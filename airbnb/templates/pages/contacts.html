@@ -5,7 +5,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Home Page</title>
+    <title>{{ flatpage.title }}</title>
 
     <!-- Bootstrap 4 - CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
@@ -28,12 +28,8 @@
 </head>
 <body>
 
-<h1>Home page</h1>
 
-<ul>
-    <li><a href="{% url 'about' %}">About</a></li>
-    <li><a href="{% url 'contacts' %}">Contacts</a></li>
-</ul>
+{{ flatpage.content }}
 
 
 <!-- Bootstrap 4 - JavaScript -->
