@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
 
     'main.apps.MainConfig',
+    'addresses.apps.AddressesConfig',
 
     'django_cleanup.apps.CleanupConfig',
 ]
