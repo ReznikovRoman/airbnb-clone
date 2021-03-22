@@ -6,8 +6,10 @@ from django.contrib.auth.models import User
 class RealtyHost(models.Model):
     """Realty host"""
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    description = models.TextField(verbose_name='host description')
+    description = models.TextField(verbose_name='host description', blank=True)
     host_rating = models.PositiveSmallIntegerField(
+        null=True,
+        blank=True,
         verbose_name='rating',
         validators=[
             MinValueValidator(0),
