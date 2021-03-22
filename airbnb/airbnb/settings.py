@@ -32,6 +32,8 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'django_inlinecss',
 
+    'main.apps.MainConfig',
+
     'django_cleanup.apps.CleanupConfig',
 ]
 
