@@ -38,6 +38,7 @@ INSTALLED_APPS = [
 
     'main.apps.MainConfig',
     'addresses.apps.AddressesConfig',
+    'hosts.apps.HostsConfig',
 
     'django_cleanup.apps.CleanupConfig',
 ]
