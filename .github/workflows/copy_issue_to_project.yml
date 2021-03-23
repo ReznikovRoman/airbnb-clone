@@ -15,4 +15,4 @@ jobs:
       uses: srggrs/assign-one-project-github-action@1.2.0
       if: github.event.action == 'opened'
       with:
-        project: 'https://github.com/thinknetica-django-lab-01/student_repo_template/projects/4'
+        project: 'https://github.com/thinknetica-django-lab-02/ReznikovRoman/projects/1'
