@@ -1,0 +1,14 @@
+.idea/
+__pycache__/
+*.pyc
+venv/
+
+*.sqlite3
+/media/
+
+*.key
+*.crt
+
+node_modules/
+
+drafts/
