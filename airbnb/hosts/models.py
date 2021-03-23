@@ -7,6 +7,7 @@ class RealtyHost(models.Model):
     """Realty host"""
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     description = models.TextField(verbose_name='host description', blank=True)
+    date_of_birth = models.DateField(verbose_name='date of birth')
     host_rating = models.PositiveSmallIntegerField(
         null=True,
         blank=True,
