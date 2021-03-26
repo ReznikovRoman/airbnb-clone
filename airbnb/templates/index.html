@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load main_extras %}
 
 
 {% block title %}
@@ -19,4 +20,10 @@
         </div>
     {% endif %}
     <p>{{ request.user.first_name }}</p>
+
+    <p>{% current_time "%Y-%m-%d" %}</p>
+    {% with text='Hello world!' %}
+        <p>{{ text|reverse }}</p>
+    {% endwith %}
+
 {% endblock %}
