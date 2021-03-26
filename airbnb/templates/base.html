@@ -36,8 +36,8 @@
 
 <div class="container">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand mr-5" href="{% url 'home_page' %}">
-            <img src="http://placehold.it/32x33?text=A" alt="">
+        <a class="navbar-brand mr-5 brand-logo" href="index.html">
+            <i class="fab fa-airbnb"></i>
             airbnb
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,7 +51,7 @@
             <div class="nav-links--right">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Become a host</a>
+                        <a class="nav-link link-host-signup" href="#">Become a host</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -76,9 +76,12 @@
         </div>
     </nav>
 
-    <div id="content" class="">
-        {% block content %}
-        {% endblock %}
+
+    <div id="content" class="wrapper">
+        <div class="content-block">
+            {% block content %}
+            {% endblock %}
+        </div>
     </div>
 </div>
 

@@ -1,9 +1,46 @@
+.brand-logo {
+  color: #FF385C !important;
+  font-size: 1.3rem;
+  font-weight: bolder;
+  display: flex; }
+  .brand-logo i {
+    font-size: 2rem;
+    margin-right: .2rem; }
+
+.color-secondary {
+  color: #757987; }
+
+hr.divider--short {
+  color: #757987;
+  width: 15%; }
+
+.show {
+  display: block !important; }
+
+.hidden {
+  display: none !important; }
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.35);
+  z-index: 5; }
+
+.form-footer--divider {
+  margin: .7rem 0 0; }
+
+.form-footer {
+  display: flex; }
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box; }
 
-html {
+html, body {
   height: 100%; }
 
 body {
@@ -14,8 +51,11 @@ body {
   color: #222;
   display: flex; }
 
+h1, h2, h3, h4, h5, h6 {
+  color: #222; }
+
 h1 {
-  font-size: 3rem;
+  font-size: 2.5rem;
   font-weight: 800; }
 
 h2 {
@@ -29,6 +69,46 @@ h3 {
   outline: none !important;
   box-shadow: none !important; }
 
+ul {
+  list-style: none; }
+
+input[type='checkbox'] {
+  padding: 1rem;
+  cursor: pointer;
+  position: relative; }
+  input[type='checkbox']:before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: -2px;
+    left: 0;
+    border: 1px solid #b0b0b0;
+    border-radius: 3px;
+    background-color: white; }
+  input[type='checkbox']:checked:after {
+    content: "";
+    display: block;
+    width: 5px;
+    height: 10px;
+    border: solid black;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    position: absolute;
+    top: 2px;
+    left: 7px; }
+
+input[type='submit'] {
+  margin-top: 1.3rem;
+  padding: .3rem .8rem;
+  background-color: #222;
+  color: #fff;
+  border: none;
+  border-radius: 10px; }
+  input[type='submit']:hover {
+    background-color: #000; }
+
 .navbar {
   padding-bottom: .7rem;
   padding-left: 0;
@@ -40,5 +120,227 @@ h3 {
     .navbar .search-form .search-field {
       border-radius: 15px;
       padding: 0 2rem; }
+      .navbar .search-form .search-field:focus {
+        border-color: #ff385c73; }
   .navbar .nav-links--right {
     margin-left: auto !important; }
+    .navbar .nav-links--right .dropdown-menu {
+      left: -50px; }
+    .navbar .nav-links--right .link-host-signup {
+      padding: .5rem;
+      border-radius: 40px;
+      margin-right: .7rem; }
+      .navbar .nav-links--right .link-host-signup:hover {
+        background-color: #aaadb73b; }
+    .navbar .nav-links--right .dropdown-toggle:hover {
+      background-color: #aaadb73b;
+      border-radius: 40px; }
+  .navbar .nav-link {
+    color: #222 !important; }
+
+.realty-explore {
+  margin-top: 1.5rem; }
+  .realty-explore h2 {
+    font-size: 2.2rem;
+    font-weight: 500;
+    line-height: 1.1; }
+  .realty-explore .realty-city {
+    margin-top: 1rem; }
+    .realty-explore .realty-city a {
+      text-decoration: none;
+      display: grid;
+      grid-template-columns: 5rem auto; }
+    .realty-explore .realty-city .realty-city--image img {
+      border-radius: 12px; }
+    .realty-explore .realty-city .realty-city--description {
+      display: flex;
+      flex-direction: column; }
+      .realty-explore .realty-city .realty-city--description .realty-city--name {
+        font-weight: 600;
+        color: #222; }
+      .realty-explore .realty-city .realty-city--description .realty-city--distance {
+        color: #757987; }
+
+.filter-popup {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 2rem 3rem;
+  border-radius: 5px;
+  box-shadow: 0 3rem 5rem rgba(0, 0, 0, 0.3);
+  z-index: 10; }
+  .filter-popup .close-popup {
+    font-size: 1.5rem;
+    color: #333;
+    cursor: pointer;
+    border: none;
+    background: none;
+    position: absolute;
+    top: 15px; }
+  .filter-popup .popup-header {
+    text-align: center; }
+    .filter-popup .popup-header h3 {
+      font-size: 1.2rem; }
+  .filter-popup .form-section .form-section--header h2 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1rem; }
+  .filter-popup .form-section .form-input label {
+    margin-left: .7rem; }
+  .filter-popup .form-section#section--rooms label {
+    margin: 0; }
+  .filter-popup .form-section#section--rooms .form-input {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between; }
+    .filter-popup .form-section#section--rooms .form-input .input-number--select {
+      display: inline-block;
+      position: relative;
+      width: 100px; }
+      .filter-popup .form-section#section--rooms .form-input .input-number--select input[type="number"] {
+        display: block;
+        height: 32px;
+        line-height: 32px;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+        text-align: center;
+        border: none; }
+      .filter-popup .form-section#section--rooms .form-input .input-number--select input[type="number"]::-webkit-outer-spin-button, .filter-popup .form-section#section--rooms .form-input .input-number--select input[type="number"]::-webkit-inner-spin-button {
+        display: none; }
+    .filter-popup .form-section#section--rooms .form-input .input-number--subtract, .filter-popup .form-section#section--rooms .form-input .input-number--add {
+      background-color: #fff;
+      color: #757987;
+      position: absolute;
+      top: 1px;
+      bottom: 1px;
+      width: 30px;
+      padding: 0;
+      display: block;
+      text-align: center;
+      border-radius: 50%;
+      border: 1px solid #b0b0b0;
+      font-size: 16px;
+      font-weight: 600; }
+    .filter-popup .form-section#section--rooms .form-input .input-number--subtract {
+      left: 1px;
+      text-align: center; }
+    .filter-popup .form-section#section--rooms .form-input .input-number--add {
+      right: 1px;
+      padding: 0; }
+
+.realty-list .header p {
+  margin-bottom: 0; }
+
+.realty-list .filter-row {
+  margin-top: 1.4rem;
+  margin-bottom: 1.5rem; }
+  .realty-list .filter-row .filter--dropdown {
+    display: inline-block;
+    position: relative; }
+    .realty-list .filter-row .filter--dropdown .property-filter--form {
+      position: absolute;
+      margin-top: .7rem;
+      background-color: #fff;
+      padding: 1rem 3rem .9rem 1.2rem;
+      border: 0.5px solid rgba(118, 118, 118, 0.28);
+      border-radius: 10px;
+      z-index: 2; }
+      .realty-list .filter-row .filter--dropdown .property-filter--form .form-input {
+        display: flex;
+        align-items: center; }
+        .realty-list .filter-row .filter--dropdown .property-filter--form .form-input:not(:first-child) {
+          margin-top: .5rem; }
+        .realty-list .filter-row .filter--dropdown .property-filter--form .form-input label {
+          margin-bottom: 0;
+          margin-left: 1rem; }
+    .realty-list .filter-row .filter--dropdown .button-filter {
+      margin-right: .6rem;
+      padding: .4rem .9rem;
+      border-radius: 40px;
+      border: 1px solid #b0b0b0;
+      background-color: #fff;
+      color: #222; }
+      .realty-list .filter-row .filter--dropdown .button-filter:hover {
+        border-color: #222; }
+
+.realty-list .realty .realty-card {
+  display: flex;
+  height: 100%;
+  margin-bottom: 1.5rem; }
+  .realty-list .realty .realty-card:not(:first-child) {
+    margin-top: 1.5rem; }
+  .realty-list .realty .realty-card .realty-card--image {
+    margin-right: 1rem; }
+    .realty-list .realty .realty-card .realty-card--image img {
+      border-radius: 12px; }
+  .realty-list .realty .realty-card .realty-card--description {
+    display: flex;
+    flex-direction: column; }
+    .realty-list .realty .realty-card .realty-card--description .realty-card--name a:hover {
+      text-decoration: none !important; }
+    .realty-list .realty .realty-card .realty-card--description .rooms {
+      margin-bottom: 0; }
+    .realty-list .realty .realty-card .realty-card--description hr.divider--short {
+      margin: 0.2rem; }
+    .realty-list .realty .realty-card .realty-card--description .rooms > li, .realty-list .realty .realty-card .realty-card--description .amenities > li {
+      display: inline-block; }
+    .realty-list .realty .realty-card .realty-card--description .rooms li:not(:last-child)::after, .realty-list .realty .realty-card .realty-card--description .amenities li:not(:last-child)::after {
+      content: " \f111";
+      font: normal normal normal 7px/1 FontAwesome;
+      vertical-align: middle; }
+  .realty-list .realty .realty-card .realty-card--footer {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between; }
+    .realty-list .realty .realty-card .realty-card--footer .realty-rating .rating-star {
+      color: #FF385C; }
+    .realty-list .realty .realty-card .realty-card--footer .realty-rating .text-rating {
+      color: #222;
+      font-weight: bolder; }
+    .realty-list .realty .realty-card .realty-card--footer .realty-rating .text-rating-count {
+      color: #757987; }
+    .realty-list .realty .realty-card .realty-card--footer .realty-price .price {
+      color: #222;
+      font-weight: bolder; }
+  .realty-list .realty .realty-card .realty-card-save {
+    margin-left: 1rem; }
+    .realty-list .realty .realty-card .realty-card-save a {
+      color: #222;
+      padding: 0.2rem 0.65rem;
+      border-radius: 100%;
+      display: flex; }
+      .realty-list .realty .realty-card .realty-card-save a span {
+        font-size: 1.3rem;
+        text-align: center; }
+    .realty-list .realty .realty-card .realty-card-save a:hover {
+      background-color: #aaadb73b; }
+
+@media screen and (max-width: 770px) {
+  .realty-list .realty .realty-card {
+    display: grid;
+    grid-template-areas: "image" "save" "description"; }
+    .realty-list .realty .realty-card .realty-card--image {
+      grid-area: image;
+      margin-right: 0;
+      margin-bottom: 1rem; }
+      .realty-list .realty .realty-card .realty-card--image img {
+        width: 100%;
+        height: 350px; }
+    .realty-list .realty .realty-card .realty-card-save {
+      grid-area: save;
+      margin-left: 0;
+      display: flex;
+      align-content: center;
+      justify-content: flex-end; }
+      .realty-list .realty .realty-card .realty-card-save a {
+        color: #222;
+        border-radius: 100%;
+        padding: 0;
+        margin-top: .25rem; }
+      .realty-list .realty .realty-card .realty-card-save a:hover {
+        background: none; }
+    .realty-list .realty .realty-card .realty-card--description {
+      grid-area: description; } }

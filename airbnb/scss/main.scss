@@ -10,7 +10,7 @@
 
 
 // General
-html {
+html, body {
   height: 100%;
 }
 
@@ -25,8 +25,12 @@ body {
   display: flex;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  color: $text-primary-color;
+}
+
 h1 {
-  font-size: 3rem;
+  font-size: 2.5rem;
   font-weight: 800;
 }
 h2 {
@@ -42,12 +46,59 @@ h3 {
   box-shadow: none !important;
 }
 
+ul {
+  list-style: none;
+}
+
+input[type='checkbox'] {
+  padding: 1rem;
+  cursor: pointer;
+  position: relative;
+
+  &:before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: -2px;
+    left: 0;
+    border: 1px solid rgb(176, 176, 176);
+    border-radius: 3px;
+    background-color: white;
+  }
+  &:checked:after {
+    content: "";
+    display: block;
+    width: 5px;
+    height: 10px;
+    border: solid black;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    position: absolute;
+    top: 2px;
+    left: 7px;
+  }
+}
+
+input[type='submit'] {
+  margin-top: 1.3rem;
+  padding: .3rem .8rem;
+  background-color: $text-primary-color;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+
+  &:hover {
+    background-color: #000;
+  }
+}
+
 
 // Navbar
 .navbar {
   padding-bottom: .7rem;
   padding-left: 0;
-
   background: none;
   box-shadow: 0px -3px 5px -5px rgba(34, 60, 80, 0.6) inset;
   margin-bottom: .9rem;
@@ -58,10 +109,394 @@ h3 {
     .search-field {
       border-radius: 15px;
       padding: 0 2rem;
+
+      &:focus {
+        border-color: #ff385c73;
+      }
     }
   }
 
   .nav-links--right {
     margin-left: auto !important;
+
+    .dropdown-menu {
+      left: -50px;
+    }
+
+    .link-host-signup {
+      padding: .5rem;
+      border-radius: 40px;
+      margin-right: .7rem;
+
+      &:hover {
+        background-color: $text-hover-color;
+      }
+    }
+
+    .dropdown-toggle {
+      &:hover {
+        background-color: $text-hover-color;
+        border-radius: 40px;
+      }
+    }
+  }
+
+  .nav-link {
+    color: $text-primary-color !important;
   }
 }
+
+
+// Realty explore
+.realty-explore {
+  margin-top: 1.5rem;
+
+  h2 {
+    font-size: 2.2rem;
+    font-weight: 500;
+    line-height: 1.1;
+  }
+
+  .realty-city {
+    margin-top: 1rem;
+
+    a {
+      text-decoration: none;
+
+      display: grid;
+      grid-template-columns: 5rem auto;
+    }
+
+    .realty-city--image img {
+      border-radius: 12px;
+    }
+
+    .realty-city--description {
+      display: flex;
+      flex-direction: column;
+
+      .realty-city--name {
+        font-weight: 600;
+        color: $text-primary-color;
+      }
+
+      .realty-city--distance {
+        color: $text-secondary-color;
+      }
+    }
+  }
+}
+
+
+// Realty list
+
+// Popup filter
+.filter-popup{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  background-color: #fff;
+  padding: 2rem 3rem;
+  border-radius: 5px;
+  box-shadow: 0 3rem 5rem rgba(0, 0, 0, 0.3);
+  z-index: 10;
+
+  .close-popup {
+    font-size: 1.5rem;
+    color: #333;
+    cursor: pointer;
+    border: none;
+    background: none;
+    position: absolute;
+    top: 15px;
+  }
+
+  .popup-header {
+    text-align: center;
+
+    h3 {
+      font-size: 1.2rem;
+    }
+  }
+
+  .form-section {
+    .form-section--header {
+      h2 {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+      }
+    }
+
+    .form-input {
+      label {
+        margin-left: .7rem;
+      }
+    }
+
+    &#section--rooms {
+      label {
+        margin: 0;
+      }
+
+      .form-input {
+        margin-top: 1rem;
+        display: flex;
+        justify-content: space-between;
+
+        .input-number--select {
+          display: inline-block;
+          position: relative;
+          width: 100px;
+
+          input[type="number"] {
+            display: block;
+            height: 32px;
+            line-height: 32px;
+            width: 100%;
+            padding: 0;
+            margin: 0;
+            text-align: center;
+            border: none;
+          }
+
+          input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button {
+            display: none;
+          }
+        }
+        .input-number--subtract, .input-number--add {
+          background-color: #fff;
+          color: $text-secondary-color;
+          position: absolute;
+          top: 1px;
+          bottom: 1px;
+          width: 30px;
+          padding: 0;
+          display: block;
+          text-align: center;
+          border-radius: 50%;
+          border: 1px solid rgb(176, 176, 176);
+          font-size: 16px;
+          font-weight: 600;
+        }
+        .input-number--subtract {
+          left: 1px;
+          text-align: center;
+        }
+        .input-number--add {
+          right: 1px;
+          padding: 0;
+        }
+      }
+    }
+  }
+}
+
+.realty-list {
+  // Realty header
+  .header {
+    p {
+      margin-bottom: 0;
+    }
+  }
+
+  // Realty filter
+  .filter-row {
+    margin-top: 1.4rem;
+    margin-bottom: 1.5rem;
+
+    .filter--dropdown {
+      display: inline-block;
+      position: relative;
+
+      .property-filter--form {
+        position: absolute;
+        margin-top: .7rem;
+        background-color: #fff;
+        padding: 1rem 3rem .9rem 1.2rem;
+        border: 0.5px solid rgba(118, 118, 118, 0.28);
+        border-radius: 10px;
+        z-index: 2;
+
+        .form-input {
+          display: flex;
+          align-items: center;
+
+          &:not(:first-child) {
+            margin-top: .5rem;
+          }
+
+          label {
+            margin-bottom: 0;
+            margin-left: 1rem;
+          }
+        }
+      }
+
+      .button-filter {
+        margin-right: .6rem;
+        padding: .4rem .9rem;
+        border-radius: 40px;
+        border: 1px solid #b0b0b0;
+        background-color: #fff;
+        color: $text-primary-color;
+
+        &:hover {
+          border-color: $text-primary-color;
+        }
+      }
+    }
+  }
+
+  // Realty card
+  .realty {
+    .realty-card {
+      display: flex;
+      height: 100%;
+      margin-bottom: 1.5rem;
+
+      &:not(:first-child) {
+        margin-top: 1.5rem;
+      }
+
+      .realty-card--image {
+        margin-right: 1rem;
+
+        img {
+          border-radius: 12px;
+        }
+      }
+
+      .realty-card--description {
+        display: flex;
+        flex-direction: column;
+
+        .realty-card--name {
+          a:hover {
+            text-decoration: none !important;
+          }
+        }
+
+        .rooms {
+          margin-bottom: 0;
+        }
+
+        hr.divider--short {
+          margin: 0.2rem;
+        }
+
+        .rooms, .amenities {
+          >li {
+            display: inline-block;
+          }
+          li:not(:last-child)::after {
+            content: " \f111";
+            font: normal normal normal 7px/1 FontAwesome;
+            vertical-align: middle;
+          }
+        }
+      }
+
+      .realty-card--footer {
+        margin-top: auto;
+        display: flex;
+        justify-content: space-between;
+
+        .realty-rating {
+          .rating-star {
+            color: $primary-color;
+          }
+          .text-rating {
+            color: $text-primary-color;
+            font-weight: bolder;
+          }
+          .text-rating-count {
+            color: $text-secondary-color;
+          }
+        }
+
+        .realty-price {
+          .price {
+            color: $text-primary-color;
+            font-weight: bolder;
+          }
+        }
+      }
+
+      .realty-card-save {
+        margin-left: 1rem;
+
+        a {
+          color: $text-primary-color;
+          padding: 0.2rem 0.65rem;
+          border-radius: 100%;
+          display: flex;
+
+          span {
+            font-size: 1.3rem;
+            text-align: center;
+          }
+        }
+
+        a:hover {
+          background-color: $text-hover-color;
+        }
+      }
+    }
+  }
+}
+
+
+@media screen and (max-width: 770px){
+  .realty-list {
+    .realty {
+      .realty-card {
+        display: grid;
+        grid-template-areas:
+                "image"
+                "save"
+                "description";
+
+        .realty-card--image {
+          grid-area: image;
+
+          margin-right: 0;
+          margin-bottom: 1rem;
+
+          img {
+            width: 100%;
+            height: 350px;
+          }
+        }
+
+        .realty-card-save {
+          grid-area: save;
+
+          margin-left: 0;
+          display: flex;
+          align-content: center;
+          justify-content: flex-end;
+
+          a {
+            color: $text-primary-color;
+            border-radius: 100%;
+            padding: 0;
+            margin-top: .25rem;
+          }
+
+          a:hover {
+            background: none;
+          }
+        }
+
+        .realty-card--description {
+          grid-area: description;
+        }
+      }
+    }
+  }
+}
+
+
