@@ -12,4 +12,11 @@
         <li><a href="{% url 'about' %}">About</a></li>
         <li><a href="{% url 'contacts' %}">Contacts</a></li>
     </ul>
+
+    {% if turn_on_block %}
+        <div class="hidden-content">
+            <p>Hidden content</p>
+        </div>
+    {% endif %}
+    <p>{{ request.user.first_name }}</p>
 {% endblock %}
