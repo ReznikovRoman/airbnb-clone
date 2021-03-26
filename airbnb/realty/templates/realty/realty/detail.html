@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    {{ realty.name|slice:":30" }} &bull; Realty &bull; airbnb
+{% endblock %}
+
+{% block content %}
+    <h1>{{ realty.name }}</h1>
+
+    {% with realty_images=realty.images %}
+        {% if realty_images.exists %}
+            {% for realty_image in realty_images.all %}
+                <img src="{{ realty_image.image.url }}"
+                     width="300px" height="200px" alt="Realty image">
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+{% endblock %}
