@@ -35,47 +35,7 @@
 <body>
 
 <div class="container">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand mr-5 brand-logo" href="{% url 'home_page' %}">
-            <i class="fab fa-airbnb"></i>
-            airbnb
-        </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <form class="form-inline my-2 my-lg-0 search-form">
-                <input class="form-control mr-sm-2 search-field text-center" type="search" placeholder="Start your search" aria-label="Search">
-            </form>
-            <div class="nav-links--right">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">
-                        <a class="nav-link link-host-signup" href="#">Become a host</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img src="http://placehold.it/32x33" width="32" height="33" class="rounded-circle">
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <a class="dropdown-item" href="#">Messages</a>
-                            <a class="dropdown-item" href="#">Notifications</a>
-                            <a class="dropdown-item" href="#">Trips</a>
-                            <a class="dropdown-item" href="#">Saved</a>
-
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Host your home</a>
-                            <a class="dropdown-item" href="#">Account</a>
-
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-center" href="#">Log out</a>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
+    {% include 'components/navbar.html' with first_name=request.user.first_name %}
 
     <div id="content" class="wrapper">
         <div class="content-block">
