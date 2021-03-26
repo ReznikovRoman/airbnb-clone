@@ -82,7 +82,7 @@ class RealtyImage(models.Model):
         Realty,
         on_delete=models.CASCADE,
         related_name='images',
-        verbose_name='realty image',
+        verbose_name='realty',
     )
     # TODO: order - custom model field (another milestone)
 
