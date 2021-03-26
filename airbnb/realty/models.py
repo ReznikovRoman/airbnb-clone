@@ -17,6 +17,18 @@ class Amenity(models.Model):
         return self.name
 
 
+class RealtyCustomQueryset(models.query.QuerySet):
+    def delete(self):
+        # have to call .delete() method when deleting a Realty queryset (e.g. on the Admin panel)
+        for obj in self:
+            obj.delete()
+
+
+class RealtyManager(models.Manager):
+    def get_queryset(self):
+        return RealtyCustomQueryset(self.model, using=self._db)
+
+
 class Realty(models.Model):
     """Realty in an online marketplace (airbnb)"""
     HOUSE = 'House'
@@ -62,6 +74,8 @@ class Realty(models.Model):
     host = models.ForeignKey(RealtyHost, on_delete=models.CASCADE, related_name='realty', verbose_name='realty host')
     amenities = models.ManyToManyField(Amenity, related_name='realty', blank=True, verbose_name='amenities')
 
+    objects = RealtyManager()
+
     class Meta:
         verbose_name = 'realty'
         verbose_name_plural = 'realty'
@@ -69,6 +83,10 @@ class Realty(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def delete(self, using=None, keep_parents=False):
+        self.location.delete()
+        super(Realty, self).delete(using, keep_parents)
 
 
 def get_realty_image_upload_path(instance: "RealtyImage", filename: str):
