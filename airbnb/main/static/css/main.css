@@ -411,7 +411,11 @@ input[type='submit'] {
         background-color: #aaadb73b; }
 
 .realty-detail .realty-images {
-  margin-bottom: 1.6rem; }
+  margin-bottom: 2.5rem;
+  padding-top: 1.2rem;
+  border: 1px solid #dddddd;
+  border-radius: 12px;
+  box-shadow: #0000001f 0 6px 16px; }
   .realty-detail .realty-images ul#image-carousel li.carousel-content {
     margin-right: 2rem !important; }
     .realty-detail .realty-images ul#image-carousel li.carousel-content .realty-image {

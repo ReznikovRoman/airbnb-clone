@@ -543,7 +543,11 @@ input[type='submit'] {
   }
 
   .realty-images {
-    margin-bottom: 1.6rem;
+    margin-bottom: 2.5rem;
+    padding-top: 1.2rem;
+    border: 1px solid rgb(221, 221, 221);
+    border-radius: 12px;
+    box-shadow: #0000001f 0 6px 16px;
 
     ul#image-carousel {
       li.carousel-content {

@@ -143,7 +143,8 @@
 
     // Light Slider
     $('#image-carousel').lightSlider({
-        item:4,
+
+        item:{% if realty.images.count < 4 %}{{ realty.images.count }}%4{% else %}4{% endif %},
         loop:true,
         slideMove:2,
         easing: 'cubic-bezier(0.25, 0, 0.25, 1)',
