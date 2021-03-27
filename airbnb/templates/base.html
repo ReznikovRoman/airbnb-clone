@@ -1,5 +1,6 @@
 <!doctype html>
 {% load static %}
+{% load main_extras %}
 
 <html lang="en">
 <head>
@@ -55,7 +56,7 @@
                         <ul class="pagination justify-content-center">
                             {% if page_obj.has_previous %}
                                 <li class="page-item">
-                                    <a tabindex="-1" class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                                    <a tabindex="-1" class="page-link" href="?{% url_replace page=page_obj.previous_page_number %}">
                                         Previous
                                     </a>
                                 </li>
@@ -67,17 +68,17 @@
                             {% for i in page_obj.paginator.page_range %}
                                 {% if page_obj.number == i %}
                                     <li class="active page-item">
-                                        <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                        <a class="page-link" href="?{% url_replace page=i %}">{{ i }}</a>
                                     </li>
                                 {% else %}
                                     <li class="page-item">
-                                        <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                        <a class="page-link" href="?{% url_replace page=i %}">{{ i }}</a>
                                     </li>
                                 {% endif %}
                             {% endfor %}
                             {% if page_obj.has_next %}
                                 <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                                    <a class="page-link" href="?{% url_replace page=page_obj.next_page_number %}">Next</a>
                                 </li>
                             {% else %}
                                 <li class="page-item disabled">

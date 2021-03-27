@@ -19,3 +19,11 @@ def get_current_time(format_string: Optional[str] = None) -> datetime.datetime:
 def reverse_string(string: str) -> str:
     return string[::-1]
 
+
+@register.simple_tag(takes_context=True)
+def url_replace(context, **kwargs):
+    """Updates url with optional query parameters"""
+    query_params = context['request'].GET.copy()
+    query_params.pop('page', None)
+    query_params.update(kwargs)
+    return query_params.urlencode()
