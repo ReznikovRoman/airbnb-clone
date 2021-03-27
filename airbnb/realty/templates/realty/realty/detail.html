@@ -6,14 +6,165 @@
 {% endblock %}
 
 {% block content %}
-    <h1>{{ realty.name }}</h1>
 
-    {% with realty_images=realty.images %}
-        {% if realty_images.exists %}
-            {% for realty_image in realty_images.all %}
-                <img src="{{ realty_image.image.url }}"
-                     width="300px" height="200px" alt="Realty image">
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
+    <div class="realty-detail">
+        <div class="realty-header">
+            <h1>{{ realty.name }}</h1>
+            <div class="realty-header--footer">
+                <div class="info--left">
+                    <ul>
+                        <li>
+                            <a href="#" class="link">
+                                {{ realty.location.city }}, {{ realty.location.country }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="realty-images">
+            <ul id="image-carousel">
+                {% for realty_image in realty.images.all %}
+                    <li class="carousel-content">
+                        <img class="realty-image" src="{{ realty_image.image.url }}">
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="realty-info">
+            <div class="realty-info--header">
+                <div class="realty-general-info">
+                    <div class="realty-name">
+                        <h2>{{ realty.realty_type }} hosted by {{ realty.host.user.first_name }}</h2>
+                    </div>
+                    <div class="realty-features">
+                        <ul>
+                            {% with max_guests_count=realty.max_guests_count %}
+                                <li>{{ max_guests_count }} guest{{ max_guests_count|pluralize }}</li>
+                            {% endwith %}
+                            <li>{{ realty.realty_type }}</li>
+                            {% with beds_count=realty.beds_count %}
+                                <li>{{ realty.beds_count }} bed{{ beds_count|pluralize }}</li>
+                            {% endwith %}
+                        </ul>
+                    </div>
+                </div>
+                <div class="host-link">
+                    <a href="#">
+                        {# TODO: Host profile image (user registration - another milestone) #}
+                        <img src="http://placehold.it/56x56" class="rounded-circle" alt="Host profile image">
+                    </a>
+                </div>
+            </div>
+
+            <div class="realty-reserve">
+                <div class="realty-short-info">
+                    <p class="realty-price">
+                        <span class="price">{{ realty.price_per_night }}$</span> / night
+                    </p>
+                </div>
+                <div class="realty-reserve-button">
+                    {# TODO: Reserve realty #}
+                    <a href="#" class="button-primary">Reserve</a>
+                </div>
+            </div>
+
+            <hr>
+            <div class="realty-description">
+                <p>{{ realty.description|safe|linebreaks }}</p>
+
+                {# TODO: DM host (django channels + websockets, another milestone) #}
+                <a href="#" class="color-secondary contact-host--link">Contact host</a>
+            </div>
+
+            <hr>
+            <div class="realty-amenities">
+            <h3>Amenities</h3>
+                <div class="row">
+                    {% for amenity in realty.amenities.all %}
+                        <div class="col-md-6">
+                            <div class="realty-amenity">
+                                <span>{{ amenity.name|capfirst }}</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {# TODO: Realty reviews #}
+
+            <hr>
+            <div class="realty-location">
+                <h3>Location</h3>
+                <p>{{ realty.location.get_full_address }}</p>
+            </div>
+
+            <hr>
+            <div class="realty-host-info">
+                <div class="realty-host">
+                    <div class="host-profile">
+
+                        {# TODO: Host profile #}
+                        <a href="#">
+                            <img src="http://placehold.it/56x56" class="rounded-circle"
+                                 alt="User profile image">
+                        </a>
+                        <div class="host-content--right">
+                            <div class="host-name">
+                                <h3>Hosted by {{ realty.host.user.first_name }} {{ realty.host.user.last_name }}</h3>
+                            </div>
+                            <div class="host-joined-date">
+                                Joined in {{ realty.host.user.date_joined|date:'F Y' }}
+                            </div>
+                        </div>
+                    </div>
+
+                    {# TODO: Host total reviews count #}
+
+                    <div class="host-description">
+                        <p>{{ realty.host.description }}</p>
+                    </div>
+                </div>
+
+                {# TODO: DM Host #}
+                <div class="contact-host">
+                    <a href="#" class="button-light">Contact host</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block domready %}
+
+    // Light Slider
+    $('#image-carousel').lightSlider({
+        item:4,
+        loop:true,
+        slideMove:2,
+        easing: 'cubic-bezier(0.25, 0, 0.25, 1)',
+        speed:600,
+        responsive : [
+            {
+                breakpoint:800,
+                settings: {
+                    item:3,
+                    slideMove:1,
+                    slideMargin:6,
+                }
+            },
+            {
+                breakpoint:480,
+                settings: {
+                    item:2,
+                    slideMove:1
+                }
+            }
+        ]
+    });
+
 {% endblock %}
