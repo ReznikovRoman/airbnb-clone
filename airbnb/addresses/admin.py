@@ -5,7 +5,7 @@ from .models import Address
 
 @admin.register(Address)
 class AddressAdmin(admin.ModelAdmin):
-    list_display = ('address_link', 'country', 'city', 'street', 'city_slug')
+    list_display = ('address_link', 'country', 'city', 'street')
     list_filter = ('country',)
     exclude = ('city_slug', 'country_slug')
 
