@@ -320,17 +320,24 @@ input[type='submit'] {
         border-radius: 10px;
         z-index: 2;
 
-        .form-input {
+        p:first-child {
+          display: none;
+        }
+
+        ul#id_realty_type li {
           display: flex;
-          align-items: center;
+
+          label {
+            display: flex;
+            align-items: center;
+
+            input {
+              margin-right: .7rem;
+            }
+          }
 
           &:not(:first-child) {
             margin-top: .5rem;
-          }
-
-          label {
-            margin-bottom: 0;
-            margin-left: 1rem;
           }
         }
       }

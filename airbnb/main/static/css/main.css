@@ -291,14 +291,17 @@ input[type='submit'] {
       border: 0.5px solid rgba(118, 118, 118, 0.28);
       border-radius: 10px;
       z-index: 2; }
-      .realty-list .filter-row .filter--dropdown .property-filter--form .form-input {
-        display: flex;
-        align-items: center; }
-        .realty-list .filter-row .filter--dropdown .property-filter--form .form-input:not(:first-child) {
+      .realty-list .filter-row .filter--dropdown .property-filter--form p:first-child {
+        display: none; }
+      .realty-list .filter-row .filter--dropdown .property-filter--form ul#id_realty_type li {
+        display: flex; }
+        .realty-list .filter-row .filter--dropdown .property-filter--form ul#id_realty_type li label {
+          display: flex;
+          align-items: center; }
+          .realty-list .filter-row .filter--dropdown .property-filter--form ul#id_realty_type li label input {
+            margin-right: .7rem; }
+        .realty-list .filter-row .filter--dropdown .property-filter--form ul#id_realty_type li:not(:first-child) {
           margin-top: .5rem; }
-        .realty-list .filter-row .filter--dropdown .property-filter--form .form-input label {
-          margin-bottom: 0;
-          margin-left: 1rem; }
     .realty-list .filter-row .filter--dropdown .button-filter {
       margin-right: .6rem;
       padding: .4rem .9rem;
