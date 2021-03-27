@@ -3,17 +3,14 @@
 
 
 {% block title %}
-    {#     TODO: filter realty by City (another milestone)     #}
-    ... &bull; Stays &bull; airbnb
+    {{ city }} &bull; Stays &bull; airbnb
 {% endblock %}
 
 {% block content %}
     <div class="realty-list">
         <div class="header mb-3">
-            <p class="color-secondary">{{ realty_count }}+ stays</p>
-
-            {#     TODO: filter realty by City (another milestone)     #}
-            <h1>Stays in ...</h1>
+            <p class="color-secondary">{{ realty_count }}+ stay{{ realty_count|pluralize }}</p>
+            <h1>Stays in {{ city }}</h1>
         </div>
 
         <div class="realty">
