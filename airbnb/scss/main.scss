@@ -404,19 +404,6 @@ input[type='submit'] {
         display: flex;
         justify-content: space-between;
 
-        .realty-rating {
-          .rating-star {
-            color: $primary-color;
-          }
-          .text-rating {
-            color: $text-primary-color;
-            font-weight: bolder;
-          }
-          .text-rating-count {
-            color: $text-secondary-color;
-          }
-        }
-
         .realty-price {
           .price {
             color: $text-primary-color;
@@ -500,3 +487,245 @@ input[type='submit'] {
 }
 
 
+// Realty detail
+.realty-detail {
+  .realty-header {
+    margin-top: 1.3rem;
+    h1 {
+      font-size: 1.8rem;
+    }
+
+    .realty-header--footer {
+      display: flex;
+      justify-content: space-between;
+
+      a.link {
+        text-decoration: underline;
+      }
+
+      .info--left {
+        ul li {
+          color: $text-secondary-color;
+
+          &:not(:first-child)::before {
+            content: " \f111";
+            font: normal normal normal 7px/1 FontAwesome;
+            vertical-align: middle;
+            margin: 0 .3rem;
+          }
+
+          & * {
+            color: $text-secondary-color;
+          }
+        }
+      }
+
+      .info--right {
+        ul li *{
+          color: $text-primary-color;
+        }
+      }
+
+      .info--left ul, .info--right ul {
+        display: flex;
+      }
+
+      .realty-save {
+        cursor: pointer;
+        padding: .3rem .5rem;
+        border-radius: 7px;
+
+        &:hover {
+          background-color: $text-hover-color;
+        }
+      }
+    }
+  }
+
+  .realty-images {
+    margin-bottom: 1.6rem;
+
+    ul#image-carousel {
+      li.carousel-content {
+        margin-right: 2rem !important;
+
+        .realty-image {
+          width: 250px;
+          height: 200px;
+        }
+      }
+    }
+  }
+
+  .realty-info {
+    .realty-info--header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+
+      .realty-general-info {
+        .realty-name {
+          h2 {
+            font-size: 1.4rem;
+            font-weight: bold;
+          }
+        }
+
+        .realty-features {
+          ul {
+            display: flex;
+
+            li {
+              color: $text-secondary-color;
+
+              &:not(:first-child)::before {
+                content: " \f111";
+                font: normal normal normal 7px/1 FontAwesome;
+                vertical-align: middle;
+                margin: 0 .3rem;
+              }
+            }
+          }
+        }
+      }
+
+      .host-link {
+        img {
+          width: 56px;
+          height: 56px;
+        }
+      }
+    }
+
+    .realty-reserve {
+      border: 1px solid rgb(221, 221, 221);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: #0000001f 0 6px 16px;
+      margin-bottom: 2rem;
+
+      .realty-short-info {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .realty-reserve-button {
+        a {
+          text-align: center;
+          display: inline-block;
+          width: 100%;
+        }
+      }
+    }
+
+    .realty-description {
+      margin-top: 1.5rem;
+
+      .contact-host--link {
+        font-size: 1.1rem;
+
+        &:hover {
+          color: $text-primary-color;
+        }
+      }
+    }
+
+    .realty-amenities {
+      margin-top: 1.5rem;
+
+      h3 {
+        font-size: 1.5rem;
+        font-weight: 500;
+      }
+
+      .realty-amenity {
+        color: $text-primary-color;
+      }
+    }
+
+    .realty-reviews {
+      margin-top: 1.5rem;
+
+      .realty-rating {
+        margin-bottom: 1.5rem;
+        .text-rating {
+          font-size: 1.3rem;
+        }
+      }
+
+      .realty-review {
+        .review-author {
+          .author-profile {
+            display: flex;
+            margin-bottom: .8rem;
+
+            a img {
+              width: 56px;
+              height: 56px;
+            }
+
+            .review-content--right {
+              margin-left: 1rem;
+              p {
+                margin-bottom: 0;
+              }
+              .review-date {
+                color: $text-secondary-color;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .realty-location {
+      margin-top: 1.5rem;
+
+      h3 {
+        font-size: 1.5rem;
+        font-weight: 500;
+      }
+    }
+
+    .realty-host-info {
+      margin-top: 2rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+
+      h3 {
+        font-size: 1.5rem;
+        font-weight: 500;
+      }
+
+      .realty-host {
+        .host-profile {
+          margin-bottom: .8rem;
+          display: flex;
+
+          a img {
+            width: 56px;
+            height: 56px;
+          }
+
+          .host-content--right {
+            margin-left: 1rem;
+            p {
+              margin-bottom: 0;
+            }
+            .host-joined-date {
+              color: $text-secondary-color;
+            }
+          }
+        }
+
+        .host-reviews {
+          margin-bottom: 1.2rem;
+        }
+
+        .host-description {
+          margin-bottom: 2rem;
+        }
+      }
+    }
+  }
+}

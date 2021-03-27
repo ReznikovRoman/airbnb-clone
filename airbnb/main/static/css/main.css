@@ -29,11 +29,54 @@ hr.divider--short {
   background-color: rgba(0, 0, 0, 0.35);
   z-index: 5; }
 
+#content {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem; }
+
 .form-footer--divider {
   margin: .7rem 0 0; }
 
 .form-footer {
   display: flex; }
+
+a.button-primary {
+  background-color: #FF385C;
+  padding: .7rem 2rem;
+  color: #fff;
+  border-radius: 10px; }
+  a.button-primary:hover {
+    text-decoration: none; }
+
+a.button-light {
+  background-color: #fff;
+  color: #222;
+  padding: .9rem 1.5rem;
+  border: 1px solid #222;
+  border-radius: 8px;
+  transition: box-shadow 0.2s ease 0s, -ms-transform 0.1s ease 0s, -webkit-transform 0.1s ease 0s, transform 0.1s ease 0s !important;
+  font-weight: 600; }
+  a.button-light:hover {
+    text-decoration: none;
+    background-color: #aaadb73b; }
+
+a.icon {
+  margin-right: .3rem; }
+  a.icon:hover {
+    text-decoration: none; }
+
+.rating-star {
+  color: #FF385C; }
+
+.realty-rating .text-rating {
+  color: #222;
+  font-weight: bolder; }
+
+.realty-rating .text-rating-count {
+  color: #757987; }
+
+.realty-price .price {
+  color: #222;
+  font-weight: bolder; }
 
 * {
   margin: 0;
@@ -295,13 +338,6 @@ input[type='submit'] {
     margin-top: auto;
     display: flex;
     justify-content: space-between; }
-    .realty-list .realty .realty-card .realty-card--footer .realty-rating .rating-star {
-      color: #FF385C; }
-    .realty-list .realty .realty-card .realty-card--footer .realty-rating .text-rating {
-      color: #222;
-      font-weight: bolder; }
-    .realty-list .realty .realty-card .realty-card--footer .realty-rating .text-rating-count {
-      color: #757987; }
     .realty-list .realty .realty-card .realty-card--footer .realty-price .price {
       color: #222;
       font-weight: bolder; }
@@ -344,3 +380,138 @@ input[type='submit'] {
         background: none; }
     .realty-list .realty .realty-card .realty-card--description {
       grid-area: description; } }
+
+.realty-detail .realty-header {
+  margin-top: 1.3rem; }
+  .realty-detail .realty-header h1 {
+    font-size: 1.8rem; }
+  .realty-detail .realty-header .realty-header--footer {
+    display: flex;
+    justify-content: space-between; }
+    .realty-detail .realty-header .realty-header--footer a.link {
+      text-decoration: underline; }
+    .realty-detail .realty-header .realty-header--footer .info--left ul li {
+      color: #757987; }
+      .realty-detail .realty-header .realty-header--footer .info--left ul li:not(:first-child)::before {
+        content: " \f111";
+        font: normal normal normal 7px/1 FontAwesome;
+        vertical-align: middle;
+        margin: 0 .3rem; }
+      .realty-detail .realty-header .realty-header--footer .info--left ul li * {
+        color: #757987; }
+    .realty-detail .realty-header .realty-header--footer .info--right ul li * {
+      color: #222; }
+    .realty-detail .realty-header .realty-header--footer .info--left ul, .realty-detail .realty-header .realty-header--footer .info--right ul {
+      display: flex; }
+    .realty-detail .realty-header .realty-header--footer .realty-save {
+      cursor: pointer;
+      padding: .3rem .5rem;
+      border-radius: 7px; }
+      .realty-detail .realty-header .realty-header--footer .realty-save:hover {
+        background-color: #aaadb73b; }
+
+.realty-detail .realty-images {
+  margin-bottom: 1.6rem; }
+  .realty-detail .realty-images ul#image-carousel li.carousel-content {
+    margin-right: 2rem !important; }
+    .realty-detail .realty-images ul#image-carousel li.carousel-content .realty-image {
+      width: 250px;
+      height: 200px; }
+
+.realty-detail .realty-info .realty-info--header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem; }
+  .realty-detail .realty-info .realty-info--header .realty-general-info .realty-name h2 {
+    font-size: 1.4rem;
+    font-weight: bold; }
+  .realty-detail .realty-info .realty-info--header .realty-general-info .realty-features ul {
+    display: flex; }
+    .realty-detail .realty-info .realty-info--header .realty-general-info .realty-features ul li {
+      color: #757987; }
+      .realty-detail .realty-info .realty-info--header .realty-general-info .realty-features ul li:not(:first-child)::before {
+        content: " \f111";
+        font: normal normal normal 7px/1 FontAwesome;
+        vertical-align: middle;
+        margin: 0 .3rem; }
+  .realty-detail .realty-info .realty-info--header .host-link img {
+    width: 56px;
+    height: 56px; }
+
+.realty-detail .realty-info .realty-reserve {
+  border: 1px solid #dddddd;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: #0000001f 0 6px 16px;
+  margin-bottom: 2rem; }
+  .realty-detail .realty-info .realty-reserve .realty-short-info {
+    display: flex;
+    justify-content: space-between; }
+  .realty-detail .realty-info .realty-reserve .realty-reserve-button a {
+    text-align: center;
+    display: inline-block;
+    width: 100%; }
+
+.realty-detail .realty-info .realty-description {
+  margin-top: 1.5rem; }
+  .realty-detail .realty-info .realty-description .contact-host--link {
+    font-size: 1.1rem; }
+    .realty-detail .realty-info .realty-description .contact-host--link:hover {
+      color: #222; }
+
+.realty-detail .realty-info .realty-amenities {
+  margin-top: 1.5rem; }
+  .realty-detail .realty-info .realty-amenities h3 {
+    font-size: 1.5rem;
+    font-weight: 500; }
+  .realty-detail .realty-info .realty-amenities .realty-amenity {
+    color: #222; }
+
+.realty-detail .realty-info .realty-reviews {
+  margin-top: 1.5rem; }
+  .realty-detail .realty-info .realty-reviews .realty-rating {
+    margin-bottom: 1.5rem; }
+    .realty-detail .realty-info .realty-reviews .realty-rating .text-rating {
+      font-size: 1.3rem; }
+  .realty-detail .realty-info .realty-reviews .realty-review .review-author .author-profile {
+    display: flex;
+    margin-bottom: .8rem; }
+    .realty-detail .realty-info .realty-reviews .realty-review .review-author .author-profile a img {
+      width: 56px;
+      height: 56px; }
+    .realty-detail .realty-info .realty-reviews .realty-review .review-author .author-profile .review-content--right {
+      margin-left: 1rem; }
+      .realty-detail .realty-info .realty-reviews .realty-review .review-author .author-profile .review-content--right p {
+        margin-bottom: 0; }
+      .realty-detail .realty-info .realty-reviews .realty-review .review-author .author-profile .review-content--right .review-date {
+        color: #757987; }
+
+.realty-detail .realty-info .realty-location {
+  margin-top: 1.5rem; }
+  .realty-detail .realty-info .realty-location h3 {
+    font-size: 1.5rem;
+    font-weight: 500; }
+
+.realty-detail .realty-info .realty-host-info {
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: 1fr auto; }
+  .realty-detail .realty-info .realty-host-info h3 {
+    font-size: 1.5rem;
+    font-weight: 500; }
+  .realty-detail .realty-info .realty-host-info .realty-host .host-profile {
+    margin-bottom: .8rem;
+    display: flex; }
+    .realty-detail .realty-info .realty-host-info .realty-host .host-profile a img {
+      width: 56px;
+      height: 56px; }
+    .realty-detail .realty-info .realty-host-info .realty-host .host-profile .host-content--right {
+      margin-left: 1rem; }
+      .realty-detail .realty-info .realty-host-info .realty-host .host-profile .host-content--right p {
+        margin-bottom: 0; }
+      .realty-detail .realty-info .realty-host-info .realty-host .host-profile .host-content--right .host-joined-date {
+        color: #757987; }
+  .realty-detail .realty-info .realty-host-info .realty-host .host-reviews {
+    margin-bottom: 1.2rem; }
+  .realty-detail .realty-info .realty-host-info .realty-host .host-description {
+    margin-bottom: 2rem; }

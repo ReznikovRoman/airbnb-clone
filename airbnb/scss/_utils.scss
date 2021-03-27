@@ -39,10 +39,70 @@ hr.divider--short {
   z-index: 5;
 }
 
+#content {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+}
+
 .form-footer--divider {
   margin: .7rem 0 0;
 }
 
 .form-footer {
   display: flex;
+}
+
+a.button-primary {
+  background-color: $primary-color;
+  padding: .7rem 2rem;
+  color: #fff;
+  border-radius: 10px;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+a.button-light {
+  background-color: #fff;
+  color: $text-primary-color;
+  padding: .9rem 1.5rem;
+  border: 1px solid $text-primary-color;
+  border-radius: 8px;
+  transition: box-shadow 0.2s ease 0s, -ms-transform 0.1s ease 0s, -webkit-transform 0.1s ease 0s, transform 0.1s ease 0s !important;
+  font-weight: 600;
+
+  &:hover {
+    text-decoration: none;
+    background-color: $text-hover-color;
+  }
+}
+
+a.icon {
+  margin-right: .3rem;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.rating-star {
+  color: $primary-color;
+}
+
+.realty-rating {
+  .text-rating {
+    color: $text-primary-color;
+    font-weight: bolder;
+  }
+  .text-rating-count {
+    color: $text-secondary-color;
+  }
+}
+
+.realty-price {
+  .price {
+    color: $text-primary-color;
+    font-weight: bolder;
+  }
 }
