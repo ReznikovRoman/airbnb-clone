@@ -30,6 +30,12 @@ class RealtyManager(models.Manager):
         return CustomDeleteQueryset(self.model, using=self._db)
 
 
+class AvailableRealtyManager(models.Manager):
+    def get_queryset(self):
+        base_qs = super(AvailableRealtyManager, self).get_queryset()
+        return base_qs.filter(is_available=True)
+
+
 class Realty(models.Model):
     """Realty in an online marketplace (airbnb)"""
     HOUSE = 'House'
@@ -76,6 +82,7 @@ class Realty(models.Model):
     amenities = models.ManyToManyField(Amenity, related_name='realty', blank=True, verbose_name='amenities')
 
     objects = RealtyManager()
+    available = AvailableRealtyManager()
 
     class Meta:
         verbose_name = 'realty'
