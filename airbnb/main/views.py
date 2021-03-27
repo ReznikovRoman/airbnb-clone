@@ -1,13 +1,13 @@
-from django.shortcuts import render
-from django.http import HttpRequest
+from django.views import generic
+
+from .services import get_all_realty_cities
 
 
-def index(request: HttpRequest):
-    turn_on_block = False
-    return render(
-        request,
-        'index.html',
-        context={
-            'turn_on_block': turn_on_block,
-        }
-    )
+class HomePageView(generic.TemplateView):
+    """Display home page"""
+    template_name = 'index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(HomePageView, self).get_context_data(**kwargs)
+        context['cities'] = get_all_realty_cities()
+        return context

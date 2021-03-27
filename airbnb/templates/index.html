@@ -7,4 +7,28 @@
 {% endblock %}
 
 {% block content %}
+    <div class="realty-explore">
+        <h2>Explore nearby</h2>
+
+        {# TODO: Most popular cities (redis, another milestone) #}
+        <div class="row">
+            {% for city in cities %}
+                <div class="col-md-4">
+                    <div class="realty-city">
+                        <a href="{% url 'realty:all_by_city' city_slug=city|slugify %}">
+                            <span class="realty-city--image">
+                                <img src="http://placehold.it/64x64" width="64" height="64">
+                            </span>
+                            <span class="realty-city--description">
+                                <span class="realty-city--name">{{ city }}</span>
+
+                                {# TODO: Distance  #}
+                                <span class="realty-city--distance">N minute drive</span>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}
