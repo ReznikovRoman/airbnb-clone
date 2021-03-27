@@ -23,15 +23,17 @@
             </div>
         </div>
 
-        <div class="realty-images">
-            <ul id="image-carousel">
-                {% for realty_image in realty.images.all %}
-                    <li class="carousel-content">
-                        <img class="realty-image" src="{{ realty_image.image.url }}">
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
+        {% if realty.images.exists %}
+            <div class="realty-images">
+                <ul id="image-carousel">
+                    {% for realty_image in realty.images.all %}
+                        <li class="carousel-content">
+                            <img class="realty-image" src="{{ realty_image.image.url }}">
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
 
         <div class="realty-info">
             <div class="realty-info--header">
