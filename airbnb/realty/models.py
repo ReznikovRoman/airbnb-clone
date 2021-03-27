@@ -36,17 +36,14 @@ class AvailableRealtyManager(models.Manager):
         return base_qs.filter(is_available=True)
 
 
+class RealtyTypeChoices(models.TextChoices):
+    HOUSE = 'House', 'House'
+    HOTEL = 'Hotel', 'Hotel'
+    APARTMENTS = 'Apartments', 'Apartments'
+
+
 class Realty(models.Model):
     """Realty in an online marketplace (airbnb)"""
-    HOUSE = 'House'
-    HOTEL = 'Hotel'
-    APARTMENTS = 'Apartments'
-    REALTY_CHOICES = (
-        (HOUSE, 'House'),
-        (HOTEL, 'Hotel Room'),
-        (APARTMENTS, 'Apartments'),
-    )
-
     name = models.CharField(verbose_name="title", max_length=255)
     slug = models.SlugField(verbose_name="slug", max_length=255)
     description = models.TextField(verbose_name="description")
@@ -56,8 +53,8 @@ class Realty(models.Model):
     realty_type = models.CharField(
         verbose_name="type of the realty",
         max_length=31,
-        choices=REALTY_CHOICES,
-        default=APARTMENTS,
+        choices=RealtyTypeChoices.choices,
+        default=RealtyTypeChoices.APARTMENTS,
     )
     beds_count = models.PositiveSmallIntegerField(
         verbose_name='beds count',
