@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 
+from .fields import OrderField
 from addresses.models import Address
 from hosts.models import RealtyHost
 
@@ -17,7 +18,7 @@ class Amenity(models.Model):
         return self.name
 
 
-class RealtyCustomQueryset(models.query.QuerySet):
+class CustomDeleteQueryset(models.query.QuerySet):
     def delete(self):
         # have to call .delete() method when deleting a Realty queryset (e.g. on the Admin panel)
         for obj in self:
@@ -26,7 +27,7 @@ class RealtyCustomQueryset(models.query.QuerySet):
 
 class RealtyManager(models.Manager):
     def get_queryset(self):
-        return RealtyCustomQueryset(self.model, using=self._db)
+        return CustomDeleteQueryset(self.model, using=self._db)
 
 
 class Realty(models.Model):
@@ -89,6 +90,11 @@ class Realty(models.Model):
         super(Realty, self).delete(using, keep_parents)
 
 
+class RealtyImageManager(models.Manager):
+    def get_queryset(self):
+        return CustomDeleteQueryset(self.model, using=self._db)
+
+
 def get_realty_image_upload_path(instance: "RealtyImage", filename: str):
     return f"upload/images/realty/{instance.realty.id}/{filename}"
 
@@ -102,11 +108,25 @@ class RealtyImage(models.Model):
         related_name='images',
         verbose_name='realty',
     )
-    # TODO: order - custom model field (another milestone)
+    order = OrderField(blank=True, null=True, related_fields=['realty'])
+
+    objects = RealtyImageManager()
 
     class Meta:
         verbose_name = 'Realty image'
         verbose_name_plural = 'Realty images'
+        ordering = ('order',)
 
     def __str__(self):
         return f"Image #{self.id} for {self.realty.name}"
+
+    def delete(self, using=None, keep_parents=False):
+        # get realty images that go after the current one (that will be deleted)
+        next_realty_images: CustomDeleteQueryset = RealtyImage.objects.filter(realty=self.realty)[self.order+1:]
+
+        if next_realty_images.exists():
+            for realty_image in next_realty_images:
+                realty_image.order -= 1
+                realty_image.save()
+
+        super(RealtyImage, self).delete(using, keep_parents)

@@ -26,5 +26,6 @@ class RealtyAdmin(admin.ModelAdmin):
 
 @admin.register(RealtyImage)
 class RealtyImageAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'realty')
+    list_display = ('__str__', 'realty', 'order')
     search_fields = ('realty__name',)
+    list_filter = ('realty',)
