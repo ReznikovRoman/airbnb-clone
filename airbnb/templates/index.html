@@ -7,23 +7,4 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Home page</h1>
-
-    <ul>
-        <li><a href="{% url 'about' %}">About</a></li>
-        <li><a href="{% url 'contacts' %}">Contacts</a></li>
-    </ul>
-
-    {% if turn_on_block %}
-        <div class="hidden-content">
-            <p>Hidden content</p>
-        </div>
-    {% endif %}
-    <p>{{ request.user.first_name }}</p>
-
-    <p>{% current_time "%Y-%m-%d" %}</p>
-    {% with text='Hello world!' %}
-        <p>{{ text|reverse }}</p>
-    {% endwith %}
-
 {% endblock %}
