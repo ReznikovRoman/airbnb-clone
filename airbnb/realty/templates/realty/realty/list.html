@@ -13,6 +13,22 @@
             <h1>Stays in {{ city }}</h1>
         </div>
 
+        <div class="filter-row">
+            <div class="filter--dropdown" id="filters-type--dropdown">
+                <button class="button-filter" id="realty-type--btn">
+                    <span>Type of place</span>
+                </button>
+                <form action="{% url 'realty:all_by_city' city_slug=city|slugify %}" class="property-filter--form hidden" method="get">
+                    {{ realty_type_form.as_p }}
+
+                    <hr class="form-footer--divider">
+                    <div class="form-footer">
+                        <input type="submit" value="Save">
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <div class="realty">
             {% for realty in realty_list %}
                 <div class="realty-card">
@@ -67,5 +83,33 @@
 
 {% block domready %}
     $('.realty-card').before('<hr>');
+    $('.form-section').before('<hr>');
+
+    const realtyTypeBtn = $('#realty-type--btn');
+    const realtyTypeForm = realtyTypeBtn.siblings('form');
+
+
+    realtyTypeBtn.click(
+        function (e) {
+            realtyTypeForm.toggleClass('hidden');
+            e.stopPropagation();
+        }
+    );
+    realtyTypeForm.click(function (e) {
+        e.stopPropagation();
+    });
+
+    $('body').click(function () {
+        if (!realtyTypeForm.hasClass('hidden')) realtyTypeForm.toggleClass('hidden');
+    });
+
+    document.addEventListener(
+        'keydown',
+        function (event) {
+            if (event.key === 'Escape') {
+                if (!realtyTypeForm.hasClass('hidden')) realtyTypeForm.toggleClass('hidden');
+            }
+        }
+    );
 {% endblock %}
 
