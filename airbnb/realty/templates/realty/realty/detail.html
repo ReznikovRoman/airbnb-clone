@@ -25,13 +25,19 @@
 
         {% if realty.images.exists %}
             <div class="realty-images">
-                <ul id="image-carousel">
-                    {% for realty_image in realty.images.all %}
-                        <li class="carousel-content">
-                            <img class="realty-image" src="{{ realty_image.image.url }}">
-                        </li>
-                    {% endfor %}
-                </ul>
+                <div class="splide">
+                    <div class="splide__track">
+                        <ul class="splide__list image-carousel">
+                            {% for realty_image in realty.images.all %}
+                                <li class="carousel-content splide__slide">
+                                    <a href="{{ realty_image.image.url }}" data-lightbox="realty_images">
+                                        <img class="realty-image" src="{{ realty_image.image.url }}">
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
             </div>
         {% endif %}
 
@@ -140,34 +146,36 @@
     </div>
 {% endblock %}
 
+<script>
+
+</script>
+
 
 {% block domready %}
 
-    // Light Slider
-    $('#image-carousel').lightSlider({
+    // Splide slider
+    const imagesCount = parseInt({{ realty.images.count }});
+    const splideType = (imagesCount > 3) ? {type: 'slide', perPage: 1} : {perPage: imagesCount, arrows: false};
 
-        item:{% if realty.images.count < 4 %}{{ realty.images.count }}%4{% else %}4{% endif %},
-        loop:true,
-        slideMove:2,
-        easing: 'cubic-bezier(0.25, 0, 0.25, 1)',
-        speed:600,
-        responsive : [
-            {
-                breakpoint:800,
-                settings: {
-                    item:3,
-                    slideMove:1,
-                    slideMargin:6,
-                }
-            },
-            {
-                breakpoint:480,
-                settings: {
-                    item:2,
-                    slideMove:1
-                }
-            }
-        ]
+    const splideOptions = {
+        gap: '1rem',
+        rewind: false,
+        autoWidth: true,
+        height: '12rem',
+        lazyLoad: 'nearby',
+        breakpoints: {
+            height: '8rem',
+        },
+    }
+    if (imagesCount > 0) {
+        new Splide( '.splide', Object.assign(splideType, splideOptions)).mount();
+    }
+
+    // Lightbox
+    lightbox.option({
+        'showImageNumberLabel': false,
+        'maxHeight': 500,
+        'maxWidth': 500,
     });
 
 {% endblock %}

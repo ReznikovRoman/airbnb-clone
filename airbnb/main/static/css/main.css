@@ -422,15 +422,20 @@ input[type='submit'] {
 
 .realty-detail .realty-images {
   margin-bottom: 2.5rem;
-  padding-top: 1.2rem;
+  padding: 1.3rem 1.3rem 1.8rem;
   border: 1px solid #dddddd;
   border-radius: 12px;
   box-shadow: #0000001f 0 6px 16px; }
-  .realty-detail .realty-images ul#image-carousel li.carousel-content {
-    margin-right: 2rem !important; }
-    .realty-detail .realty-images ul#image-carousel li.carousel-content .realty-image {
-      width: 250px;
-      height: 200px; }
+  .realty-detail .realty-images .splide__pagination {
+    bottom: -1.2em; }
+  .realty-detail .realty-images .splide__arrow {
+    background-color: #aaadb73b; }
+  .realty-detail .realty-images .splide__pagination__page.is-active {
+    background-color: #FF385C; }
+  .realty-detail .realty-images .realty-image {
+    width: 250px;
+    height: 200px;
+    object-fit: fill; }
 
 .realty-detail .realty-info .realty-info--header {
   display: flex;
