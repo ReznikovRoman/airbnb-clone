@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+{# TODO: complete Host form  #}
+
+
+{% block title %}
+    Hosts &bull; Edit personal details &bull; Airbnb
+{% endblock %}
+
+{% block content %}
+    <h1>Personal details</h1>
+    <form action="" method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <input type="submit" value="Save">
+    </form>
+{% endblock %}

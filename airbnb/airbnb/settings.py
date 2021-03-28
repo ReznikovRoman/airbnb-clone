@@ -65,6 +65,7 @@ TEMPLATES = [
         'DIRS': [
             BASE_DIR / 'templates',
             BASE_DIR / 'realty/templates',
+            BASE_DIR / 'hosts/templates',
         ],
         'APP_DIRS': True,
         'OPTIONS': {

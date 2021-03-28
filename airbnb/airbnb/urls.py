@@ -14,6 +14,7 @@ urlpatterns = [
     path('ckeditor/', include('ckeditor_uploader.urls')),
 
     path('realty/', include('realty.urls', namespace='realty')),
+    path('hosts/', include('hosts.urls', namespace='hosts')),
     path('', include('main.urls')),
 ]
 
