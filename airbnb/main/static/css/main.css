@@ -78,6 +78,13 @@ a.icon {
   color: #222;
   font-weight: bolder; }
 
+li.page-item a.page-link {
+  color: #222; }
+
+li.page-item.active a.page-link {
+  background-color: #FF385C;
+  border-color: #FF385C; }
+
 * {
   margin: 0;
   padding: 0;

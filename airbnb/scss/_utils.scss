@@ -106,3 +106,17 @@ a.icon {
     font-weight: bolder;
   }
 }
+
+
+li.page-item {
+  a.page-link {
+    color: $text-primary-color;
+  }
+
+  &.active {
+    a.page-link {
+      background-color: $primary-color;
+      border-color: $primary-color;
+    }
+  }
+}
