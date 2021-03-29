@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 
 class RealtyHost(models.Model):
-    """Realty host"""
+    """Realty host."""
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     description = models.TextField(verbose_name='host description', blank=True)
     date_of_birth = models.DateField(verbose_name='date of birth')

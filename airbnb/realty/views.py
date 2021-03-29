@@ -5,7 +5,7 @@ from .forms import RealtyTypeForm
 
 
 class RealtyListView(generic.ListView):
-    """Display all realty objects"""
+    """Display all realty objects."""
     model = Realty
     template_name = 'realty/realty/list.html'
     paginate_by = 3
@@ -41,6 +41,6 @@ class RealtyListView(generic.ListView):
 
 
 class RealtyDetailView(generic.DetailView):
-    """Display single Realty"""
+    """Display a single Realty."""
     model = Realty
     template_name = 'realty/realty/detail.html'

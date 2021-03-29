@@ -5,7 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 class OrderField(models.PositiveSmallIntegerField):
-    """Order field
+    """Order field.
 
     Attributes:
         related_fields (Optional[List[str]]): fields, with the respect to which the order is calculated
@@ -25,7 +25,7 @@ class OrderField(models.PositiveSmallIntegerField):
                     # get all values of 'related_fields' (e.g. {'realty': '<Realty object>'}
                     related_fields = {field: getattr(model_instance, field) for field in self.related_fields}
 
-                    # get all models instances filtered by the given related fields
+                    # get all model instances filtered by the given related fields
                     model_instances = model_instances.filter(**related_fields)
 
                 last_item = model_instances.latest(self.attname)  # trying to get the last item (e.g. RealtyImage)

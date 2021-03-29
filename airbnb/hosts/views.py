@@ -10,7 +10,7 @@ from .models import RealtyHost
 
 
 class HostDetailsUpdateView(LoginRequiredMixin, generic.UpdateView):
-    """Temporary View for updating host's details"""
+    """Temporary View for updating host's details."""
     model = RealtyHost
     form_class = HostDetailsForm
     template_name = 'hosts/host/form.html'

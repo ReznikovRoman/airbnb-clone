@@ -9,7 +9,7 @@ from .models import RealtyHost
 
 
 class HostDetailsForm(forms.ModelForm):
-    """Temporary Host details form for issue-4.2"""
+    """Temporary Host details form."""
 
     class Meta:
         model = RealtyHost

@@ -7,7 +7,7 @@ from hosts.models import RealtyHost
 
 
 class Amenity(models.Model):
-    """Realty amenity"""
+    """Realty amenity."""
     name = models.CharField(verbose_name='name', max_length=100)
 
     class Meta:
@@ -43,7 +43,7 @@ class RealtyTypeChoices(models.TextChoices):
 
 
 class Realty(models.Model):
-    """Realty in an online marketplace (airbnb)"""
+    """Realty in an online marketplace (airbnb)."""
     name = models.CharField(verbose_name="title", max_length=255)
     slug = models.SlugField(verbose_name="slug", max_length=255)
     description = models.TextField(verbose_name="description")
@@ -104,7 +104,7 @@ def get_realty_image_upload_path(instance: "RealtyImage", filename: str):
 
 
 class RealtyImage(models.Model):
-    """Image of a realty"""
+    """Image of a realty."""
     image = models.ImageField(upload_to=get_realty_image_upload_path, verbose_name='image')
     realty = models.ForeignKey(
         Realty,

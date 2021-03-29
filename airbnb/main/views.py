@@ -6,12 +6,12 @@ from .constants import DISPLAYED_CITIES_COUNT
 
 
 class HomePageView(generic.TemplateView):
-    """Display home page"""
+    """Display home page."""
     template_name = 'index.html'
 
     def get_context_data(self, **kwargs):
         context = super(HomePageView, self).get_context_data(**kwargs)
 
-        # TODO: get most popular cities (by views, о - Redis, sorted set (another milestone)
+        # TODO: get most popular cities (by views + booking count, - Redis, sorted set (another milestone)
         context['popular_cities']: QuerySet = get_all_realty_cities()[:DISPLAYED_CITIES_COUNT]
         return context
