@@ -125,7 +125,8 @@ ul {
 input[type='checkbox'] {
   padding: 1rem;
   cursor: pointer;
-  position: relative; }
+  position: relative;
+  margin-right: .7rem; }
   input[type='checkbox']:before {
     content: "";
     display: block;
@@ -305,8 +306,6 @@ input[type='submit'] {
         .realty-list .filter-row .filter--dropdown .property-filter--form ul#id_realty_type li label {
           display: flex;
           align-items: center; }
-          .realty-list .filter-row .filter--dropdown .property-filter--form ul#id_realty_type li label input {
-            margin-right: .7rem; }
         .realty-list .filter-row .filter--dropdown .property-filter--form ul#id_realty_type li:not(:first-child) {
           margin-top: .5rem; }
     .realty-list .filter-row .filter--dropdown .button-filter {

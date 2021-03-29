@@ -16,4 +16,8 @@ class RealtyForm(forms.ModelForm):
     class Meta:
         model = Realty
         fields = ('name', 'realty_type', 'description',
-                  'beds_count', 'max_guests_count', 'price_per_night')
+                  'beds_count', 'max_guests_count', 'price_per_night',
+                  'amenities')
+        widgets = {
+            'amenities': forms.CheckboxSelectMultiple(),
+        }

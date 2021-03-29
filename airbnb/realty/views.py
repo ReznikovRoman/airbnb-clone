@@ -97,7 +97,10 @@ class RealtyEditView(LoginRequiredMixin,
                 new_realty.location = new_address
                 new_realty.save()
 
+                realty_form.save_m2m()  # save many to many fields
+
                 return redirect('realty:all')
+
         return self.render_to_response(
             context={
                 'realty_form': realty_form,

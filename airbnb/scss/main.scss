@@ -54,6 +54,7 @@ input[type='checkbox'] {
   padding: 1rem;
   cursor: pointer;
   position: relative;
+  margin-right: .7rem;
 
   &:before {
     content: "";
@@ -330,10 +331,6 @@ input[type='submit'] {
           label {
             display: flex;
             align-items: center;
-
-            input {
-              margin-right: .7rem;
-            }
           }
 
           &:not(:first-child) {
