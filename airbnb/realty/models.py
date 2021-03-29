@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.text import slugify
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 from .fields import OrderField
@@ -88,6 +89,10 @@ class Realty(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Realty, self).save(*args, **kwargs)
     
     def delete(self, using=None, keep_parents=False):
         self.location.delete()
