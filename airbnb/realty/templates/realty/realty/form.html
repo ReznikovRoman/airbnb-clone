@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+
+{% block title %}
+    {% if is_creating_new_realty %}
+        New realty
+    {% else %}
+        Edit realty
+    {% endif %}
+     &bull; Airbnb
+{% endblock %}
+
+{% block content %}
+    {% if is_creating_new_realty %}
+        <h1>Create new realty</h1>
+    {% else %}
+        <h1>Edit your realty</h1>
+    {% endif %}
+
+
+    <form action="" method="post">
+        {% csrf_token %}
+        {% bootstrap_form realty_form %}
+        {% bootstrap_form address_form %}
+        <input type="submit" value="Save">
+    </form>
+{% endblock %}
+
