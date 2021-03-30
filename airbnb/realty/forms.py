@@ -1,7 +1,7 @@
 from django import forms
 
 from .models import Realty, RealtyImage, RealtyTypeChoices
-from .constants import MAX_REALTY_IMAGES_COUNT
+from .constants import (MAX_REALTY_IMAGES_COUNT, MAX_BEDS_COUNT, MAX_GUESTS_COUNT)
 
 
 class RealtyTypeForm(forms.Form):
@@ -21,6 +21,22 @@ class RealtyForm(forms.ModelForm):
                   'amenities')
         widgets = {
             'amenities': forms.CheckboxSelectMultiple(),
+            'beds_count': forms.TextInput(attrs={
+                'type': 'number',
+                'min': 1,
+                'max': str(MAX_BEDS_COUNT),
+                'class': 'input-number--custom-field',
+            }),
+            'max_guests_count': forms.TextInput(attrs={
+                'type': 'number',
+                'min': 1,
+                'max': str(MAX_GUESTS_COUNT),
+                'class': 'input-number--custom-field',
+            }),
+            'price_per_night': forms.TextInput(attrs={
+                'type': 'number',
+                'min': 1,
+            }),
         }
 
 
