@@ -1,6 +1,7 @@
 from django import forms
 
-from .models import Realty, RealtyTypeChoices
+from .models import Realty, RealtyImage, RealtyTypeChoices
+from .constants import MAX_REALTY_IMAGES_COUNT
 
 
 class RealtyTypeForm(forms.Form):
@@ -21,3 +22,27 @@ class RealtyForm(forms.ModelForm):
         widgets = {
             'amenities': forms.CheckboxSelectMultiple(),
         }
+
+
+class RealtyImageForm(forms.ModelForm):
+    """Form for creating RealtyImages."""
+    class Meta:
+        model = RealtyImage
+        fields = ('image',)
+        widgets = {
+            'image': forms.FileInput(),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(RealtyImageForm, self).__init__(*args, **kwargs)
+        self.fields['image'].label = 'Image'
+
+
+RealtyImageFormSet = forms.modelformset_factory(
+    RealtyImage,
+    form=RealtyImageForm,
+    can_delete=False,
+    max_num=MAX_REALTY_IMAGES_COUNT,
+    validate_max=MAX_REALTY_IMAGES_COUNT,
+    extra=MAX_REALTY_IMAGES_COUNT,
+)

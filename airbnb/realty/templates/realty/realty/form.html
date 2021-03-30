@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load bootstrap4 %}
 
 
@@ -19,11 +20,85 @@
     {% endif %}
 
 
-    <form action="" method="post">
+    <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
+
         {% bootstrap_form realty_form %}
         {% bootstrap_form address_form %}
+
+        <div class="image-form-group">
+            {{ realty_image_formset.management_form }}
+
+            {% for image_form in realty_image_formset %}
+                {{ image_form.id }}
+                <div class="image-upload">
+                    {{ image_form.as_p }}
+                    <div class="image-preview">
+                        {% if is_new_realty %}
+                            <div id="image-{{ forloop.counter0 }}"
+                                 style='background: url("{% static 'realty/images/default/realty_image_placeholder.png' %}")'>
+                            </div>
+                        {% else %}
+                            {% for realty_image in realty_images %}
+                                {% if forloop.counter0 == forloop.parentloop.counter0 %}
+                                    <div id="image-{{ forloop.parentloop.counter0 }}"
+                                         data-id="{{ property_image.id }}"
+                                         style='background: url("{{ realty_image.image.url }}") no-repeat; background-size: 100% 100%'>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
         <input type="submit" value="Save">
     </form>
+{% endblock %}
+
+
+{% block domready %}
+
+
+    // Change label text
+    $('.image-upload p label').each(function () {
+        $(this).html($('<i class="fas fa-cloud-upload-alt"></i>'));
+    });
+
+    const imagePreviewsDom = $('.image-preview');
+    let imagesDom = $('div[id^=image-]');
+    const imageInputsDom = $('input[name*=-image]');
+
+    imagePreviewsDom.each(function (index) {
+        if (imagesDom.size !== {{ max_realty_images_count }}) {
+            if ($(this).find($('div[id^=image-]')).length !== 1) {
+                $(this).append(`<div id="image-${index}" style='background: url("{% static 'realty/images/default/realty_image_placeholder.png' %}")'></div>`);
+            }
+        }
+    });
+
+    imagesDom = $('div[id^=image-]');
+
+    function readURL(input, index) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                $(imagesDom[index]).css('background-image', 'url('+e.target.result +')');
+                $(imagesDom[index]).css('background-size', '100% 100%');
+                $(imagesDom[index]).hide();
+                $(imagesDom[index]).fadeIn(650);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    imageInputsDom.each(function (index) {
+        $(this).change(function() {
+            readURL(this, index);
+        });
+    });
+
+
 {% endblock %}
 
