@@ -23,14 +23,16 @@ class RealtyForm(forms.ModelForm):
             'amenities': forms.CheckboxSelectMultiple(),
             'beds_count': forms.TextInput(attrs={
                 'type': 'number',
-                'min': 1,
+                'min': '1',
                 'max': str(MAX_BEDS_COUNT),
+                'value': '1',
                 'class': 'input-number--custom-field',
             }),
             'max_guests_count': forms.TextInput(attrs={
                 'type': 'number',
-                'min': 1,
+                'min': '1',
                 'max': str(MAX_GUESTS_COUNT),
+                'value': '1',
                 'class': 'input-number--custom-field',
             }),
             'price_per_night': forms.TextInput(attrs={
