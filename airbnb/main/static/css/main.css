@@ -121,6 +121,8 @@ li.page-item.active a.page-link {
   border: 1px solid #b0b0b0;
   font-size: 16px;
   font-weight: 600; }
+  .input-number--subtract:hover, .input-number--add:hover {
+    border-color: #222; }
 
 .input-number--subtract {
   left: 1px;
@@ -533,9 +535,9 @@ input[type='submit'] {
     margin: 50px auto; }
     .image-form-group .image-upload p {
       position: absolute;
-      left: 0;
       z-index: 1;
-      top: -25px; }
+      top: -25px;
+      left: 10px; }
       .image-form-group .image-upload p input {
         display: none;
         width: 90%;
@@ -545,7 +547,6 @@ input[type='submit'] {
         position: absolute;
         top: -20px;
         left: 0;
-        right: 0;
         text-align: center;
         margin: auto;
         z-index: -2; }
@@ -561,7 +562,6 @@ input[type='submit'] {
         border: 1px solid transparent;
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12);
         cursor: pointer;
-        font-weight: normal;
         transition: all 0.2s ease-in-out; }
         .image-form-group .image-upload p label i {
           color: #757575;

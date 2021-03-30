@@ -165,6 +165,10 @@ li.page-item {
   border: 1px solid rgb(176, 176, 176);
   font-size: 16px;
   font-weight: 600;
+
+  &:hover {
+    border-color: $text-primary-color;
+  }
 }
 .input-number--subtract {
   left: 1px;
