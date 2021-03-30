@@ -1,9 +1,10 @@
 from typing import Optional
 
+from braces.views import JsonRequestResponseMixin
+
 from django.views import generic
 from django.http import HttpRequest
 from django.shortcuts import get_object_or_404, reverse, redirect
-from django.db.models import QuerySet
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from addresses.forms import AddressForm
@@ -12,7 +13,8 @@ from hosts.models import RealtyHost
 from .models import Realty, RealtyImage, CustomDeleteQueryset
 from .forms import RealtyForm, RealtyTypeForm, RealtyImageFormSet
 from .constants import MAX_REALTY_IMAGES_COUNT
-from .services.images import get_realty_images_by_realty_id
+from .services.images import get_realty_images_by_realty_id, update_images_order
+from .services.ordering import convert_response_to_orders
 
 
 class RealtyListView(generic.ListView):
@@ -132,6 +134,20 @@ class RealtyEditView(LoginRequiredMixin,
                 'is_creating_new_realty': self.is_creating_new_realty,
                 'realty_images': self.realty_images,
                 'max_realty_images_count': MAX_REALTY_IMAGES_COUNT,
+            }
+        )
+
+
+class RealtyImageOrderView(LoginRequiredMixin,
+                           JsonRequestResponseMixin,
+                           generic.View):
+    """View for changing RealtyImages' order"""
+    def post(self, request, *args, **kwargs):
+        response = list(self.request_json.items())
+        update_images_order(new_ordering=convert_response_to_orders(response))
+        return self.render_json_response(
+            context_dict={
+                'saved': 'OK',
             }
         )
 

@@ -42,7 +42,7 @@
                             {% for realty_image in realty_images %}
                                 {% if forloop.counter0 == forloop.parentloop.counter0 %}
                                     <div id="image-{{ forloop.parentloop.counter0 }}"
-                                         data-id="{{ property_image.id }}"
+                                         data-id="{{ realty_image.id }}"
                                          style='background: url("{{ realty_image.image.url }}") no-repeat; background-size: 100% 100%'>
                                     </div>
                                 {% endif %}
@@ -59,8 +59,6 @@
 
 
 {% block domready %}
-
-
 
 
     // Change label text
@@ -149,7 +147,29 @@
     });
 
 
+    // js - sortable
+    {% if not is_creating_new_realty %}
+        $('.image-form-group').sortable({
+            stop: function (event, ui) {
+                const imagesOrder = {};
+                $('.image-form-group div[id^=image-]').each(function () {
 
+                    const images = $('.image-upload');
+                    const currentImage = $(this).closest('.image-preview').closest('.image-upload');
+
+                    // associate the image's id with its order
+                    imagesOrder[$(this).data('id')] = images.index(currentImage);
+                });
+                $.ajax({
+                    type: 'POST',
+                    url: "{% url 'realty:image_change_order' %}",
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    data: JSON.stringify(imagesOrder)
+                });
+            }
+        });
+    {% endif %}
 
 {% endblock %}
 
