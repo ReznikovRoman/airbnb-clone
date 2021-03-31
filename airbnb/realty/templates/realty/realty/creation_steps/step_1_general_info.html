@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+
+{% block title %}
+    Create new realty &bull; General info &bull; Airbnb
+{% endblock %}
+
+
+{% block content %}
+    <h1>Add new realty | General info</h1>
+
+    <form action="" method="post">
+        {% csrf_token %}
+        {% bootstrap_form realty_form %}
+
+        <div class="form-buttons">
+            <input type="submit" value="Next" class="button">
+        </div>
+    </form>
+{% endblock %}

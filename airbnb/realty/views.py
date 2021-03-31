@@ -9,20 +9,25 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from addresses.forms import AddressForm
 from addresses.models import Address
-from hosts.models import RealtyHost
-from .models import Realty, RealtyImage, CustomDeleteQueryset
-from .forms import RealtyForm, RealtyTypeForm, RealtyImageFormSet
+from common.session_handler import SessionHandler
 from .constants import MAX_REALTY_IMAGES_COUNT
+from hosts.models import RealtyHost
+from common.services import get_field_names_from_form
+from .models import Realty, RealtyImage, CustomDeleteQueryset
+from .mixins import RealtySessionDataRequiredMixin
+from .forms import (RealtyForm, RealtyTypeForm, RealtyImageFormSet,
+                    RealtyGeneralInfoForm, RealtyDescriptionForm, )
 from .services.images import get_realty_images_by_realty_id, update_images_order
 from .services.ordering import convert_response_to_orders
+from .services.realty import get_amenities_from_session
 
 
 class RealtyListView(generic.ListView):
-    """Display all realty objects."""
+    """Display all available realty objects."""
     model = Realty
     template_name = 'realty/realty/list.html'
     paginate_by = 3
-    realty_type_form = None
+    realty_type_form: RealtyTypeForm = None
 
     def dispatch(self, request, *args, **kwargs):
         # TODO: get initial form data from session
@@ -54,39 +59,77 @@ class RealtyListView(generic.ListView):
 
 
 class RealtyDetailView(generic.DetailView):
-    """Display a single Realty."""
+    """Display a single available Realty."""
     model = Realty
     template_name = 'realty/realty/detail.html'
+    queryset = Realty.available.all()
 
 
 class RealtyEditView(LoginRequiredMixin,
+                     RealtySessionDataRequiredMixin,
                      generic.base.TemplateResponseMixin,
                      generic.View):
     """View for creating or updating a single Realty."""
     template_name = 'realty/realty/form.html'
-    realty: Optional[Realty] = None
-    address: Optional[Address] = None
-    realty_images: Optional[CustomDeleteQueryset[RealtyImage]] = None
+
+    realty: Realty = None
+    address: Address = None
+    realty_images: CustomDeleteQueryset[RealtyImage] = None
+
     is_creating_new_realty: bool = True  # True if we are creating new Realty, False otherwise
+    realty_form: RealtyForm = None
+    address_form: AddressForm = None
+    realty_address_initial: dict = None
+    realty_info_initial: dict = None
+
+    session_handler: SessionHandler = None
 
     def dispatch(self, request: HttpRequest, realty_id: Optional[int] = None, *args, **kwargs):
+        self.session_handler = SessionHandler(
+            session=request.session,
+            keys_collector_name='realty_form_keys',
+            session_prefix='realty',
+        )
+
         if realty_id:  # if we are editing an existing Realty object
             self.realty = get_object_or_404(Realty, id=realty_id)
             self.address = self.realty.location
             self.is_creating_new_realty = False
             self.realty_images = self.realty.images.all()
+            self.required_session_data = []
+        else:
+            self.required_session_data = ('realty_name', 'realty_country', 'realty_description')
+
+            self.realty_info_initial = self.session_handler.create_initial_dict_with_session_data(
+                initial_keys=get_field_names_from_form(RealtyForm)
+            )
+            # handle m2m field
+            self.realty_info_initial['amenities'] = get_amenities_from_session(self.session_handler)
+
+            self.realty_address_initial = self.session_handler.create_initial_dict_with_session_data(
+                get_field_names_from_form(AddressForm)
+            )
+
+        self.realty_form = RealtyForm(
+            data=request.POST or None,
+            instance=self.realty,
+            initial=self.realty_info_initial,
+        )
+        self.address_form = AddressForm(
+            data=request.POST or None,
+            instance=self.address,
+            initial=self.realty_address_initial,
+        )
 
         return super(RealtyEditView, self).dispatch(request, realty_id, *args, **kwargs)
 
     def get(self, request: HttpRequest, realty_id: Optional[int] = None, *args, **kwargs):
-        realty_form = RealtyForm(instance=self.realty)
-        address_form = AddressForm(instance=self.address)
         realty_image_formset = RealtyImageFormSet(queryset=get_realty_images_by_realty_id(realty_id))
 
         return self.render_to_response(
             context={
-                'realty_form': realty_form,
-                'address_form': address_form,
+                'realty_form': self.realty_form,
+                'address_form': self.address_form,
                 'realty_image_formset': realty_image_formset,
                 'is_creating_new_realty': self.is_creating_new_realty,
                 'realty_images': self.realty_images,
@@ -95,26 +138,29 @@ class RealtyEditView(LoginRequiredMixin,
         )
 
     def post(self, request: HttpRequest, realty_id: Optional[int] = None, *args, **kwargs):
-        realty_form = RealtyForm(data=request.POST, instance=self.realty)
-        address_form = AddressForm(data=request.POST, instance=self.address)
         realty_image_formset = RealtyImageFormSet(
             data=request.POST,
             files=request.FILES,
             queryset=get_realty_images_by_realty_id(realty_id),
         )
 
-        if realty_form.is_valid():
-            new_realty: Realty = realty_form.save(commit=False)
+        if self.realty_form.is_valid():
+            new_realty: Realty = self.realty_form.save(commit=False)
 
             # TODO: Set realty host properly (User registration, permissions - another milestone)
             new_realty.host = RealtyHost.objects.first()
 
-            if address_form.is_valid():
-                new_address: Address = address_form.save()
+            if self.address_form.is_valid():
+                new_address: Address = self.address_form.save()
                 new_realty.location = new_address
+
+                if not realty_id:  # if it is not a new Realty
+                    self.session_handler.flush_keys_collector()
+                    new_realty.is_available = False
+
                 new_realty.save()
 
-                realty_form.save_m2m()  # save many to many fields
+                self.realty_form.save_m2m()  # save many to many fields
 
                 if realty_image_formset.is_valid():
                     valid_image_formsets = [image_formset for image_formset in realty_image_formset
@@ -124,12 +170,13 @@ class RealtyEditView(LoginRequiredMixin,
                         new_image.realty = new_realty
                         new_image.save()
 
-                return redirect(reverse('realty:detail', kwargs={'slug': new_realty.slug}))
+            # TODO: Redirect to Host's listings dashboard
+            return redirect(reverse('realty:all'))
 
         return self.render_to_response(
             context={
-                'realty_form': realty_form,
-                'address_form': address_form,
+                'realty_form': self.realty_form,
+                'address_form': self.address_form,
                 'realty_image_formset': realty_image_formset,
                 'is_creating_new_realty': self.is_creating_new_realty,
                 'realty_images': self.realty_images,
@@ -138,10 +185,145 @@ class RealtyEditView(LoginRequiredMixin,
         )
 
 
+class RealtyGeneralInfoEditView(LoginRequiredMixin,
+                                generic.base.TemplateResponseMixin,
+                                generic.View):
+    """View for editing Realty general info (part of the multi-step form).
+
+    Step-1
+    """
+    template_name = 'realty/realty/creation_steps/step_1_general_info.html'
+    realty_form: Optional[RealtyGeneralInfoForm] = None
+    session_handler: SessionHandler = None
+
+    def dispatch(self, request: HttpRequest, *args, **kwargs):
+        self.session_handler = SessionHandler(
+            session=request.session,
+            keys_collector_name='realty_form_keys',
+            session_prefix='realty',
+        )
+        initial = self.session_handler.create_initial_dict_with_session_data(
+            initial_keys=get_field_names_from_form(RealtyGeneralInfoForm)
+        )
+        # handle m2m field
+        initial['amenities'] = get_amenities_from_session(self.session_handler)
+
+        self.realty_form = RealtyGeneralInfoForm(request.POST or None, initial=initial)
+        return super(RealtyGeneralInfoEditView, self).dispatch(request, *args, **kwargs)
+
+    def get(self, request: HttpRequest, *args, **kwargs):
+        return self.render_to_response(
+            context={
+                'realty_form': self.realty_form,
+            }
+        )
+
+    def post(self, request: HttpRequest, *args, **kwargs):
+        if self.realty_form.is_valid():
+            self.session_handler.update_values_with_given_data(self.realty_form.cleaned_data)
+
+            # 'serialize' m2m field
+            self.session_handler.add_new_item('amenities',
+                                              [amenity.name for amenity in self.realty_form.cleaned_data['amenities']])
+
+            return redirect(reverse('realty:new_realty_location'))
+        return self.render_to_response(
+            context={
+                'realty_form': self.realty_form,
+            }
+        )
+
+
+class RealtyLocationEditView(LoginRequiredMixin,
+                             RealtySessionDataRequiredMixin,
+                             generic.base.TemplateResponseMixin,
+                             generic.View):
+    """View for editing Realty location (part of the multi-step form).
+
+    Step-2
+    """
+    required_session_data = ('realty_name',)
+    template_name = 'realty/realty/creation_steps/step_2_location.html'
+    location_form: AddressForm = None
+    session_handler: SessionHandler = None
+
+    def dispatch(self, request: HttpRequest, *args, **kwargs):
+        self.session_handler = SessionHandler(
+            session=request.session,
+            keys_collector_name='realty_form_keys',
+            session_prefix='realty',
+        )
+        initial = self.session_handler.create_initial_dict_with_session_data(get_field_names_from_form(AddressForm))
+        self.location_form = AddressForm(request.POST or None, initial=initial)
+        return super(RealtyLocationEditView, self).dispatch(request, *args, **kwargs)
+
+    def get(self, request: HttpRequest, *args, **kwargs):
+        return self.render_to_response(
+            context={
+                'location_form': self.location_form
+            }
+        )
+
+    def post(self, request: HttpRequest, *args, **kwargs):
+        if self.location_form.is_valid():
+            self.session_handler.update_values_with_given_data(self.location_form.cleaned_data)
+            return redirect(reverse('realty:new_realty_description'))
+
+        return self.render_to_response(
+            context={
+                'location_form': self.location_form,
+            }
+        )
+
+
+class RealtyDescriptionEditView(LoginRequiredMixin,
+                                RealtySessionDataRequiredMixin,
+                                generic.base.TemplateResponseMixin,
+                                generic.View):
+    """View for editing realty description (part of multi-step form).
+
+    Step-3
+    """
+    required_session_data = ('realty_name', 'realty_country')
+    template_name = 'realty/realty/creation_steps/step_3_description.html'
+    description_form: RealtyDescriptionForm = None
+    session_handler: SessionHandler = None
+
+    def dispatch(self, request: HttpRequest, *args, **kwargs):
+        self.session_handler = SessionHandler(
+            session=request.session,
+            keys_collector_name='realty_form_keys',
+            session_prefix='realty',
+        )
+        initial = self.session_handler.create_initial_dict_with_session_data(
+            initial_keys=get_field_names_from_form(RealtyDescriptionForm)
+        )
+        self.description_form = RealtyDescriptionForm(request.POST or None, initial=initial)
+        return super(RealtyDescriptionEditView, self).dispatch(request, *args, **kwargs)
+
+    def get(self, request: HttpRequest, *args, **kwargs):
+        return self.render_to_response(
+            context={
+                'description_form': self.description_form,
+            }
+        )
+
+    def post(self, request: HttpRequest, *args, **kwargs):
+        if self.description_form.is_valid():
+            self.session_handler.update_values_with_given_data(self.description_form.cleaned_data)
+            return redirect(reverse('realty:new_realty'))
+        return self.render_to_response(
+            context={
+                'description_form': self.description_form,
+            }
+        )
+
+
 class RealtyImageOrderView(LoginRequiredMixin,
                            JsonRequestResponseMixin,
                            generic.View):
-    """View for changing RealtyImages' order"""
+    """View for changing RealtyImages' order."""
+
     def post(self, request, *args, **kwargs):
         response = list(self.request_json.items())
         update_images_order(new_ordering=convert_response_to_orders(response))
@@ -150,38 +332,3 @@ class RealtyImageOrderView(LoginRequiredMixin,
                 'saved': 'OK',
             }
         )
-
-
-'''
-
-Realty multi-step form (saving data in the session)
-
-Step - 1:
-    - Name/Title
-    - Property type
-
-Step - 2:
-    - Beds count
-    - Max guests count
-    - Price per night
-
-Step - 3:
-    - Amenities (inline formset):
-        - Amenity name (select from multiple choices)
-
-Step - 4:
-    - location (inline formset):
-        - Country
-        - City
-        - Street
-
-Step - 5:
-    - Realty description
-    
---- SAVE REALTY ---
-
-Step - 6:
-    - Realty images (inline formset), max - 6 images:
-        - Image - ajax form submission
-        
-'''

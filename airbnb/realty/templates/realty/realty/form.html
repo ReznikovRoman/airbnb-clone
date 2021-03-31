@@ -19,7 +19,6 @@
         <h1>Edit your realty</h1>
     {% endif %}
 
-
     <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
@@ -34,7 +33,7 @@
                 <div class="image-upload">
                     {{ image_form.as_p }}
                     <div class="image-preview">
-                        {% if is_new_realty %}
+                        {% if is_creating_new_realty %}
                             <div id="image-{{ forloop.counter0 }}"
                                  style='background: url("{% static 'realty/images/default/realty_image_placeholder.png' %}")'>
                             </div>
@@ -53,7 +52,12 @@
             {% endfor %}
         </div>
 
-        <input type="submit" value="Save">
+        <div class="form-buttons">
+            {% if is_creating_new_realty %}
+                <a href="{% url 'realty:new_realty_description' %}" class="button button-dark">Previous</a>
+            {% endif %}
+            <input type="submit" value="Save" class="button">
+        </div>
     </form>
 {% endblock %}
 
@@ -96,53 +100,6 @@
     imageInputsDom.each(function (index) {
         $(this).change(function() {
             readURL(this, index);
-        });
-    });
-
-    const customNumberInputs = $('.input-number--custom-field');
-    customNumberInputs.each(function () {
-        $(this).wrap('<div class="input-number--custom-wrapper"></div>');
-        $(this).parent().parent().addClass('flex--between');
-
-        $(this).before('<button class="input-number--subtract" type="button">-</button>');
-        $(this).after('<button class="input-number--add" type="button">+</button>');
-    });
-
-
-    const realtyFilterButtonsSubtract = $('.input-number--subtract');
-    const realtyFilterButtonsAdd = $('.input-number--add');
-    const realtyFilterInputs = $('.input-number--custom-wrapper input');
-
-
-    function getInputDataFromContext(context) {
-        const inputEl = $(context).siblings('input');
-        return {
-            element: inputEl,
-            value: parseInt(inputEl.val()),
-            minValue: inputEl.attr('min'),
-            maxValue: inputEl.attr('max'),
-        };
-    }
-
-    realtyFilterButtonsSubtract.each(function () {
-        $(this).click(function () {
-            const inputData = getInputDataFromContext($(this));
-            const inputValue = inputData["value"];
-
-            if (inputValue - 1 > inputData["minValue"] - 1) inputData["element"].val(inputValue - 1);
-        });
-    });
-    realtyFilterButtonsAdd.each(function () {
-        $(this).click(function () {
-            const inputData = getInputDataFromContext($(this));
-            const inputValue = inputData["value"];
-
-            if (inputValue + 1 <= inputData["maxValue"]) inputData["element"].val(inputValue + 1);
-        });
-    });
-    realtyFilterInputs.each(function () {
-        $(this).keypress(function (e) {
-            return false;
         });
     });
 
