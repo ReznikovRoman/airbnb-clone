@@ -30,7 +30,6 @@ class RealtyListView(generic.ListView):
     realty_type_form: RealtyTypeForm = None
 
     def dispatch(self, request, *args, **kwargs):
-        # TODO: get initial form data from session
         self.realty_type_form = RealtyTypeForm()
         return super(RealtyListView, self).dispatch(request, *args, **kwargs)
 
