@@ -47,6 +47,16 @@ a.button-primary {
   a.button-primary:hover {
     text-decoration: none; }
 
+input[type='submit'], a.button-dark {
+  margin-top: 1.3rem;
+  padding: .3rem .8rem;
+  background-color: #222;
+  color: #fff;
+  border: none;
+  border-radius: 10px; }
+  input[type='submit']:hover, a.button-dark:hover {
+    background-color: #000; }
+
 a.button-light {
   background-color: #fff;
   color: #222;
@@ -58,6 +68,16 @@ a.button-light {
   a.button-light:hover {
     text-decoration: none;
     background-color: #aaadb73b; }
+
+.form-buttons {
+  display: flex; }
+  .form-buttons .button {
+    padding: .5rem 1rem;
+    text-decoration: none; }
+    .form-buttons .button:hover {
+      text-decoration: none; }
+    .form-buttons .button:not(:last-child) {
+      margin-right: .8rem; }
 
 a.icon {
   margin-right: .3rem; }
@@ -197,15 +217,11 @@ input[type='checkbox'] {
     top: 2px;
     left: 7px; }
 
-input[type='submit'] {
-  margin-top: 1.3rem;
-  padding: .3rem .8rem;
-  background-color: #222;
-  color: #fff;
-  border: none;
-  border-radius: 10px; }
-  input[type='submit']:hover {
-    background-color: #000; }
+.content-block {
+  margin-top: 1.5rem; }
+
+form input:focus, form select:focus, form textarea:focus {
+  border-color: #222 !important; }
 
 .navbar {
   padding-bottom: .7rem;

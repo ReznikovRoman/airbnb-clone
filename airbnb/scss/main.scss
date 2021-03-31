@@ -82,16 +82,13 @@ input[type='checkbox'] {
   }
 }
 
-input[type='submit'] {
-  margin-top: 1.3rem;
-  padding: .3rem .8rem;
-  background-color: $text-primary-color;
-  color: #fff;
-  border: none;
-  border-radius: 10px;
+.content-block {
+  margin-top: 1.5rem;
+}
 
-  &:hover {
-    background-color: #000;
+form {
+  input:focus, select:focus, textarea:focus {
+    border-color: $text-primary-color !important;
   }
 }
 

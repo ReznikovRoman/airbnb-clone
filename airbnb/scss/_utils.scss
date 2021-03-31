@@ -63,6 +63,19 @@ a.button-primary {
   }
 }
 
+input[type='submit'], a.button-dark {
+  margin-top: 1.3rem;
+  padding: .3rem .8rem;
+  background-color: $text-primary-color;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+
+  &:hover {
+    background-color: #000;
+  }
+}
+
 a.button-light {
   background-color: #fff;
   color: $text-primary-color;
@@ -75,6 +88,23 @@ a.button-light {
   &:hover {
     text-decoration: none;
     background-color: $text-hover-color;
+  }
+}
+
+.form-buttons {
+  display: flex;
+
+  .button {
+    padding: .5rem 1rem;
+    text-decoration: none;
+    
+    &:hover {
+      text-decoration: none;
+    }
+
+    &:not(:last-child) {
+      margin-right: .8rem;
+    }
   }
 }
 
