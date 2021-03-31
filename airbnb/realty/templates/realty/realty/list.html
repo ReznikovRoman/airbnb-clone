@@ -18,7 +18,7 @@
                 <button class="button-filter" id="realty-type--btn">
                     <span>Type of place</span>
                 </button>
-                <form action="{% url 'realty:all_by_city' city_slug=city|slugify %}" class="property-filter--form hidden" method="get">
+                <form action="{% url 'realty:all_by_city' city_slug=city|slugify %}" class="realty-filter--form hidden" method="get">
                     {{ realty_type_form.as_p }}
 
                     <hr class="form-footer--divider">
@@ -80,8 +80,21 @@
     </div>
 {% endblock %}
 
-
 {% block domready %}
+
+
+    // Realty filter form - checkboxes
+    const filterCheckboxes = $('.realty-filter--form').find('input[type="checkbox"]');
+
+    const search = window.location.search.slice(1).split('&');
+    const realtyTypes = [];
+    search.forEach(realtyType => realtyTypes.push(realtyType.split('=')[1]));
+
+    filterCheckboxes.each(function () {
+        if (realtyTypes.indexOf($(this).val()) >= 0) $(this).prop('checked', true);
+    });
+
+
     $('.realty-card').before('<hr>');
     $('.form-section').before('<hr>');
 
@@ -111,5 +124,6 @@
             }
         }
     );
+
 {% endblock %}
 

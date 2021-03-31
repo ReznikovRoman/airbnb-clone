@@ -319,7 +319,7 @@ form input:focus, form select:focus, form textarea:focus {
   .realty-list .filter-row .filter--dropdown {
     display: inline-block;
     position: relative; }
-    .realty-list .filter-row .filter--dropdown .property-filter--form {
+    .realty-list .filter-row .filter--dropdown .realty-filter--form {
       position: absolute;
       margin-top: .7rem;
       background-color: #fff;
@@ -327,14 +327,14 @@ form input:focus, form select:focus, form textarea:focus {
       border: 0.5px solid rgba(118, 118, 118, 0.28);
       border-radius: 10px;
       z-index: 2; }
-      .realty-list .filter-row .filter--dropdown .property-filter--form p:first-child {
+      .realty-list .filter-row .filter--dropdown .realty-filter--form p:first-child {
         display: none; }
-      .realty-list .filter-row .filter--dropdown .property-filter--form ul#id_realty_type li {
+      .realty-list .filter-row .filter--dropdown .realty-filter--form ul#id_realty_type li {
         display: flex; }
-        .realty-list .filter-row .filter--dropdown .property-filter--form ul#id_realty_type li label {
+        .realty-list .filter-row .filter--dropdown .realty-filter--form ul#id_realty_type li label {
           display: flex;
           align-items: center; }
-        .realty-list .filter-row .filter--dropdown .property-filter--form ul#id_realty_type li:not(:first-child) {
+        .realty-list .filter-row .filter--dropdown .realty-filter--form ul#id_realty_type li:not(:first-child) {
           margin-top: .5rem; }
     .realty-list .filter-row .filter--dropdown .button-filter {
       margin-right: .6rem;
