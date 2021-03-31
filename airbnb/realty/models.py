@@ -45,7 +45,7 @@ class RealtyTypeChoices(models.TextChoices):
 
 class Realty(models.Model):
     """Realty in an online marketplace (airbnb)."""
-    name = models.CharField(verbose_name="title", max_length=255)
+    name = models.CharField(verbose_name="name", max_length=255)
     slug = models.SlugField(verbose_name="slug", max_length=255)
     description = models.TextField(verbose_name="description")
     is_available = models.BooleanField(default=True)
