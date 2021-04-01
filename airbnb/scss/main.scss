@@ -319,9 +319,14 @@ form {
 
       .realty-card--image {
         margin-right: 1rem;
+        width: 300px;
+        height: 200px;
 
         img {
           border-radius: 12px;
+          width: 300px;
+          height: 200px;
+          object-fit: fill;
         }
       }
 
