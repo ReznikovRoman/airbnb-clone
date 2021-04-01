@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django_inlinecss',
     'ckeditor',
     'ckeditor_uploader',
+    'sorl.thumbnail',
 
     'main.apps.MainConfig',
     'addresses.apps.AddressesConfig',
