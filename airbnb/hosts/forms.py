@@ -1,19 +1,29 @@
 from django import forms
 from django.utils import timezone
 from django.core.exceptions import ValidationError
+from django.contrib.auth.models import User
 
 from .models import RealtyHost
 
 
 # TODO: complete Host forms
+# TODO: Fields from custom user model (AbstractUser, another milestone)
+
+
+class UserEditForm(forms.ModelForm):
+    """Temporary form for updating User's details"""
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name')
 
 
 class HostDetailsForm(forms.ModelForm):
     """Temporary Host details form."""
+    user = forms.CharField(widget=forms.HiddenInput())
 
     class Meta:
         model = RealtyHost
-        fields = ('description', 'date_of_birth')
+        fields = ('user', 'description', 'date_of_birth')
         widgets = {
             'date_of_birth': forms.DateInput(
                 attrs={
@@ -25,7 +35,7 @@ class HostDetailsForm(forms.ModelForm):
         }
 
     def clean_date_of_birth(self):
-        """Handles input of date_of_birth field
+        """Handles input of date_of_birth field.
 
         date of birth can't be in the future, Host must be at least 18 years old
         """
@@ -38,3 +48,14 @@ class HostDetailsForm(forms.ModelForm):
         elif host_age < 18:
             raise ValidationError('Invalid date: You must be at least 18 years old.', code='underage')
         return date_of_birth
+
+
+RealtyHostInlineFormSet = forms.inlineformset_factory(
+    User,
+    RealtyHost,
+    form=HostDetailsForm,
+    extra=1,
+    max_num=1,
+    validate_max=1,
+    can_delete=False,
+)

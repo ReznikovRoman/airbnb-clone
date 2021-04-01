@@ -13,6 +13,10 @@
     <form action="" method="post">
         {% csrf_token %}
         {% bootstrap_form form %}
-        <input type="submit" value="Save">
+        {% bootstrap_formset host_formset %}
+
+        <div class="form-buttons">
+            <input type="submit" value="Save" class="button">
+        </div>
     </form>
 {% endblock %}
