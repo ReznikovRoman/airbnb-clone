@@ -1,6 +1,9 @@
 from typing import Type, TypeVar
 
-from django.forms.forms import BaseForm
+from django.forms import BaseForm
+from django.db.models import Model
 
 
-Form = TypeVar('Form', bound=Type[BaseForm])
+AbstractForm = TypeVar('AbstractForm', bound=Type[BaseForm])
+
+AbstractModel = TypeVar('AbstractModel', bound=Type[Model])
