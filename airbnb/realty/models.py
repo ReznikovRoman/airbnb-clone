@@ -32,6 +32,7 @@ class RealtyManager(models.Manager):
 
 
 class AvailableRealtyManager(models.Manager):
+    """Manager for all realty that is available."""
     def get_queryset(self):
         base_qs = super(AvailableRealtyManager, self).get_queryset()
         return base_qs.filter(is_available=True)
@@ -104,7 +105,7 @@ class RealtyImageManager(models.Manager):
         return CustomDeleteQueryset(self.model, using=self._db)
 
 
-def get_realty_image_upload_path(instance: "RealtyImage", filename: str):
+def get_realty_image_upload_path(instance: "RealtyImage", filename: str) -> str:
     return f"upload/images/realty/{instance.realty.id}/{filename}"
 
 

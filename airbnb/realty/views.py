@@ -10,16 +10,19 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from addresses.forms import AddressForm
 from addresses.models import Address
 from common.session_handler import SessionHandler
-from .constants import MAX_REALTY_IMAGES_COUNT
+from common.services import (get_field_names_from_form,
+                             get_required_fields_from_form_with_model, set_prefixes_for_names)
+from common.collections import FormWithModel
 from hosts.models import RealtyHost
-from common.services import get_field_names_from_form
+from .constants import (MAX_REALTY_IMAGES_COUNT,
+                        REALTY_FORM_SESSION_PREFIX, REALTY_FORM_KEYS_COLLECTOR_NAME)
 from .models import Realty, RealtyImage, CustomDeleteQueryset
 from .mixins import RealtySessionDataRequiredMixin
 from .forms import (RealtyForm, RealtyTypeForm, RealtyImageFormSet,
                     RealtyGeneralInfoForm, RealtyDescriptionForm, )
-from .services.images import get_realty_images_by_realty_id, update_images_order
+from .services.images import get_images_by_realty_id, update_images_order
 from .services.ordering import convert_response_to_orders
-from .services.realty import get_amenities_from_session
+from .services.realty import get_amenity_ids_from_session
 
 
 class RealtyListView(generic.ListView):
@@ -86,8 +89,8 @@ class RealtyEditView(LoginRequiredMixin,
     def dispatch(self, request: HttpRequest, realty_id: Optional[int] = None, *args, **kwargs):
         self.session_handler = SessionHandler(
             session=request.session,
-            keys_collector_name='realty_form_keys',
-            session_prefix='realty',
+            keys_collector_name=REALTY_FORM_KEYS_COLLECTOR_NAME,
+            session_prefix=REALTY_FORM_SESSION_PREFIX,
         )
 
         if realty_id:  # if we are editing an existing Realty object
@@ -97,13 +100,22 @@ class RealtyEditView(LoginRequiredMixin,
             self.realty_images = self.realty.images.all()
             self.required_session_data = []
         else:
-            self.required_session_data = ('realty_name', 'realty_country', 'realty_description')
+            self.required_session_data = set_prefixes_for_names(
+                names=get_required_fields_from_form_with_model(
+                    forms_with_models=[
+                        FormWithModel(RealtyGeneralInfoForm, Realty),
+                        FormWithModel(AddressForm, Address),
+                        FormWithModel(RealtyDescriptionForm, Realty),
+                    ],
+                ),
+                prefix=REALTY_FORM_SESSION_PREFIX,
+            )
 
             self.realty_info_initial = self.session_handler.create_initial_dict_with_session_data(
                 initial_keys=get_field_names_from_form(RealtyForm)
             )
             # handle m2m field
-            self.realty_info_initial['amenities'] = get_amenities_from_session(self.session_handler)
+            self.realty_info_initial['amenities'] = get_amenity_ids_from_session(self.session_handler)
 
             self.realty_address_initial = self.session_handler.create_initial_dict_with_session_data(
                 get_field_names_from_form(AddressForm)
@@ -123,7 +135,7 @@ class RealtyEditView(LoginRequiredMixin,
         return super(RealtyEditView, self).dispatch(request, realty_id, *args, **kwargs)
 
     def get(self, request: HttpRequest, realty_id: Optional[int] = None, *args, **kwargs):
-        realty_image_formset = RealtyImageFormSet(queryset=get_realty_images_by_realty_id(realty_id))
+        realty_image_formset = RealtyImageFormSet(queryset=get_images_by_realty_id(realty_id))
 
         return self.render_to_response(
             context={
@@ -140,7 +152,7 @@ class RealtyEditView(LoginRequiredMixin,
         realty_image_formset = RealtyImageFormSet(
             data=request.POST,
             files=request.FILES,
-            queryset=get_realty_images_by_realty_id(realty_id),
+            queryset=get_images_by_realty_id(realty_id),
         )
 
         if self.realty_form.is_valid():
@@ -198,14 +210,14 @@ class RealtyGeneralInfoEditView(LoginRequiredMixin,
     def dispatch(self, request: HttpRequest, *args, **kwargs):
         self.session_handler = SessionHandler(
             session=request.session,
-            keys_collector_name='realty_form_keys',
-            session_prefix='realty',
+            keys_collector_name=REALTY_FORM_KEYS_COLLECTOR_NAME,
+            session_prefix=REALTY_FORM_SESSION_PREFIX,
         )
         initial = self.session_handler.create_initial_dict_with_session_data(
             initial_keys=get_field_names_from_form(RealtyGeneralInfoForm)
         )
         # handle m2m field
-        initial['amenities'] = get_amenities_from_session(self.session_handler)
+        initial['amenities'] = get_amenity_ids_from_session(self.session_handler)
 
         self.realty_form = RealtyGeneralInfoForm(request.POST or None, initial=initial)
         return super(RealtyGeneralInfoEditView, self).dispatch(request, *args, **kwargs)
@@ -241,7 +253,17 @@ class RealtyLocationEditView(LoginRequiredMixin,
 
     Step-2
     """
-    required_session_data = ('realty_name',)
+    # required_session_data = get_required_data_from_form(RealtyGeneralInfoForm,)
+    required_session_data = set_prefixes_for_names(
+        names=get_required_fields_from_form_with_model(
+            forms_with_models=[
+                FormWithModel(RealtyGeneralInfoForm, Realty),
+                FormWithModel(AddressForm, Address),
+                FormWithModel(RealtyDescriptionForm, Realty),
+            ],
+        ),
+        prefix=REALTY_FORM_SESSION_PREFIX,
+    )
     template_name = 'realty/realty/creation_steps/step_2_location.html'
     location_form: AddressForm = None
     session_handler: SessionHandler = None
@@ -249,8 +271,8 @@ class RealtyLocationEditView(LoginRequiredMixin,
     def dispatch(self, request: HttpRequest, *args, **kwargs):
         self.session_handler = SessionHandler(
             session=request.session,
-            keys_collector_name='realty_form_keys',
-            session_prefix='realty',
+            keys_collector_name=REALTY_FORM_KEYS_COLLECTOR_NAME,
+            session_prefix=REALTY_FORM_SESSION_PREFIX,
         )
         initial = self.session_handler.create_initial_dict_with_session_data(get_field_names_from_form(AddressForm))
         self.location_form = AddressForm(request.POST or None, initial=initial)
@@ -283,7 +305,16 @@ class RealtyDescriptionEditView(LoginRequiredMixin,
 
     Step-3
     """
-    required_session_data = ('realty_name', 'realty_country')
+    required_session_data = set_prefixes_for_names(
+        names=get_required_fields_from_form_with_model(
+            forms_with_models=[
+                FormWithModel(RealtyGeneralInfoForm, Realty),
+                FormWithModel(AddressForm, Address),
+                FormWithModel(RealtyDescriptionForm, Realty),
+            ],
+        ),
+        prefix=REALTY_FORM_SESSION_PREFIX,
+    )
     template_name = 'realty/realty/creation_steps/step_3_description.html'
     description_form: RealtyDescriptionForm = None
     session_handler: SessionHandler = None
@@ -291,8 +322,8 @@ class RealtyDescriptionEditView(LoginRequiredMixin,
     def dispatch(self, request: HttpRequest, *args, **kwargs):
         self.session_handler = SessionHandler(
             session=request.session,
-            keys_collector_name='realty_form_keys',
-            session_prefix='realty',
+            keys_collector_name=REALTY_FORM_KEYS_COLLECTOR_NAME,
+            session_prefix=REALTY_FORM_SESSION_PREFIX,
         )
         initial = self.session_handler.create_initial_dict_with_session_data(
             initial_keys=get_field_names_from_form(RealtyDescriptionForm)

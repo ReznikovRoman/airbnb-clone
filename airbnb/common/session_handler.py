@@ -2,13 +2,15 @@ from typing import List, Optional, Union, Tuple
 
 from django.contrib.sessions.backends.base import SessionBase
 
+from .services import create_name_with_prefix
+
 
 class SessionHandler:
-    """Basic session handler
+    """Basic session handler.
 
     Attributes:
         session (SessionBase): current session
-        keys_collector_name (str): name of the session variable that holds all app-specific keys
+        keys_collector_name (str): name of the session variable that stores all app-specific keys
         session_prefix (Optional[str]): optional prefix that all keys will start with (<prefix>_<key>)
     """
     def __init__(self, session: SessionBase, keys_collector_name: str, session_prefix: Optional[str] = None):
@@ -21,14 +23,14 @@ class SessionHandler:
         self._keys_collector: List[str] = self._session.get(keys_collector_name)
 
     def create_initial_dict_with_session_data(self, initial_keys: Union[List[str], Tuple[str]]) -> dict:
-        return {initial_key: self._session.get(self._get_key_with_prefix(initial_key), None)
+        return {initial_key: self._session.get(create_name_with_prefix(initial_key, self._prefix), None)
                 for initial_key in initial_keys}
 
     def add_new_key_to_collector(self, new_session_key: str) -> None:
         self._keys_collector.append(new_session_key)
 
     def add_new_item(self, new_key: str, new_value) -> None:
-        session_key = self._get_key_with_prefix(new_key)
+        session_key = create_name_with_prefix(new_key, self._prefix)
         try:
             self._session[session_key] = new_value
             self.add_new_key_to_collector(session_key)
@@ -39,7 +41,7 @@ class SessionHandler:
 
     def update_values_with_given_data(self, data: dict) -> None:
         for field_name, field_value in data.items():
-            session_key = self._get_key_with_prefix(field_name)
+            session_key = create_name_with_prefix(field_name, self._prefix)
             try:
                 self._session[session_key] = field_value
                 self.add_new_key_to_collector(session_key)
@@ -61,6 +63,3 @@ class SessionHandler:
 
     def get_session(self) -> SessionBase:
         return self._session
-
-    def _get_key_with_prefix(self, key: str):
-        return f"{self._prefix}{key}" if not key.startswith(self._prefix) else key
