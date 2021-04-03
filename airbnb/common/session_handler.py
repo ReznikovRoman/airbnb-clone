@@ -4,11 +4,11 @@ from django.contrib.sessions.backends.base import SessionBase
 
 
 class SessionHandler:
-    """Basic session handler
+    """Basic session handler.
 
     Attributes:
         session (SessionBase): current session
-        keys_collector_name (str): name of the session variable that holds all app-specific keys
+        keys_collector_name (str): name of the session variable that stores all app-specific keys
         session_prefix (Optional[str]): optional prefix that all keys will start with (<prefix>_<key>)
     """
     def __init__(self, session: SessionBase, keys_collector_name: str, session_prefix: Optional[str] = None):
@@ -62,5 +62,5 @@ class SessionHandler:
     def get_session(self) -> SessionBase:
         return self._session
 
-    def _get_key_with_prefix(self, key: str):
+    def _get_key_with_prefix(self, key: str) -> str:
         return f"{self._prefix}{key}" if not key.startswith(self._prefix) else key

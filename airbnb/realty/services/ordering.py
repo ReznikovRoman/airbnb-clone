@@ -7,5 +7,5 @@ class ImageOrder(NamedTuple):
 
 
 def convert_response_to_orders(response: List[Tuple[str, int]]) -> List[ImageOrder]:
-    """Convert response to list of ImageOrders"""
+    """Convert response to list of ImageOrders."""
     return [ImageOrder(image_id=item[0], order=item[1]) for item in response if item[0].isdigit()]

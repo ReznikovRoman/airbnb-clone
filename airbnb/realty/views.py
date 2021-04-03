@@ -17,9 +17,9 @@ from .models import Realty, RealtyImage, CustomDeleteQueryset
 from .mixins import RealtySessionDataRequiredMixin
 from .forms import (RealtyForm, RealtyTypeForm, RealtyImageFormSet,
                     RealtyGeneralInfoForm, RealtyDescriptionForm, )
-from .services.images import get_realty_images_by_realty_id, update_images_order
+from .services.images import get_images_by_realty_id, update_images_order
 from .services.ordering import convert_response_to_orders
-from .services.realty import get_amenities_from_session
+from .services.realty import get_amenity_ids_from_session
 
 
 class RealtyListView(generic.ListView):
@@ -103,7 +103,7 @@ class RealtyEditView(LoginRequiredMixin,
                 initial_keys=get_field_names_from_form(RealtyForm)
             )
             # handle m2m field
-            self.realty_info_initial['amenities'] = get_amenities_from_session(self.session_handler)
+            self.realty_info_initial['amenities'] = get_amenity_ids_from_session(self.session_handler)
 
             self.realty_address_initial = self.session_handler.create_initial_dict_with_session_data(
                 get_field_names_from_form(AddressForm)
@@ -123,7 +123,7 @@ class RealtyEditView(LoginRequiredMixin,
         return super(RealtyEditView, self).dispatch(request, realty_id, *args, **kwargs)
 
     def get(self, request: HttpRequest, realty_id: Optional[int] = None, *args, **kwargs):
-        realty_image_formset = RealtyImageFormSet(queryset=get_realty_images_by_realty_id(realty_id))
+        realty_image_formset = RealtyImageFormSet(queryset=get_images_by_realty_id(realty_id))
 
         return self.render_to_response(
             context={
@@ -140,7 +140,7 @@ class RealtyEditView(LoginRequiredMixin,
         realty_image_formset = RealtyImageFormSet(
             data=request.POST,
             files=request.FILES,
-            queryset=get_realty_images_by_realty_id(realty_id),
+            queryset=get_images_by_realty_id(realty_id),
         )
 
         if self.realty_form.is_valid():
@@ -205,7 +205,7 @@ class RealtyGeneralInfoEditView(LoginRequiredMixin,
             initial_keys=get_field_names_from_form(RealtyGeneralInfoForm)
         )
         # handle m2m field
-        initial['amenities'] = get_amenities_from_session(self.session_handler)
+        initial['amenities'] = get_amenity_ids_from_session(self.session_handler)
 
         self.realty_form = RealtyGeneralInfoForm(request.POST or None, initial=initial)
         return super(RealtyGeneralInfoEditView, self).dispatch(request, *args, **kwargs)

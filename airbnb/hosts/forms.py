@@ -11,7 +11,7 @@ from .models import RealtyHost
 
 
 class UserEditForm(forms.ModelForm):
-    """Temporary form for updating User's details"""
+    """Temporary form for updating User's details."""
     class Meta:
         model = User
         fields = ('first_name', 'last_name')
