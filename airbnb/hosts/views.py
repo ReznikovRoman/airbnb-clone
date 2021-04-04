@@ -15,6 +15,8 @@ class HostDetailsUpdateView(LoginRequiredMixin, generic.UpdateView):
     form_class = UserEditForm
     template_name = 'hosts/host/form.html'
     success_url = reverse_lazy('home_page')
+
+    login_url = reverse_lazy('home_page')  # TODO: edit login url (another issue)
     host_formset: RealtyHostInlineFormSet = None
 
     def get_object(self, queryset=None):
