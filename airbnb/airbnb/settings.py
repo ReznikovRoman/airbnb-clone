@@ -1,6 +1,9 @@
 import os
 from pathlib import Path
 
+from django.urls import reverse_lazy
+from django.contrib.messages import constants as messages_constants
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,6 +40,12 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     'sorl.thumbnail',
 
+    # allauth
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+
     'main.apps.MainConfig',
     'addresses.apps.AddressesConfig',
     'hosts.apps.HostsConfig',
@@ -67,6 +76,8 @@ TEMPLATES = [
             BASE_DIR / 'templates',
             BASE_DIR / 'realty/templates',
             BASE_DIR / 'hosts/templates',
+
+            BASE_DIR / 'templates/allauth',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -99,6 +110,12 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
+]
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 
@@ -144,6 +161,50 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD_ESL')
+
+
+# LOGIN
+LOGIN_URL = reverse_lazy('account_login')
+LOGIN_REDIRECT_URL = reverse_lazy('home_page')
+
+
+# MESSAGES
+MESSAGE_TAGS = {
+    messages_constants.DEBUG: 'alert-secondary',
+    messages_constants.INFO: 'alert-info',
+    messages_constants.SUCCESS: 'alert-success',
+    messages_constants.WARNING: 'alert-warning',
+    messages_constants.ERROR: 'alert-danger',
+}
+
+
+# ALLAUTH
+ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_LOGOUT_ON_GET = True
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+ACCOUNT_SESSION_REMEMBER = True
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': os.environ.get('AIRBNB_GOOGLE_CLIENT_ID'),
+            'secret': os.environ.get('AIRBNB_GOOGLE_CLIENT_SECRET'),
+            'key': '',
+        },
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+    }
+}
+SOCIALACCOUNT_QUERY_EMAIL = True
 
 
 # CKEDITOR
