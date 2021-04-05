@@ -24,6 +24,11 @@ urlpatterns += [
     path('contacts/', flatpage_views.flatpage, {'url': 'contacts/'}, name='contacts'),
 ]
 
+handler400 = 'main.views.bad_request_view'
+handler403 = 'main.views.permission_denied_view'
+handler404 = 'main.views.page_not_found_view'
+handler500 = 'main.views.server_error_view'
+
 
 if settings.DEBUG:
     urlpatterns += static(
