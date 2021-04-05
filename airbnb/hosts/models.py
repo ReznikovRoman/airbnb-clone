@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 
 
 class RealtyHost(models.Model):
@@ -25,3 +25,8 @@ class RealtyHost(models.Model):
     def __str__(self):
         # TODO: fields from CustomUser model (another milestone)
         return f"Host: {self.user.first_name} {self.user.last_name}"
+
+    def save(self, *args, **kwargs):
+        hosts_group = Group.objects.get_or_create(name='hosts')[0]
+        self.user.groups.add(hosts_group)
+        super(RealtyHost, self).save(*args, **kwargs)

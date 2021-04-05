@@ -5,7 +5,7 @@ from braces.views import JsonRequestResponseMixin
 from django.views import generic
 from django.http import HttpRequest
 from django.shortcuts import get_object_or_404, reverse, redirect
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 from addresses.forms import AddressForm
 from addresses.models import Address
@@ -68,11 +68,13 @@ class RealtyDetailView(generic.DetailView):
 
 
 class RealtyEditView(LoginRequiredMixin,
+                     PermissionRequiredMixin,
                      RealtySessionDataRequiredMixin,
                      generic.base.TemplateResponseMixin,
                      generic.View):
     """View for creating or updating a single Realty."""
     template_name = 'realty/realty/form.html'
+    permission_required = 'realty.add_realty'
 
     realty: Realty = None
     address: Address = None
@@ -131,7 +133,6 @@ class RealtyEditView(LoginRequiredMixin,
             instance=self.address,
             initial=self.realty_address_initial,
         )
-
         return super(RealtyEditView, self).dispatch(request, realty_id, *args, **kwargs)
 
     def get(self, request: HttpRequest, realty_id: Optional[int] = None, *args, **kwargs):
@@ -197,6 +198,7 @@ class RealtyEditView(LoginRequiredMixin,
 
 
 class RealtyGeneralInfoEditView(LoginRequiredMixin,
+                                PermissionRequiredMixin,
                                 generic.base.TemplateResponseMixin,
                                 generic.View):
     """View for editing Realty general info (part of the multi-step form).
@@ -204,6 +206,8 @@ class RealtyGeneralInfoEditView(LoginRequiredMixin,
     Step-1
     """
     template_name = 'realty/realty/creation_steps/step_1_general_info.html'
+    permission_required = 'realty.add_realty'
+
     realty_form: Optional[RealtyGeneralInfoForm] = None
     session_handler: SessionHandler = None
 
@@ -246,6 +250,7 @@ class RealtyGeneralInfoEditView(LoginRequiredMixin,
 
 
 class RealtyLocationEditView(LoginRequiredMixin,
+                             PermissionRequiredMixin,
                              RealtySessionDataRequiredMixin,
                              generic.base.TemplateResponseMixin,
                              generic.View):
@@ -253,6 +258,9 @@ class RealtyLocationEditView(LoginRequiredMixin,
 
     Step-2
     """
+    template_name = 'realty/realty/creation_steps/step_2_location.html'
+    permission_required = 'realty.add_realty'
+
     # required_session_data = get_required_data_from_form(RealtyGeneralInfoForm,)
     required_session_data = set_prefixes_for_names(
         names=get_required_fields_from_form_with_model(
@@ -264,7 +272,6 @@ class RealtyLocationEditView(LoginRequiredMixin,
         ),
         prefix=REALTY_FORM_SESSION_PREFIX,
     )
-    template_name = 'realty/realty/creation_steps/step_2_location.html'
     location_form: AddressForm = None
     session_handler: SessionHandler = None
 
@@ -298,6 +305,7 @@ class RealtyLocationEditView(LoginRequiredMixin,
 
 
 class RealtyDescriptionEditView(LoginRequiredMixin,
+                                PermissionRequiredMixin,
                                 RealtySessionDataRequiredMixin,
                                 generic.base.TemplateResponseMixin,
                                 generic.View):
@@ -305,6 +313,9 @@ class RealtyDescriptionEditView(LoginRequiredMixin,
 
     Step-3
     """
+    template_name = 'realty/realty/creation_steps/step_3_description.html'
+    permission_required = 'realty.add_realty'
+
     required_session_data = set_prefixes_for_names(
         names=get_required_fields_from_form_with_model(
             forms_with_models=[
@@ -315,7 +326,6 @@ class RealtyDescriptionEditView(LoginRequiredMixin,
         ),
         prefix=REALTY_FORM_SESSION_PREFIX,
     )
-    template_name = 'realty/realty/creation_steps/step_3_description.html'
     description_form: RealtyDescriptionForm = None
     session_handler: SessionHandler = None
 
@@ -350,9 +360,11 @@ class RealtyDescriptionEditView(LoginRequiredMixin,
 
 
 class RealtyImageOrderView(LoginRequiredMixin,
+                           PermissionRequiredMixin,
                            JsonRequestResponseMixin,
                            generic.View):
     """View for changing RealtyImages' order."""
+    permission_required = 'realty.add_realty'
 
     def post(self, request, *args, **kwargs):
         response = list(self.request_json.items())

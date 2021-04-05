@@ -1,7 +1,7 @@
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import generic
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.models import User
 
 from .forms import RealtyHostInlineFormSet, UserEditForm
@@ -9,12 +9,16 @@ from .forms import RealtyHostInlineFormSet, UserEditForm
 # TODO: Complete Host views
 
 
-class HostDetailsUpdateView(LoginRequiredMixin, generic.UpdateView):
+class HostDetailsUpdateView(LoginRequiredMixin,
+                            PermissionRequiredMixin,
+                            generic.UpdateView):
     """Temporary View for updating host's details."""
     model = User
     form_class = UserEditForm
     template_name = 'hosts/host/form.html'
     success_url = reverse_lazy('home_page')
+    permission_required = 'realty.add_realty'
+
     host_formset: RealtyHostInlineFormSet = None
 
     def get_object(self, queryset=None):
