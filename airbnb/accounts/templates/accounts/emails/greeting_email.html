@@ -1,0 +1,24 @@
+{% load inlinecss %}
+
+{% inlinecss 'accounts/css/emails.css' %}
+    <html>
+        <body>
+            <div class="wrapper">
+                <div class="email-content">
+                    <h1 class="header-center">
+                        Thanks for signing up on
+                        <a href="{{ protocol }}://{{ domain }}">
+                            airbnb
+                        </a>
+                    </h1>
+
+                    <p>
+                        Thanks,
+                        <br>
+                        {{ domain }} Team
+                    </p>
+                </div>
+            </div>
+        </body>
+    </html>
+{% endinlinecss %}
