@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
 
+    'accounts.apps.AccountsConfig',
     'main.apps.MainConfig',
     'addresses.apps.AddressesConfig',
     'hosts.apps.HostsConfig',
