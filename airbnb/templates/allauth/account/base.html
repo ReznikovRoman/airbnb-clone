@@ -8,11 +8,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>
-        {% block title %}
-            airbnb
-        {% endblock %}
-    </title>
+    <title>{% block head_title %}{% endblock %}</title>
 
     <!-- Bootstrap 4 - CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
@@ -43,59 +39,62 @@
 
     <!--  Custom CSS  -->
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    {% block extra_head %}
+    {% endblock %}
 </head>
 <body>
+    {% block body %}
+        <div class="container">
+            {% include 'components/navbar.html' %}
+            {% include 'components/messages.html' %}
 
-<div class="container">
-    {% include 'components/navbar.html' %}
-    {% include 'components/messages.html' %}
+            <div id="content" class="wrapper">
+                <div class="content-block">
+                    {% block content %}
+                    {% endblock %}
 
-    <div id="content" class="wrapper">
-        <div class="content-block">
-            {% block content %}
-            {% endblock %}
-
-            {% include 'components/pagination.html' %}
+                    {% include 'components/pagination.html' %}
+                </div>
+            </div>
         </div>
-    </div>
-</div>
+    {% endblock %}
 
+    {% block extra_body %}
+    {% endblock %}
 
+    <!-- Bootstrap 4 - JavaScript -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+            integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+            crossorigin="anonymous"></script>
 
-<!-- Bootstrap 4 - JavaScript -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
-        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
-        crossorigin="anonymous"></script>
+    {# jQuery UI #}
+    <script
+      src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
+      integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="
+      crossorigin="anonymous"></script>
 
-{# jQuery UI #}
-<script
-  src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
-  integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="
-  crossorigin="anonymous"></script>
+    <!--  Custom JS  -->
+    <script src="{% static 'js/script.js' %}"></script>
 
-<!--  Custom JS  -->
-<script src="{% static 'js/script.js' %}"></script>
+    <script>
+        const csrftoken = Cookies.get('csrftoken');
 
-<script>
-    const csrftoken = Cookies.get('csrftoken');
+        function csrfSafeMethod(method) {
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
 
-    function csrfSafeMethod(method) {
-        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-    }
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader('X-CSRFToken', csrftoken);
+                }
+            },
+        });
 
-    $.ajaxSetup({
-        beforeSend: function (xhr, settings) {
-            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                xhr.setRequestHeader('X-CSRFToken', csrftoken);
-            }
-        },
-    });
-
-    $(document).ready(function () {
-        {% block domready %}
-        {% endblock %}
-    });
-</script>
-
+        $(document).ready(function () {
+            {% block domready %}
+            {% endblock %}
+        });
+    </script>
 </body>
 </html>
