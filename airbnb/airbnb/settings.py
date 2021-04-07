@@ -40,12 +40,6 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     'sorl.thumbnail',
 
-    # allauth
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
-
     'accounts.apps.AccountsConfig',
     'main.apps.MainConfig',
     'addresses.apps.AddressesConfig',
@@ -77,8 +71,6 @@ TEMPLATES = [
             BASE_DIR / 'templates',
             BASE_DIR / 'realty/templates',
             BASE_DIR / 'hosts/templates',
-
-            BASE_DIR / 'templates/allauth',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -178,35 +170,6 @@ MESSAGE_TAGS = {
     messages_constants.WARNING: 'alert-warning',
     messages_constants.ERROR: 'alert-danger',
 }
-
-
-# ALLAUTH
-ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_LOGOUT_ON_GET = True
-ACCOUNT_CONFIRM_EMAIL_ON_GET = True
-ACCOUNT_SESSION_REMEMBER = True
-
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'APP': {
-            'client_id': os.environ.get('AIRBNB_GOOGLE_CLIENT_ID'),
-            'secret': os.environ.get('AIRBNB_GOOGLE_CLIENT_SECRET'),
-            'key': '',
-        },
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        },
-        'SCOPE': [
-            'profile',
-            'email',
-        ],
-    }
-}
-SOCIALACCOUNT_QUERY_EMAIL = True
 
 
 # CKEDITOR
