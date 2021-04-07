@@ -1,11 +1,12 @@
 from django.db import models
+from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group
 
 
 class RealtyHost(models.Model):
     """Realty host."""
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     description = models.TextField(verbose_name='host description', blank=True)
     date_of_birth = models.DateField(verbose_name='date of birth')
     host_rating = models.PositiveSmallIntegerField(
