@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+
+
+{% block title %}
+    Sign up &bull; Airbnb
+{% endblock %}
+
+{% block content %}
+    <h1>Sign up</h1>
+
+    <form method="POST" class="form sign_up_form">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+
+        <div class="form-buttons">
+            <input type="submit" class="button" value="Sign Up">
+        </div>
+    </form>
+{% endblock %}

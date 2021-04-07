@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+
+
+{% block title %}
+    Log in &bull; Airbnb
+{% endblock %}
+
+{% block content %}
+    <h1>Log in</h1>
+
+    <form method="POST" class="">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+
+        <div class="form-buttons">
+            <input type="submit" class="button" value="Log in">
+        </div>
+
+        {# TODO: reset link styles #}
+        <a href="{% url 'accounts:password_reset' %}" class="auth_link">Forgot password?</a>
+    </form>
+{% endblock %}

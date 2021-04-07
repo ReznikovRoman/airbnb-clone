@@ -69,6 +69,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             BASE_DIR / 'templates',
+            BASE_DIR / 'accounts/templates',
             BASE_DIR / 'realty/templates',
             BASE_DIR / 'hosts/templates',
         ],
@@ -156,8 +157,9 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD_ESL')
 
 # LOGIN
 AUTH_USER_MODEL = 'accounts.CustomUser'
-LOGIN_URL = reverse_lazy('account_login')
+LOGIN_URL = reverse_lazy('accounts:login')
 LOGIN_REDIRECT_URL = reverse_lazy('home_page')
+LOGOUT_REDIRECT_URL = reverse_lazy('home_page')
 
 
 # MESSAGES
