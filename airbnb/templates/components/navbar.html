@@ -32,11 +32,11 @@
                             <a class="dropdown-item" href="#">Account</a>
 
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-center" href="{% url 'account_logout' %}">Log out</a>
+                            <a class="dropdown-item text-center" href="{% url 'accounts:logout' %}">Log out</a>
                         {% else %}
-                            <a class="dropdown-item" href="{% url 'account_login' %}">Log in</a>
+                            <a class="dropdown-item" href="{% url 'accounts:login' %}">Log in</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{% url 'account_signup' %}">Sign up</a>
+                            <a class="dropdown-item" href="{% url 'accounts:signup' %}">Sign up</a>
                         {% endif %}
                     </div>
                 </li>
