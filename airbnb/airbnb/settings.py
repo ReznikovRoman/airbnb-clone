@@ -165,6 +165,7 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD_ESL')
 
 
 # LOGIN
+AUTH_USER_MODEL = 'accounts.CustomUser'
 LOGIN_URL = reverse_lazy('account_login')
 LOGIN_REDIRECT_URL = reverse_lazy('home_page')
 
