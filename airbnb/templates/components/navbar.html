@@ -1,3 +1,5 @@
+{% load static %}
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand mr-5 brand-logo" href="{% url 'home_page' %}">
         <i class="fab fa-airbnb"></i>
@@ -18,7 +20,15 @@
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <img src="http://placehold.it/32x33" width="32" height="33" class="rounded-circle">
+                        {% if request.user.is_authenticated %}
+                            <img src="{{ request.user.profile.profile_image_url }}"
+                                 width="32" height="33"
+                                 class="rounded-circle">
+                        {% else %}
+                            <img src="{% static 'images/default/profile/default_profile_image.png' %}"
+                                 width="32" height="33"
+                                 class="rounded-circle">
+                        {% endif %}
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         {% if request.user.is_authenticated %}
@@ -32,7 +42,7 @@
                             <a class="dropdown-item" href="#">Account</a>
 
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-center" href="{% url 'accounts:logout' %}">Log out</a>
+                            <a class="dropdown-item" href="{% url 'accounts:logout' %}">Log out</a>
                         {% else %}
                             <a class="dropdown-item" href="{% url 'accounts:login' %}">Log in</a>
                             <div class="dropdown-divider"></div>
