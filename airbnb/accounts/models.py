@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from django.contrib.auth.models import (AbstractUser, BaseUserManager,
                                         PermissionsMixin, Permission)
 
@@ -111,3 +112,52 @@ class CustomUser(AbstractUser, PermissionsMixin):
         if perm in self.get_all_permissions() or perm in self.get_group_permissions():
             return True
         return False
+
+
+def get_profile_image_upload_path(instance: "Profile", filename: str) -> str:
+    return f"upload/users/{instance.user.email}/profile/{filename}"
+
+
+def get_default_profile_image_url() -> str:
+    return f"media/default/profile/default_profile_image.png"
+
+
+class ProfileGenderChoices(models.TextChoices):
+    MALE = 'M', 'Male'
+    HOTEL = 'F', 'Female'
+    APARTMENTS = 'O', 'Other'
+
+
+class Profile(models.Model):
+    """Profile for CustomUser."""
+    profile_image = models.ImageField(
+        verbose_name='profile image',
+        blank=True,
+        null=True,
+        upload_to=get_profile_image_upload_path,
+    )
+    date_of_birth = models.DateField(
+        verbose_name='date of birth',
+        blank=True,
+        null=True,
+    )
+    gender = models.CharField(
+        verbose_name='gender',
+        blank=True,
+        max_length=2,
+        choices=ProfileGenderChoices.choices,
+    )
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        related_name='profile',
+        on_delete=models.CASCADE,
+    )
+
+    def __str__(self):
+        return f"Profile for {self.user}"
+
+    @property
+    def profile_image_url(self):
+        if self.profile_image:
+            return self.profile_image.url
+        return get_default_profile_image_url()
