@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+
+{% block title %}
+    Personal info
+{% endblock %}
+
+{% block content %}
+    <h1>Personal info</h1>
+
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% bootstrap_form user_info_form %}
+        {% bootstrap_form profile_form %}
+
+        <div class="form-buttons">
+            <input type="submit" value="Save" class="button">
+        </div>
+    </form>
+
+{% endblock %}
+

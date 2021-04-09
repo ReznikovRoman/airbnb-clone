@@ -1,4 +1,5 @@
 {% load static %}
+{% load main_extras %}
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand mr-5 brand-logo" href="{% url 'home_page' %}">
@@ -16,7 +17,13 @@
         <div class="nav-links--right">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link link-host-signup" href="#">Become a host</a>
+                    {% if request.user|has_group:'hosts' %}
+                        {# TODO: Host dashboard #}
+                        <a class="nav-link link-host-signup" href="#">Switch to hosting</a>
+                    {% else %}
+                        <a class="nav-link link-host-signup" href="#">Become a host</a>
+                    {% endif %}
+
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -38,8 +45,13 @@
                             <a class="dropdown-item" href="#">Saved</a>
 
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Host your home</a>
-                            <a class="dropdown-item" href="#">Account</a>
+                            {% if request.user|has_group:'hosts' %}
+                                {# TODO: Host listings #}
+                                <a class="dropdown-item" href="#">Manage listings</a>
+                            {% else %}
+                                <a class="dropdown-item" href="#">Host your home</a>
+                            {% endif %}
+                            <a class="dropdown-item" href="{% url 'accounts:user_info_edit' %}">Account</a>
 
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{% url 'accounts:logout' %}">Log out</a>

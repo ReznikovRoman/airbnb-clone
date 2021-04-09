@@ -13,6 +13,8 @@ urlpatterns = [
          name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 
+    path('personal-info/', views.UserInfoEditView.as_view(), name='user_info_edit'),
+
     # password change urls
     path('password_change/',
          auth_views.PasswordChangeView.as_view(
