@@ -22,7 +22,7 @@ from .forms import (RealtyForm, RealtyTypeForm, RealtyImageFormSet,
                     RealtyGeneralInfoForm, RealtyDescriptionForm, )
 from .services.images import get_images_by_realty_id, update_images_order
 from .services.ordering import convert_response_to_orders
-from .services.realty import get_amenity_ids_from_session
+from .services.realty import get_amenity_ids_from_session, set_realty_host_by_user
 
 
 class RealtyListView(generic.ListView):
@@ -68,13 +68,11 @@ class RealtyDetailView(generic.DetailView):
 
 
 class RealtyEditView(LoginRequiredMixin,
-                     PermissionRequiredMixin,
                      RealtySessionDataRequiredMixin,
                      generic.base.TemplateResponseMixin,
                      generic.View):
     """View for creating or updating a single Realty."""
     template_name = 'realty/realty/form.html'
-    permission_required = 'realty.add_realty'
 
     realty: Realty = None
     address: Address = None
@@ -159,8 +157,7 @@ class RealtyEditView(LoginRequiredMixin,
         if self.realty_form.is_valid():
             new_realty: Realty = self.realty_form.save(commit=False)
 
-            # TODO: Set realty host properly (User registration, permissions - another milestone)
-            new_realty.host = RealtyHost.objects.first()
+            set_realty_host_by_user(realty=new_realty, user=request.user)
 
             if self.address_form.is_valid():
                 new_address: Address = self.address_form.save()
@@ -198,7 +195,6 @@ class RealtyEditView(LoginRequiredMixin,
 
 
 class RealtyGeneralInfoEditView(LoginRequiredMixin,
-                                PermissionRequiredMixin,
                                 generic.base.TemplateResponseMixin,
                                 generic.View):
     """View for editing Realty general info (part of the multi-step form).
@@ -206,7 +202,6 @@ class RealtyGeneralInfoEditView(LoginRequiredMixin,
     Step-1
     """
     template_name = 'realty/realty/creation_steps/step_1_general_info.html'
-    permission_required = 'realty.add_realty'
 
     realty_form: Optional[RealtyGeneralInfoForm] = None
     session_handler: SessionHandler = None
@@ -250,7 +245,6 @@ class RealtyGeneralInfoEditView(LoginRequiredMixin,
 
 
 class RealtyLocationEditView(LoginRequiredMixin,
-                             PermissionRequiredMixin,
                              RealtySessionDataRequiredMixin,
                              generic.base.TemplateResponseMixin,
                              generic.View):
@@ -259,7 +253,6 @@ class RealtyLocationEditView(LoginRequiredMixin,
     Step-2
     """
     template_name = 'realty/realty/creation_steps/step_2_location.html'
-    permission_required = 'realty.add_realty'
 
     # required_session_data = get_required_data_from_form(RealtyGeneralInfoForm,)
     required_session_data = set_prefixes_for_names(
@@ -305,7 +298,6 @@ class RealtyLocationEditView(LoginRequiredMixin,
 
 
 class RealtyDescriptionEditView(LoginRequiredMixin,
-                                PermissionRequiredMixin,
                                 RealtySessionDataRequiredMixin,
                                 generic.base.TemplateResponseMixin,
                                 generic.View):
@@ -314,7 +306,6 @@ class RealtyDescriptionEditView(LoginRequiredMixin,
     Step-3
     """
     template_name = 'realty/realty/creation_steps/step_3_description.html'
-    permission_required = 'realty.add_realty'
 
     required_session_data = set_prefixes_for_names(
         names=get_required_fields_from_form_with_model(
@@ -360,11 +351,9 @@ class RealtyDescriptionEditView(LoginRequiredMixin,
 
 
 class RealtyImageOrderView(LoginRequiredMixin,
-                           PermissionRequiredMixin,
                            JsonRequestResponseMixin,
                            generic.View):
     """View for changing RealtyImages' order."""
-    permission_required = 'realty.add_realty'
 
     def post(self, request, *args, **kwargs):
         response = list(self.request_json.items())
