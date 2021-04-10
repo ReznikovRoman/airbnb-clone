@@ -1,5 +1,6 @@
 {% load static %}
 {% load main_extras %}
+{% load thumbnail %}
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand mr-5 brand-logo" href="{% url 'home_page' %}">
@@ -21,21 +22,26 @@
                         {# TODO: Host dashboard #}
                         <a class="nav-link link-host-signup" href="#">Switch to hosting</a>
                     {% else %}
-                        <a class="nav-link link-host-signup" href="#">Become a host</a>
+                        <a class="nav-link link-host-signup" href="{% url 'hosts:become_a_host' %}">
+                            Become a host
+                        </a>
                     {% endif %}
 
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {% if request.user.is_authenticated %}
-                            <img src="{{ request.user.profile.profile_image_url }}"
-                                 width="32" height="33"
-                                 class="rounded-circle">
+                            {% thumbnail request.user.profile.profile_image "32x33" crop='center' as profile_image %}
+                                <img src="{{ profile_image.url }}"
+                                     width="{{ profile_image.width }}" height="{{ profile_image.height }}"
+                                     alt="Profile image" class="rounded-circle">
+                            {% endthumbnail %}
                         {% else %}
                             <img src="{% static 'images/default/profile/default_profile_image.png' %}"
                                  width="32" height="33"
-                                 class="rounded-circle">
+                                 alt="Default profile image" class="rounded-circle">
                         {% endif %}
+
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         {% if request.user.is_authenticated %}
@@ -51,7 +57,7 @@
                             {% else %}
                                 <a class="dropdown-item" href="#">Host your home</a>
                             {% endif %}
-                            <a class="dropdown-item" href="{% url 'accounts:user_info_edit' %}">Account</a>
+                            <a class="dropdown-item" href="{% url 'accounts:settings_dashboard' %}">Account</a>
 
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{% url 'accounts:logout' %}">Log out</a>

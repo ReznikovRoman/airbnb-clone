@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load thumbnail %}
 
 
 {% block title %}
@@ -60,9 +61,13 @@
                     </div>
                 </div>
                 <div class="host-link">
+                    {# TODO: Host profile page #}
                     <a href="#">
-                        {# TODO: Host profile image (user registration - another milestone) #}
-                        <img src="http://placehold.it/56x56" class="rounded-circle" alt="Host profile image">
+                        {% thumbnail realty.host.user.profile.profile_image "56x56" crop='center' as host_profile_image %}
+                            <img src="{{ host_profile_image.url }}"
+                                 width="{{ host_profile_image.width }}" height="{{ host_profile_image.height }}"
+                                 alt="Host profile image" class="rounded-circle">
+                        {% endthumbnail %}
                     </a>
                 </div>
             </div>
@@ -114,10 +119,13 @@
                 <div class="realty-host">
                     <div class="host-profile">
 
-                        {# TODO: Host profile #}
+                        {# TODO: Host profile page #}
                         <a href="#">
-                            <img src="http://placehold.it/56x56" class="rounded-circle"
-                                 alt="User profile image">
+                            {% thumbnail realty.host.user.profile.profile_image "56x56" crop='center' as host_profile_image %}
+                                <img src="{{ host_profile_image.url }}"
+                                     width="{{ host_profile_image.width }}" height="{{ host_profile_image.height }}"
+                                     alt="Host profile image" class="rounded-circle">
+                            {% endthumbnail %}
                         </a>
                         <div class="host-content--right">
                             <div class="host-name">
