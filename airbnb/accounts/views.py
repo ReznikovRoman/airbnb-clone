@@ -7,9 +7,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import SignUpForm, ProfileForm, UserInfoForm
 from .models import CustomUser, Profile
+from .mixins import AnonymousUserRequiredMixin
 
 
-class SignUpView(generic.base.TemplateResponseMixin,
+class SignUpView(AnonymousUserRequiredMixin,
+                 generic.base.TemplateResponseMixin,
                  generic.View):
     """View for creating a new account."""
     form_class = SignUpForm
@@ -36,6 +38,12 @@ class SignUpView(generic.base.TemplateResponseMixin,
                 'form': form,
             }
         )
+
+
+class LoginView(AnonymousUserRequiredMixin,
+                auth_views.LoginView):
+    """View for signing in."""
+    template_name = 'accounts/registration/login.html'
 
 
 class CustomPasswordResetView(auth_views.PasswordResetView):
