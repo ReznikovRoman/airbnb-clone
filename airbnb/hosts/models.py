@@ -7,8 +7,6 @@ from django.contrib.auth.models import Group
 class RealtyHost(models.Model):
     """Realty host."""
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    description = models.TextField(verbose_name='host description', blank=True)
-    date_of_birth = models.DateField(verbose_name='date of birth')
     host_rating = models.PositiveSmallIntegerField(
         null=True,
         blank=True,
@@ -24,7 +22,6 @@ class RealtyHost(models.Model):
         verbose_name_plural = 'realty hosts'
 
     def __str__(self):
-        # TODO: fields from CustomUser model (another milestone)
         return f"Host: {self.user.first_name} {self.user.last_name}"
 
     def save(self, *args, **kwargs):

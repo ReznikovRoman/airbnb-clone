@@ -1,10 +1,10 @@
 from django.urls import path
 
-from . import views
+from realty.views import RealtyEditView
 
 
 app_name = 'hosts'
 
 urlpatterns = [
-    path('profile/edit/', views.HostDetailsUpdateView.as_view(), name='details_update'),
+    path('become-a-host/', RealtyEditView.as_view(), name='become_a_host'),
 ]
