@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    Account Settings &bull; Airbnb
+{% endblock %}
+
+{% block content %}
+    <div class="account-settings">
+        <div class="account--header">
+            <h1>Account</h1>
+            <div class="general-info">
+                <p>
+                    <span class="general-info--item">
+                        <span class="user--name">
+                            {{ request.user.first_name }} {{ request.user.last_name }}
+                        </span>, {{ request.user.email }}
+                    </span>
+                    <span>
+                        {# TODO: Profile page #}
+                        <a href="#"><span class="user--profile-link">Go to profile</span></a>
+                    </span>
+                </p>
+            </div>
+        </div>
+        <div class="account--cards">
+            <div class="row">
+                <div class="col-md-4 col-sm-6">
+                    <a href="{% url 'accounts:user_info_edit' %}" class="account-card--link">
+                        <div class="account-card card--base">
+                            <div class="card--logo">
+                                <i class="fas fa-id-card"></i>
+                            </div>
+                            <div class="card--header">
+                                <h2>Personal info <span><i class="fas fa-chevron-right"></i></span></h2>
+                            </div>
+                            <div class="card--description">
+                                <p>Provide personal details and how we can reach you</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-4 col-sm-6">
+                    <a href="{% url 'accounts:password_change' %}" class="account-card--link">
+                        <div class="account-card card--base">
+                            <div class="card--logo">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="card--header">
+                                <h2>Login & security <span><i class="fas fa-chevron-right"></i></span></h2>
+                            </div>
+                            <div class="card--description">
+                                <p>Update your password</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                {# TODO: payments & payouts settings #}
+
+                {# TODO: notifications settings #}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

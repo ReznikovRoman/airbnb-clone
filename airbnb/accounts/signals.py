@@ -7,17 +7,14 @@ from .models import Profile
 
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def add_user_to_group(sender, instance, created, **kwargs):
+def handle_user_sign_up(sender, instance, created, **kwargs):
     if created:
         common_users_group = Group.objects.get_or_create(name='common_users')[0]
         instance.groups.add(common_users_group)
-        instance.save()
 
-
-@receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def create_profile(sender, instance, created, **kwargs):
-    if created and not kwargs.get('raw', False):
-        Profile.objects.create(user=instance)
+        if not kwargs.get('raw', False):
+            Profile.objects.create(user=instance)
+            instance.save()
 
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)

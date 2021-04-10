@@ -741,6 +741,152 @@ form {
   }
 }
 
+// Accounts
+.account-settings {
+  .account--header {
+    margin-top: 3rem;
+    margin-bottom: 2.5rem;
+
+    h1 {
+      font-size: 2rem;
+    }
+
+    .general-info {
+      display: flex;
+      justify-content: flex-start;
+
+      .general-info--item:not(:last-child)::after {
+        content: "\f111";
+        font: normal normal normal 7px/1 FontAwesome;
+        vertical-align: middle;
+        margin-left: .25rem;
+        margin-right: .35rem;
+      }
+
+      .user--name {
+        font-weight: bolder;
+      }
+
+      .user--profile-link {
+        color: $secondary-color;
+        font-weight: bolder;
+      }
+    }
+
+    .account--cards {
+      a.account-card--link {
+        display: block;
+        text-decoration: none !important;
+      }
+
+      .row {
+        flex-wrap: wrap;
+
+        & > [class*='col-'] .card--base {
+          display: flex;
+          flex-direction: row;
+        }
+      }
+    }
+  }
+
+  [class*='col-'] {
+    margin-bottom: 1.5rem !important;
+  }
+
+  a.account-card--link:hover, .account-card:hover {
+    text-decoration: none !important;
+  }
+}
+
+
+// Personal info settings
+.account--personal-info, .account--security {
+  .personal-info--header, .security--header {
+    .account--links {
+      .account--link a {
+        color: $text-primary-color;
+      }
+
+      .account--link:not(:last-child)::after {
+        content: "\f054";
+        font: normal normal normal 7px/1 FontAwesome;
+        font-size: .8rem;
+        vertical-align: middle;
+        margin-left: .25rem;
+        margin-right: .35rem;
+      }
+    }
+
+    h1 {
+      margin-top: .6rem;
+      font-size: 2rem;
+    }
+  }
+
+  .personal-info--settings, .security--settings {
+    .personal-info--form, .security--form {
+      margin-top: 2rem;
+
+      form {
+        max-width: 70%;
+        display: flex;
+        flex-flow: row wrap;
+
+        & > .form-group {
+          flex: 1 100% !important;
+        }
+
+        .form-group {
+          display: flex !important;
+          flex-direction: column !important;
+
+          &:not(:last-child) {
+            margin-bottom: 1rem !important;
+          }
+
+          &:nth-child(-n+3) {
+            flex: 2 0 !important;
+          }
+          &:nth-child(-n+2) {
+            margin-right: .8rem !important;
+          }
+
+          input, select {
+            padding: 1.4rem 1rem;
+            color: #484848 !important;
+            border: 1px solid #ebebeb !important;
+            border-radius: 4px !important;
+
+            &:focus {
+              border-color: $secondary-color !important;
+            }
+          }
+
+          select {
+            padding: .69rem 1rem;
+            height: 120%;
+          }
+        }
+      }
+    }
+
+    .security--form {
+      form {
+        .form-group {
+          flex: 1 100% !important;
+
+          &:nth-child(-n+3) {
+            flex: 1 100% !important;
+          }
+        }
+      }
+    }
+
+  }
+}
+
+
 @media screen and (max-width: 770px){
   .realty-list {
     .realty {
@@ -794,3 +940,4 @@ form {
     max-width: 100%;
   }
 }
+

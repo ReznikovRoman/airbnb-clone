@@ -7,17 +7,33 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Personal info</h1>
-
-    <form action="" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {% bootstrap_form user_info_form %}
-        {% bootstrap_form profile_form %}
-
-        <div class="form-buttons">
-            <input type="submit" value="Save" class="button">
+    <div class="account--personal-info">
+        <div class="personal-info--header">
+            <div class="account--links">
+                <span class="account--link">
+                    <a href="{% url 'accounts:settings_dashboard' %}">Account</a>
+                </span>
+                <span class="account--link active">
+                    Personal info
+                </span>
+            </div>
+            <h1>Personal info</h1>
         </div>
-    </form>
+
+        <div class="personal-info--settings">
+            <div class="personal-info--form">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {% bootstrap_form user_info_form %}
+                    {% bootstrap_form profile_form %}
+
+                    <div class="form-buttons">
+                        <input type="submit" class="button button-secondary" value="Save">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}
 

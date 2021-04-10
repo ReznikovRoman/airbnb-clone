@@ -118,8 +118,8 @@ def get_profile_image_upload_path(instance: "Profile", filename: str) -> str:
     return f"upload/users/{instance.user.email}/profile/{filename}"
 
 
-def get_default_profile_image_url() -> str:
-    return f"media/default/profile/default_profile_image.png"
+def get_default_profile_image() -> str:
+    return f"default/profile/default_profile_image.png"
 
 
 class ProfileGenderChoices(models.TextChoices):
@@ -135,6 +135,7 @@ class Profile(models.Model):
         blank=True,
         null=True,
         upload_to=get_profile_image_upload_path,
+        default=get_default_profile_image,
     )
     date_of_birth = models.DateField(
         verbose_name='date of birth',
@@ -147,6 +148,11 @@ class Profile(models.Model):
         max_length=2,
         choices=ProfileGenderChoices.choices,
     )
+    description = models.TextField(
+        verbose_name='description',
+        help_text='About',
+        blank=True,
+    )
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         related_name='profile',
@@ -155,9 +161,3 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"Profile for {self.user}"
-
-    @property
-    def profile_image_url(self):
-        if self.profile_image:
-            return self.profile_image.url
-        return get_default_profile_image_url()

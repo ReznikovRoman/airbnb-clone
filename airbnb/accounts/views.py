@@ -29,7 +29,7 @@ class SignUpView(AnonymousUserRequiredMixin,
 
         if form.is_valid():
             user = form.save()
-            # TODO: send an account verification link to the email (celery, another milestone)
+            # TODO: send an account verification link to the email
 
             return redirect('accounts:login')
 
@@ -57,10 +57,16 @@ class CustomPasswordResetView(auth_views.PasswordResetView):
         return super(CustomPasswordResetView, self).get(request, *args, **kwargs)
 
 
-class UserInfoEditView(LoginRequiredMixin,
-                       generic.base.TemplateResponseMixin,
-                       generic.View):
-    """View for editing user info."""
+class AccountSettingsDashboardView(LoginRequiredMixin,
+                                   generic.TemplateView):
+    """View for showing an account dashboard."""
+    template_name = 'accounts/settings_dashboard.html'
+
+
+class PersonalInfoEditView(LoginRequiredMixin,
+                           generic.base.TemplateResponseMixin,
+                           generic.View):
+    """View for editing user personal info."""
     template_name = 'accounts/user_form.html'
     profile_form: ProfileForm = None
     user_info_form: UserInfoForm = None
@@ -75,7 +81,7 @@ class UserInfoEditView(LoginRequiredMixin,
             data=request.POST or None,
             instance=request.user,
         )
-        return super(UserInfoEditView, self).dispatch(request, *args, **kwargs)
+        return super(PersonalInfoEditView, self).dispatch(request, *args, **kwargs)
 
     def get(self, request: HttpRequest, *args, **kwargs):
         return self.render_to_response(

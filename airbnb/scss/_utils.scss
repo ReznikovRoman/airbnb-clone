@@ -61,6 +61,13 @@ a.button-primary {
   &:hover {
     text-decoration: none;
   }
+
+  &.button-secondary {
+    background-color: $secondary-color;
+    border-radius: 4px;
+    font-size: 1rem;
+    padding: .7rem 1.3rem;
+  }
 }
 
 input[type='submit'], a.button-dark {
@@ -73,6 +80,13 @@ input[type='submit'], a.button-dark {
 
   &:hover {
     background-color: #000;
+  }
+
+  &.button-secondary {
+    background-color: $secondary-color;
+    border-radius: 4px;
+    font-size: 1rem;
+    padding: .7rem 1.3rem;
   }
 }
 
@@ -207,4 +221,32 @@ li.page-item {
 .input-number--add {
   right: 1px;
   padding: 0;
+}
+
+
+// Card
+.card--base {
+  box-shadow: #00000029 0 2px 8px;
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  height: 100%;
+
+  .card--logo {
+    font-size: 1.6rem;
+    color: $secondary-color;
+    margin-bottom: 1rem;
+  }
+
+  .card--header {
+    margin-bottom: .9rem;
+
+    h2 {
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+  }
+
+  .card--description {
+    color: $text-primary-color;
+  }
 }
