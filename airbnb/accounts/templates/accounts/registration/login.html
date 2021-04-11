@@ -7,17 +7,21 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Log in</h1>
+    <div class="login-page">
+        <h1>Log in</h1>
 
-    <form method="POST" class="">
-        {% csrf_token %}
-        {% bootstrap_form form %}
-
-        <div class="form-buttons">
-            <input type="submit" class="button" value="Log in">
-        </div>
+        <form method="POST" class="">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <div class="form-buttons">
+                <input type="submit" class="button" value="Log in">
+            </div>
+        </form>
 
         {# TODO: reset link styles #}
-        <a href="{% url 'accounts:password_reset' %}" class="auth_link">Forgot password?</a>
-    </form>
+        <p class="reset-password">
+            Forgot your password?
+            <a href="{% url 'accounts:password_reset' %}">Click here to reset it</a>
+        </p>
+    </div>
 {% endblock %}

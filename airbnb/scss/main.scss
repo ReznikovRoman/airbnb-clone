@@ -748,6 +748,19 @@ form {
   }
 }
 
+
+// Login page
+.login-page {
+  .reset-password {
+    margin-top: 1rem;
+
+    a {
+      color: $text-primary-color;
+      text-decoration: underline;
+    }
+  }
+}
+
 // Accounts
 .account-settings {
   .account--header {
