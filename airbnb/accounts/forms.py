@@ -62,9 +62,6 @@ class ProfileForm(forms.ModelForm):
         return date_of_birth
 
 
-# TODO: Profile edit view (description ('about me' section) and profile image)
-
-
 class ProfileImageForm(forms.ModelForm):
     """Form for uploading profile image."""
     class Meta:
