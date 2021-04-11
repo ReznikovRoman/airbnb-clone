@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+
+
+{% block title %}
+    {{ profile_owner.full_name }}'s Profile &bull; Airbnb
+{% endblock %}
+
+{% block content %}
+    <div class="profile-show">
+        <div class="profile-card">
+            <div class="profile-photo">
+                {% thumbnail profile_owner.profile.profile_image "128x128" crop='center' as profile_image %}
+                    <img src="{{ profile_image.url }}"
+                         width="{{ profile_image.width }}" height="{{ profile_image.height }}"
+                         alt="Profile image" class="rounded-circle">
+                {% endthumbnail %}
+                {% if is_profile_of_current_user %}
+                    <a href="{% url 'accounts:edit_image' %}" class="color-secondary">Update photo</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="profile-info">
+            <div class="profile-header">
+                <h1>Hi, I'm {{ profile_owner.first_name }}</h1>
+                <p class="color-secondary joined-date">Joined in {{ profile_owner.date_joined|date:"Y" }}</p>
+                {% if is_profile_of_current_user %}
+                    <a href="{% url 'accounts:edit_description' %}">Edit profile</a>
+                {% endif %}
+            </div>
+            {% with profile_description=profile_owner.profile.description  %}
+                {% if profile_description %}
+                    <div class="about-section">
+                        <h2>About</h2>
+                        <div class="description">
+                            <p>{{ profile_description }}</p>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            {% if host_listings.exists %}
+                <hr>
+                <div class="listings-section">
+                    <h2>{{ profile_owner.first_name }}'s listings</h2>
+                    <div class="listings">
+                        <div class="splide">
+                            <div class="splide__track">
+                                <ul class="splide__list listings-carousel">
+                                    {% for host_listing in host_listings %}
+                                        <li class="carousel-content splide__slide">
+                                            <div class="listing">
+                                                <a href="{% url 'realty:detail' pk=host_listing.pk slug=host_listing.slug %}">
+                                                    {% thumbnail host_listing.images.first.image "306x204" as image %}
+                                                        <img src="{{ image.url }}"
+                                                             width="{{ image.width }}" height="{{ image.height }}" alt="Realty image">
+                                                    {% endthumbnail %}
+                                                </a>
+                                                <div class="listing-details">
+                                                    <p class="listing-type">{{ host_listing.realty_type }}</p>
+                                                    <a href="{% url 'realty:detail' pk=host_listing.pk slug=host_listing.slug %}"
+                                                       class="listing-link">
+                                                        <p class="listing-name">{{ host_listing.name }}</p>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block domready %}
+    new Splide( '.splide', {
+        perPage: 1,
+        gap: '1rem',
+        rewind: false,
+        autoWidth: true,
+        lazyLoad: 'nearby',
+        breakpoints: {
+            height: '8rem',
+        },
+    } ).mount();
+{% endblock %}

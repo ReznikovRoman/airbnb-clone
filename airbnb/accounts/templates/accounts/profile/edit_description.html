@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+
+{% block title %}
+    Profile image &bull; Airbnb
+{% endblock %}
+
+{% block content %}
+    <div class="edit-description">
+        <div class="edit-description--header">
+            <div class="profile--links">
+                <span class="profile--link">
+                    <a href="{% url 'accounts:profile_show' user_pk=request.user.pk %}">Profile</a>
+                </span>
+                <span class="description--link active">
+                    Profile description
+                </span>
+            </div>
+            <h1>Profile description</h1>
+        </div>
+
+        <div class="profile-description--form">
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {% bootstrap_form profile_description_form %}
+
+                <div class="form-buttons">
+                    <input type="submit" class="button button-secondary" value="Save">
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

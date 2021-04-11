@@ -50,6 +50,13 @@ ul {
   list-style: none;
 }
 
+a.dropdown-item {
+  &:active {
+    background: $text-hover-color;
+    color: $text-primary-color;
+  }
+}
+
 input[type='checkbox'] {
   padding: 1rem;
   cursor: pointer;
@@ -887,6 +894,263 @@ form {
 }
 
 
+// Profile - show
+.profile-show {
+  margin-top: 2.5rem;
+  display: flex;
+
+  .profile-card {
+    flex: 1;
+    height: 100%;
+    margin-right: 3.5rem;
+    padding: 2rem;
+    border: 1px solid #DDDDDD !important;
+    border-radius: 12px;
+
+    .profile-photo {
+      text-align: center;
+
+      a {
+        margin-top: .4rem;
+        display: block;
+        text-decoration: underline;
+
+        &:hover {
+          color: $text-primary-color;
+        }
+      }
+    }
+
+    .profile-reviews-count {
+      margin-top: 1.5rem;
+      margin-bottom: 1.5rem;
+
+      span {
+        font-weight: bolder;
+      }
+    }
+
+    .confirmed-details {
+      margin-top: 1.5rem;
+      h3 {
+        font-size: 1.3rem;
+        font-weight: 600;
+      }
+
+      .confirmed-detail {
+        span.check-icon {
+          margin-right: .4rem;
+        }
+      }
+    }
+  }
+
+  .profile-info {
+    flex: 2;
+    max-width: 66%;
+
+    h2 {
+      font-size: 1.4rem;
+      font-weight: bolder;
+    }
+
+    .profile-header {
+      h1 {
+        font-size: 2.2rem;
+        margin-bottom: .1rem;
+      }
+
+      p.joined-date {
+        margin-bottom: .3rem;
+      }
+
+      a {
+        color: $text-primary-color;
+        text-decoration: underline;
+      }
+    }
+
+    .about-section {
+      margin-top: 2.5rem;
+      margin-bottom: 1.7rem;
+    }
+
+    .listings-section {
+      margin-top: 1.7rem;
+      margin-bottom: 1.7rem;
+
+      .listings {
+        margin-top: 1.5rem;
+
+        .splide__pagination {
+          bottom: -1.2em;
+        }
+        .splide__arrow {
+          background-color: $text-hover-color;
+          top: 7rem
+        }
+        .splide__pagination__page {
+          &.is-active {
+            background-color: $primary-color;
+          }
+        }
+
+        .listing {
+          img {
+            border-radius: 12px;
+          }
+
+          .listing-rating {
+            margin-top: .5rem;
+          }
+
+          .listing-details {
+            .listing-link {
+              color: $text-primary-color;
+            }
+
+            .listing-type {
+              margin-bottom: 0;
+            }
+          }
+        }
+      }
+    }
+
+    .reviews-section {
+      margin-top: 1.7rem;
+      margin-bottom: 1.7rem;
+
+      h2 {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        span:first-child {
+          margin-right: .4rem;
+        }
+      }
+
+      .reviews {
+        margin-top: 1.5rem;
+
+        .review {
+          margin-top: 2rem;
+
+          .review-header {
+            display: flex;
+            justify-content: space-between;
+
+            .review-realty-name {
+              p {
+                font-size: 1.1rem;
+                font-weight: bolder;
+                margin-bottom: 0;
+              }
+            }
+
+            .review-date {
+              p {
+                margin-bottom: .5rem;
+              }
+            }
+
+            .review-realty-image {
+              img {
+                border-radius: 8px;
+              }
+            }
+          }
+
+          .review-author {
+            display: flex;
+
+            .author-profile-image {
+              margin-right: 1rem;
+            }
+
+            .author-info {
+              .author-name {
+                font-weight: bolder;
+                margin-bottom: 0;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+// Profile - Edit image
+.edit-image, .edit-description {
+  .edit-image--header, .edit-description--header {
+    .profile--links {
+      .profile--link a {
+        color: $text-primary-color;
+      }
+
+      .profile--link:not(:last-child)::after {
+        content: "\f054";
+        font: normal normal normal 7px/1 FontAwesome;
+        font-size: .8rem;
+        vertical-align: middle;
+        margin-left: .25rem;
+        margin-right: .35rem;
+      }
+    }
+
+    h1 {
+      margin-top: .6rem;
+      font-size: 2rem;
+    }
+  }
+
+  .profile-image--form {
+    .image-group {
+      display: flex;
+
+      .image-preview {
+        margin-right: 2rem;
+      }
+
+      .form-group {
+        label:first-child {
+          display: none;
+        }
+
+        a {
+          margin-bottom: .5rem;
+
+          &:after {
+            content: ' ';
+            display: block;
+          }
+        }
+      }
+    }
+
+    .image-preview {
+      width: 145px;
+      height: 145px;
+      position: relative;
+      border-radius: 10px;
+      border: 6px solid #f8f8f8;
+      box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+
+      #profile-image {
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+    }
+  }
+}
+
+
 @media screen and (max-width: 770px){
   .realty-list {
     .realty {
@@ -938,6 +1202,29 @@ form {
 
   .form-group.flex--between {
     max-width: 100%;
+  }
+
+  .profile-show {
+    display: block;
+
+    .profile-card {
+      margin-right: 0;
+      margin-bottom: 2rem;
+      padding: 0;
+      border: none !important;
+    }
+
+    .profile-info {
+      max-width: 100%;
+
+      .listings-section {
+        .listing {
+          img {
+            width: 90%;
+          }
+        }
+      }
+    }
   }
 }
 

@@ -16,6 +16,10 @@ urlpatterns = [
     path('settings/', views.AccountSettingsDashboardView.as_view(), name='settings_dashboard'),
     path('personal-info/', views.PersonalInfoEditView.as_view(), name='user_info_edit'),
 
+    path('show/<int:user_pk>/', views.ProfileShowView.as_view(), name='profile_show'),
+    path('edit-image/', views.ProfileImageEditView.as_view(), name='edit_image'),
+    path('edit-description/', views.ProfileDescriptionEditView.as_view(), name='edit_description'),
+
     # password change urls
     path('password_change/',
          auth_views.PasswordChangeView.as_view(

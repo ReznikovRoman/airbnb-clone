@@ -1,11 +1,14 @@
 from django.views import generic
 from django.http import HttpRequest
 from django.urls import reverse_lazy
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404, reverse
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .forms import SignUpForm, ProfileForm, UserInfoForm
+from hosts.models import RealtyHost
+from realty.models import CustomDeleteQueryset, Realty
+from realty.services.realty import get_available_realty_by_host
+from .forms import SignUpForm, ProfileForm, UserInfoForm, ProfileImageForm, ProfileDescriptionForm
 from .models import CustomUser, Profile
 from .mixins import AnonymousUserRequiredMixin
 
@@ -60,14 +63,14 @@ class CustomPasswordResetView(auth_views.PasswordResetView):
 class AccountSettingsDashboardView(LoginRequiredMixin,
                                    generic.TemplateView):
     """View for showing an account dashboard."""
-    template_name = 'accounts/settings_dashboard.html'
+    template_name = 'accounts/settings/settings_dashboard.html'
 
 
 class PersonalInfoEditView(LoginRequiredMixin,
                            generic.base.TemplateResponseMixin,
                            generic.View):
     """View for editing user personal info."""
-    template_name = 'accounts/user_form.html'
+    template_name = 'accounts/settings/user_form.html'
     profile_form: ProfileForm = None
     user_info_form: UserInfoForm = None
 
@@ -102,5 +105,101 @@ class PersonalInfoEditView(LoginRequiredMixin,
             context={
                 'user_info_form': self.user_info_form,
                 'profile_form': self.profile_form,
+            }
+        )
+
+
+class ProfileShowView(generic.base.TemplateResponseMixin,
+                      generic.View):
+    """View for displaying a user profile."""
+    template_name = 'accounts/profile/show.html'
+
+    profile_owner: CustomUser = None
+    is_profile_of_current_user: bool = False  # True if the profile is the current user's profile, False otherwise
+
+    def dispatch(self, request: HttpRequest, *args, **kwargs):
+        self.profile_owner = get_object_or_404(CustomUser, pk=kwargs.get('user_pk'))
+
+        if self.profile_owner == request.user:
+            self.is_profile_of_current_user = True
+
+        return super(ProfileShowView, self).dispatch(request, *args, **kwargs)
+
+    def get(self, request: HttpRequest, *args, **kwargs):
+        host_listings: CustomDeleteQueryset[Realty] = Realty.available.none()
+        if RealtyHost.objects.filter(user=self.profile_owner).exists():
+            host_listings = get_available_realty_by_host(RealtyHost.objects.get(user=self.profile_owner))
+        return self.render_to_response(
+            context={
+                'profile_owner': self.profile_owner,
+                'is_profile_of_current_user': self.is_profile_of_current_user,
+                'host_listings': host_listings,
+            }
+        )
+
+
+class ProfileImageEditView(LoginRequiredMixin,
+                           generic.base.TemplateResponseMixin,
+                           generic.View):
+    """View for editing a profile image."""
+    template_name = 'accounts/profile/edit_image.html'
+
+    profile_image_form: ProfileImageForm = None
+
+    def dispatch(self, request: HttpRequest, *args, **kwargs):
+        self.profile_image_form = ProfileImageForm(
+            data=request.POST or None,
+            files=request.FILES or None,
+            instance=request.user.profile,
+        )
+        return super(ProfileImageEditView, self).dispatch(request, *args, **kwargs)
+
+    def get(self, request: HttpRequest, *args, **kwargs):
+        return self.render_to_response(
+            context={
+                'profile_image_form': self.profile_image_form,
+            }
+        )
+
+    def post(self, request: HttpRequest, *args, **kwargs):
+        if self.profile_image_form.is_valid():
+            self.profile_image_form.save()
+            return redirect(reverse('accounts:profile_show', kwargs={'user_pk': request.user.pk}))
+        return self.render_to_response(
+            context={
+                'profile_image_form': self.profile_image_form,
+            }
+        )
+
+
+class ProfileDescriptionEditView(LoginRequiredMixin,
+                                 generic.base.TemplateResponseMixin,
+                                 generic.View):
+    """View for editing profile description."""
+    template_name = 'accounts/profile/edit_description.html'
+
+    profile_description_form: ProfileDescriptionForm = None
+
+    def dispatch(self, request: HttpRequest, *args, **kwargs):
+        self.profile_description_form = ProfileDescriptionForm(
+            data=request.POST or None,
+            instance=request.user.profile,
+        )
+        return super(ProfileDescriptionEditView, self).dispatch(request, *args, **kwargs)
+
+    def get(self, request: HttpRequest, *args, **kwargs):
+        return self.render_to_response(
+            context={
+                'profile_description_form': self.profile_description_form,
+            }
+        )
+
+    def post(self, request: HttpRequest, *args, **kwargs):
+        if self.profile_description_form.is_valid():
+            self.profile_description_form.save()
+            return redirect(reverse('accounts:profile_show', kwargs={'user_pk': request.user.pk}))
+        return self.render_to_response(
+            context={
+                'profile_description_form': self.profile_description_form,
             }
         )

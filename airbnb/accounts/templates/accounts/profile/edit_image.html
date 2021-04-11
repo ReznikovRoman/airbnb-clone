@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+
+{% block title %}
+    Profile image &bull; Airbnb
+{% endblock %}
+
+{% block content %}
+    <div class="edit-image">
+        <div class="edit-image--header">
+            <div class="profile--links">
+                <span class="profile--link">
+                    <a href="{% url 'accounts:profile_show' user_pk=request.user.pk %}">Profile</a>
+                </span>
+                <span class="image--link active">
+                    Profile image
+                </span>
+            </div>
+            <h1>Profile image</h1>
+        </div>
+
+        <div class="profile-image--form">
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="image-group">
+                    <div class="image-preview">
+                        <div id="profile-image"
+                             style='background: url("{{ request.user.profile.profile_image.url }}") no-repeat; background-size: 100% 100%'>
+                        </div>
+                    </div>
+                    {% bootstrap_form profile_image_form %}
+                </div>
+
+                <div class="form-buttons">
+                    <input type="submit" class="button button-secondary" value="Save">
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block domready %}
+    const profileImage = $('#profile-image');
+    const profileImageInput = $('#id_profile_image');
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                $(profileImage).css('background-image', 'url('+e.target.result +')');
+                $(profileImage).css('background-size', '100% 100%');
+                $(profileImage).hide();
+                $(profileImage).fadeIn(650);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    profileImageInput.change(function() {
+        readURL(this);
+    });
+{% endblock %}

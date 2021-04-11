@@ -12,11 +12,13 @@
             <div class="general-info">
                 <p>
                     <span class="general-info--item">
-                        <span class="user--name">{{ request.user.first_name }} {{ request.user.last_name }}</span>, {{ request.user.email }}
+                        <span class="user--name">{{ request.user.full_name }}</span>, {{ request.user.email }}
                     </span>
                     <span>
                         {# TODO: Profile page #}
-                        <a href="#"><span class="user--profile-link">Go to profile</span></a>
+                        <a href="{% url 'accounts:profile_show' user_pk=request.user.pk %}">
+                            <span class="user--profile-link">Go to profile</span>
+                        </a>
                     </span>
                 </p>
             </div>

@@ -216,6 +216,10 @@ h3 {
 ul {
   list-style: none; }
 
+a.dropdown-item:active {
+  background: #aaadb73b;
+  color: #222; }
+
 input[type='checkbox'] {
   padding: 1rem;
   cursor: pointer;
@@ -716,6 +720,146 @@ form input:focus, form select:focus, form textarea:focus {
   .account--personal-info .personal-info--settings .security--form form .form-group:nth-child(-n+3), .account--personal-info .security--settings .security--form form .form-group:nth-child(-n+3), .account--security .personal-info--settings .security--form form .form-group:nth-child(-n+3), .account--security .security--settings .security--form form .form-group:nth-child(-n+3) {
     flex: 1 100% !important; }
 
+.profile-show {
+  margin-top: 2.5rem;
+  display: flex; }
+  .profile-show .profile-card {
+    flex: 1;
+    height: 100%;
+    margin-right: 3.5rem;
+    padding: 2rem;
+    border: 1px solid #DDDDDD !important;
+    border-radius: 12px; }
+    .profile-show .profile-card .profile-photo {
+      text-align: center; }
+      .profile-show .profile-card .profile-photo a {
+        margin-top: .4rem;
+        display: block;
+        text-decoration: underline; }
+        .profile-show .profile-card .profile-photo a:hover {
+          color: #222; }
+    .profile-show .profile-card .profile-reviews-count {
+      margin-top: 1.5rem;
+      margin-bottom: 1.5rem; }
+      .profile-show .profile-card .profile-reviews-count span {
+        font-weight: bolder; }
+    .profile-show .profile-card .confirmed-details {
+      margin-top: 1.5rem; }
+      .profile-show .profile-card .confirmed-details h3 {
+        font-size: 1.3rem;
+        font-weight: 600; }
+      .profile-show .profile-card .confirmed-details .confirmed-detail span.check-icon {
+        margin-right: .4rem; }
+  .profile-show .profile-info {
+    flex: 2;
+    max-width: 66%; }
+    .profile-show .profile-info h2 {
+      font-size: 1.4rem;
+      font-weight: bolder; }
+    .profile-show .profile-info .profile-header h1 {
+      font-size: 2.2rem;
+      margin-bottom: .1rem; }
+    .profile-show .profile-info .profile-header p.joined-date {
+      margin-bottom: .3rem; }
+    .profile-show .profile-info .profile-header a {
+      color: #222;
+      text-decoration: underline; }
+    .profile-show .profile-info .about-section {
+      margin-top: 2.5rem;
+      margin-bottom: 1.7rem; }
+    .profile-show .profile-info .listings-section {
+      margin-top: 1.7rem;
+      margin-bottom: 1.7rem; }
+      .profile-show .profile-info .listings-section .listings {
+        margin-top: 1.5rem; }
+        .profile-show .profile-info .listings-section .listings .splide__pagination {
+          bottom: -1.2em; }
+        .profile-show .profile-info .listings-section .listings .splide__arrow {
+          background-color: #aaadb73b;
+          top: 7rem; }
+        .profile-show .profile-info .listings-section .listings .splide__pagination__page.is-active {
+          background-color: #FF385C; }
+        .profile-show .profile-info .listings-section .listings .listing img {
+          border-radius: 12px; }
+        .profile-show .profile-info .listings-section .listings .listing .listing-rating {
+          margin-top: .5rem; }
+        .profile-show .profile-info .listings-section .listings .listing .listing-details .listing-link {
+          color: #222; }
+        .profile-show .profile-info .listings-section .listings .listing .listing-details .listing-type {
+          margin-bottom: 0; }
+    .profile-show .profile-info .reviews-section {
+      margin-top: 1.7rem;
+      margin-bottom: 1.7rem; }
+      .profile-show .profile-info .reviews-section h2 {
+        display: flex;
+        flex-direction: row;
+        align-items: center; }
+        .profile-show .profile-info .reviews-section h2 span:first-child {
+          margin-right: .4rem; }
+      .profile-show .profile-info .reviews-section .reviews {
+        margin-top: 1.5rem; }
+        .profile-show .profile-info .reviews-section .reviews .review {
+          margin-top: 2rem; }
+          .profile-show .profile-info .reviews-section .reviews .review .review-header {
+            display: flex;
+            justify-content: space-between; }
+            .profile-show .profile-info .reviews-section .reviews .review .review-header .review-realty-name p {
+              font-size: 1.1rem;
+              font-weight: bolder;
+              margin-bottom: 0; }
+            .profile-show .profile-info .reviews-section .reviews .review .review-header .review-date p {
+              margin-bottom: .5rem; }
+            .profile-show .profile-info .reviews-section .reviews .review .review-header .review-realty-image img {
+              border-radius: 8px; }
+          .profile-show .profile-info .reviews-section .reviews .review .review-author {
+            display: flex; }
+            .profile-show .profile-info .reviews-section .reviews .review .review-author .author-profile-image {
+              margin-right: 1rem; }
+            .profile-show .profile-info .reviews-section .reviews .review .review-author .author-info .author-name {
+              font-weight: bolder;
+              margin-bottom: 0; }
+
+.edit-image .edit-image--header .profile--links .profile--link a, .edit-image .edit-description--header .profile--links .profile--link a, .edit-description .edit-image--header .profile--links .profile--link a, .edit-description .edit-description--header .profile--links .profile--link a {
+  color: #222; }
+
+.edit-image .edit-image--header .profile--links .profile--link:not(:last-child)::after, .edit-image .edit-description--header .profile--links .profile--link:not(:last-child)::after, .edit-description .edit-image--header .profile--links .profile--link:not(:last-child)::after, .edit-description .edit-description--header .profile--links .profile--link:not(:last-child)::after {
+  content: "\f054";
+  font: normal normal normal 7px/1 FontAwesome;
+  font-size: .8rem;
+  vertical-align: middle;
+  margin-left: .25rem;
+  margin-right: .35rem; }
+
+.edit-image .edit-image--header h1, .edit-image .edit-description--header h1, .edit-description .edit-image--header h1, .edit-description .edit-description--header h1 {
+  margin-top: .6rem;
+  font-size: 2rem; }
+
+.edit-image .profile-image--form .image-group, .edit-description .profile-image--form .image-group {
+  display: flex; }
+  .edit-image .profile-image--form .image-group .image-preview, .edit-description .profile-image--form .image-group .image-preview {
+    margin-right: 2rem; }
+  .edit-image .profile-image--form .image-group .form-group label:first-child, .edit-description .profile-image--form .image-group .form-group label:first-child {
+    display: none; }
+  .edit-image .profile-image--form .image-group .form-group a, .edit-description .profile-image--form .image-group .form-group a {
+    margin-bottom: .5rem; }
+    .edit-image .profile-image--form .image-group .form-group a:after, .edit-description .profile-image--form .image-group .form-group a:after {
+      content: ' ';
+      display: block; }
+
+.edit-image .profile-image--form .image-preview, .edit-description .profile-image--form .image-preview {
+  width: 145px;
+  height: 145px;
+  position: relative;
+  border-radius: 10px;
+  border: 6px solid #f8f8f8;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1); }
+  .edit-image .profile-image--form .image-preview #profile-image, .edit-description .profile-image--form .image-preview #profile-image {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center; }
+
 @media screen and (max-width: 770px) {
   .realty-list .realty .realty-card {
     display: grid;
@@ -743,4 +887,15 @@ form input:focus, form select:focus, form textarea:focus {
     .realty-list .realty .realty-card .realty-card--description {
       grid-area: description; }
   .form-group.flex--between {
-    max-width: 100%; } }
+    max-width: 100%; }
+  .profile-show {
+    display: block; }
+    .profile-show .profile-card {
+      margin-right: 0;
+      margin-bottom: 2rem;
+      padding: 0;
+      border: none !important; }
+    .profile-show .profile-info {
+      max-width: 100%; }
+      .profile-show .profile-info .listings-section .listing img {
+        width: 90%; } }

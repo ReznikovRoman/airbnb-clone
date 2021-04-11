@@ -5,7 +5,7 @@ from django.db.models import QuerySet
 
 from common.session_handler import SessionHandler
 from hosts.models import RealtyHost
-from ..models import Amenity, Realty
+from ..models import Amenity, Realty, CustomDeleteQueryset
 
 
 def get_amenity_ids_from_session(session_handler: SessionHandler) -> Optional[QuerySet[int]]:
@@ -18,3 +18,7 @@ def get_amenity_ids_from_session(session_handler: SessionHandler) -> Optional[Qu
 def set_realty_host_by_user(realty: Realty, user: settings.AUTH_USER_MODEL) -> None:
     host = RealtyHost.objects.get_or_create(user=user)[0]
     realty.host = host
+
+
+def get_available_realty_by_host(realty_host: RealtyHost) -> CustomDeleteQueryset[Realty]:
+    return Realty.available.filter(host=realty_host)
