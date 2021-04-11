@@ -113,6 +113,10 @@ class CustomUser(AbstractUser, PermissionsMixin):
             return True
         return False
 
+    @property
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}"
+
 
 def get_profile_image_upload_path(instance: "Profile", filename: str) -> str:
     return f"upload/users/{instance.user.email}/profile/{filename}"
@@ -150,7 +154,6 @@ class Profile(models.Model):
     )
     description = models.TextField(
         verbose_name='description',
-        help_text='About',
         blank=True,
     )
     user = models.OneToOneField(
