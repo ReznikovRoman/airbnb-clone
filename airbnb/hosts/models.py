@@ -6,7 +6,11 @@ from django.contrib.auth.models import Group
 
 class RealtyHost(models.Model):
     """Realty host."""
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='host',
+    )
     host_rating = models.PositiveSmallIntegerField(
         null=True,
         blank=True,
