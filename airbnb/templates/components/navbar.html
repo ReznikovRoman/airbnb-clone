@@ -31,11 +31,17 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {% if request.user.is_authenticated %}
-                            {% thumbnail request.user.profile.profile_image "32x33" crop='center' as profile_image %}
-                                <img src="{{ profile_image.url }}"
-                                     width="{{ profile_image.width }}" height="{{ profile_image.height }}"
-                                     alt="Profile image" class="rounded-circle">
-                            {% endthumbnail %}
+                            {% if request.user.profile.profile_image %}
+                                {% thumbnail request.user.profile.profile_image "32x33" crop='center' as profile_image %}
+                                    <img src="{{ profile_image.url }}"
+                                         width="{{ profile_image.width }}" height="{{ profile_image.height }}"
+                                         alt="Profile image" class="rounded-circle">
+                                {% endthumbnail %}
+                            {% else %}
+                                <img src="{% static 'images/default/profile/default_profile_image.png' %}"
+                                 width="32" height="33"
+                                 alt="Default profile image" class="rounded-circle">
+                            {% endif %}
                         {% else %}
                             <img src="{% static 'images/default/profile/default_profile_image.png' %}"
                                  width="32" height="33"

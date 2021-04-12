@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+
+{% block title %}
+    Become a host &bull; Missing profile image &bull; Airbnb
+{% endblock %}
+
+{% block content %}
+    <h1>Profile image is missing</h1>
+    <p>
+        You have to upload a profile image to move on.
+        Go to your <a href="{% url 'accounts:edit_image' %}">profile settings to upload it</a>
+    </p>
+{% endblock %}

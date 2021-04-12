@@ -1,10 +1,11 @@
 from django.urls import path
 
-from realty.views import RealtyEditView
+from . import views
 
 
 app_name = 'hosts'
 
 urlpatterns = [
-    path('become-a-host/', RealtyEditView.as_view(), name='become_a_host'),
+    path('become-a-host/', views.BecomeHostView.as_view(), name='become_a_host'),
+    path('become-a-host/missing-image/', views.HostMissingImageView.as_view(), name='missing_image'),
 ]
