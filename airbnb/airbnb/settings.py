@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'addresses.apps.AddressesConfig',
     'hosts.apps.HostsConfig',
     'realty.apps.RealtyConfig',
+    'subscribers.apps.SubscribersConfig',
 
     'django_cleanup.apps.CleanupConfig',
 ]
