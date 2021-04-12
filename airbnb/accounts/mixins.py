@@ -1,6 +1,8 @@
 from django.http import HttpRequest
 from django.shortcuts import redirect, reverse
 
+from .services import send_verification_link
+
 
 class AnonymousUserRequiredMixin:
     """Verify that current user is not logged in."""
@@ -8,3 +10,17 @@ class AnonymousUserRequiredMixin:
         if request.user.is_authenticated:
             return redirect(reverse('home_page'))
         return super(AnonymousUserRequiredMixin, self).dispatch(request, *args, **kwargs)
+
+
+class ActivatedAccountRequiredMixin:
+    """Verify that current user has confirmed an email."""
+    def dispatch(self, request: HttpRequest, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect(reverse('accounts:login'))
+
+        # TODO: Add cooldown for sending confirmation emails (Redis, another milestone)
+        if not request.user.is_email_confirmed:
+            send_verification_link(request, request.user)
+            return redirect(reverse('accounts:activation_required'))
+        
+        return super(ActivatedAccountRequiredMixin, self).dispatch(request, *args, **kwargs)
