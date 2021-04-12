@@ -135,6 +135,10 @@ def get_default_profile_image() -> str:
     return f"default/profile/default_profile_image.png"
 
 
+def get_default_profile_image_full_url() -> str:
+    return f"{settings.MEDIA_URL}{get_default_profile_image()}"
+
+
 class ProfileGenderChoices(models.TextChoices):
     MALE = 'M', 'Male'
     HOTEL = 'F', 'Female'
