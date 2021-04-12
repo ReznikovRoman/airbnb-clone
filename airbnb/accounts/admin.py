@@ -9,7 +9,7 @@ from .forms import AdminCustomUserChangeForm, SignUpForm
 
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
-    list_display = ('email', 'first_name', 'last_name', 'get_profile_link')
+    list_display = ('email', 'first_name', 'last_name', 'get_profile_link', 'is_email_confirmed')
     search_fields = ('email', 'first_name', 'last_name')
     readonly_fields = ('id', 'date_joined', 'last_login')
     ordering = ('email',)
@@ -20,7 +20,9 @@ class CustomUserAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('email',)}),
         ('Personal info', {'fields': ('first_name', 'last_name')}),
-        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_admin', 'groups', 'user_permissions')}),
+        ('Permissions', {
+            'fields': ('is_active', 'is_email_confirmed', 'is_staff', 'is_admin', 'groups', 'user_permissions')}
+         ),
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )
 

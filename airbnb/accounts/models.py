@@ -61,6 +61,13 @@ class CustomUserManager(BaseUserManager):
         return user, created
 
 
+class ActivatedAccountsManager(CustomUserManager):
+    """Manager for all users that have confirmed their email."""
+    def get_queryset(self):
+        base_qs = super(ActivatedAccountsManager, self).get_queryset()
+        return base_qs.filter(is_email_confirmed=True)
+
+
 class CustomUser(AbstractUser, PermissionsMixin):
     """Custom user model."""
     username = None
@@ -77,6 +84,7 @@ class CustomUser(AbstractUser, PermissionsMixin):
         verbose_name='last name',
         max_length=40,
     )
+    is_email_confirmed = models.BooleanField(verbose_name='email confirmed', default=False)
     date_joined = models.DateTimeField(
         verbose_name='date joined',
         auto_now_add=True,
@@ -91,6 +99,7 @@ class CustomUser(AbstractUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
 
     objects = CustomUserManager()
+    activated = ActivatedAccountsManager()
 
     # login parameter
     USERNAME_FIELD = 'email'

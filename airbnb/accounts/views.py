@@ -1,7 +1,9 @@
 from django.views import generic
 from django.http import HttpRequest
 from django.urls import reverse_lazy
+from django.contrib import messages
 from django.shortcuts import redirect, get_object_or_404, reverse
+from django.contrib.auth import login
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -11,6 +13,8 @@ from realty.services.realty import get_available_realty_by_host
 from .forms import SignUpForm, ProfileForm, UserInfoForm, ProfileImageForm, ProfileDescriptionForm
 from .models import CustomUser, Profile
 from .mixins import AnonymousUserRequiredMixin
+from .services import get_user_from_uid, send_verification_link
+from .tokens import account_activation_token
 
 
 class SignUpView(AnonymousUserRequiredMixin,
@@ -32,8 +36,7 @@ class SignUpView(AnonymousUserRequiredMixin,
 
         if form.is_valid():
             user = form.save()
-            # TODO: send an account verification link to the email
-
+            send_verification_link(request, user)  # TODO: Send email using Celery (another milestone)
             return redirect('accounts:login')
 
         return self.render_to_response(
@@ -58,6 +61,30 @@ class CustomPasswordResetView(auth_views.PasswordResetView):
 
     def get(self, request: HttpRequest, *args, **kwargs):
         return super(CustomPasswordResetView, self).get(request, *args, **kwargs)
+
+
+class AccountActivationView(generic.View):
+    """View for confirming user's email."""
+    def get(self, request: HttpRequest, uidb64, token, *args, **kwargs):
+        try:
+            user = get_user_from_uid(uidb64)
+        except (TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
+            user = None
+
+        if user is not None and account_activation_token.check_token(user, token):
+            user.is_email_confirmed = True
+            user.save()
+            login(request, user)
+            messages.add_message(request, messages.SUCCESS, message='You have successfully confirmed your email.')
+            return redirect(reverse('home_page'))
+
+        messages.add_message(request, messages.ERROR, message='There was an error while confirming your email.')
+        return redirect(reverse('home_page'))
+
+
+class ActivationRequiredView(generic.TemplateView):
+    """Display error page - page requires confirmed email."""
+    template_name = 'accounts/registration/account_activation_required.html'
 
 
 class AccountSettingsDashboardView(LoginRequiredMixin,

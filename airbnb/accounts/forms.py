@@ -1,6 +1,6 @@
 from django import forms
-from django.core.exceptions import ValidationError
 from django.utils import timezone
+from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
 from .models import CustomUser, Profile
@@ -21,7 +21,7 @@ class AdminCustomUserChangeForm(UserChangeForm):
     """Form for editing CustomUser (used on the admin panel)."""
     class Meta:
         model = CustomUser
-        fields = ('email', 'first_name', 'last_name')
+        fields = ('email', 'first_name', 'last_name', 'is_email_confirmed')
 
 
 class UserInfoForm(forms.ModelForm):
