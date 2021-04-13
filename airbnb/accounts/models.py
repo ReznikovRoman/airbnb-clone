@@ -1,3 +1,5 @@
+from model_utils import FieldTracker
+
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import (AbstractUser, BaseUserManager,
@@ -104,6 +106,9 @@ class CustomUser(AbstractUser, PermissionsMixin):
     # login parameter
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
+
+    # email field tracker
+    email_tracker = FieldTracker(fields=['email'])
 
     class Meta:
         verbose_name = 'user'
