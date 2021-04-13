@@ -6,8 +6,10 @@ from django.core.mail import send_mail, EmailMultiAlternatives
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 from django.template.loader import render_to_string, get_template
+from django.contrib.auth.models import Group
 from django.contrib.sites.shortcuts import get_current_site
 
+from subscribers.services import get_subscriber_by_email
 from .models import CustomUser
 from .tokens import account_activation_token
 
@@ -105,3 +107,8 @@ def get_user_from_uid(uid) -> CustomUser:
     uid = force_text(urlsafe_base64_decode(force_text(uid)))
     user = CustomUser.objects.get(id=uid)
     return user
+
+
+def add_user_to_group(user: CustomUser, group_name: str) -> None:
+    group = Group.objects.get_or_create(name=group_name)[0]
+    user.groups.add(group)
