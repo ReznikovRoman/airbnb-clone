@@ -16,6 +16,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls', namespace='accounts')),
     path('realty/', include('realty.urls', namespace='realty')),
     path('hosts/', include('hosts.urls', namespace='hosts')),
+    path('subscribers/', include('subscribers.urls', namespace='subscribers')),
     path('', include('main.urls')),
 ]
 

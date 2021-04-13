@@ -18,11 +18,9 @@ body {
   background-color: #f9f9f9;
   font-family: $font-stack;
   line-height: 1.7;
-  height: 100%;
+  min-height: 100%;
 
   color: $text-primary-color;
-
-  display: flex;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -149,6 +147,22 @@ form {
   .nav-link {
     color: $text-primary-color !important;
   }
+}
+
+
+// Content
+.page-wrapper {
+  display: grid;
+  min-height: 100%;
+  grid-template-rows: 1fr auto;
+}
+
+
+// Footer
+#main-footer {
+  background-color: #fff;
+  grid-row-start: 2;
+  grid-row-end: 3;
 }
 
 

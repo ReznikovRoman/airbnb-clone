@@ -1,0 +1,61 @@
+<footer id="main-footer">
+    <div class="container py-5">
+        <div class="row py-4">
+            <div class="col-lg-4 col-md-6 mb-4 mb-lg-0 mr-lg-4">
+                <h6 class="text-uppercase font-weight-bold mb-4">Newsletter</h6>
+                <p class="text-muted mb-4">
+                    Receive promotions, surveys, info about new realty.
+                </p>
+                <form action="{% url 'subscribers:new_subscription' %}" method="post">
+                    {% csrf_token %}
+                    <div class="p-1 rounded border">
+                        <div class="input-group">
+                            <input type="email" placeholder="Enter your email address"
+                                   aria-describedby="button-addon1"
+                                   class="form-control border-0 shadow-0"
+                                   id="id_email" name="email" maxlength="254">
+                            <div class="input-group-append">
+                                <button id="button-addon1" type="submit" class="btn btn-link"><i class="fa fa-paper-plane"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-lg-2 col-md-6 mb-4 mb-lg-0">
+                <h6 class="text-uppercase font-weight-bold mb-4">About</h6>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2"><a href="#" class="text-muted">How airbnb works</a></li>
+                    <li class="mb-2"><a href="#" class="text-muted">Newsroom</a></li>
+                    <li class="mb-2"><a href="#" class="text-muted">Investors</a></li>
+                    <li class="mb-2"><a href="#" class="text-muted">Airbnb Plus</a></li>
+                    <li class="mb-2"><a href="#" class="text-muted">Airbnb Luxe</a></li>
+                    <li class="mb-2"><a href="#" class="text-muted">HotelTonight</a></li>
+                    <li class="mb-2"><a href="#" class="text-muted">Airbnb for Work</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-2 col-md-6 mb-4 mb-lg-0">
+                <h6 class="text-uppercase font-weight-bold mb-4">Community</h6>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2"><a href="#" class="text-muted">Diversity & Belonging</a></li>
+                    <li class="mb-2"><a href="#" class="text-muted">Against Discrimination</a></li>
+                    <li class="mb-2"><a href="#" class="text-muted">Airbnb Associates</a></li>
+                    <li class="mb-2"><a href="#" class="text-muted">Gift cards</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-2 col-md-6 mb-4 mb-lg-0">
+                <h6 class="text-uppercase font-weight-bold mb-4">Host</h6>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2"><a href="#" class="text-muted">Host your home</a></li>
+                    <li class="mb-2"><a href="#" class="text-muted">Resource Center</a></li>
+                    <li class="mb-2"><a href="#" class="text-muted">Community Center</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div id="sub-footer" class="py-4">
+        <div class="container text-center">
+            <p class="text-muted mb-0 py-2">© 2021 Airbnb, Inc.</p>
+        </div>
+    </div>
+</footer>

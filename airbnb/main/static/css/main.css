@@ -191,9 +191,8 @@ body {
   background-color: #f9f9f9;
   font-family: "Roboto", sans-serif;
   line-height: 1.7;
-  height: 100%;
-  color: #222;
-  display: flex; }
+  min-height: 100%;
+  color: #222; }
 
 h1, h2, h3, h4, h5, h6 {
   color: #222; }
@@ -282,6 +281,16 @@ form input:focus, form select:focus, form textarea:focus {
       border-radius: 40px; }
   .navbar .nav-link {
     color: #222 !important; }
+
+.page-wrapper {
+  display: grid;
+  min-height: 100%;
+  grid-template-rows: 1fr auto; }
+
+#main-footer {
+  background-color: #fff;
+  grid-row-start: 2;
+  grid-row-end: 3; }
 
 .realty-explore {
   margin-top: 1.5rem; }
