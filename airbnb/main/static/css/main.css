@@ -287,7 +287,11 @@ form input:focus, form select:focus, form textarea:focus {
   min-height: 100%;
   grid-template-rows: 1fr auto; }
 
+#content {
+  padding: 0 !important; }
+
 #main-footer {
+  margin-top: 5rem;
   background-color: #fff;
   grid-row-start: 2;
   grid-row-end: 3; }
@@ -876,6 +880,9 @@ form input:focus, form select:focus, form textarea:focus {
     background-position: center; }
 
 @media screen and (max-width: 770px) {
+  .page-wrapper {
+    display: flex;
+    flex-direction: column; }
   .realty-list .realty .realty-card {
     display: grid;
     grid-template-areas: "image" "save" "description"; }
@@ -884,8 +891,7 @@ form input:focus, form select:focus, form textarea:focus {
       margin-right: 0;
       margin-bottom: 1rem; }
       .realty-list .realty .realty-card .realty-card--image img {
-        width: 100%;
-        height: 350px; }
+        width: 100%; }
     .realty-list .realty .realty-card .realty-card-save {
       grid-area: save;
       margin-left: 0;
@@ -913,4 +919,18 @@ form input:focus, form select:focus, form textarea:focus {
     .profile-show .profile-info {
       max-width: 100%; }
       .profile-show .profile-info .listings-section .listing img {
-        width: 90%; } }
+        width: 90%; }
+  .account--personal-info .personal-info--settings .personal-info--form form, .account--personal-info .personal-info--settings .security--form form, .account--personal-info .security--settings .personal-info--form form, .account--personal-info .security--settings .security--form form, .account--security .personal-info--settings .personal-info--form form, .account--security .personal-info--settings .security--form form, .account--security .security--settings .personal-info--form form, .account--security .security--settings .security--form form {
+    max-width: 100%; }
+    .account--personal-info .personal-info--settings .personal-info--form form .form-group:nth-child(-n+3), .account--personal-info .personal-info--settings .security--form form .form-group:nth-child(-n+3), .account--personal-info .security--settings .personal-info--form form .form-group:nth-child(-n+3), .account--personal-info .security--settings .security--form form .form-group:nth-child(-n+3), .account--security .personal-info--settings .personal-info--form form .form-group:nth-child(-n+3), .account--security .personal-info--settings .security--form form .form-group:nth-child(-n+3), .account--security .security--settings .personal-info--form form .form-group:nth-child(-n+3), .account--security .security--settings .security--form form .form-group:nth-child(-n+3) {
+      flex: 1 100% !important; }
+    .account--personal-info .personal-info--settings .personal-info--form form .form-group:nth-child(-n+2), .account--personal-info .personal-info--settings .security--form form .form-group:nth-child(-n+2), .account--personal-info .security--settings .personal-info--form form .form-group:nth-child(-n+2), .account--personal-info .security--settings .security--form form .form-group:nth-child(-n+2), .account--security .personal-info--settings .personal-info--form form .form-group:nth-child(-n+2), .account--security .personal-info--settings .security--form form .form-group:nth-child(-n+2), .account--security .security--settings .personal-info--form form .form-group:nth-child(-n+2), .account--security .security--settings .security--form form .form-group:nth-child(-n+2) {
+      margin-right: 0 !important; }
+  .profile-image--form .image-group {
+    display: flex;
+    flex-direction: column; }
+    .profile-image--form .image-group .image-preview {
+      margin: auto !important; }
+  .profile-image--form .image-preview {
+    width: 175px !important;
+    height: 175px !important; } }
