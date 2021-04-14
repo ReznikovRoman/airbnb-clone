@@ -22,3 +22,7 @@ def set_realty_host_by_user(realty: Realty, user: settings.AUTH_USER_MODEL) -> N
 
 def get_available_realty_by_host(realty_host: RealtyHost) -> CustomDeleteQueryset[Realty]:
     return Realty.available.filter(host=realty_host)
+
+
+def get_latest_realty() -> Realty:
+    return Realty.objects.last()

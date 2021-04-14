@@ -1,6 +1,13 @@
+from typing import Optional
+
 from django.conf import settings
 from django.db.models import QuerySet
+from django.template.loader import render_to_string, get_template
+from django.contrib.sites.models import Site
 
+from mailings.services import send_email_with_attachments
+from realty.models import Realty
+from realty.services.realty import get_latest_realty
 from accounts.models import CustomUser
 from .models import Subscriber
 
@@ -29,3 +36,42 @@ def update_email_for_subscriber_by_user(user: CustomUser) -> None:
     subscriber_qs = get_subscriber_by_email(user.email_tracker.previous('email'))
     if subscriber_qs.exists():
         subscriber_qs.update(email=user.email)
+
+
+def email_subscribers(latest_realty: Optional[Realty] = None) -> None:
+    """Send promo email about new Realty to all Subscribers."""
+    if latest_realty is None:
+        latest_realty = get_latest_realty()
+
+    domain = Site.objects.get_current().domain
+    protocol = settings.DEFAULT_PROTOCOL
+    subject = 'Check out new realty'
+
+    for subscriber in Subscriber.objects.all():
+        text_content = render_to_string(
+            template_name='subscribers/promo/new_realty.html',
+            context={
+                'subscriber': subscriber,
+                'realty': latest_realty,
+                'protocol': protocol,
+                'domain': domain,
+            }
+        )
+
+        html = get_template(template_name='subscribers/promo/new_realty.html')
+        html_content = html.render(
+            context={
+                'subscriber': subscriber,
+                'realty': latest_realty,
+                'protocol': protocol,
+                'domain': domain,
+            }
+        )
+
+        # TODO: Use Celery to send emails (another milestone)
+        send_email_with_attachments(
+            subject,
+            text_content,
+            email_to=[subscriber.email],
+            alternatives=[(html_content, 'text/html')]
+        )
