@@ -7,7 +7,7 @@ from django.contrib.sites.models import Site
 
 from mailings.services import send_email_with_attachments
 from realty.models import Realty
-from realty.services.realty import get_latest_realty
+from realty.services.realty import get_n_latest_available_realty
 from accounts.models import CustomUser
 from .models import Subscriber
 
@@ -38,10 +38,9 @@ def update_email_for_subscriber_by_user(user: CustomUser) -> None:
         subscriber_qs.update(email=user.email)
 
 
-def email_subscribers(latest_realty: Optional[Realty] = None) -> None:
+def email_subscribers_about_latest_realty(latest_realty_count: Optional[int] = 3) -> None:
     """Send promo email about new Realty to all Subscribers."""
-    if latest_realty is None:
-        latest_realty = get_latest_realty()
+    latest_realty = get_n_latest_available_realty(realty_count=latest_realty_count)
 
     domain = Site.objects.get_current().domain
     protocol = settings.DEFAULT_PROTOCOL
@@ -52,7 +51,7 @@ def email_subscribers(latest_realty: Optional[Realty] = None) -> None:
             template_name='subscribers/promo/new_realty.html',
             context={
                 'subscriber': subscriber,
-                'realty': latest_realty,
+                'realty_list': latest_realty,
                 'protocol': protocol,
                 'domain': domain,
             }
@@ -62,7 +61,7 @@ def email_subscribers(latest_realty: Optional[Realty] = None) -> None:
         html_content = html.render(
             context={
                 'subscriber': subscriber,
-                'realty': latest_realty,
+                'realty_list': latest_realty,
                 'protocol': protocol,
                 'domain': domain,
             }

@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'bootstrap4',
     'debug_toolbar',
     'django_inlinecss',
+    'django_apscheduler',
     'ckeditor',
     'ckeditor_uploader',
     'sorl.thumbnail',

@@ -12,22 +12,22 @@
                         {% else %}
                             Check out new realty
                         {% endif %}
-
                     </h1>
 
-                    <div class="realty-card">
-                        <div class="realty-card--image">
-                            <a href="{{ protocol }}://{{ domain }}{% url 'realty:detail' pk=realty.id slug=realty.slug %}">
-                                {% if realty.images.exists %}
-                                    <img src="{{ realty.images.first.image.url }}"
-                                         width="300" height="200" alt="Realty image">
-                                {% else %}
-                                    <img src="/static/realty/images/default/realty_image_placeholder.png"
-                                         width="300" height="200" alt="Realty image">
-                                {% endif %}
-                            </a>
-                        </div>
-                        <div class="realty-card--description">
+                    {% for realty in realty_list %}
+                        <div class="realty-card">
+                            <div class="realty-card--image">
+                                <a href="{{ protocol }}://{{ domain }}{% url 'realty:detail' pk=realty.id slug=realty.slug %}">
+                                    {% if realty.images.exists %}
+                                        <img src="{{ realty.images.first.image.url }}"
+                                             width="300" height="200" alt="Realty image">
+                                    {% else %}
+                                        <img src="/static/realty/images/default/realty_image_placeholder.png"
+                                             width="300" height="200" alt="Realty image">
+                                    {% endif %}
+                                </a>
+                            </div>
+                            <div class="realty-card--description">
                             <div class="realty-card--name">
                                 <a href="{{ protocol }}://{{ domain }}{% url 'realty:detail' pk=realty.id slug=realty.slug %}">
                                     <p class="realty-card--short-description color-secondary mb-0">
@@ -60,7 +60,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        </div>
+                    {% endfor %}
 
                     <p>
                         Thanks,

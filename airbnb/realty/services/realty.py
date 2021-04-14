@@ -26,3 +26,7 @@ def get_available_realty_by_host(realty_host: RealtyHost) -> CustomDeleteQueryse
 
 def get_latest_realty() -> Realty:
     return Realty.objects.last()
+
+
+def get_n_latest_available_realty(realty_count: int) -> CustomDeleteQueryset[Realty]:
+    return Realty.available.all()[:realty_count]
