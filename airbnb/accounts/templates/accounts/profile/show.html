@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load thumbnail %}
 
 
@@ -52,10 +53,15 @@
                                         <li class="carousel-content splide__slide">
                                             <div class="listing">
                                                 <a href="{% url 'realty:detail' pk=host_listing.pk slug=host_listing.slug %}">
-                                                    {% thumbnail host_listing.images.first.image "306x204" as image %}
-                                                        <img src="{{ image.url }}"
-                                                             width="{{ image.width }}" height="{{ image.height }}" alt="Realty image">
-                                                    {% endthumbnail %}
+                                                    {% if host_listing.images.exists %}
+                                                        {% thumbnail host_listing.images.first.image "306x204" as image %}
+                                                            <img src="{{ image.url }}"
+                                                                 width="{{ image.width }}" height="{{ image.height }}" alt="Realty image">
+                                                        {% endthumbnail %}
+                                                    {% else %}
+                                                        <img src="{% static 'realty/images/default/realty_image_placeholder.png' %}"
+                                                             width="300" height="200" alt="Realty image">
+                                                    {% endif %}
                                                 </a>
                                                 <div class="listing-details">
                                                     <p class="listing-type">{{ host_listing.realty_type }}</p>
