@@ -1,44 +1,14 @@
-from typing import List
-
 from django.conf import settings
 from django.http import HttpRequest
-from django.core.mail import send_mail, EmailMultiAlternatives
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 from django.template.loader import render_to_string, get_template
 from django.contrib.auth.models import Group
 from django.contrib.sites.shortcuts import get_current_site
 
-from subscribers.services import get_subscriber_by_email
+from mailings.services import send_email_with_attachments
 from .models import CustomUser
 from .tokens import account_activation_token
-
-
-def send_email_to_user(subject: str, message: str, email_to: List[str], email_from: str = None, fail_silently=False):
-    return send_mail(
-        subject,
-        message,
-        email_from,
-        email_to,
-        fail_silently,
-    )
-
-
-def send_email_with_attachments(subject: str, body: str, email_to: List[str], email_from: str = None,
-                                alternatives=None) -> None:
-    """Send email with optional alternatives (html files, pdf, etc.)."""
-    email = EmailMultiAlternatives(
-        subject=subject,
-        body=body,
-        from_email=email_from,
-        to=email_to,
-    )
-
-    if alternatives:
-        for alternative_content, alternative_type in alternatives:
-            email.attach_alternative(alternative_content, alternative_type)
-
-    email.send()
 
 
 def send_greeting_email(request: HttpRequest, user: CustomUser) -> None:

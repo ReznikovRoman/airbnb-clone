@@ -40,12 +40,13 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     'sorl.thumbnail',
 
-    'accounts.apps.AccountsConfig',
     'main.apps.MainConfig',
+    'accounts.apps.AccountsConfig',
     'addresses.apps.AddressesConfig',
     'hosts.apps.HostsConfig',
     'realty.apps.RealtyConfig',
     'subscribers.apps.SubscribersConfig',
+    'mailings.apps.MailingsConfig',
 
     'django_cleanup.apps.CleanupConfig',
 ]
@@ -70,9 +71,11 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             BASE_DIR / 'templates',
+            BASE_DIR / 'main/templates',
             BASE_DIR / 'accounts/templates',
             BASE_DIR / 'realty/templates',
             BASE_DIR / 'hosts/templates',
+            BASE_DIR / 'subscribers/templates',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -123,6 +126,7 @@ USE_TZ = True
 
 # SITES
 SITE_ID = 1
+DEFAULT_PROTOCOL = 'http'
 
 
 # DEBUG TOOLBAR
