@@ -1,8 +1,10 @@
 from django import forms
 from django.utils import timezone
+from django.template import loader
 from django.core.exceptions import ValidationError
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordResetForm
 
+from mailings.tasks import send_email_with_attachments
 from .models import CustomUser, Profile
 
 
@@ -15,6 +17,27 @@ class SignUpForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super(SignUpForm, self).__init__(*args, **kwargs)
         self.fields['email'].label = 'Email address'
+
+
+class CustomPasswordResetForm(PasswordResetForm):
+    def send_mail(self, subject_template_name, email_template_name,
+                  context, from_email, to_email, html_email_template_name=None):
+        subject = loader.render_to_string(subject_template_name, context)
+        # Email subject *must not* contain newlines
+        subject = ''.join(subject.splitlines())
+        body = loader.render_to_string(email_template_name, context)
+
+        html = loader.get_template(html_email_template_name)
+        html_content = html.render(context)
+
+        # launch celery task
+        send_email_with_attachments.delay(
+            subject=subject,
+            body=body,
+            email_to=[to_email],
+            email_from=from_email,
+            alternatives=[(html_content, 'text/html')]
+        )
 
 
 class AdminCustomUserChangeForm(UserChangeForm):
