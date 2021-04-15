@@ -178,6 +178,10 @@ MESSAGE_TAGS = {
 }
 
 
+# CELERY
+CELERY_TIMEZONE = 'Europe/Moscow'
+
+
 # CKEDITOR
 CKEDITOR_UPLOAD_PATH = 'upload/images_admin/'
 CKEDITOR_IMAGE_BACKEND = "pillow"
