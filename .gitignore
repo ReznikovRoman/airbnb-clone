@@ -14,3 +14,6 @@ airbnb/static/
 node_modules/
 
 drafts/
+
+*.env
+
