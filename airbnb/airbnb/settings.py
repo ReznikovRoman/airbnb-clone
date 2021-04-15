@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'django_inlinecss',
     'django_apscheduler',
+    'django_celery_beat',
     'ckeditor',
     'ckeditor_uploader',
     'sorl.thumbnail',
