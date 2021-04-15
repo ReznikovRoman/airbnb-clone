@@ -1,9 +1,36 @@
 version: "3.8"
 services:
   redis:
+    env_file:
+      - .env
+    environment:
+      - AIRBNB_REDIS_HOST=airbnb_redis
     image: redis
+    ports:
+      - 6380:6379
+    container_name: ${AIRBNB_REDIS_HOST}
+
+  celery:
+    env_file:
+      - .env
+    environment:
+      - AIRBNB_REDIS_HOST=airbnb_redis
+    restart: always
+    build: .
+    command: celery -A airbnb worker -l info
+    volumes:
+      - .:/airbnb-docker
+    links:
+      - redis
+    depends_on:
+      - redis
+      - airbnb
 
   airbnb:
+    env_file:
+      - .env
+    environment:
+      - AIRBNB_REDIS_HOST=airbnb_redis
     build: .
     volumes:
       - .:/airbnb-docker
