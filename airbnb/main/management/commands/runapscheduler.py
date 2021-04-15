@@ -6,8 +6,6 @@ from django.core.management.base import BaseCommand
 from django_apscheduler.jobstores import DjangoJobStore
 from django_apscheduler.models import DjangoJobExecution
 
-from subscribers.services import email_subscribers_about_latest_realty
-
 
 def delete_old_job_executions(max_age=604_800):
     """This job deletes all apscheduler job executions older than `max_age` from the database."""
@@ -20,16 +18,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         scheduler = BlockingScheduler(timezone=settings.TIME_ZONE)
         scheduler.add_jobstore(DjangoJobStore(), "default")
-
-        scheduler.add_job(
-            email_subscribers_about_latest_realty,
-            trigger=CronTrigger(
-                day_of_week="fri", hour="18", minute="00"
-            ),  # 18:00 on Friday
-            id="email_newsletter",
-            max_instances=1,
-            replace_existing=True,
-        )
 
         scheduler.add_job(
             delete_old_job_executions,
