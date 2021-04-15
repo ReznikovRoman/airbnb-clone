@@ -6,7 +6,7 @@ from django.template.loader import render_to_string, get_template
 from django.contrib.auth.models import Group
 from django.contrib.sites.shortcuts import get_current_site
 
-from mailings.services import send_email_with_attachments
+from mailings.tasks import send_email_with_attachments
 from .models import CustomUser
 from .tokens import account_activation_token
 
@@ -31,7 +31,7 @@ def send_greeting_email(request: HttpRequest, user: CustomUser) -> None:
             'domain': current_site.domain,
         }
     )
-    send_email_with_attachments(
+    send_email_with_attachments.delay(
         subject,
         text_content,
         email_to=[user.email],
@@ -65,7 +65,7 @@ def send_verification_link(request: HttpRequest, user: settings.AUTH_USER_MODEL)
             'token': account_activation_token.make_token(user),
         }
     )
-    send_email_with_attachments(
+    send_email_with_attachments.delay(
         subject,
         text_content,
         email_to=[user.email],

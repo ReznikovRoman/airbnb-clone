@@ -3,7 +3,7 @@ from typing import List
 from django.core.mail import EmailMultiAlternatives, send_mail
 
 
-def send_email_to_user(subject: str, message: str, email_to: List[str], email_from: str = None, fail_silently=False):
+def _send_email_to_user(subject: str, message: str, email_to: List[str], email_from: str = None, fail_silently=False):
     return send_mail(
         subject,
         message,
@@ -13,8 +13,8 @@ def send_email_to_user(subject: str, message: str, email_to: List[str], email_fr
     )
 
 
-def send_email_with_attachments(subject: str, body: str, email_to: List[str], email_from: str = None,
-                                alternatives=None) -> None:
+def _send_email_with_attachments(subject: str, body: str, email_to: List[str], email_from: str = None,
+                                 alternatives=None) -> None:
     """Send email with optional alternatives (html files, pdf, etc.)."""
     email = EmailMultiAlternatives(
         subject=subject,

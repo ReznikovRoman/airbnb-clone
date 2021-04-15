@@ -5,8 +5,7 @@ from django.db.models import QuerySet
 from django.template.loader import render_to_string, get_template
 from django.contrib.sites.models import Site
 
-from mailings.services import send_email_with_attachments
-from realty.models import Realty
+from mailings.tasks import send_email_with_attachments
 from realty.services.realty import get_n_latest_available_realty
 from accounts.models import CustomUser
 from .models import Subscriber
@@ -67,8 +66,7 @@ def email_subscribers_about_latest_realty(latest_realty_count: Optional[int] = 3
             }
         )
 
-        # TODO: Use Celery to send emails (another milestone)
-        send_email_with_attachments(
+        send_email_with_attachments.delay(
             subject,
             text_content,
             email_to=[subscriber.email],
