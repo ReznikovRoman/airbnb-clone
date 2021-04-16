@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.views import generic
 from django.http import HttpRequest
@@ -9,15 +8,14 @@ from django.contrib.auth import login
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from common.tasks import send_sms_by_twilio
 from hosts.models import RealtyHost
 from realty.models import CustomDeleteQueryset, Realty
 from realty.services.realty import get_available_realty_by_host
 from .forms import (SignUpForm, CustomPasswordResetForm,
                     ProfileForm, UserInfoForm, ProfileImageForm, ProfileDescriptionForm)
-from .models import CustomUser, Profile, SMSLog
+from .models import CustomUser, Profile
 from .mixins import AnonymousUserRequiredMixin
-from .services import get_user_from_uid, send_verification_link, generate_random_sms_code, handle_phone_number_change
+from .services import get_user_from_uid, send_verification_link, handle_phone_number_change
 from .tokens import account_activation_token
 
 
