@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.views import generic
 from django.http import HttpRequest
 from django.urls import reverse_lazy
@@ -7,6 +8,7 @@ from django.contrib.auth import login
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from common.tasks import send_sms_by_twilio
 from hosts.models import RealtyHost
 from realty.models import CustomDeleteQueryset, Realty
 from realty.services.realty import get_available_realty_by_host
@@ -125,6 +127,19 @@ class PersonalInfoEditView(LoginRequiredMixin,
             user_info: CustomUser = self.user_info_form.save()
         if self.profile_form.is_valid():
             user_profile: Profile = self.profile_form.save()
+            profile_cleaned_data = self.profile_form.cleaned_data
+
+            # if phone number has been changed (and it is not blank)
+            if 'phone_number' in self.profile_form.changed_data and \
+                    profile_cleaned_data.get('phone_number', None):
+                messages.add_message(request, messages.SUCCESS, message="We've sent a message to your phone number.")
+                send_sms_by_twilio.delay(
+                    body=f"Hi {user_info.first_name}! "
+                         f"You are receiving this message because you've changed your phone number recently.",
+                    sms_from=settings.TWILIO_PHONE_NUMBER,
+                    sms_to=str(profile_cleaned_data.get('phone_number')),
+                )
+
             return redirect('accounts:user_info_edit')
 
         return self.render_to_response(

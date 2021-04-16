@@ -58,7 +58,7 @@ class ProfileForm(forms.ModelForm):
     """Form for editing user profile."""
     class Meta:
         model = Profile
-        fields = ('gender', 'date_of_birth')
+        fields = ('gender', 'date_of_birth', 'phone_number')
         widgets = {
             'date_of_birth': forms.DateInput(
                 attrs={
