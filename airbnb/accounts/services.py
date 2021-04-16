@@ -110,6 +110,7 @@ def handle_phone_number_change(user_profile: Profile, site_domain: str, new_phon
 
     sms_verification_code = generate_random_sms_code()
     sms_log.sms_code = sms_verification_code
+    sms_log.save()
 
     send_sms_by_twilio.delay(
         body=f"Your {site_domain} verification code is: {sms_verification_code}",
