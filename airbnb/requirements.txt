@@ -39,6 +39,7 @@ idna==2.10
 kombu==4.6.11
 oauthlib==3.1.0
 phonenumbers==8.12.21
+phonenumberslite==8.12.21
 Pillow==8.1.2
 prometheus-client==0.8.0
 prompt-toolkit==3.0.18

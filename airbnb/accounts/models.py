@@ -1,4 +1,5 @@
 from model_utils import FieldTracker
+from phonenumber_field.modelfields import PhoneNumberField
 
 from django.db import models
 from django.conf import settings
@@ -169,6 +170,12 @@ class Profile(models.Model):
         blank=True,
         max_length=2,
         choices=ProfileGenderChoices.choices,
+    )
+    phone_number = PhoneNumberField(
+        verbose_name='phone number',
+        blank=True,
+        null=True,
+        unique=True,
     )
     description = models.TextField(
         verbose_name='description',

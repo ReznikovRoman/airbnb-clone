@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'ckeditor',
     'ckeditor_uploader',
+    'phonenumber_field',
     'sorl.thumbnail',
 
     'main.apps.MainConfig',
@@ -261,3 +262,8 @@ CKEDITOR_CONFIGS = {
         ]),
     }
 }
+
+
+# PHONENUMBER
+PHONENUMBER_DB_FORMAT = 'NATIONAL'
+PHONENUMBER_DEFAULT_REGION = 'RU'
