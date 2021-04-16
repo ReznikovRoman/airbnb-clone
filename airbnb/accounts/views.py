@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.sites.shortcuts import get_current_site
 from django.views import generic
 from django.http import HttpRequest
 from django.urls import reverse_lazy
@@ -14,9 +15,9 @@ from realty.models import CustomDeleteQueryset, Realty
 from realty.services.realty import get_available_realty_by_host
 from .forms import (SignUpForm, CustomPasswordResetForm,
                     ProfileForm, UserInfoForm, ProfileImageForm, ProfileDescriptionForm)
-from .models import CustomUser, Profile
+from .models import CustomUser, Profile, SMSLog
 from .mixins import AnonymousUserRequiredMixin
-from .services import get_user_from_uid, send_verification_link
+from .services import get_user_from_uid, send_verification_link, generate_random_sms_code, handle_phone_number_change
 from .tokens import account_activation_token
 
 
@@ -132,12 +133,16 @@ class PersonalInfoEditView(LoginRequiredMixin,
             # if phone number has been changed (and it is not blank)
             if 'phone_number' in self.profile_form.changed_data and \
                     profile_cleaned_data.get('phone_number', None):
-                messages.add_message(request, messages.SUCCESS, message="We've sent a message to your phone number.")
-                send_sms_by_twilio.delay(
-                    body=f"Hi {user_info.first_name}! "
-                         f"You are receiving this message because you've changed your phone number recently.",
-                    sms_from=settings.TWILIO_PHONE_NUMBER,
-                    sms_to=str(profile_cleaned_data.get('phone_number')),
+                messages.add_message(
+                    request,
+                    level=messages.SUCCESS,
+                    message="We've sent a verification code to you. "
+                            "You can confirm your phone number at the Login & Security panel."
+                )
+                handle_phone_number_change(
+                    user_profile=user_profile,
+                    site_domain=get_current_site(request).domain,
+                    new_phone_number=str(profile_cleaned_data.get('phone_number')),
                 )
 
             return redirect('accounts:user_info_edit')
