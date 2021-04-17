@@ -100,3 +100,63 @@ class ProfileDescriptionForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ('description',)
+
+
+class VerificationCodeForm(forms.Form):
+    """Form for entering a SMS verification code."""
+    digit_1 = forms.CharField(
+        min_length=1,
+        max_length=1,
+        widget=forms.NumberInput(
+            attrs={'min': '0', 'max': '9', 'class': 'code', 'placeholder': '0'},
+        ),
+        label='',
+    )
+    digit_2 = forms.CharField(
+        min_length=1,
+        max_length=1,
+        widget=forms.NumberInput(
+            attrs={'min': '0', 'max': '9', 'class': 'code', 'placeholder': '0'},
+        ),
+        label='',
+    )
+    digit_3 = forms.CharField(
+        min_length=1,
+        max_length=1,
+        widget=forms.NumberInput(
+            attrs={'min': '0', 'max': '9', 'class': 'code', 'placeholder': '0'},
+        ),
+        label='',
+    )
+    digit_4 = forms.CharField(
+        min_length=1,
+        max_length=1,
+        widget=forms.NumberInput(
+            attrs={'min': '0', 'max': '9', 'class': 'code', 'placeholder': '0'},
+        ),
+        label='',
+    )
+
+    def clean_digit_1(self):
+        data = self.cleaned_data['digit_1']
+        if not 0 <= int(data) <= 9:
+            raise ValidationError('Digit must be in range [0, 9].')
+        return data
+
+    def clean_digit_2(self):
+        data = self.cleaned_data['digit_2']
+        if not 0 <= int(data) <= 9:
+            raise ValidationError('Digit must be in range [0, 9].')
+        return data
+
+    def clean_digit_3(self):
+        data = self.cleaned_data['digit_3']
+        if not 0 <= int(data) <= 9:
+            raise ValidationError('Digit must be in range [0, 9].')
+        return data
+
+    def clean_digit_4(self):
+        data = self.cleaned_data['digit_4']
+        if not 0 <= int(data) <= 9:
+            raise ValidationError('Digit must be in range [0, 9].')
+        return data

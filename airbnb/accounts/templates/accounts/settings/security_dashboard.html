@@ -36,13 +36,23 @@
             <div class="verification-section security-section">
                 <h2>Confirm your details</h2>
 
-                <div class="confirm-phone">
-                    <div class="section-info">
-                        <p>Phone number</p>
-                        <p class="color-secondary">+7 985 168 60 43</p>
+                {% if phone_number %}
+                    <div class="confirm-phone">
+                        <div class="section-info">
+                            <p>Phone number</p>
+                            <p class="color-secondary">{{ phone_number }}</p>
+                        </div>
+
+                        {% if not request.user.profile.is_phone_number_confirmed %}
+                            <a href="{% url 'accounts:confirm_phone' %}" class="account-dashboard--link">Confirm</a>
+                        {% else %}
+                            <p class="account-dashboard--link">
+                                <span class="check-icon"><i class="fas fa-check"></i></span>
+                                <span>Confirmed</span>
+                            </p>
+                        {% endif %}
                     </div>
-                    <a href="#" class="account-dashboard--link">Confirm</a>
-                </div>
+                {% endif %}
                 <hr>
 
             </div>

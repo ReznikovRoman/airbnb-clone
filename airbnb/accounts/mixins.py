@@ -24,3 +24,15 @@ class ActivatedAccountRequiredMixin:
             return redirect(reverse('accounts:activation_required'))
         
         return super(ActivatedAccountRequiredMixin, self).dispatch(request, *args, **kwargs)
+
+
+class UnconfirmedPhoneNumberRequiredMixin:
+    """Verify that current user has not confirmed his phone number yet."""
+    def dispatch(self, request: HttpRequest, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect(reverse('accounts:login'))
+        
+        if request.user.profile.is_phone_number_confirmed:
+            return redirect(reverse('accounts:settings_dashboard'))
+        
+        return super(UnconfirmedPhoneNumberRequiredMixin, self).dispatch(request, *args, **kwargs)

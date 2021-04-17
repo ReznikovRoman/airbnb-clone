@@ -19,6 +19,9 @@ urlpatterns = [
     path('settings/personal-info/', views.PersonalInfoEditView.as_view(), name='user_info_edit'),
 
     path('settings/login-and-security/', views.SecurityDashboardView.as_view(), name='security_dashboard'),
+    path('settings/login-and-security/confirm-phone/',
+         views.PhoneNumberConfirmPageView.as_view(),
+         name='confirm_phone'),
 
     path('show/<int:user_pk>/', views.ProfileShowView.as_view(), name='profile_show'),
     path('edit-image/', views.ProfileImageEditView.as_view(), name='edit_image'),
