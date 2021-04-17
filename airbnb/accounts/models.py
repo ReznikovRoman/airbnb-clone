@@ -178,6 +178,10 @@ class Profile(models.Model):
         null=True,
         unique=True,
     )
+    is_phone_number_confirmed = models.BooleanField(
+        verbose_name='is phone number confirmed',
+        default=False,
+    )
     description = models.TextField(
         verbose_name='description',
         blank=True,
