@@ -10,7 +10,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from hosts.models import RealtyHost
 from realty.models import CustomDeleteQueryset, Realty
 from realty.services.realty import get_available_realty_by_host
-from .forms import SignUpForm, ProfileForm, UserInfoForm, ProfileImageForm, ProfileDescriptionForm
+from .forms import (SignUpForm, CustomPasswordResetForm,
+                    ProfileForm, UserInfoForm, ProfileImageForm, ProfileDescriptionForm)
 from .models import CustomUser, Profile
 from .mixins import AnonymousUserRequiredMixin
 from .services import get_user_from_uid, send_verification_link
@@ -36,7 +37,7 @@ class SignUpView(AnonymousUserRequiredMixin,
 
         if form.is_valid():
             user = form.save()
-            send_verification_link(request, user)  # TODO: Send email using Celery (another milestone)
+            send_verification_link(request, user)
             return redirect('accounts:login')
 
         return self.render_to_response(
@@ -58,9 +59,7 @@ class CustomPasswordResetView(auth_views.PasswordResetView):
     success_url = reverse_lazy('accounts:password_reset_done')
     html_email_template_name = 'accounts/registration/password_reset_email.html'
     email_template_name = 'accounts/registration/password_reset_email.html'
-
-    def get(self, request: HttpRequest, *args, **kwargs):
-        return super(CustomPasswordResetView, self).get(request, *args, **kwargs)
+    form_class = CustomPasswordResetForm
 
 
 class AccountActivationView(generic.View):
