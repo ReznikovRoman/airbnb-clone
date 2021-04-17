@@ -31,8 +31,21 @@ class UnconfirmedPhoneNumberRequiredMixin:
     def dispatch(self, request: HttpRequest, *args, **kwargs):
         if not request.user.is_authenticated:
             return redirect(reverse('accounts:login'))
-        
-        if request.user.profile.is_phone_number_confirmed:
+
+        if request.user.profile.is_phone_number_confirmed or \
+                request.user.profile.phone_number is None:
             return redirect(reverse('accounts:settings_dashboard'))
         
         return super(UnconfirmedPhoneNumberRequiredMixin, self).dispatch(request, *args, **kwargs)
+
+
+class UnconfirmedEmailRequiredMixin:
+    """Verify that current user has not confirmed an email address yet."""
+    def dispatch(self, request: HttpRequest, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect(reverse('accounts:login'))
+
+        if request.user.is_email_confirmed:
+            return redirect(reverse('accounts:settings_dashboard'))
+
+        return super(UnconfirmedEmailRequiredMixin, self).dispatch(request, *args, **kwargs)

@@ -36,23 +36,43 @@
             <div class="verification-section security-section">
                 <h2>Confirm your details</h2>
 
-                {% if phone_number %}
-                    <div class="confirm-phone">
-                        <div class="section-info">
-                            <p>Phone number</p>
+                <div class="confirm-phone">
+                    <div class="section-info">
+                        <p>Phone number</p>
+                        {% if phone_number %}
                             <p class="color-secondary">{{ phone_number }}</p>
-                        </div>
+                        {% else %}
+                            <p class="color-secondary">No phone number yet</p>
+                        {% endif %}
+                    </div>
 
+                    {% if phone_number %}
                         {% if not request.user.profile.is_phone_number_confirmed %}
-                            <a href="{% url 'accounts:confirm_phone' %}" class="account-dashboard--link">Confirm</a>
+                                <a href="{% url 'accounts:confirm_phone' %}" class="account-dashboard--link">Confirm</a>
+                            {% else %}
+                                <p class="account-dashboard--link">
+                                    <span class="check-icon"><i class="fas fa-check"></i></span>
+                                    <span>Confirmed</span>
+                                </p>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                <hr>
+                <div class="confirm-email">
+                    <div class="section-info">
+                        <p>Email</p>
+                        <p class="color-secondary">{{ email }}</p>
+                    </div>
+
+                    {% if not request.user.is_email_confirmed %}
+                            <a href="{% url 'accounts:confirm_email' %}" class="account-dashboard--link">Confirm</a>
                         {% else %}
                             <p class="account-dashboard--link">
                                 <span class="check-icon"><i class="fas fa-check"></i></span>
                                 <span>Confirmed</span>
                             </p>
-                        {% endif %}
-                    </div>
-                {% endif %}
+                    {% endif %}
+                </div>
                 <hr>
 
             </div>
