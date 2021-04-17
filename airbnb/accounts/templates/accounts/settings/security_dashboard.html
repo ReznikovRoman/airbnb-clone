@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+
+{% block title %}
+    Login & Security &bull; Account Settings &bull; Airbnb
+{% endblock %}
+
+{% block content %}
+    <div class="account--security">
+        <div class="security--header">
+            <div class="account--links">
+                <span class="account--link">
+                    <a href="{% url 'accounts:settings_dashboard' %}">Account</a>
+                </span>
+                <span class="account--link active">
+                    Login & Security
+                </span>
+            </div>
+            <h1>Login & Security</h1>
+        </div>
+
+        <div class="security--settings">
+            <hr>
+            <div class="login-section security-section">
+                <h2>Login</h2>
+
+                <div class="update-password">
+                    <div class="section-info">
+                        <p>Password</p>
+                    </div>
+                    <a href="{% url 'accounts:password_change' %}" class="account-dashboard--link">Update</a>
+                </div>
+            </div>
+            <hr>
+            <div class="verification-section security-section">
+                <h2>Confirm your details</h2>
+
+                <div class="confirm-phone">
+                    <div class="section-info">
+                        <p>Phone number</p>
+                        <p class="color-secondary">+7 985 168 60 43</p>
+                    </div>
+                    <a href="#" class="account-dashboard--link">Confirm</a>
+                </div>
+                <hr>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+

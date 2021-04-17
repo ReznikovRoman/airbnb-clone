@@ -10,6 +10,11 @@
 .color-secondary {
   color: #757987; }
 
+.account-dashboard--link {
+  color: #008489; }
+  .account-dashboard--link:hover {
+    color: #008489; }
+
 hr.divider--short {
   color: #757987;
   width: 15%; }
@@ -739,6 +744,20 @@ form input:focus, form select:focus, form textarea:focus {
   .account--personal-info .personal-info--settings .security--form form .form-group:nth-child(-n+3), .account--personal-info .security--settings .security--form form .form-group:nth-child(-n+3), .account--security .personal-info--settings .security--form form .form-group:nth-child(-n+3), .account--security .security--settings .security--form form .form-group:nth-child(-n+3) {
     flex: 1 100% !important; }
 
+.account--security .security--header {
+  margin-bottom: 3.5rem; }
+
+.account--security .security--settings {
+  max-width: 75%; }
+  .account--security .security--settings .security-section h2 {
+    font-weight: bold;
+    font-size: 1.4rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem; }
+  .account--security .security--settings .security-section > div {
+    display: flex;
+    justify-content: space-between; }
+
 .profile-show {
   margin-top: 2.5rem;
   display: flex; }
@@ -926,6 +945,8 @@ form input:focus, form select:focus, form textarea:focus {
       flex: 1 100% !important; }
     .account--personal-info .personal-info--settings .personal-info--form form .form-group:nth-child(-n+2), .account--personal-info .personal-info--settings .security--form form .form-group:nth-child(-n+2), .account--personal-info .security--settings .personal-info--form form .form-group:nth-child(-n+2), .account--personal-info .security--settings .security--form form .form-group:nth-child(-n+2), .account--security .personal-info--settings .personal-info--form form .form-group:nth-child(-n+2), .account--security .personal-info--settings .security--form form .form-group:nth-child(-n+2), .account--security .security--settings .personal-info--form form .form-group:nth-child(-n+2), .account--security .security--settings .security--form form .form-group:nth-child(-n+2) {
       margin-right: 0 !important; }
+  .account--security .security--settings {
+    max-width: 100%; }
   .profile-image--form .image-group {
     display: flex;
     flex-direction: column; }

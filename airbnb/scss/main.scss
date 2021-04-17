@@ -926,6 +926,32 @@ form {
 }
 
 
+// Account - security settings
+.account--security {
+  .security--header {
+    margin-bottom: 3.5rem;
+  }
+
+  .security--settings {
+    max-width: 75%;
+
+    .security-section {
+      h2 {
+        font-weight: bold;
+        font-size: 1.4rem;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      & > div {
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+  }
+}
+
+
 // Profile - show
 .profile-show {
   margin-top: 2.5rem;
@@ -1280,6 +1306,12 @@ form {
           }
         }
       }
+    }
+  }
+
+  .account--security {
+    .security--settings {
+      max-width: 100%;
     }
   }
 
