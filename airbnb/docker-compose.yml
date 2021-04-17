@@ -26,6 +26,50 @@ services:
       - redis
       - airbnb
 
+  flower:
+    env_file:
+      - .env
+    environment:
+      - CELERY_BROKER_TRANSPORT=redis
+      - CELERY_BROKER_HOST=redis
+      - CELERY_BROKER_PORT=6379
+      - CELERY_BROKER_VHOST=2
+      - CELERY_REDIS_DB=2
+      - CELERY_BROKER_URL=${CELERY_BROKER_HOST}://${CELERY_BROKER_TRANSPORT}:${CELERY_BROKER_PORT}/${CELERY_REDIS_DB}
+      - FLOWER_PORT=5555
+    image: mher/flower
+    volumes:
+      - .:/airbnb-docker
+    restart: always
+    command: flower --broker=${CELERY_BROKER_URL}
+    ports:
+      - 5555:5555
+    container_name: airbnb_flower
+    depends_on:
+      - celery
+      - redis
+
+  celery_beat:
+    env_file:
+      - .env
+    environment:
+      - CELERY_BROKER_TRANSPORT=redis
+      - CELERY_BROKER_HOST=redis
+      - CELERY_BROKER_PORT=6379
+      - CELERY_BROKER_VHOST=2
+      - CELERY_REDIS_DB=2
+      - CELERY_BROKER_URL=${CELERY_BROKER_HOST}://${CELERY_BROKER_TRANSPORT}:${CELERY_BROKER_PORT}/${CELERY_REDIS_DB}
+      - FLOWER_PORT=5555
+    build: .
+    restart: on-failure
+    volumes:
+    - .:/airbnb-docker
+    command: celery -A airbnb beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    container_name: airbnb_celery_beat
+    depends_on:
+      - redis
+      - airbnb
+
   airbnb:
     env_file:
       - .env
