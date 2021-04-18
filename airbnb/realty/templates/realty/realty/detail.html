@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load cache %}
 {% load thumbnail %}
 
 
@@ -7,7 +8,6 @@
 {% endblock %}
 
 {% block content %}
-
     <div class="realty-detail">
         <div class="realty-header">
             <h1>{{ realty.name }}</h1>
@@ -18,6 +18,11 @@
                             <a href="#" class="link">
                                 {{ realty.location.city }}, {{ realty.location.country }}
                             </a>
+
+                            {# TODO: Show realty views in the host listings dashboard #}
+                            {% cache 0 realty_views_count %}
+                                <span class="ml-2">{{ realty_views_count }} view{{ realty_views_count|pluralize }}</span>
+                            {% endcache %}
                         </li>
                     </ul>
                 </div>
@@ -43,81 +48,26 @@
             </div>
         {% endif %}
 
-        <div class="realty-info">
-            <div class="realty-info--header">
-                <div class="realty-general-info">
-                    <div class="realty-name">
-                        <h2>{{ realty.realty_type }} hosted by {{ realty.host.user.first_name }}</h2>
-                    </div>
-                    <div class="realty-features">
-                        <ul>
-                            {% with max_guests_count=realty.max_guests_count %}
-                                <li>{{ max_guests_count }} guest{{ max_guests_count|pluralize }}</li>
-                            {% endwith %}
-                            <li>{{ realty.realty_type }}</li>
-                            {% with beds_count=realty.beds_count %}
-                                <li>{{ realty.beds_count }} bed{{ beds_count|pluralize }}</li>
-                            {% endwith %}
-                        </ul>
-                    </div>
-                </div>
-                <div class="host-link">
-                    <a href="{% url 'accounts:profile_show' user_pk=realty.host.user.id %}">
-                        {% thumbnail realty.host.user.profile.profile_image "56x56" crop='center' as host_profile_image %}
-                            <img src="{{ host_profile_image.url }}"
-                                 width="{{ host_profile_image.width }}" height="{{ host_profile_image.height }}"
-                                 alt="Host profile image" class="rounded-circle">
-                        {% endthumbnail %}
-                    </a>
-                </div>
-            </div>
-
-            <div class="realty-reserve">
-                <div class="realty-short-info">
-                    <p class="realty-price">
-                        <span class="price">{{ realty.price_per_night }}$</span> / night
-                    </p>
-                </div>
-                <div class="realty-reserve-button">
-                    {# TODO: Reserve realty #}
-                    <a href="#" class="button-primary">Reserve</a>
-                </div>
-            </div>
-
-            <hr>
-            <div class="realty-description">
-                <p>{{ realty.description|safe|linebreaks }}</p>
-
-                {# TODO: DM host (django channels + websockets, another milestone) #}
-                <a href="#" class="color-secondary contact-host--link">Contact host</a>
-            </div>
-
-            <hr>
-            <div class="realty-amenities">
-            <h3>Amenities</h3>
-                <div class="row">
-                    {% for amenity in realty.amenities.all %}
-                        <div class="col-md-6">
-                            <div class="realty-amenity">
-                                <span>{{ amenity.name|capfirst }}</span>
-                            </div>
+        {% cache 300 realty %}
+            <div class="realty-info">
+                <div class="realty-info--header">
+                    <div class="realty-general-info">
+                        <div class="realty-name">
+                            <h2>{{ realty.realty_type }} hosted by {{ realty.host.user.first_name }}</h2>
                         </div>
-                    {% endfor %}
-                </div>
-            </div>
-
-            {# TODO: Realty reviews #}
-
-            <hr>
-            <div class="realty-location">
-                <h3>Location</h3>
-                <p>{{ realty.location.get_full_address }}</p>
-            </div>
-
-            <hr>
-            <div class="realty-host-info">
-                <div class="realty-host">
-                    <div class="host-profile">
+                        <div class="realty-features">
+                            <ul>
+                                {% with max_guests_count=realty.max_guests_count %}
+                                    <li>{{ max_guests_count }} guest{{ max_guests_count|pluralize }}</li>
+                                {% endwith %}
+                                <li>{{ realty.realty_type }}</li>
+                                {% with beds_count=realty.beds_count %}
+                                    <li>{{ realty.beds_count }} bed{{ beds_count|pluralize }}</li>
+                                {% endwith %}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="host-link">
                         <a href="{% url 'accounts:profile_show' user_pk=realty.host.user.id %}">
                             {% thumbnail realty.host.user.profile.profile_image "56x56" crop='center' as host_profile_image %}
                                 <img src="{{ host_profile_image.url }}"
@@ -125,30 +75,86 @@
                                      alt="Host profile image" class="rounded-circle">
                             {% endthumbnail %}
                         </a>
-                        <div class="host-content--right">
-                            <div class="host-name">
-                                <h3>Hosted by {{ realty.host.user.full_name }}</h3>
+                    </div>
+                </div>
+
+                <div class="realty-reserve">
+                    <div class="realty-short-info">
+                        <p class="realty-price">
+                            <span class="price">{{ realty.price_per_night }}$</span> / night
+                        </p>
+                    </div>
+                    <div class="realty-reserve-button">
+                        {# TODO: Reserve realty #}
+                        <a href="#" class="button-primary">Reserve</a>
+                    </div>
+                </div>
+
+                <hr>
+                <div class="realty-description">
+                    <p>{{ realty.description|safe|linebreaks }}</p>
+
+                    {# TODO: DM host (django channels + websockets, another milestone) #}
+                    <a href="#" class="color-secondary contact-host--link">Contact host</a>
+                </div>
+
+                <hr>
+                <div class="realty-amenities">
+                <h3>Amenities</h3>
+                    <div class="row">
+                        {% for amenity in realty.amenities.all %}
+                            <div class="col-md-6">
+                                <div class="realty-amenity">
+                                    <span>{{ amenity.name|capfirst }}</span>
+                                </div>
                             </div>
-                            <div class="host-joined-date">
-                                Joined in {{ realty.host.user.date_joined|date:'F Y' }}
+                        {% endfor %}
+                    </div>
+                </div>
+
+                {# TODO: Realty reviews #}
+
+                <hr>
+                <div class="realty-location">
+                    <h3>Location</h3>
+                    <p>{{ realty.location.get_full_address }}</p>
+                </div>
+
+                <hr>
+                <div class="realty-host-info">
+                    <div class="realty-host">
+                        <div class="host-profile">
+                            <a href="{% url 'accounts:profile_show' user_pk=realty.host.user.id %}">
+                                {% thumbnail realty.host.user.profile.profile_image "56x56" crop='center' as host_profile_image %}
+                                    <img src="{{ host_profile_image.url }}"
+                                         width="{{ host_profile_image.width }}" height="{{ host_profile_image.height }}"
+                                         alt="Host profile image" class="rounded-circle">
+                                {% endthumbnail %}
+                            </a>
+                            <div class="host-content--right">
+                                <div class="host-name">
+                                    <h3>Hosted by {{ realty.host.user.full_name }}</h3>
+                                </div>
+                                <div class="host-joined-date">
+                                    Joined in {{ realty.host.user.date_joined|date:'F Y' }}
+                                </div>
                             </div>
+                        </div>
+
+                        {# TODO: Host total reviews count #}
+
+                        <div class="host-description">
+                            <p>{{ realty.host.description }}</p>
                         </div>
                     </div>
 
-                    {# TODO: Host total reviews count #}
-
-                    <div class="host-description">
-                        <p>{{ realty.host.description }}</p>
+                    {# TODO: DM Host #}
+                    <div class="contact-host">
+                        <a href="#" class="button-light">Contact host</a>
                     </div>
                 </div>
-
-                {# TODO: DM Host #}
-                <div class="contact-host">
-                    <a href="#" class="button-light">Contact host</a>
-                </div>
             </div>
-
-        </div>
+        {% endcache %}
     </div>
 {% endblock %}
 

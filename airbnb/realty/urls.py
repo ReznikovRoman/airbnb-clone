@@ -1,5 +1,4 @@
 from django.urls import path
-from django.views.decorators.cache import cache_page
 
 from . import views
 
@@ -8,7 +7,7 @@ app_name = 'realty'
 
 urlpatterns = [
     path('', views.RealtyListView.as_view(), name='all'),
-    path('rooms/<int:pk>/<slug>/', cache_page(60 * 15)(views.RealtyDetailView.as_view()), name='detail'),
+    path('rooms/<int:pk>/<slug>/', views.RealtyDetailView.as_view(), name='detail'),
     path('city/<slug:city_slug>/', views.RealtyListView.as_view(), name='all_by_city'),
 
     # Edit realty

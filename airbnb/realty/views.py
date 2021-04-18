@@ -5,7 +5,8 @@ from braces.views import JsonRequestResponseMixin
 from django.views import generic
 from django.http import HttpRequest
 from django.shortcuts import get_object_or_404, reverse, redirect
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.core.cache import cache
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from addresses.forms import AddressForm
 from addresses.models import Address
@@ -13,7 +14,6 @@ from common.session_handler import SessionHandler
 from common.services import (get_field_names_from_form,
                              get_required_fields_from_form_with_model, set_prefixes_for_names)
 from common.collections import FormWithModel
-from hosts.models import RealtyHost
 from .constants import (MAX_REALTY_IMAGES_COUNT,
                         REALTY_FORM_SESSION_PREFIX, REALTY_FORM_KEYS_COLLECTOR_NAME)
 from .models import Realty, RealtyImage, CustomDeleteQueryset
@@ -65,6 +65,17 @@ class RealtyDetailView(generic.DetailView):
     model = Realty
     template_name = 'realty/realty/detail.html'
     queryset = Realty.available.all()
+    
+    def get(self, request: HttpRequest, *args, **kwargs):
+        # TODO: Use redis (db) to store realty views + Celery scheduled task to save `views count` to the db
+        cache.set(f"realty_{self.get_object().id}_views", 0, nx=True)
+        cache.incr(f"realty_{self.get_object().id}_views")
+        return super(RealtyDetailView, self).get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(RealtyDetailView, self).get_context_data(**kwargs)
+        context['realty_views_count'] = cache.get(f"realty_{self.get_object().id}_views")
+        return context
 
 
 class RealtyEditView(LoginRequiredMixin,
