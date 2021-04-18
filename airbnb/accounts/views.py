@@ -1,3 +1,4 @@
+from django.contrib.sites.shortcuts import get_current_site
 from django.views import generic
 from django.http import HttpRequest
 from django.urls import reverse_lazy
@@ -11,10 +12,12 @@ from hosts.models import RealtyHost
 from realty.models import CustomDeleteQueryset, Realty
 from realty.services.realty import get_available_realty_by_host
 from .forms import (SignUpForm, CustomPasswordResetForm,
-                    ProfileForm, UserInfoForm, ProfileImageForm, ProfileDescriptionForm)
+                    ProfileForm, UserInfoForm, ProfileImageForm, ProfileDescriptionForm, VerificationCodeForm)
 from .models import CustomUser, Profile
-from .mixins import AnonymousUserRequiredMixin
-from .services import get_user_from_uid, send_verification_link
+from .mixins import (AnonymousUserRequiredMixin, UnconfirmedPhoneNumberRequiredMixin, UnconfirmedEmailRequiredMixin,)
+from .services import (get_user_from_uid, send_verification_link, handle_phone_number_change,
+                       is_verification_code_for_profile_valid, set_profile_phone_number_confirmed,
+                       get_verification_code_from_digits_dict)
 from .tokens import account_activation_token
 
 
@@ -122,9 +125,39 @@ class PersonalInfoEditView(LoginRequiredMixin,
 
     def post(self, request: HttpRequest, *args, **kwargs):
         if self.user_info_form.is_valid():
-            user_info: CustomUser = self.user_info_form.save()
+            user: CustomUser = self.user_info_form.save()
+
+            if 'email' in self.user_info_form.changed_data:
+                messages.add_message(
+                    request,
+                    level=messages.SUCCESS,
+                    message="We've sent a confirmation email to your email address"
+                )
+                user.is_email_confirmed = False
+                user.save()
+                send_verification_link(request, user)
+
         if self.profile_form.is_valid():
             user_profile: Profile = self.profile_form.save()
+            profile_cleaned_data = self.profile_form.cleaned_data
+
+            # if phone number has been changed
+            if 'phone_number' in self.profile_form.changed_data:
+                if profile_cleaned_data.get('phone_number', None):  # if it is not blank
+                    messages.add_message(
+                        request,
+                        level=messages.SUCCESS,
+                        message="We've sent a verification code to you. "
+                                "You can confirm your phone number at the Login & Security panel."
+                    )
+                    handle_phone_number_change(
+                        user_profile=user_profile,
+                        site_domain=get_current_site(request).domain,
+                        new_phone_number=str(profile_cleaned_data.get('phone_number')),
+                    )
+                else:
+                    set_profile_phone_number_confirmed(user_profile, is_phone_number_confirmed=False)
+
             return redirect('accounts:user_info_edit')
 
         return self.render_to_response(
@@ -229,3 +262,80 @@ class ProfileDescriptionEditView(LoginRequiredMixin,
                 'profile_description_form': self.profile_description_form,
             }
         )
+
+
+class SecurityDashboardView(LoginRequiredMixin,
+                            generic.TemplateView):
+    """View for showing a `Login & Security` dashboard."""
+    template_name = 'accounts/settings/security_dashboard.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(SecurityDashboardView, self).get_context_data(**kwargs)
+        context['phone_number'] = self.request.user.profile.phone_number
+        context['email'] = self.request.user.email
+        return context
+
+
+class PhoneNumberConfirmPageView(UnconfirmedPhoneNumberRequiredMixin,
+                                 LoginRequiredMixin,
+                                 generic.base.TemplateResponseMixin,
+                                 generic.View):
+    """View for confirming a phone number (by a verification SMS code)."""
+    template_name = 'accounts/settings/confirm_phone.html'
+
+    verification_code_form: VerificationCodeForm = None
+    phone_number: str = None
+
+    def dispatch(self, request: HttpRequest, *args, **kwargs):
+        self.verification_code_form = VerificationCodeForm(request.POST or None)
+        self.phone_number = request.user.profile.phone_number
+        return super(PhoneNumberConfirmPageView, self).dispatch(request, *args, **kwargs)
+    
+    def get(self, request: HttpRequest, *args, **kwargs):
+        return self.render_to_response(
+            context={
+                'verification_code_form': self.verification_code_form,
+                'phone_number': self.phone_number,
+            }
+        )
+
+    def post(self, request: HttpRequest, *args, **kwargs):
+        if self.verification_code_form.is_valid():
+            if is_verification_code_for_profile_valid(
+                    user_profile=request.user.profile,
+                    verification_code=get_verification_code_from_digits_dict(self.verification_code_form.cleaned_data)
+            ):
+                set_profile_phone_number_confirmed(user_profile=request.user.profile)
+                messages.add_message(
+                    request,
+                    level=messages.SUCCESS,
+                    message='You have successfully confirmed your phone number'
+                )
+                return redirect(reverse('accounts:settings_dashboard'))
+            else:
+                messages.add_message(
+                    request,
+                    level=messages.ERROR,
+                    message='Error: Your code is invalid'
+                )
+
+        return self.render_to_response(
+            context={
+                'verification_code_form': self.verification_code_form,
+                'phone_number': self.phone_number,
+            }
+        )
+
+
+class ConfirmEmailView(UnconfirmedEmailRequiredMixin,
+                       LoginRequiredMixin,
+                       generic.View):
+    """View for sending a confirmation email to a user."""
+    def get(self, request: HttpRequest, *args, **kwargs):
+        send_verification_link(request, request.user)
+        messages.add_message(
+            request,
+            level=messages.SUCCESS,
+            message="We've sent a confirmation email to your email address"
+        )
+        return redirect(reverse('accounts:security_dashboard'))

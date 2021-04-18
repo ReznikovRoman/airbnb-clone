@@ -58,7 +58,7 @@ class ProfileForm(forms.ModelForm):
     """Form for editing user profile."""
     class Meta:
         model = Profile
-        fields = ('gender', 'date_of_birth')
+        fields = ('gender', 'date_of_birth', 'phone_number')
         widgets = {
             'date_of_birth': forms.DateInput(
                 attrs={
@@ -75,13 +75,14 @@ class ProfileForm(forms.ModelForm):
         date of birth can't be in the future, Host must be at least 18 years old
         """
         date_of_birth = self.cleaned_data['date_of_birth']
-        date_now = timezone.now().date()
-        host_age = date_now.year - date_of_birth.year - ((date_now.month, date_now.day) <
-                                                         (date_of_birth.month, date_of_birth.day))
-        if date_of_birth > date_now:
-            raise ValidationError('Invalid date: date of birth in the future.', code='invalid')
-        elif host_age < 18:
-            raise ValidationError('Invalid date: You must be at least 18 years old.', code='underage')
+        if date_of_birth:
+            date_now = timezone.now().date()
+            host_age = date_now.year - date_of_birth.year - ((date_now.month, date_now.day) <
+                                                             (date_of_birth.month, date_of_birth.day))
+            if date_of_birth > date_now:
+                raise ValidationError('Invalid date: date of birth in the future.', code='invalid')
+            elif host_age < 18:
+                raise ValidationError('Invalid date: You must be at least 18 years old.', code='underage')
         return date_of_birth
 
 
@@ -100,3 +101,63 @@ class ProfileDescriptionForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ('description',)
+
+
+class VerificationCodeForm(forms.Form):
+    """Form for entering a SMS verification code."""
+    digit_1 = forms.CharField(
+        min_length=1,
+        max_length=1,
+        widget=forms.NumberInput(
+            attrs={'min': '0', 'max': '9', 'class': 'code', 'placeholder': '0'},
+        ),
+        label='',
+    )
+    digit_2 = forms.CharField(
+        min_length=1,
+        max_length=1,
+        widget=forms.NumberInput(
+            attrs={'min': '0', 'max': '9', 'class': 'code', 'placeholder': '0'},
+        ),
+        label='',
+    )
+    digit_3 = forms.CharField(
+        min_length=1,
+        max_length=1,
+        widget=forms.NumberInput(
+            attrs={'min': '0', 'max': '9', 'class': 'code', 'placeholder': '0'},
+        ),
+        label='',
+    )
+    digit_4 = forms.CharField(
+        min_length=1,
+        max_length=1,
+        widget=forms.NumberInput(
+            attrs={'min': '0', 'max': '9', 'class': 'code', 'placeholder': '0'},
+        ),
+        label='',
+    )
+
+    def clean_digit_1(self):
+        data = self.cleaned_data['digit_1']
+        if not 0 <= int(data) <= 9:
+            raise ValidationError('Digit must be in range [0, 9].')
+        return data
+
+    def clean_digit_2(self):
+        data = self.cleaned_data['digit_2']
+        if not 0 <= int(data) <= 9:
+            raise ValidationError('Digit must be in range [0, 9].')
+        return data
+
+    def clean_digit_3(self):
+        data = self.cleaned_data['digit_3']
+        if not 0 <= int(data) <= 9:
+            raise ValidationError('Digit must be in range [0, 9].')
+        return data
+
+    def clean_digit_4(self):
+        data = self.cleaned_data['digit_4']
+        if not 0 <= int(data) <= 9:
+            raise ValidationError('Digit must be in range [0, 9].')
+        return data

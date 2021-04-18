@@ -1,7 +1,9 @@
 from model_utils import FieldTracker
+from phonenumber_field.modelfields import PhoneNumberField
 
 from django.db import models
 from django.conf import settings
+from django.core.validators import MinLengthValidator
 from django.contrib.auth.models import (AbstractUser, BaseUserManager,
                                         PermissionsMixin, Permission)
 
@@ -170,6 +172,16 @@ class Profile(models.Model):
         max_length=2,
         choices=ProfileGenderChoices.choices,
     )
+    phone_number = PhoneNumberField(
+        verbose_name='phone number',
+        blank=True,
+        null=True,
+        unique=True,
+    )
+    is_phone_number_confirmed = models.BooleanField(
+        verbose_name='is phone number confirmed',
+        default=False,
+    )
     description = models.TextField(
         verbose_name='description',
         blank=True,
@@ -182,3 +194,27 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"Profile for {self.user}"
+
+
+class SMSLog(models.Model):
+    """Log of sms message that is sent to User to verify his phone number."""
+    sms_code = models.CharField(
+        verbose_name='4 digits sms code',
+        blank=True,
+        max_length=4,
+        validators=[
+            MinLengthValidator(4),
+        ],
+    )
+    profile = models.OneToOneField(
+        Profile,
+        related_name='sms_log',
+        on_delete=models.CASCADE,
+    )
+
+    class Meta:
+        verbose_name = 'sms log'
+        verbose_name_plural = 'sms logs'
+
+    def __str__(self):
+        return f"Code `{self.sms_code}` for {self.profile.user}"

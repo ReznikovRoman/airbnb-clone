@@ -16,6 +16,14 @@
   color: $text-secondary-color;
 }
 
+.account-dashboard--link {
+  color: $secondary-color;
+
+  &:hover {
+    color: $secondary-color;
+  }
+}
+
 hr.divider--short {
   color: $text-secondary-color;
   width: 15%;

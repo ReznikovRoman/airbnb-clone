@@ -840,8 +840,8 @@ form {
 
 
 // Personal info settings
-.account--personal-info, .account--security {
-  .personal-info--header, .security--header {
+.account--personal-info, .account--security, .account--confirm-phone {
+  .personal-info--header, .security--header, .confirm-phone--header {
     .account--links {
       .account--link a {
         color: $text-primary-color;
@@ -922,6 +922,75 @@ form {
       }
     }
 
+  }
+}
+
+
+// Account - security settings
+.account--security {
+  .security--header {
+    margin-bottom: 3.5rem;
+  }
+
+  .security--settings {
+    max-width: 75%;
+
+    .security-section {
+      h2 {
+        font-weight: bold;
+        font-size: 1.4rem;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      & > div {
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+  }
+}
+
+
+// Security - confirm phone
+.account--confirm-phone {
+  .confirm-phone--header {
+    margin-bottom: 3.5rem;
+  }
+
+  .confirm-phone {
+    .code {
+      margin-right: .5rem;
+      border-radius: 5px;
+      font-size: 50px;
+      height: 95px;
+      width: 80px;
+      border: 1px solid #eee;
+      text-align: center;
+      font-weight: 300;
+      -moz-appearance: textfield;
+
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      &:valid {
+        border-color: #3498db;
+        box-shadow: 0 10px 10px -5px rgba(0, 0, 0, 0.25);
+      }
+    }
+
+    .info {
+      background-color: #eaeaea;
+      display: inline-block;
+      padding: 10px;
+      line-height: 20px;
+      max-width: 400px;
+      color: #777;
+      border-radius: 5px;
+    }
   }
 }
 
@@ -1279,6 +1348,26 @@ form {
             }
           }
         }
+      }
+    }
+  }
+
+  .account--security {
+    .security--settings {
+      max-width: 100%;
+    }
+  }
+
+  .account--confirm-phone {
+    .confirm-phone {
+      .code-container {
+        flex-wrap: wrap;
+      }
+
+      .code {
+        font-size: 60px;
+        height: 80px;
+        max-width: 70px;
       }
     }
   }

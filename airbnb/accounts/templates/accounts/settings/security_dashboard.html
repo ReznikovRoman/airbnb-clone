@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+
+{% block title %}
+    Login & Security &bull; Account Settings &bull; Airbnb
+{% endblock %}
+
+{% block content %}
+    <div class="account--security">
+        <div class="security--header">
+            <div class="account--links">
+                <span class="account--link">
+                    <a href="{% url 'accounts:settings_dashboard' %}">Account</a>
+                </span>
+                <span class="account--link active">
+                    Login & Security
+                </span>
+            </div>
+            <h1>Login & Security</h1>
+        </div>
+
+        <div class="security--settings">
+            <hr>
+            <div class="login-section security-section">
+                <h2>Login</h2>
+
+                <div class="update-password">
+                    <div class="section-info">
+                        <p>Password</p>
+                    </div>
+                    <a href="{% url 'accounts:password_change' %}" class="account-dashboard--link">Update</a>
+                </div>
+            </div>
+            <hr>
+            <div class="verification-section security-section">
+                <h2>Confirm your details</h2>
+
+                <div class="confirm-phone">
+                    <div class="section-info">
+                        <p>Phone number</p>
+                        {% if phone_number %}
+                            <p class="color-secondary">{{ phone_number }}</p>
+                        {% else %}
+                            <p class="color-secondary">No phone number yet</p>
+                        {% endif %}
+                    </div>
+
+                    {% if phone_number %}
+                        {% if not request.user.profile.is_phone_number_confirmed %}
+                                <a href="{% url 'accounts:confirm_phone' %}" class="account-dashboard--link">Confirm</a>
+                            {% else %}
+                                <p class="account-dashboard--link">
+                                    <span class="check-icon"><i class="fas fa-check"></i></span>
+                                    <span>Confirmed</span>
+                                </p>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                <hr>
+                <div class="confirm-email">
+                    <div class="section-info">
+                        <p>Email</p>
+                        <p class="color-secondary">{{ email }}</p>
+                    </div>
+
+                    {% if not request.user.is_email_confirmed %}
+                            <a href="{% url 'accounts:confirm_email' %}" class="account-dashboard--link">Confirm</a>
+                        {% else %}
+                            <p class="account-dashboard--link">
+                                <span class="check-icon"><i class="fas fa-check"></i></span>
+                                <span>Confirmed</span>
+                            </p>
+                    {% endif %}
+                </div>
+                <hr>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+

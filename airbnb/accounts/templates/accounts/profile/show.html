@@ -20,6 +20,27 @@
                     <a href="{% url 'accounts:edit_image' %}" class="color-secondary">Update photo</a>
                 {% endif %}
             </div>
+            
+            {% if profile_owner.is_email_confirmed or profile_owner.profile.is_phone_number_confirmed %}
+                <hr>
+                <div class="confirmed-details">
+                    <h3>{{ profile_owner.first_name }} confirmed</h3>
+                    <ul>
+                        {% if profile_owner.is_email_confirmed %}
+                            <li class="confirmed-detail">
+                                <span class="check-icon"><i class="fas fa-check"></i></span>
+                                <span>Email address</span>
+                            </li>
+                        {% endif %}
+                        {% if profile_owner.profile.is_phone_number_confirmed %}
+                            <li class="confirmed-detail">
+                                <span class="check-icon"><i class="fas fa-check"></i></span>
+                                <span>Phone number</span>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            {% endif %}
         </div>
 
         <div class="profile-info">

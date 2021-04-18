@@ -3,7 +3,7 @@ from django.shortcuts import reverse
 from django.utils.safestring import mark_safe
 from django.contrib.auth.admin import UserAdmin
 
-from .models import CustomUser, Profile
+from .models import CustomUser, Profile, SMSLog
 from .forms import AdminCustomUserChangeForm, SignUpForm
 
 
@@ -44,5 +44,17 @@ class CustomUserAdmin(UserAdmin):
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'date_of_birth', 'gender')
+    list_display = ('__str__', 'date_of_birth', 'gender', 'phone_number')
     search_fields = ('user__email',)
+
+
+@admin.register(SMSLog)
+class SMSLogAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'get_profile_link')
+
+    def get_profile_link(self, obj: CustomUser):
+        return mark_safe(
+            f"""<a href="{reverse('admin:accounts_profile_change', args=(obj.profile.id,))}">
+            {obj.profile.user.first_name}'s profile</a>"""
+        )
+    get_profile_link.short_description = 'profile link'
