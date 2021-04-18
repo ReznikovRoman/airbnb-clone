@@ -30,6 +30,7 @@ django-js-asset==1.2.2
 django-model-utils==4.1.1
 django-phonenumber-field==5.1.0
 django-redis==4.12.1
+django-redis-sessions==0.6.2
 django-timezone-field==4.1.2
 django-twilio==0.13.1.post0
 flower==0.9.7
