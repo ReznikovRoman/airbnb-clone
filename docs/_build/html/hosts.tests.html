@@ -1,0 +1,217 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>hosts.tests package &#8212; Airbnb  documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="mailings package" href="mailings.html" />
+    <link rel="prev" title="hosts package" href="hosts.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="hosts-tests-package">
+<h1>hosts.tests package<a class="headerlink" href="#hosts-tests-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-hosts.tests.test_views">
+<span id="hosts-tests-test-views-module"></span><h2>hosts.tests.test_views module<a class="headerlink" href="#module-hosts.tests.test_views" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="hosts.tests.test_views.BecomeHostViewTests">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">hosts.tests.test_views.</span></code><code class="sig-name descname"><span class="pre">BecomeHostViewTests</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hosts.tests.test_views.BecomeHostViewTests" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="py method">
+<dt id="hosts.tests.test_views.BecomeHostViewTests.setUp">
+<code class="sig-name descname"><span class="pre">setUp</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hosts.tests.test_views.BecomeHostViewTests.setUp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hosts.tests.test_views.BecomeHostViewTests.test_desired_redirect_if_required_data_exists">
+<code class="sig-name descname"><span class="pre">test_desired_redirect_if_required_data_exists</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hosts.tests.test_views.BecomeHostViewTests.test_desired_redirect_if_required_data_exists" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="hosts.tests.test_views.BecomeHostViewTests.test_redirect_if_no_profile_image">
+<code class="sig-name descname"><span class="pre">test_redirect_if_no_profile_image</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hosts.tests.test_views.BecomeHostViewTests.test_redirect_if_no_profile_image" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="hosts.tests.test_views.BecomeHostViewTests.test_redirect_if_not_email_confirmed">
+<code class="sig-name descname"><span class="pre">test_redirect_if_not_email_confirmed</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hosts.tests.test_views.BecomeHostViewTests.test_redirect_if_not_email_confirmed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="hosts.tests.test_views.BecomeHostViewTests.test_redirect_if_not_logged_in">
+<code class="sig-name descname"><span class="pre">test_redirect_if_not_logged_in</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hosts.tests.test_views.BecomeHostViewTests.test_redirect_if_not_logged_in" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="hosts.tests.test_views.BecomeHostViewTests.test_view_url_accessible_by_name">
+<code class="sig-name descname"><span class="pre">test_view_url_accessible_by_name</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hosts.tests.test_views.BecomeHostViewTests.test_view_url_accessible_by_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="hosts.tests.test_views.test_desired_redirect_if_required_data_exists">
+<code class="sig-prename descclassname"><span class="pre">hosts.tests.test_views.</span></code><code class="sig-name descname"><span class="pre">test_desired_redirect_if_required_data_exists</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">django.test.client.Client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hosts.tests.test_views.test_desired_redirect_if_required_data_exists" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="hosts.tests.test_views.test_redirect_if_no_profile_image">
+<code class="sig-prename descclassname"><span class="pre">hosts.tests.test_views.</span></code><code class="sig-name descname"><span class="pre">test_redirect_if_no_profile_image</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">django.test.client.Client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hosts.tests.test_views.test_redirect_if_no_profile_image" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="hosts.tests.test_views.test_redirect_if_not_email_confirmed">
+<code class="sig-prename descclassname"><span class="pre">hosts.tests.test_views.</span></code><code class="sig-name descname"><span class="pre">test_redirect_if_not_email_confirmed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">django.test.client.Client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hosts.tests.test_views.test_redirect_if_not_email_confirmed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="hosts.tests.test_views.test_redirect_if_not_logged_in">
+<code class="sig-prename descclassname"><span class="pre">hosts.tests.test_views.</span></code><code class="sig-name descname"><span class="pre">test_redirect_if_not_logged_in</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">django.test.client.Client</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hosts.tests.test_views.test_redirect_if_not_logged_in" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="hosts.tests.test_views.test_view_url_accessible_by_name">
+<code class="sig-prename descclassname"><span class="pre">hosts.tests.test_views.</span></code><code class="sig-name descname"><span class="pre">test_view_url_accessible_by_name</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">django.test.client.Client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hosts.tests.test_views.test_view_url_accessible_by_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="hosts.tests.test_views.user_1">
+<code class="sig-prename descclassname"><span class="pre">hosts.tests.test_views.</span></code><code class="sig-name descname"><span class="pre">user_1</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_factory</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="accounts.html#accounts.models.CustomUser" title="accounts.models.CustomUser"><span class="pre">accounts.models.CustomUser</span></a><a class="headerlink" href="#hosts.tests.test_views.user_1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="hosts.tests.test_views.user_2">
+<code class="sig-prename descclassname"><span class="pre">hosts.tests.test_views.</span></code><code class="sig-name descname"><span class="pre">user_2</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_factory</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="accounts.html#accounts.models.CustomUser" title="accounts.models.CustomUser"><span class="pre">accounts.models.CustomUser</span></a><a class="headerlink" href="#hosts.tests.test_views.user_2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="hosts.tests.test_views.user_3">
+<code class="sig-prename descclassname"><span class="pre">hosts.tests.test_views.</span></code><code class="sig-name descname"><span class="pre">user_3</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_factory</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="accounts.html#accounts.models.CustomUser" title="accounts.models.CustomUser"><span class="pre">accounts.models.CustomUser</span></a><a class="headerlink" href="#hosts.tests.test_views.user_3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="hosts.tests.test_views.user_factory">
+<code class="sig-prename descclassname"><span class="pre">hosts.tests.test_views.</span></code><code class="sig-name descname"><span class="pre">user_factory</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hosts.tests.test_views.user_factory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-hosts.tests">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-hosts.tests" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Airbnb</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">airbnb</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="accounts.html">accounts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="addresses.html">addresses package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="airbnb.html">airbnb package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common.html">common package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configs.html">configs package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="hosts.html">hosts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mailings.html">mailings package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manage.html">manage module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queries.html">queries module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="realty.html">realty package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="subscribers.html">subscribers package</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">airbnb</a><ul>
+  <li><a href="hosts.html">hosts package</a><ul>
+      <li>Previous: <a href="hosts.html" title="previous chapter">hosts package</a></li>
+      <li>Next: <a href="mailings.html" title="next chapter">mailings package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Roman Reznikov.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/hosts.tests.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

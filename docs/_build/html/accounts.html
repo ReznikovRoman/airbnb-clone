@@ -1,0 +1,1539 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>accounts package &#8212; Airbnb  documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="addresses package" href="addresses.html" />
+    <link rel="prev" title="airbnb" href="modules.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="accounts-package">
+<h1>accounts package<a class="headerlink" href="#accounts-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-accounts.admin">
+<span id="accounts-admin-module"></span><h2>accounts.admin module<a class="headerlink" href="#module-accounts.admin" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="accounts.admin.CustomUserAdmin">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.admin.</span></code><code class="sig-name descname"><span class="pre">CustomUserAdmin</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">admin_site</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.admin.CustomUserAdmin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.contrib.auth.admin.UserAdmin</span></code></p>
+<dl class="py attribute">
+<dt id="accounts.admin.CustomUserAdmin.add_fieldsets">
+<code class="sig-name descname"><span class="pre">add_fieldsets</span></code><em class="property"> <span class="pre">=</span> <span class="pre">((None,</span> <span class="pre">{'classes':</span> <span class="pre">('wide',),</span> <span class="pre">'fields':</span> <span class="pre">('email',</span> <span class="pre">'first_name',</span> <span class="pre">'last_name',</span> <span class="pre">'password1',</span> <span class="pre">'password2')}),)</span></em><a class="headerlink" href="#accounts.admin.CustomUserAdmin.add_fieldsets" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.admin.CustomUserAdmin.add_form">
+<code class="sig-name descname"><span class="pre">add_form</span></code><a class="headerlink" href="#accounts.admin.CustomUserAdmin.add_form" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#accounts.forms.SignUpForm" title="accounts.forms.SignUpForm"><code class="xref py py-class docutils literal notranslate"><span class="pre">accounts.forms.SignUpForm</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.admin.CustomUserAdmin.fieldsets">
+<code class="sig-name descname"><span class="pre">fieldsets</span></code><em class="property"> <span class="pre">=</span> <span class="pre">((None,</span> <span class="pre">{'fields':</span> <span class="pre">('email',)}),</span> <span class="pre">('Personal</span> <span class="pre">info',</span> <span class="pre">{'fields':</span> <span class="pre">('first_name',</span> <span class="pre">'last_name')}),</span> <span class="pre">('Permissions',</span> <span class="pre">{'fields':</span> <span class="pre">('is_active',</span> <span class="pre">'is_email_confirmed',</span> <span class="pre">'is_staff',</span> <span class="pre">'is_admin',</span> <span class="pre">'groups',</span> <span class="pre">'user_permissions')}),</span> <span class="pre">('Important</span> <span class="pre">dates',</span> <span class="pre">{'fields':</span> <span class="pre">('last_login',</span> <span class="pre">'date_joined')}))</span></em><a class="headerlink" href="#accounts.admin.CustomUserAdmin.fieldsets" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.admin.CustomUserAdmin.form">
+<code class="sig-name descname"><span class="pre">form</span></code><a class="headerlink" href="#accounts.admin.CustomUserAdmin.form" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#accounts.forms.AdminCustomUserChangeForm" title="accounts.forms.AdminCustomUserChangeForm"><code class="xref py py-class docutils literal notranslate"><span class="pre">accounts.forms.AdminCustomUserChangeForm</span></code></a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="accounts.admin.CustomUserAdmin.get_profile_link">
+<code class="sig-name descname"><span class="pre">get_profile_link</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#accounts.models.CustomUser" title="accounts.models.CustomUser"><span class="pre">accounts.models.CustomUser</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.admin.CustomUserAdmin.get_profile_link" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.admin.CustomUserAdmin.list_display">
+<code class="sig-name descname"><span class="pre">list_display</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('email',</span> <span class="pre">'first_name',</span> <span class="pre">'last_name',</span> <span class="pre">'get_profile_link',</span> <span class="pre">'is_email_confirmed')</span></em><a class="headerlink" href="#accounts.admin.CustomUserAdmin.list_display" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.admin.CustomUserAdmin.list_filter">
+<code class="sig-name descname"><span class="pre">list_filter</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('is_active',</span> <span class="pre">'is_staff',</span> <span class="pre">'is_admin')</span></em><a class="headerlink" href="#accounts.admin.CustomUserAdmin.list_filter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.admin.CustomUserAdmin.media">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">media</span></code><a class="headerlink" href="#accounts.admin.CustomUserAdmin.media" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.admin.CustomUserAdmin.ordering">
+<code class="sig-name descname"><span class="pre">ordering</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('email',)</span></em><a class="headerlink" href="#accounts.admin.CustomUserAdmin.ordering" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.admin.CustomUserAdmin.readonly_fields">
+<code class="sig-name descname"><span class="pre">readonly_fields</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('id',</span> <span class="pre">'date_joined',</span> <span class="pre">'last_login')</span></em><a class="headerlink" href="#accounts.admin.CustomUserAdmin.readonly_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.admin.CustomUserAdmin.search_fields">
+<code class="sig-name descname"><span class="pre">search_fields</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('email',</span> <span class="pre">'first_name',</span> <span class="pre">'last_name')</span></em><a class="headerlink" href="#accounts.admin.CustomUserAdmin.search_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="accounts.admin.ProfileAdmin">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.admin.</span></code><code class="sig-name descname"><span class="pre">ProfileAdmin</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">admin_site</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.admin.ProfileAdmin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.contrib.admin.options.ModelAdmin</span></code></p>
+<dl class="py attribute">
+<dt id="accounts.admin.ProfileAdmin.list_display">
+<code class="sig-name descname"><span class="pre">list_display</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('__str__',</span> <span class="pre">'date_of_birth',</span> <span class="pre">'gender',</span> <span class="pre">'phone_number')</span></em><a class="headerlink" href="#accounts.admin.ProfileAdmin.list_display" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.admin.ProfileAdmin.media">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">media</span></code><a class="headerlink" href="#accounts.admin.ProfileAdmin.media" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.admin.ProfileAdmin.search_fields">
+<code class="sig-name descname"><span class="pre">search_fields</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('user__email',)</span></em><a class="headerlink" href="#accounts.admin.ProfileAdmin.search_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="accounts.admin.SMSLogAdmin">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.admin.</span></code><code class="sig-name descname"><span class="pre">SMSLogAdmin</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">admin_site</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.admin.SMSLogAdmin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.contrib.admin.options.ModelAdmin</span></code></p>
+<dl class="py method">
+<dt id="accounts.admin.SMSLogAdmin.get_profile_link">
+<code class="sig-name descname"><span class="pre">get_profile_link</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#accounts.models.CustomUser" title="accounts.models.CustomUser"><span class="pre">accounts.models.CustomUser</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.admin.SMSLogAdmin.get_profile_link" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.admin.SMSLogAdmin.list_display">
+<code class="sig-name descname"><span class="pre">list_display</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('__str__',</span> <span class="pre">'get_profile_link')</span></em><a class="headerlink" href="#accounts.admin.SMSLogAdmin.list_display" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.admin.SMSLogAdmin.media">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">media</span></code><a class="headerlink" href="#accounts.admin.SMSLogAdmin.media" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-accounts.apps">
+<span id="accounts-apps-module"></span><h2>accounts.apps module<a class="headerlink" href="#module-accounts.apps" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="accounts.apps.AccountsConfig">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.apps.</span></code><code class="sig-name descname"><span class="pre">AccountsConfig</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_module</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.apps.AccountsConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.apps.config.AppConfig</span></code></p>
+<dl class="py attribute">
+<dt id="accounts.apps.AccountsConfig.name">
+<code class="sig-name descname"><span class="pre">name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'accounts'</span></em><a class="headerlink" href="#accounts.apps.AccountsConfig.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.apps.AccountsConfig.ready">
+<code class="sig-name descname"><span class="pre">ready</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#accounts.apps.AccountsConfig.ready" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this method in subclasses to run code when Django starts.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-accounts.forms">
+<span id="accounts-forms-module"></span><h2>accounts.forms module<a class="headerlink" href="#module-accounts.forms" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="accounts.forms.AdminCustomUserChangeForm">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.forms.</span></code><code class="sig-name descname"><span class="pre">AdminCustomUserChangeForm</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.forms.AdminCustomUserChangeForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.contrib.auth.forms.UserChangeForm</span></code></p>
+<p>Form for editing CustomUser (used on the admin panel).</p>
+<dl class="py class">
+<dt id="accounts.forms.AdminCustomUserChangeForm.Meta">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Meta</span></code><a class="headerlink" href="#accounts.forms.AdminCustomUserChangeForm.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="accounts.forms.AdminCustomUserChangeForm.Meta.fields">
+<code class="sig-name descname"><span class="pre">fields</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('email',</span> <span class="pre">'first_name',</span> <span class="pre">'last_name',</span> <span class="pre">'is_email_confirmed')</span></em><a class="headerlink" href="#accounts.forms.AdminCustomUserChangeForm.Meta.fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.forms.AdminCustomUserChangeForm.Meta.model">
+<code class="sig-name descname"><span class="pre">model</span></code><a class="headerlink" href="#accounts.forms.AdminCustomUserChangeForm.Meta.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#accounts.models.CustomUser" title="accounts.models.CustomUser"><code class="xref py py-class docutils literal notranslate"><span class="pre">accounts.models.CustomUser</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.forms.AdminCustomUserChangeForm.base_fields">
+<code class="sig-name descname"><span class="pre">base_fields</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{'email':</span> <span class="pre">&lt;django.forms.fields.EmailField</span> <span class="pre">object&gt;,</span> <span class="pre">'first_name':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;,</span> <span class="pre">'is_email_confirmed':</span> <span class="pre">&lt;django.forms.fields.BooleanField</span> <span class="pre">object&gt;,</span> <span class="pre">'last_name':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;,</span> <span class="pre">'password':</span> <span class="pre">&lt;django.contrib.auth.forms.ReadOnlyPasswordHashField</span> <span class="pre">object&gt;}</span></em><a class="headerlink" href="#accounts.forms.AdminCustomUserChangeForm.base_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.forms.AdminCustomUserChangeForm.declared_fields">
+<code class="sig-name descname"><span class="pre">declared_fields</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{'password':</span> <span class="pre">&lt;django.contrib.auth.forms.ReadOnlyPasswordHashField</span> <span class="pre">object&gt;}</span></em><a class="headerlink" href="#accounts.forms.AdminCustomUserChangeForm.declared_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.forms.AdminCustomUserChangeForm.media">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">media</span></code><a class="headerlink" href="#accounts.forms.AdminCustomUserChangeForm.media" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all media required to render the widgets on this form.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="accounts.forms.CustomPasswordResetForm">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.forms.</span></code><code class="sig-name descname"><span class="pre">CustomPasswordResetForm</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">data=None</span></em>, <em class="sig-param"><span class="pre">files=None</span></em>, <em class="sig-param"><span class="pre">auto_id='id_%s'</span></em>, <em class="sig-param"><span class="pre">prefix=None</span></em>, <em class="sig-param"><span class="pre">initial=None</span></em>, <em class="sig-param"><span class="pre">error_class=&lt;class</span> <span class="pre">'django.forms.utils.ErrorList'&gt;</span></em>, <em class="sig-param"><span class="pre">label_suffix=None</span></em>, <em class="sig-param"><span class="pre">empty_permitted=False</span></em>, <em class="sig-param"><span class="pre">field_order=None</span></em>, <em class="sig-param"><span class="pre">use_required_attribute=None</span></em>, <em class="sig-param"><span class="pre">renderer=None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.forms.CustomPasswordResetForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.contrib.auth.forms.PasswordResetForm</span></code></p>
+<p>Custom password reset form.</p>
+<p>Sends emails using Celery.</p>
+<dl class="py attribute">
+<dt id="accounts.forms.CustomPasswordResetForm.base_fields">
+<code class="sig-name descname"><span class="pre">base_fields</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{'email':</span> <span class="pre">&lt;django.forms.fields.EmailField</span> <span class="pre">object&gt;}</span></em><a class="headerlink" href="#accounts.forms.CustomPasswordResetForm.base_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.forms.CustomPasswordResetForm.declared_fields">
+<code class="sig-name descname"><span class="pre">declared_fields</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{'email':</span> <span class="pre">&lt;django.forms.fields.EmailField</span> <span class="pre">object&gt;}</span></em><a class="headerlink" href="#accounts.forms.CustomPasswordResetForm.declared_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.forms.CustomPasswordResetForm.media">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">media</span></code><a class="headerlink" href="#accounts.forms.CustomPasswordResetForm.media" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all media required to render the widgets on this form.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="accounts.forms.CustomPasswordResetForm.send_mail">
+<code class="sig-name descname"><span class="pre">send_mail</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subject_template_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">email_template_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_email</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_email</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">html_email_template_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.forms.CustomPasswordResetForm.send_mail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send a django.core.mail.EmailMultiAlternatives to <cite>to_email</cite>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="accounts.forms.ProfileDescriptionForm">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.forms.</span></code><code class="sig-name descname"><span class="pre">ProfileDescriptionForm</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">data=None</span></em>, <em class="sig-param"><span class="pre">files=None</span></em>, <em class="sig-param"><span class="pre">auto_id='id_%s'</span></em>, <em class="sig-param"><span class="pre">prefix=None</span></em>, <em class="sig-param"><span class="pre">initial=None</span></em>, <em class="sig-param"><span class="pre">error_class=&lt;class</span> <span class="pre">'django.forms.utils.ErrorList'&gt;</span></em>, <em class="sig-param"><span class="pre">label_suffix=None</span></em>, <em class="sig-param"><span class="pre">empty_permitted=False</span></em>, <em class="sig-param"><span class="pre">instance=None</span></em>, <em class="sig-param"><span class="pre">use_required_attribute=None</span></em>, <em class="sig-param"><span class="pre">renderer=None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.forms.ProfileDescriptionForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.forms.models.ModelForm</span></code></p>
+<p>Form for editing user description (‘about me’ section).</p>
+<dl class="py class">
+<dt id="accounts.forms.ProfileDescriptionForm.Meta">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Meta</span></code><a class="headerlink" href="#accounts.forms.ProfileDescriptionForm.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="accounts.forms.ProfileDescriptionForm.Meta.fields">
+<code class="sig-name descname"><span class="pre">fields</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('description',)</span></em><a class="headerlink" href="#accounts.forms.ProfileDescriptionForm.Meta.fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.forms.ProfileDescriptionForm.Meta.model">
+<code class="sig-name descname"><span class="pre">model</span></code><a class="headerlink" href="#accounts.forms.ProfileDescriptionForm.Meta.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#accounts.models.Profile" title="accounts.models.Profile"><code class="xref py py-class docutils literal notranslate"><span class="pre">accounts.models.Profile</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.forms.ProfileDescriptionForm.base_fields">
+<code class="sig-name descname"><span class="pre">base_fields</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{'description':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;}</span></em><a class="headerlink" href="#accounts.forms.ProfileDescriptionForm.base_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.forms.ProfileDescriptionForm.declared_fields">
+<code class="sig-name descname"><span class="pre">declared_fields</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{}</span></em><a class="headerlink" href="#accounts.forms.ProfileDescriptionForm.declared_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.forms.ProfileDescriptionForm.media">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">media</span></code><a class="headerlink" href="#accounts.forms.ProfileDescriptionForm.media" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all media required to render the widgets on this form.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="accounts.forms.ProfileForm">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.forms.</span></code><code class="sig-name descname"><span class="pre">ProfileForm</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">data=None</span></em>, <em class="sig-param"><span class="pre">files=None</span></em>, <em class="sig-param"><span class="pre">auto_id='id_%s'</span></em>, <em class="sig-param"><span class="pre">prefix=None</span></em>, <em class="sig-param"><span class="pre">initial=None</span></em>, <em class="sig-param"><span class="pre">error_class=&lt;class</span> <span class="pre">'django.forms.utils.ErrorList'&gt;</span></em>, <em class="sig-param"><span class="pre">label_suffix=None</span></em>, <em class="sig-param"><span class="pre">empty_permitted=False</span></em>, <em class="sig-param"><span class="pre">instance=None</span></em>, <em class="sig-param"><span class="pre">use_required_attribute=None</span></em>, <em class="sig-param"><span class="pre">renderer=None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.forms.ProfileForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.forms.models.ModelForm</span></code></p>
+<p>Form for editing user profile.</p>
+<dl class="py class">
+<dt id="accounts.forms.ProfileForm.Meta">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Meta</span></code><a class="headerlink" href="#accounts.forms.ProfileForm.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="accounts.forms.ProfileForm.Meta.fields">
+<code class="sig-name descname"><span class="pre">fields</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('gender',</span> <span class="pre">'date_of_birth',</span> <span class="pre">'phone_number')</span></em><a class="headerlink" href="#accounts.forms.ProfileForm.Meta.fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.forms.ProfileForm.Meta.model">
+<code class="sig-name descname"><span class="pre">model</span></code><a class="headerlink" href="#accounts.forms.ProfileForm.Meta.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#accounts.models.Profile" title="accounts.models.Profile"><code class="xref py py-class docutils literal notranslate"><span class="pre">accounts.models.Profile</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.forms.ProfileForm.Meta.widgets">
+<code class="sig-name descname"><span class="pre">widgets</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{'date_of_birth':</span> <span class="pre">&lt;django.forms.widgets.DateInput</span> <span class="pre">object&gt;}</span></em><a class="headerlink" href="#accounts.forms.ProfileForm.Meta.widgets" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.forms.ProfileForm.base_fields">
+<code class="sig-name descname"><span class="pre">base_fields</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{'date_of_birth':</span> <span class="pre">&lt;django.forms.fields.DateField</span> <span class="pre">object&gt;,</span> <span class="pre">'gender':</span> <span class="pre">&lt;django.forms.fields.TypedChoiceField</span> <span class="pre">object&gt;,</span> <span class="pre">'phone_number':</span> <span class="pre">&lt;phonenumber_field.formfields.PhoneNumberField</span> <span class="pre">object&gt;}</span></em><a class="headerlink" href="#accounts.forms.ProfileForm.base_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.forms.ProfileForm.clean_date_of_birth">
+<code class="sig-name descname"><span class="pre">clean_date_of_birth</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#accounts.forms.ProfileForm.clean_date_of_birth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles input of date_of_birth field.</p>
+<p>date of birth can’t be in the future, Host must be at least 18 years old</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.forms.ProfileForm.declared_fields">
+<code class="sig-name descname"><span class="pre">declared_fields</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{}</span></em><a class="headerlink" href="#accounts.forms.ProfileForm.declared_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.forms.ProfileForm.media">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">media</span></code><a class="headerlink" href="#accounts.forms.ProfileForm.media" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all media required to render the widgets on this form.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="accounts.forms.ProfileImageForm">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.forms.</span></code><code class="sig-name descname"><span class="pre">ProfileImageForm</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">data=None</span></em>, <em class="sig-param"><span class="pre">files=None</span></em>, <em class="sig-param"><span class="pre">auto_id='id_%s'</span></em>, <em class="sig-param"><span class="pre">prefix=None</span></em>, <em class="sig-param"><span class="pre">initial=None</span></em>, <em class="sig-param"><span class="pre">error_class=&lt;class</span> <span class="pre">'django.forms.utils.ErrorList'&gt;</span></em>, <em class="sig-param"><span class="pre">label_suffix=None</span></em>, <em class="sig-param"><span class="pre">empty_permitted=False</span></em>, <em class="sig-param"><span class="pre">instance=None</span></em>, <em class="sig-param"><span class="pre">use_required_attribute=None</span></em>, <em class="sig-param"><span class="pre">renderer=None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.forms.ProfileImageForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.forms.models.ModelForm</span></code></p>
+<p>Form for uploading profile image.</p>
+<dl class="py class">
+<dt id="accounts.forms.ProfileImageForm.Meta">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Meta</span></code><a class="headerlink" href="#accounts.forms.ProfileImageForm.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="accounts.forms.ProfileImageForm.Meta.fields">
+<code class="sig-name descname"><span class="pre">fields</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('profile_image',)</span></em><a class="headerlink" href="#accounts.forms.ProfileImageForm.Meta.fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.forms.ProfileImageForm.Meta.model">
+<code class="sig-name descname"><span class="pre">model</span></code><a class="headerlink" href="#accounts.forms.ProfileImageForm.Meta.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#accounts.models.Profile" title="accounts.models.Profile"><code class="xref py py-class docutils literal notranslate"><span class="pre">accounts.models.Profile</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.forms.ProfileImageForm.Meta.widgets">
+<code class="sig-name descname"><span class="pre">widgets</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{'profile_image':</span> <span class="pre">&lt;django.forms.widgets.FileInput</span> <span class="pre">object&gt;}</span></em><a class="headerlink" href="#accounts.forms.ProfileImageForm.Meta.widgets" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.forms.ProfileImageForm.base_fields">
+<code class="sig-name descname"><span class="pre">base_fields</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{'profile_image':</span> <span class="pre">&lt;django.forms.fields.ImageField</span> <span class="pre">object&gt;}</span></em><a class="headerlink" href="#accounts.forms.ProfileImageForm.base_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.forms.ProfileImageForm.declared_fields">
+<code class="sig-name descname"><span class="pre">declared_fields</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{}</span></em><a class="headerlink" href="#accounts.forms.ProfileImageForm.declared_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.forms.ProfileImageForm.media">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">media</span></code><a class="headerlink" href="#accounts.forms.ProfileImageForm.media" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all media required to render the widgets on this form.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="accounts.forms.SignUpForm">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.forms.</span></code><code class="sig-name descname"><span class="pre">SignUpForm</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.forms.SignUpForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.contrib.auth.forms.UserCreationForm</span></code></p>
+<p>Form for signing up/creating new account.</p>
+<dl class="py class">
+<dt id="accounts.forms.SignUpForm.Meta">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Meta</span></code><a class="headerlink" href="#accounts.forms.SignUpForm.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="accounts.forms.SignUpForm.Meta.fields">
+<code class="sig-name descname"><span class="pre">fields</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('email',</span> <span class="pre">'first_name',</span> <span class="pre">'last_name',</span> <span class="pre">'password1',</span> <span class="pre">'password2')</span></em><a class="headerlink" href="#accounts.forms.SignUpForm.Meta.fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.forms.SignUpForm.Meta.model">
+<code class="sig-name descname"><span class="pre">model</span></code><a class="headerlink" href="#accounts.forms.SignUpForm.Meta.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#accounts.models.CustomUser" title="accounts.models.CustomUser"><code class="xref py py-class docutils literal notranslate"><span class="pre">accounts.models.CustomUser</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.forms.SignUpForm.base_fields">
+<code class="sig-name descname"><span class="pre">base_fields</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{'email':</span> <span class="pre">&lt;django.forms.fields.EmailField</span> <span class="pre">object&gt;,</span> <span class="pre">'first_name':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;,</span> <span class="pre">'last_name':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;,</span> <span class="pre">'password1':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;,</span> <span class="pre">'password2':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;}</span></em><a class="headerlink" href="#accounts.forms.SignUpForm.base_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.forms.SignUpForm.declared_fields">
+<code class="sig-name descname"><span class="pre">declared_fields</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{'password1':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;,</span> <span class="pre">'password2':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;}</span></em><a class="headerlink" href="#accounts.forms.SignUpForm.declared_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.forms.SignUpForm.media">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">media</span></code><a class="headerlink" href="#accounts.forms.SignUpForm.media" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all media required to render the widgets on this form.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="accounts.forms.UserInfoForm">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.forms.</span></code><code class="sig-name descname"><span class="pre">UserInfoForm</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">data=None</span></em>, <em class="sig-param"><span class="pre">files=None</span></em>, <em class="sig-param"><span class="pre">auto_id='id_%s'</span></em>, <em class="sig-param"><span class="pre">prefix=None</span></em>, <em class="sig-param"><span class="pre">initial=None</span></em>, <em class="sig-param"><span class="pre">error_class=&lt;class</span> <span class="pre">'django.forms.utils.ErrorList'&gt;</span></em>, <em class="sig-param"><span class="pre">label_suffix=None</span></em>, <em class="sig-param"><span class="pre">empty_permitted=False</span></em>, <em class="sig-param"><span class="pre">instance=None</span></em>, <em class="sig-param"><span class="pre">use_required_attribute=None</span></em>, <em class="sig-param"><span class="pre">renderer=None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.forms.UserInfoForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.forms.models.ModelForm</span></code></p>
+<p>Form for editing user info.</p>
+<dl class="py class">
+<dt id="accounts.forms.UserInfoForm.Meta">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Meta</span></code><a class="headerlink" href="#accounts.forms.UserInfoForm.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="accounts.forms.UserInfoForm.Meta.fields">
+<code class="sig-name descname"><span class="pre">fields</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('first_name',</span> <span class="pre">'last_name',</span> <span class="pre">'email')</span></em><a class="headerlink" href="#accounts.forms.UserInfoForm.Meta.fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.forms.UserInfoForm.Meta.model">
+<code class="sig-name descname"><span class="pre">model</span></code><a class="headerlink" href="#accounts.forms.UserInfoForm.Meta.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#accounts.models.CustomUser" title="accounts.models.CustomUser"><code class="xref py py-class docutils literal notranslate"><span class="pre">accounts.models.CustomUser</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.forms.UserInfoForm.base_fields">
+<code class="sig-name descname"><span class="pre">base_fields</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{'email':</span> <span class="pre">&lt;django.forms.fields.EmailField</span> <span class="pre">object&gt;,</span> <span class="pre">'first_name':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;,</span> <span class="pre">'last_name':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;}</span></em><a class="headerlink" href="#accounts.forms.UserInfoForm.base_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.forms.UserInfoForm.declared_fields">
+<code class="sig-name descname"><span class="pre">declared_fields</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{}</span></em><a class="headerlink" href="#accounts.forms.UserInfoForm.declared_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.forms.UserInfoForm.media">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">media</span></code><a class="headerlink" href="#accounts.forms.UserInfoForm.media" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all media required to render the widgets on this form.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="accounts.forms.VerificationCodeForm">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.forms.</span></code><code class="sig-name descname"><span class="pre">VerificationCodeForm</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">data=None</span></em>, <em class="sig-param"><span class="pre">files=None</span></em>, <em class="sig-param"><span class="pre">auto_id='id_%s'</span></em>, <em class="sig-param"><span class="pre">prefix=None</span></em>, <em class="sig-param"><span class="pre">initial=None</span></em>, <em class="sig-param"><span class="pre">error_class=&lt;class</span> <span class="pre">'django.forms.utils.ErrorList'&gt;</span></em>, <em class="sig-param"><span class="pre">label_suffix=None</span></em>, <em class="sig-param"><span class="pre">empty_permitted=False</span></em>, <em class="sig-param"><span class="pre">field_order=None</span></em>, <em class="sig-param"><span class="pre">use_required_attribute=None</span></em>, <em class="sig-param"><span class="pre">renderer=None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.forms.VerificationCodeForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.forms.forms.Form</span></code></p>
+<p>Form for entering a SMS verification code.</p>
+<dl class="py attribute">
+<dt id="accounts.forms.VerificationCodeForm.base_fields">
+<code class="sig-name descname"><span class="pre">base_fields</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{'digit_1':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;,</span> <span class="pre">'digit_2':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;,</span> <span class="pre">'digit_3':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;,</span> <span class="pre">'digit_4':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;}</span></em><a class="headerlink" href="#accounts.forms.VerificationCodeForm.base_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.forms.VerificationCodeForm.clean_digit_1">
+<code class="sig-name descname"><span class="pre">clean_digit_1</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#accounts.forms.VerificationCodeForm.clean_digit_1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.forms.VerificationCodeForm.clean_digit_2">
+<code class="sig-name descname"><span class="pre">clean_digit_2</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#accounts.forms.VerificationCodeForm.clean_digit_2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.forms.VerificationCodeForm.clean_digit_3">
+<code class="sig-name descname"><span class="pre">clean_digit_3</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#accounts.forms.VerificationCodeForm.clean_digit_3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.forms.VerificationCodeForm.clean_digit_4">
+<code class="sig-name descname"><span class="pre">clean_digit_4</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#accounts.forms.VerificationCodeForm.clean_digit_4" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.forms.VerificationCodeForm.declared_fields">
+<code class="sig-name descname"><span class="pre">declared_fields</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{'digit_1':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;,</span> <span class="pre">'digit_2':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;,</span> <span class="pre">'digit_3':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;,</span> <span class="pre">'digit_4':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;}</span></em><a class="headerlink" href="#accounts.forms.VerificationCodeForm.declared_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.forms.VerificationCodeForm.media">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">media</span></code><a class="headerlink" href="#accounts.forms.VerificationCodeForm.media" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all media required to render the widgets on this form.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-accounts.mixins">
+<span id="accounts-mixins-module"></span><h2>accounts.mixins module<a class="headerlink" href="#module-accounts.mixins" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="accounts.mixins.ActivatedAccountRequiredMixin">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.mixins.</span></code><code class="sig-name descname"><span class="pre">ActivatedAccountRequiredMixin</span></code><a class="headerlink" href="#accounts.mixins.ActivatedAccountRequiredMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Verify that current user has confirmed an email.</p>
+<dl class="py method">
+<dt id="accounts.mixins.ActivatedAccountRequiredMixin.dispatch">
+<code class="sig-name descname"><span class="pre">dispatch</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">django.http.request.HttpRequest</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.mixins.ActivatedAccountRequiredMixin.dispatch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="accounts.mixins.AnonymousUserRequiredMixin">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.mixins.</span></code><code class="sig-name descname"><span class="pre">AnonymousUserRequiredMixin</span></code><a class="headerlink" href="#accounts.mixins.AnonymousUserRequiredMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Verify that current user is not logged in.</p>
+<dl class="py method">
+<dt id="accounts.mixins.AnonymousUserRequiredMixin.dispatch">
+<code class="sig-name descname"><span class="pre">dispatch</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">django.http.request.HttpRequest</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.mixins.AnonymousUserRequiredMixin.dispatch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="accounts.mixins.UnconfirmedEmailRequiredMixin">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.mixins.</span></code><code class="sig-name descname"><span class="pre">UnconfirmedEmailRequiredMixin</span></code><a class="headerlink" href="#accounts.mixins.UnconfirmedEmailRequiredMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Verify that current user has not confirmed an email address yet.</p>
+<dl class="py method">
+<dt id="accounts.mixins.UnconfirmedEmailRequiredMixin.dispatch">
+<code class="sig-name descname"><span class="pre">dispatch</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">django.http.request.HttpRequest</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.mixins.UnconfirmedEmailRequiredMixin.dispatch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="accounts.mixins.UnconfirmedPhoneNumberRequiredMixin">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.mixins.</span></code><code class="sig-name descname"><span class="pre">UnconfirmedPhoneNumberRequiredMixin</span></code><a class="headerlink" href="#accounts.mixins.UnconfirmedPhoneNumberRequiredMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Verify that current user has not confirmed his phone number yet.</p>
+<dl class="py method">
+<dt id="accounts.mixins.UnconfirmedPhoneNumberRequiredMixin.dispatch">
+<code class="sig-name descname"><span class="pre">dispatch</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">django.http.request.HttpRequest</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.mixins.UnconfirmedPhoneNumberRequiredMixin.dispatch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-accounts.models">
+<span id="accounts-models-module"></span><h2>accounts.models module<a class="headerlink" href="#module-accounts.models" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="accounts.models.ActivatedAccountsManager">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.models.</span></code><code class="sig-name descname"><span class="pre">ActivatedAccountsManager</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.models.ActivatedAccountsManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#accounts.models.CustomUserManager" title="accounts.models.CustomUserManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">accounts.models.CustomUserManager</span></code></a></p>
+<p>Manager for all users that have confirmed their email.</p>
+<dl class="py method">
+<dt id="accounts.models.ActivatedAccountsManager.get_queryset">
+<code class="sig-name descname"><span class="pre">get_queryset</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#accounts.models.ActivatedAccountsManager.get_queryset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a new QuerySet object. Subclasses can override this method to
+customize the behavior of the Manager.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="accounts.models.CustomUser">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.models.</span></code><code class="sig-name descname"><span class="pre">CustomUser</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.models.CustomUser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.contrib.auth.models.AbstractUser</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">django.contrib.auth.models.PermissionsMixin</span></code></p>
+<p>Custom user model.</p>
+<dl class="py exception">
+<dt id="accounts.models.CustomUser.DoesNotExist">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-name descname"><span class="pre">DoesNotExist</span></code><a class="headerlink" href="#accounts.models.CustomUser.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="accounts.models.CustomUser.MultipleObjectsReturned">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></code><a class="headerlink" href="#accounts.models.CustomUser.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.CustomUser.REQUIRED_FIELDS">
+<code class="sig-name descname"><span class="pre">REQUIRED_FIELDS</span></code><em class="property"> <span class="pre">=</span> <span class="pre">['first_name',</span> <span class="pre">'last_name']</span></em><a class="headerlink" href="#accounts.models.CustomUser.REQUIRED_FIELDS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.CustomUser.USERNAME_FIELD">
+<code class="sig-name descname"><span class="pre">USERNAME_FIELD</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'email'</span></em><a class="headerlink" href="#accounts.models.CustomUser.USERNAME_FIELD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.CustomUser.activated">
+<code class="sig-name descname"><span class="pre">activated</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;accounts.models.ActivatedAccountsManager</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#accounts.models.CustomUser.activated" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.CustomUser.email">
+<code class="sig-name descname"><span class="pre">email</span></code><a class="headerlink" href="#accounts.models.CustomUser.email" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.CustomUser.email_tracker">
+<code class="sig-name descname"><span class="pre">email_tracker</span></code><a class="headerlink" href="#accounts.models.CustomUser.email_tracker" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.models.CustomUser.full_name">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">full_name</span></code><a class="headerlink" href="#accounts.models.CustomUser.full_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.models.CustomUser.get_all_permissions">
+<code class="sig-name descname"><span class="pre">get_all_permissions</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.models.CustomUser.get_all_permissions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.models.CustomUser.get_next_by_date_joined">
+<code class="sig-name descname"><span class="pre">get_next_by_date_joined</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">*</span></em>, <em class="sig-param"><span class="pre">field=&lt;django.db.models.fields.DateTimeField:</span> <span class="pre">date_joined&gt;</span></em>, <em class="sig-param"><span class="pre">is_next=True</span></em>, <em class="sig-param"><span class="pre">**kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.models.CustomUser.get_next_by_date_joined" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.models.CustomUser.get_next_by_last_login">
+<code class="sig-name descname"><span class="pre">get_next_by_last_login</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">*</span></em>, <em class="sig-param"><span class="pre">field=&lt;django.db.models.fields.DateTimeField:</span> <span class="pre">last_login&gt;</span></em>, <em class="sig-param"><span class="pre">is_next=True</span></em>, <em class="sig-param"><span class="pre">**kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.models.CustomUser.get_next_by_last_login" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.models.CustomUser.get_previous_by_date_joined">
+<code class="sig-name descname"><span class="pre">get_previous_by_date_joined</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">*</span></em>, <em class="sig-param"><span class="pre">field=&lt;django.db.models.fields.DateTimeField:</span> <span class="pre">date_joined&gt;</span></em>, <em class="sig-param"><span class="pre">is_next=False</span></em>, <em class="sig-param"><span class="pre">**kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.models.CustomUser.get_previous_by_date_joined" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.models.CustomUser.get_previous_by_last_login">
+<code class="sig-name descname"><span class="pre">get_previous_by_last_login</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">*</span></em>, <em class="sig-param"><span class="pre">field=&lt;django.db.models.fields.DateTimeField:</span> <span class="pre">last_login&gt;</span></em>, <em class="sig-param"><span class="pre">is_next=False</span></em>, <em class="sig-param"><span class="pre">**kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.models.CustomUser.get_previous_by_last_login" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.CustomUser.groups">
+<code class="sig-name descname"><span class="pre">groups</span></code><a class="headerlink" href="#accounts.models.CustomUser.groups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the forward and reverse sides of
+a many-to-many relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Pizza</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">toppings</span> <span class="o">=</span> <span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Topping</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;pizzas&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Pizza.toppings</span></code> and <code class="docutils literal notranslate"><span class="pre">Topping.pizzas</span></code> are <code class="docutils literal notranslate"><span class="pre">ManyToManyDescriptor</span></code>
+instances.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="accounts.models.CustomUser.has_perm">
+<code class="sig-name descname"><span class="pre">has_perm</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">perm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.models.CustomUser.has_perm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True if the user has the specified permission. Query all
+available auth backends, but return immediately if any backend returns
+True. Thus, a user who has permission from a single auth backend is
+assumed to have permission in general. If an object is provided, check
+permissions for that object.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.CustomUser.host">
+<code class="sig-name descname"><span class="pre">host</span></code><a class="headerlink" href="#accounts.models.CustomUser.host" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the reverse side of a one-to-one
+relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Restaurant</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">place</span> <span class="o">=</span> <span class="n">OneToOneField</span><span class="p">(</span><span class="n">Place</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;restaurant&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Place.restaurant</span></code> is a <code class="docutils literal notranslate"><span class="pre">ReverseOneToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.CustomUser.id">
+<code class="sig-name descname"><span class="pre">id</span></code><a class="headerlink" href="#accounts.models.CustomUser.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.CustomUser.is_admin">
+<code class="sig-name descname"><span class="pre">is_admin</span></code><a class="headerlink" href="#accounts.models.CustomUser.is_admin" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.CustomUser.is_email_confirmed">
+<code class="sig-name descname"><span class="pre">is_email_confirmed</span></code><a class="headerlink" href="#accounts.models.CustomUser.is_email_confirmed" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.CustomUser.logentry_set">
+<code class="sig-name descname"><span class="pre">logentry_set</span></code><a class="headerlink" href="#accounts.models.CustomUser.logentry_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Parent.children</span></code> is a <code class="docutils literal notranslate"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.CustomUser.objects">
+<code class="sig-name descname"><span class="pre">objects</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;accounts.models.CustomUserManager</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#accounts.models.CustomUser.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.CustomUser.profile">
+<code class="sig-name descname"><span class="pre">profile</span></code><a class="headerlink" href="#accounts.models.CustomUser.profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the reverse side of a one-to-one
+relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Restaurant</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">place</span> <span class="o">=</span> <span class="n">OneToOneField</span><span class="p">(</span><span class="n">Place</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;restaurant&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Place.restaurant</span></code> is a <code class="docutils literal notranslate"><span class="pre">ReverseOneToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="accounts.models.CustomUser.refresh_from_db">
+<code class="sig-name descname"><span class="pre">refresh_from_db</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">using</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fields</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.models.CustomUser.refresh_from_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reload field values from the database.</p>
+<p>By default, the reloading happens from the database this instance was
+loaded from, or by the read router if this instance wasn’t loaded from
+any database. The using parameter will override the default.</p>
+<p>Fields can be used to specify which fields to reload. The fields
+should be an iterable of field attnames. If fields is None, then
+all non-deferred fields are reloaded.</p>
+<p>When accessing deferred fields of an instance, the deferred loading
+of the field will call this method.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="accounts.models.CustomUser.save_base">
+<code class="sig-name descname"><span class="pre">save_base</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_insert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">using</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_fields</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.models.CustomUser.save_base" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle the parts of saving which should be done only once per save,
+yet need to be done in raw saves, too. This includes some sanity
+checks and signal sending.</p>
+<p>The ‘raw’ argument is telling save_base not to save any parent
+models and not to do any changes to the values before save. This
+is used by fixture loading.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.CustomUser.subscriber">
+<code class="sig-name descname"><span class="pre">subscriber</span></code><a class="headerlink" href="#accounts.models.CustomUser.subscriber" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the reverse side of a one-to-one
+relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Restaurant</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">place</span> <span class="o">=</span> <span class="n">OneToOneField</span><span class="p">(</span><span class="n">Place</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;restaurant&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Place.restaurant</span></code> is a <code class="docutils literal notranslate"><span class="pre">ReverseOneToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.CustomUser.user_permissions">
+<code class="sig-name descname"><span class="pre">user_permissions</span></code><a class="headerlink" href="#accounts.models.CustomUser.user_permissions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the forward and reverse sides of
+a many-to-many relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Pizza</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">toppings</span> <span class="o">=</span> <span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Topping</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;pizzas&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Pizza.toppings</span></code> and <code class="docutils literal notranslate"><span class="pre">Topping.pizzas</span></code> are <code class="docutils literal notranslate"><span class="pre">ManyToManyDescriptor</span></code>
+instances.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.CustomUser.username">
+<code class="sig-name descname"><span class="pre">username</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#accounts.models.CustomUser.username" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="accounts.models.CustomUserManager">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.models.</span></code><code class="sig-name descname"><span class="pre">CustomUserManager</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.models.CustomUserManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.contrib.auth.base_user.BaseUserManager</span></code></p>
+<p>Manager for CustomUser model.</p>
+<dl class="py method">
+<dt id="accounts.models.CustomUserManager.create_staffuser">
+<code class="sig-name descname"><span class="pre">create_staffuser</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.models.CustomUserManager.create_staffuser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.models.CustomUserManager.create_superuser">
+<code class="sig-name descname"><span class="pre">create_superuser</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.models.CustomUserManager.create_superuser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.models.CustomUserManager.create_user">
+<code class="sig-name descname"><span class="pre">create_user</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.models.CustomUserManager.create_user" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.models.CustomUserManager.get_or_create">
+<code class="sig-name descname"><span class="pre">get_or_create</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.models.CustomUserManager.get_or_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Look up an object with the given kwargs, creating one if necessary.
+Return a tuple of (object, created), where created is a boolean
+specifying whether an object was created.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="accounts.models.Profile">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.models.</span></code><code class="sig-name descname"><span class="pre">Profile</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.models.Profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.db.models.base.Model</span></code></p>
+<p>Profile for CustomUser.</p>
+<dl class="py exception">
+<dt id="accounts.models.Profile.DoesNotExist">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-name descname"><span class="pre">DoesNotExist</span></code><a class="headerlink" href="#accounts.models.Profile.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="accounts.models.Profile.MultipleObjectsReturned">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></code><a class="headerlink" href="#accounts.models.Profile.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.Profile.date_of_birth">
+<code class="sig-name descname"><span class="pre">date_of_birth</span></code><a class="headerlink" href="#accounts.models.Profile.date_of_birth" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.Profile.description">
+<code class="sig-name descname"><span class="pre">description</span></code><a class="headerlink" href="#accounts.models.Profile.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.Profile.gender">
+<code class="sig-name descname"><span class="pre">gender</span></code><a class="headerlink" href="#accounts.models.Profile.gender" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="accounts.models.Profile.get_gender_display">
+<code class="sig-name descname"><span class="pre">get_gender_display</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">*</span></em>, <em class="sig-param"><span class="pre">field=&lt;django.db.models.fields.CharField:</span> <span class="pre">gender&gt;</span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.models.Profile.get_gender_display" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.Profile.id">
+<code class="sig-name descname"><span class="pre">id</span></code><a class="headerlink" href="#accounts.models.Profile.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.Profile.is_phone_number_confirmed">
+<code class="sig-name descname"><span class="pre">is_phone_number_confirmed</span></code><a class="headerlink" href="#accounts.models.Profile.is_phone_number_confirmed" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.Profile.objects">
+<code class="sig-name descname"><span class="pre">objects</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;django.db.models.manager.Manager</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#accounts.models.Profile.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.Profile.phone_number">
+<code class="sig-name descname"><span class="pre">phone_number</span></code><a class="headerlink" href="#accounts.models.Profile.phone_number" title="Permalink to this definition">¶</a></dt>
+<dd><p>The descriptor for the phone number attribute on the model instance.
+Returns a PhoneNumber when accessed so you can do stuff like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span><span class="o">.</span><span class="n">phone_number</span><span class="o">.</span><span class="n">as_international</span>
+</pre></div>
+</div>
+<p>Assigns a phone number object on assignment so you can do:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span><span class="o">.</span><span class="n">phone_number</span> <span class="o">=</span> <span class="n">PhoneNumber</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>or,</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span><span class="o">.</span><span class="n">phone_number</span> <span class="o">=</span> <span class="s1">&#39;+414204242&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.Profile.profile_image">
+<code class="sig-name descname"><span class="pre">profile_image</span></code><a class="headerlink" href="#accounts.models.Profile.profile_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Just like the FileDescriptor, but for ImageFields. The only difference is
+assigning the width/height to the width_field/height_field, if appropriate.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.Profile.sms_log">
+<code class="sig-name descname"><span class="pre">sms_log</span></code><a class="headerlink" href="#accounts.models.Profile.sms_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the reverse side of a one-to-one
+relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Restaurant</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">place</span> <span class="o">=</span> <span class="n">OneToOneField</span><span class="p">(</span><span class="n">Place</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;restaurant&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Place.restaurant</span></code> is a <code class="docutils literal notranslate"><span class="pre">ReverseOneToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.Profile.user">
+<code class="sig-name descname"><span class="pre">user</span></code><a class="headerlink" href="#accounts.models.Profile.user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a one-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Restaurant</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">place</span> <span class="o">=</span> <span class="n">OneToOneField</span><span class="p">(</span><span class="n">Place</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;restaurant&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Restaurant.place</span></code> is a <code class="docutils literal notranslate"><span class="pre">ForwardOneToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.Profile.user_id">
+<code class="sig-name descname"><span class="pre">user_id</span></code><a class="headerlink" href="#accounts.models.Profile.user_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="accounts.models.ProfileGenderChoices">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.models.</span></code><code class="sig-name descname"><span class="pre">ProfileGenderChoices</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.models.ProfileGenderChoices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.db.models.enums.TextChoices</span></code></p>
+<p>An enumeration.</p>
+<dl class="py attribute">
+<dt id="accounts.models.ProfileGenderChoices.APARTMENTS">
+<code class="sig-name descname"><span class="pre">APARTMENTS</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'O'</span></em><a class="headerlink" href="#accounts.models.ProfileGenderChoices.APARTMENTS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.ProfileGenderChoices.HOTEL">
+<code class="sig-name descname"><span class="pre">HOTEL</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'F'</span></em><a class="headerlink" href="#accounts.models.ProfileGenderChoices.HOTEL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.ProfileGenderChoices.MALE">
+<code class="sig-name descname"><span class="pre">MALE</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'M'</span></em><a class="headerlink" href="#accounts.models.ProfileGenderChoices.MALE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="accounts.models.SMSLog">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.models.</span></code><code class="sig-name descname"><span class="pre">SMSLog</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.models.SMSLog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.db.models.base.Model</span></code></p>
+<p>Log of sms message that is sent to User to verify his phone number.</p>
+<dl class="py exception">
+<dt id="accounts.models.SMSLog.DoesNotExist">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-name descname"><span class="pre">DoesNotExist</span></code><a class="headerlink" href="#accounts.models.SMSLog.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="accounts.models.SMSLog.MultipleObjectsReturned">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></code><a class="headerlink" href="#accounts.models.SMSLog.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.SMSLog.id">
+<code class="sig-name descname"><span class="pre">id</span></code><a class="headerlink" href="#accounts.models.SMSLog.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.SMSLog.objects">
+<code class="sig-name descname"><span class="pre">objects</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;django.db.models.manager.Manager</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#accounts.models.SMSLog.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.SMSLog.profile">
+<code class="sig-name descname"><span class="pre">profile</span></code><a class="headerlink" href="#accounts.models.SMSLog.profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a one-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Restaurant</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">place</span> <span class="o">=</span> <span class="n">OneToOneField</span><span class="p">(</span><span class="n">Place</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;restaurant&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Restaurant.place</span></code> is a <code class="docutils literal notranslate"><span class="pre">ForwardOneToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.SMSLog.profile_id">
+<code class="sig-name descname"><span class="pre">profile_id</span></code><a class="headerlink" href="#accounts.models.SMSLog.profile_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.SMSLog.sms_code">
+<code class="sig-name descname"><span class="pre">sms_code</span></code><a class="headerlink" href="#accounts.models.SMSLog.sms_code" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="accounts.models.get_default_profile_image">
+<code class="sig-prename descclassname"><span class="pre">accounts.models.</span></code><code class="sig-name descname"><span class="pre">get_default_profile_image</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">str</span><a class="headerlink" href="#accounts.models.get_default_profile_image" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="accounts.models.get_default_profile_image_full_url">
+<code class="sig-prename descclassname"><span class="pre">accounts.models.</span></code><code class="sig-name descname"><span class="pre">get_default_profile_image_full_url</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">str</span><a class="headerlink" href="#accounts.models.get_default_profile_image_full_url" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="accounts.models.get_profile_image_upload_path">
+<code class="sig-prename descclassname"><span class="pre">accounts.models.</span></code><code class="sig-name descname"><span class="pre">get_profile_image_upload_path</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#accounts.models.Profile" title="accounts.models.Profile"><span class="pre">accounts.models.Profile</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">str</span><a class="headerlink" href="#accounts.models.get_profile_image_upload_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-accounts.services">
+<span id="accounts-services-module"></span><h2>accounts.services module<a class="headerlink" href="#module-accounts.services" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="accounts.services.add_user_to_group">
+<code class="sig-prename descclassname"><span class="pre">accounts.services.</span></code><code class="sig-name descname"><span class="pre">add_user_to_group</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#accounts.models.CustomUser" title="accounts.models.CustomUser"><span class="pre">accounts.models.CustomUser</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#accounts.services.add_user_to_group" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="accounts.services.generate_random_sms_code">
+<code class="sig-prename descclassname"><span class="pre">accounts.services.</span></code><code class="sig-name descname"><span class="pre">generate_random_sms_code</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">str</span><a class="headerlink" href="#accounts.services.generate_random_sms_code" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates random 4 digits code (0000-9999).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="accounts.services.get_user_from_uid">
+<code class="sig-prename descclassname"><span class="pre">accounts.services.</span></code><code class="sig-name descname"><span class="pre">get_user_from_uid</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uid</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#accounts.models.CustomUser" title="accounts.models.CustomUser"><span class="pre">accounts.models.CustomUser</span></a><a class="headerlink" href="#accounts.services.get_user_from_uid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="accounts.services.get_verification_code_from_digits_dict">
+<code class="sig-prename descclassname"><span class="pre">accounts.services.</span></code><code class="sig-name descname"><span class="pre">get_verification_code_from_digits_dict</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">digits_dict</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">str</span><a class="headerlink" href="#accounts.services.get_verification_code_from_digits_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts dict of digits ({‘key’: ‘digit’, …}) to a verification code.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="accounts.services.handle_phone_number_change">
+<code class="sig-prename descclassname"><span class="pre">accounts.services.</span></code><code class="sig-name descname"><span class="pre">handle_phone_number_change</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_profile</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#accounts.models.Profile" title="accounts.models.Profile"><span class="pre">accounts.models.Profile</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">site_domain</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_phone_number</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#accounts.services.handle_phone_number_change" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles phone number change.
+- Gets or creates a SMSLog object for the given <cite>user_profile</cite>
+- Generates random verification code and saves it to the SMSLog object
+- Sets <cite>profile.is_phone_number_confirmed</cite> to False
+- Sends verification code to the user’s new phone number (celery task)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user_profile</strong> (<a class="reference internal" href="#accounts.models.Profile" title="accounts.models.Profile"><em>Profile</em></a>) – Profile of current user</p></li>
+<li><p><strong>site_domain</strong> (<em>str</em>) – Current site domain (e.g., airbnb, localhost, etc.)</p></li>
+<li><p><strong>new_phone_number</strong> (<em>str</em>) – User’s new phone number</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="accounts.services.is_verification_code_for_profile_valid">
+<code class="sig-prename descclassname"><span class="pre">accounts.services.</span></code><code class="sig-name descname"><span class="pre">is_verification_code_for_profile_valid</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_profile</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#accounts.models.Profile" title="accounts.models.Profile"><span class="pre">accounts.models.Profile</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">verification_code</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">bool</span><a class="headerlink" href="#accounts.services.is_verification_code_for_profile_valid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="accounts.services.send_greeting_email">
+<code class="sig-prename descclassname"><span class="pre">accounts.services.</span></code><code class="sig-name descname"><span class="pre">send_greeting_email</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">django.http.request.HttpRequest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#accounts.models.CustomUser" title="accounts.models.CustomUser"><span class="pre">accounts.models.CustomUser</span></a></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#accounts.services.send_greeting_email" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send greeting email to the given user.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="accounts.services.send_verification_link">
+<code class="sig-prename descclassname"><span class="pre">accounts.services.</span></code><code class="sig-name descname"><span class="pre">send_verification_link</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">django.http.request.HttpRequest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">accounts.CustomUser</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#accounts.services.send_verification_link" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send email verification link.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="accounts.services.set_profile_phone_number_confirmed">
+<code class="sig-prename descclassname"><span class="pre">accounts.services.</span></code><code class="sig-name descname"><span class="pre">set_profile_phone_number_confirmed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_profile</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#accounts.models.Profile" title="accounts.models.Profile"><span class="pre">accounts.models.Profile</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_phone_number_confirmed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#accounts.services.set_profile_phone_number_confirmed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-accounts.signals">
+<span id="accounts-signals-module"></span><h2>accounts.signals module<a class="headerlink" href="#module-accounts.signals" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="accounts.signals.handle_user_sign_up">
+<code class="sig-prename descclassname"><span class="pre">accounts.signals.</span></code><code class="sig-name descname"><span class="pre">handle_user_sign_up</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sender</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">accounts.CustomUser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">created</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.signals.handle_user_sign_up" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="accounts.signals.update_profile">
+<code class="sig-prename descclassname"><span class="pre">accounts.signals.</span></code><code class="sig-name descname"><span class="pre">update_profile</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sender</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">accounts.CustomUser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">created</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.signals.update_profile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-accounts.tests">
+<span id="accounts-tests-module"></span><h2>accounts.tests module<a class="headerlink" href="#module-accounts.tests" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-accounts.tokens">
+<span id="accounts-tokens-module"></span><h2>accounts.tokens module<a class="headerlink" href="#module-accounts.tokens" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="accounts.tokens.AccountActivationTokenGenerator">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.tokens.</span></code><code class="sig-name descname"><span class="pre">AccountActivationTokenGenerator</span></code><a class="headerlink" href="#accounts.tokens.AccountActivationTokenGenerator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.contrib.auth.tokens.PasswordResetTokenGenerator</span></code></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-accounts.urls">
+<span id="accounts-urls-module"></span><h2>accounts.urls module<a class="headerlink" href="#module-accounts.urls" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-accounts.views">
+<span id="accounts-views-module"></span><h2>accounts.views module<a class="headerlink" href="#module-accounts.views" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="accounts.views.AccountActivationView">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.views.</span></code><code class="sig-name descname"><span class="pre">AccountActivationView</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.AccountActivationView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.views.generic.base.View</span></code></p>
+<p>View for confirming user’s email.</p>
+<dl class="py method">
+<dt id="accounts.views.AccountActivationView.get">
+<code class="sig-name descname"><span class="pre">get</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">django.http.request.HttpRequest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uidb64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.AccountActivationView.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="accounts.views.AccountSettingsDashboardView">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.views.</span></code><code class="sig-name descname"><span class="pre">AccountSettingsDashboardView</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.AccountSettingsDashboardView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.contrib.auth.mixins.LoginRequiredMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">django.views.generic.base.TemplateView</span></code></p>
+<p>View for showing an account dashboard.</p>
+<dl class="py attribute">
+<dt id="accounts.views.AccountSettingsDashboardView.template_name">
+<code class="sig-name descname"><span class="pre">template_name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'accounts/settings/settings_dashboard.html'</span></em><a class="headerlink" href="#accounts.views.AccountSettingsDashboardView.template_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="accounts.views.ActivationRequiredView">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.views.</span></code><code class="sig-name descname"><span class="pre">ActivationRequiredView</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.ActivationRequiredView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.views.generic.base.TemplateView</span></code></p>
+<p>Display error page - page requires confirmed email.</p>
+<dl class="py attribute">
+<dt id="accounts.views.ActivationRequiredView.template_name">
+<code class="sig-name descname"><span class="pre">template_name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'accounts/registration/account_activation_required.html'</span></em><a class="headerlink" href="#accounts.views.ActivationRequiredView.template_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="accounts.views.ConfirmEmailView">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.views.</span></code><code class="sig-name descname"><span class="pre">ConfirmEmailView</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.ConfirmEmailView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#accounts.mixins.UnconfirmedEmailRequiredMixin" title="accounts.mixins.UnconfirmedEmailRequiredMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">accounts.mixins.UnconfirmedEmailRequiredMixin</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">django.contrib.auth.mixins.LoginRequiredMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">django.views.generic.base.View</span></code></p>
+<p>View for sending a confirmation email to a user.</p>
+<dl class="py method">
+<dt id="accounts.views.ConfirmEmailView.get">
+<code class="sig-name descname"><span class="pre">get</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">django.http.request.HttpRequest</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.ConfirmEmailView.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="accounts.views.CustomPasswordResetView">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.views.</span></code><code class="sig-name descname"><span class="pre">CustomPasswordResetView</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.CustomPasswordResetView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.contrib.auth.views.PasswordResetView</span></code></p>
+<p>View for resetting a password.</p>
+<dl class="py attribute">
+<dt id="accounts.views.CustomPasswordResetView.email_template_name">
+<code class="sig-name descname"><span class="pre">email_template_name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'accounts/registration/password_reset_email.html'</span></em><a class="headerlink" href="#accounts.views.CustomPasswordResetView.email_template_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.views.CustomPasswordResetView.form_class">
+<code class="sig-name descname"><span class="pre">form_class</span></code><a class="headerlink" href="#accounts.views.CustomPasswordResetView.form_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#accounts.forms.CustomPasswordResetForm" title="accounts.forms.CustomPasswordResetForm"><code class="xref py py-class docutils literal notranslate"><span class="pre">accounts.forms.CustomPasswordResetForm</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.views.CustomPasswordResetView.html_email_template_name">
+<code class="sig-name descname"><span class="pre">html_email_template_name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'accounts/registration/password_reset_email.html'</span></em><a class="headerlink" href="#accounts.views.CustomPasswordResetView.html_email_template_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.views.CustomPasswordResetView.success_url">
+<code class="sig-name descname"><span class="pre">success_url</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'/accounts/password_reset/done/'</span></em><a class="headerlink" href="#accounts.views.CustomPasswordResetView.success_url" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.views.CustomPasswordResetView.template_name">
+<code class="sig-name descname"><span class="pre">template_name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'accounts/registration/password_reset.html'</span></em><a class="headerlink" href="#accounts.views.CustomPasswordResetView.template_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="accounts.views.LoginView">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.views.</span></code><code class="sig-name descname"><span class="pre">LoginView</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.LoginView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#accounts.mixins.AnonymousUserRequiredMixin" title="accounts.mixins.AnonymousUserRequiredMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">accounts.mixins.AnonymousUserRequiredMixin</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">django.contrib.auth.views.LoginView</span></code></p>
+<p>View for signing in.</p>
+<dl class="py attribute">
+<dt id="accounts.views.LoginView.template_name">
+<code class="sig-name descname"><span class="pre">template_name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'accounts/registration/login.html'</span></em><a class="headerlink" href="#accounts.views.LoginView.template_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="accounts.views.PersonalInfoEditView">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.views.</span></code><code class="sig-name descname"><span class="pre">PersonalInfoEditView</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.PersonalInfoEditView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.contrib.auth.mixins.LoginRequiredMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">django.views.generic.base.TemplateResponseMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">django.views.generic.base.View</span></code></p>
+<p>View for editing user personal info.</p>
+<dl class="py method">
+<dt id="accounts.views.PersonalInfoEditView.dispatch">
+<code class="sig-name descname"><span class="pre">dispatch</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">django.http.request.HttpRequest</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.PersonalInfoEditView.dispatch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.views.PersonalInfoEditView.get">
+<code class="sig-name descname"><span class="pre">get</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">django.http.request.HttpRequest</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.PersonalInfoEditView.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.views.PersonalInfoEditView.post">
+<code class="sig-name descname"><span class="pre">post</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">django.http.request.HttpRequest</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.PersonalInfoEditView.post" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.views.PersonalInfoEditView.profile_form">
+<code class="sig-name descname"><span class="pre">profile_form</span></code><em class="property"><span class="pre">:</span> <a class="reference internal" href="#accounts.forms.ProfileForm" title="accounts.forms.ProfileForm"><span class="pre">accounts.forms.ProfileForm</span></a></em><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#accounts.views.PersonalInfoEditView.profile_form" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.views.PersonalInfoEditView.template_name">
+<code class="sig-name descname"><span class="pre">template_name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'accounts/settings/user_form.html'</span></em><a class="headerlink" href="#accounts.views.PersonalInfoEditView.template_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.views.PersonalInfoEditView.user_info_form">
+<code class="sig-name descname"><span class="pre">user_info_form</span></code><em class="property"><span class="pre">:</span> <a class="reference internal" href="#accounts.forms.UserInfoForm" title="accounts.forms.UserInfoForm"><span class="pre">accounts.forms.UserInfoForm</span></a></em><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#accounts.views.PersonalInfoEditView.user_info_form" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="accounts.views.PhoneNumberConfirmPageView">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.views.</span></code><code class="sig-name descname"><span class="pre">PhoneNumberConfirmPageView</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.PhoneNumberConfirmPageView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#accounts.mixins.UnconfirmedPhoneNumberRequiredMixin" title="accounts.mixins.UnconfirmedPhoneNumberRequiredMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">accounts.mixins.UnconfirmedPhoneNumberRequiredMixin</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">django.contrib.auth.mixins.LoginRequiredMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">django.views.generic.base.TemplateResponseMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">django.views.generic.base.View</span></code></p>
+<p>View for confirming a phone number (by a verification SMS code).</p>
+<dl class="py method">
+<dt id="accounts.views.PhoneNumberConfirmPageView.dispatch">
+<code class="sig-name descname"><span class="pre">dispatch</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">django.http.request.HttpRequest</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.PhoneNumberConfirmPageView.dispatch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.views.PhoneNumberConfirmPageView.get">
+<code class="sig-name descname"><span class="pre">get</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">django.http.request.HttpRequest</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.PhoneNumberConfirmPageView.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.views.PhoneNumberConfirmPageView.phone_number">
+<code class="sig-name descname"><span class="pre">phone_number</span></code><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#accounts.views.PhoneNumberConfirmPageView.phone_number" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.views.PhoneNumberConfirmPageView.post">
+<code class="sig-name descname"><span class="pre">post</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">django.http.request.HttpRequest</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.PhoneNumberConfirmPageView.post" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.views.PhoneNumberConfirmPageView.template_name">
+<code class="sig-name descname"><span class="pre">template_name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'accounts/settings/confirm_phone.html'</span></em><a class="headerlink" href="#accounts.views.PhoneNumberConfirmPageView.template_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.views.PhoneNumberConfirmPageView.verification_code_form">
+<code class="sig-name descname"><span class="pre">verification_code_form</span></code><em class="property"><span class="pre">:</span> <a class="reference internal" href="#accounts.forms.VerificationCodeForm" title="accounts.forms.VerificationCodeForm"><span class="pre">accounts.forms.VerificationCodeForm</span></a></em><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#accounts.views.PhoneNumberConfirmPageView.verification_code_form" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="accounts.views.ProfileDescriptionEditView">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.views.</span></code><code class="sig-name descname"><span class="pre">ProfileDescriptionEditView</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.ProfileDescriptionEditView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.contrib.auth.mixins.LoginRequiredMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">django.views.generic.base.TemplateResponseMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">django.views.generic.base.View</span></code></p>
+<p>View for editing profile description.</p>
+<dl class="py method">
+<dt id="accounts.views.ProfileDescriptionEditView.dispatch">
+<code class="sig-name descname"><span class="pre">dispatch</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">django.http.request.HttpRequest</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.ProfileDescriptionEditView.dispatch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.views.ProfileDescriptionEditView.get">
+<code class="sig-name descname"><span class="pre">get</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">django.http.request.HttpRequest</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.ProfileDescriptionEditView.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.views.ProfileDescriptionEditView.post">
+<code class="sig-name descname"><span class="pre">post</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">django.http.request.HttpRequest</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.ProfileDescriptionEditView.post" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.views.ProfileDescriptionEditView.profile_description_form">
+<code class="sig-name descname"><span class="pre">profile_description_form</span></code><em class="property"><span class="pre">:</span> <a class="reference internal" href="#accounts.forms.ProfileDescriptionForm" title="accounts.forms.ProfileDescriptionForm"><span class="pre">accounts.forms.ProfileDescriptionForm</span></a></em><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#accounts.views.ProfileDescriptionEditView.profile_description_form" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.views.ProfileDescriptionEditView.template_name">
+<code class="sig-name descname"><span class="pre">template_name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'accounts/profile/edit_description.html'</span></em><a class="headerlink" href="#accounts.views.ProfileDescriptionEditView.template_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="accounts.views.ProfileImageEditView">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.views.</span></code><code class="sig-name descname"><span class="pre">ProfileImageEditView</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.ProfileImageEditView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.contrib.auth.mixins.LoginRequiredMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">django.views.generic.base.TemplateResponseMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">django.views.generic.base.View</span></code></p>
+<p>View for editing a profile image.</p>
+<dl class="py method">
+<dt id="accounts.views.ProfileImageEditView.dispatch">
+<code class="sig-name descname"><span class="pre">dispatch</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">django.http.request.HttpRequest</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.ProfileImageEditView.dispatch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.views.ProfileImageEditView.get">
+<code class="sig-name descname"><span class="pre">get</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">django.http.request.HttpRequest</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.ProfileImageEditView.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.views.ProfileImageEditView.post">
+<code class="sig-name descname"><span class="pre">post</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">django.http.request.HttpRequest</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.ProfileImageEditView.post" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.views.ProfileImageEditView.profile_image_form">
+<code class="sig-name descname"><span class="pre">profile_image_form</span></code><em class="property"><span class="pre">:</span> <a class="reference internal" href="#accounts.forms.ProfileImageForm" title="accounts.forms.ProfileImageForm"><span class="pre">accounts.forms.ProfileImageForm</span></a></em><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#accounts.views.ProfileImageEditView.profile_image_form" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.views.ProfileImageEditView.template_name">
+<code class="sig-name descname"><span class="pre">template_name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'accounts/profile/edit_image.html'</span></em><a class="headerlink" href="#accounts.views.ProfileImageEditView.template_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="accounts.views.ProfileShowView">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.views.</span></code><code class="sig-name descname"><span class="pre">ProfileShowView</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.ProfileShowView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.views.generic.base.TemplateResponseMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">django.views.generic.base.View</span></code></p>
+<p>View for displaying a user profile.</p>
+<dl class="py method">
+<dt id="accounts.views.ProfileShowView.dispatch">
+<code class="sig-name descname"><span class="pre">dispatch</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">django.http.request.HttpRequest</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.ProfileShowView.dispatch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.views.ProfileShowView.get">
+<code class="sig-name descname"><span class="pre">get</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">django.http.request.HttpRequest</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.ProfileShowView.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.views.ProfileShowView.is_profile_of_current_user">
+<code class="sig-name descname"><span class="pre">is_profile_of_current_user</span></code><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><em class="property"> <span class="pre">=</span> <span class="pre">False</span></em><a class="headerlink" href="#accounts.views.ProfileShowView.is_profile_of_current_user" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.views.ProfileShowView.profile_owner">
+<code class="sig-name descname"><span class="pre">profile_owner</span></code><em class="property"><span class="pre">:</span> <a class="reference internal" href="#accounts.models.CustomUser" title="accounts.models.CustomUser"><span class="pre">accounts.models.CustomUser</span></a></em><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#accounts.views.ProfileShowView.profile_owner" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.views.ProfileShowView.template_name">
+<code class="sig-name descname"><span class="pre">template_name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'accounts/profile/show.html'</span></em><a class="headerlink" href="#accounts.views.ProfileShowView.template_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="accounts.views.SecurityDashboardView">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.views.</span></code><code class="sig-name descname"><span class="pre">SecurityDashboardView</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.SecurityDashboardView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.contrib.auth.mixins.LoginRequiredMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">django.views.generic.base.TemplateView</span></code></p>
+<p>View for showing a <cite>Login &amp; Security</cite> dashboard.</p>
+<dl class="py method">
+<dt id="accounts.views.SecurityDashboardView.get_context_data">
+<code class="sig-name descname"><span class="pre">get_context_data</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.SecurityDashboardView.get_context_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.views.SecurityDashboardView.template_name">
+<code class="sig-name descname"><span class="pre">template_name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'accounts/settings/security_dashboard.html'</span></em><a class="headerlink" href="#accounts.views.SecurityDashboardView.template_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="accounts.views.SignUpView">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">accounts.views.</span></code><code class="sig-name descname"><span class="pre">SignUpView</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.SignUpView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#accounts.mixins.AnonymousUserRequiredMixin" title="accounts.mixins.AnonymousUserRequiredMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">accounts.mixins.AnonymousUserRequiredMixin</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">django.views.generic.base.TemplateResponseMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">django.views.generic.base.View</span></code></p>
+<p>View for creating a new account.</p>
+<dl class="py attribute">
+<dt id="accounts.views.SignUpView.form_class">
+<code class="sig-name descname"><span class="pre">form_class</span></code><a class="headerlink" href="#accounts.views.SignUpView.form_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#accounts.forms.SignUpForm" title="accounts.forms.SignUpForm"><code class="xref py py-class docutils literal notranslate"><span class="pre">accounts.forms.SignUpForm</span></code></a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="accounts.views.SignUpView.get">
+<code class="sig-name descname"><span class="pre">get</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">django.http.request.HttpRequest</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.SignUpView.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.views.SignUpView.post">
+<code class="sig-name descname"><span class="pre">post</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">django.http.request.HttpRequest</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.SignUpView.post" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.views.SignUpView.template_name">
+<code class="sig-name descname"><span class="pre">template_name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'accounts/registration/signup.html'</span></em><a class="headerlink" href="#accounts.views.SignUpView.template_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-accounts">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-accounts" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Airbnb</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">airbnb</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">accounts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="addresses.html">addresses package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="airbnb.html">airbnb package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common.html">common package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configs.html">configs package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hosts.html">hosts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mailings.html">mailings package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manage.html">manage module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queries.html">queries module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="realty.html">realty package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="subscribers.html">subscribers package</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">airbnb</a><ul>
+      <li>Previous: <a href="modules.html" title="previous chapter">airbnb</a></li>
+      <li>Next: <a href="addresses.html" title="next chapter">addresses package</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Roman Reznikov.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/accounts.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

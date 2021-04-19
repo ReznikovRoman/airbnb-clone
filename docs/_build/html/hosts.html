@@ -1,0 +1,298 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>hosts package &#8212; Airbnb  documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="hosts.tests package" href="hosts.tests.html" />
+    <link rel="prev" title="configs package" href="configs.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="hosts-package">
+<h1>hosts package<a class="headerlink" href="#hosts-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="hosts.tests.html">hosts.tests package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hosts.tests.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hosts.tests.html#module-hosts.tests.test_views">hosts.tests.test_views module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hosts.tests.html#module-hosts.tests">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-hosts.admin">
+<span id="hosts-admin-module"></span><h2>hosts.admin module<a class="headerlink" href="#module-hosts.admin" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="hosts.admin.RealtyHostAdmin">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">hosts.admin.</span></code><code class="sig-name descname"><span class="pre">RealtyHostAdmin</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">admin_site</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hosts.admin.RealtyHostAdmin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.contrib.admin.options.ModelAdmin</span></code></p>
+<dl class="py attribute">
+<dt id="hosts.admin.RealtyHostAdmin.list_display">
+<code class="sig-name descname"><span class="pre">list_display</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('__str__',</span> <span class="pre">'host_rating')</span></em><a class="headerlink" href="#hosts.admin.RealtyHostAdmin.list_display" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="hosts.admin.RealtyHostAdmin.media">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">media</span></code><a class="headerlink" href="#hosts.admin.RealtyHostAdmin.media" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-hosts.apps">
+<span id="hosts-apps-module"></span><h2>hosts.apps module<a class="headerlink" href="#module-hosts.apps" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="hosts.apps.HostsConfig">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">hosts.apps.</span></code><code class="sig-name descname"><span class="pre">HostsConfig</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_module</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hosts.apps.HostsConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.apps.config.AppConfig</span></code></p>
+<dl class="py attribute">
+<dt id="hosts.apps.HostsConfig.name">
+<code class="sig-name descname"><span class="pre">name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'hosts'</span></em><a class="headerlink" href="#hosts.apps.HostsConfig.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-hosts.models">
+<span id="hosts-models-module"></span><h2>hosts.models module<a class="headerlink" href="#module-hosts.models" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="hosts.models.RealtyHost">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">hosts.models.</span></code><code class="sig-name descname"><span class="pre">RealtyHost</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hosts.models.RealtyHost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.db.models.base.Model</span></code></p>
+<p>Realty host.</p>
+<dl class="py exception">
+<dt id="hosts.models.RealtyHost.DoesNotExist">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-name descname"><span class="pre">DoesNotExist</span></code><a class="headerlink" href="#hosts.models.RealtyHost.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="hosts.models.RealtyHost.MultipleObjectsReturned">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></code><a class="headerlink" href="#hosts.models.RealtyHost.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="hosts.models.RealtyHost.host_rating">
+<code class="sig-name descname"><span class="pre">host_rating</span></code><a class="headerlink" href="#hosts.models.RealtyHost.host_rating" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="hosts.models.RealtyHost.id">
+<code class="sig-name descname"><span class="pre">id</span></code><a class="headerlink" href="#hosts.models.RealtyHost.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="hosts.models.RealtyHost.objects">
+<code class="sig-name descname"><span class="pre">objects</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;django.db.models.manager.Manager</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#hosts.models.RealtyHost.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="hosts.models.RealtyHost.realty">
+<code class="sig-name descname"><span class="pre">realty</span></code><a class="headerlink" href="#hosts.models.RealtyHost.realty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Parent.children</span></code> is a <code class="docutils literal notranslate"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hosts.models.RealtyHost.save">
+<code class="sig-name descname"><span class="pre">save</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hosts.models.RealtyHost.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the current instance. Override this in a subclass if you want to
+control the saving process.</p>
+<p>The ‘force_insert’ and ‘force_update’ parameters can be used to insist
+that the “save” must be an SQL insert or update (or equivalent for
+non-SQL backends), respectively. Normally, they should not be set.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="hosts.models.RealtyHost.user">
+<code class="sig-name descname"><span class="pre">user</span></code><a class="headerlink" href="#hosts.models.RealtyHost.user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a one-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Restaurant</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">place</span> <span class="o">=</span> <span class="n">OneToOneField</span><span class="p">(</span><span class="n">Place</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;restaurant&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Restaurant.place</span></code> is a <code class="docutils literal notranslate"><span class="pre">ForwardOneToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="hosts.models.RealtyHost.user_id">
+<code class="sig-name descname"><span class="pre">user_id</span></code><a class="headerlink" href="#hosts.models.RealtyHost.user_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-hosts.services">
+<span id="hosts-services-module"></span><h2>hosts.services module<a class="headerlink" href="#module-hosts.services" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="hosts.services.has_user_required_data_to_become_host">
+<code class="sig-prename descclassname"><span class="pre">hosts.services.</span></code><code class="sig-name descname"><span class="pre">has_user_required_data_to_become_host</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">accounts.CustomUser</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">bool</span><a class="headerlink" href="#hosts.services.has_user_required_data_to_become_host" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if user that wants to become a host has a profile image and a confirmed email address.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-hosts.urls">
+<span id="hosts-urls-module"></span><h2>hosts.urls module<a class="headerlink" href="#module-hosts.urls" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-hosts.views">
+<span id="hosts-views-module"></span><h2>hosts.views module<a class="headerlink" href="#module-hosts.views" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="hosts.views.BecomeHostView">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">hosts.views.</span></code><code class="sig-name descname"><span class="pre">BecomeHostView</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hosts.views.BecomeHostView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.contrib.auth.mixins.LoginRequiredMixin</span></code>, <a class="reference internal" href="accounts.html#accounts.mixins.ActivatedAccountRequiredMixin" title="accounts.mixins.ActivatedAccountRequiredMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">accounts.mixins.ActivatedAccountRequiredMixin</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">django.views.generic.base.View</span></code></p>
+<p>View for handling new hosts.</p>
+<dl class="py method">
+<dt id="hosts.views.BecomeHostView.get">
+<code class="sig-name descname"><span class="pre">get</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">django.http.request.HttpRequest</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hosts.views.BecomeHostView.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="hosts.views.HostMissingImageView">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">hosts.views.</span></code><code class="sig-name descname"><span class="pre">HostMissingImageView</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hosts.views.HostMissingImageView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.contrib.auth.mixins.LoginRequiredMixin</span></code>, <a class="reference internal" href="accounts.html#accounts.mixins.ActivatedAccountRequiredMixin" title="accounts.mixins.ActivatedAccountRequiredMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">accounts.mixins.ActivatedAccountRequiredMixin</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">django.views.generic.base.TemplateView</span></code></p>
+<p>View for showing a ‘missing profile image’ error page.</p>
+<dl class="py attribute">
+<dt id="hosts.views.HostMissingImageView.template_name">
+<code class="sig-name descname"><span class="pre">template_name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'hosts/host/missing_image.html'</span></em><a class="headerlink" href="#hosts.views.HostMissingImageView.template_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-hosts">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-hosts" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Airbnb</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">airbnb</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="accounts.html">accounts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="addresses.html">addresses package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="airbnb.html">airbnb package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common.html">common package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configs.html">configs package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">hosts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mailings.html">mailings package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manage.html">manage module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queries.html">queries module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="realty.html">realty package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="subscribers.html">subscribers package</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">airbnb</a><ul>
+      <li>Previous: <a href="configs.html" title="previous chapter">configs package</a></li>
+      <li>Next: <a href="hosts.tests.html" title="next chapter">hosts.tests package</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Roman Reznikov.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/hosts.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

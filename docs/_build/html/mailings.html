@@ -1,0 +1,174 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>mailings package &#8212; Airbnb  documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="main package" href="main.html" />
+    <link rel="prev" title="hosts.tests package" href="hosts.tests.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="mailings-package">
+<h1>mailings package<a class="headerlink" href="#mailings-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-mailings.admin">
+<span id="mailings-admin-module"></span><h2>mailings.admin module<a class="headerlink" href="#module-mailings.admin" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-mailings.apps">
+<span id="mailings-apps-module"></span><h2>mailings.apps module<a class="headerlink" href="#module-mailings.apps" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="mailings.apps.MailingsConfig">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">mailings.apps.</span></code><code class="sig-name descname"><span class="pre">MailingsConfig</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_module</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mailings.apps.MailingsConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.apps.config.AppConfig</span></code></p>
+<dl class="py attribute">
+<dt id="mailings.apps.MailingsConfig.name">
+<code class="sig-name descname"><span class="pre">name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'mailings'</span></em><a class="headerlink" href="#mailings.apps.MailingsConfig.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mailings.models">
+<span id="mailings-models-module"></span><h2>mailings.models module<a class="headerlink" href="#module-mailings.models" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-mailings.services">
+<span id="mailings-services-module"></span><h2>mailings.services module<a class="headerlink" href="#module-mailings.services" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-mailings.tasks">
+<span id="mailings-tasks-module"></span><h2>mailings.tasks module<a class="headerlink" href="#module-mailings.tasks" title="Permalink to this headline">¶</a></h2>
+<dl class="py task">
+<dt id="mailings.tasks.send_email_to_user">
+<em class="property"><span class="pre">(task)</span></em><code class="sig-prename descclassname"><span class="pre">mailings.tasks.</span></code><code class="sig-name descname"><span class="pre">send_email_to_user</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subject</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">email_to</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">email_from</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fail_silently</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mailings.tasks.send_email_to_user" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py task">
+<dt id="mailings.tasks.send_email_with_attachments">
+<em class="property"><span class="pre">(task)</span></em><code class="sig-prename descclassname"><span class="pre">mailings.tasks.</span></code><code class="sig-name descname"><span class="pre">send_email_with_attachments</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subject</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">email_to</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">email_from</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alternatives</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#mailings.tasks.send_email_with_attachments" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-mailings.views">
+<span id="mailings-views-module"></span><h2>mailings.views module<a class="headerlink" href="#module-mailings.views" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-mailings">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-mailings" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Airbnb</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">airbnb</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="accounts.html">accounts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="addresses.html">addresses package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="airbnb.html">airbnb package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common.html">common package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configs.html">configs package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hosts.html">hosts package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">mailings package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manage.html">manage module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queries.html">queries module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="realty.html">realty package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="subscribers.html">subscribers package</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">airbnb</a><ul>
+      <li>Previous: <a href="hosts.tests.html" title="previous chapter">hosts.tests package</a></li>
+      <li>Next: <a href="main.html" title="next chapter">main package</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Roman Reznikov.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/mailings.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
