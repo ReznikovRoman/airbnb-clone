@@ -34,12 +34,15 @@ django-redis==4.12.1
 django-redis-sessions==0.6.2
 django-timezone-field==4.1.2
 django-twilio==0.13.1.post0
+flake8==3.9.1
 flower==0.9.7
 future==0.18.2
 humanize==3.4.1
 idna==2.10
 iniconfig==1.1.1
+isort==5.8.0
 kombu==4.6.11
+mccabe==0.6.1
 oauthlib==3.1.0
 packaging==20.9
 phonenumbers==8.12.21
@@ -49,7 +52,9 @@ pluggy==0.13.1
 prometheus-client==0.8.0
 prompt-toolkit==3.0.18
 py==1.10.0
+pycodestyle==2.7.0
 pycparser==2.20
+pyflakes==2.3.1
 PyJWT==1.7.1
 pynliner==0.8.0
 pyparsing==2.4.7
