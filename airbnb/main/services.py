@@ -1,7 +1,7 @@
-from django.db.models.query import ValuesQuerySet
+from django.db.models import QuerySet
 
 from realty.models import Realty
 
 
-def get_all_realty_cities() -> ValuesQuerySet[Realty, str]:
+def get_all_realty_cities() -> QuerySet[str]:
     return Realty.available.order_by().values_list('location__city', flat=True).distinct()
