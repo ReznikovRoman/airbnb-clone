@@ -87,7 +87,7 @@ class RealtyEditView(LoginRequiredMixin,
 
     realty: Realty = None
     address: Address = None
-    realty_images: CustomDeleteQueryset[RealtyImage] = None
+    realty_images: 'CustomDeleteQueryset[RealtyImage]' = None
 
     is_creating_new_realty: bool = True  # True if we are creating new Realty, False otherwise
     realty_form: RealtyForm = None

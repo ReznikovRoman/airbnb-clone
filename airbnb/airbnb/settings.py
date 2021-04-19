@@ -1,4 +1,5 @@
 import os
+from typing import List
 from pathlib import Path
 
 from django.urls import reverse_lazy
@@ -18,7 +19,7 @@ SECRET_KEY = '=g(33qw)hiwuk&$nrdwr#=xd2cblmh0&k^*he)-gq^4#a$b6*r'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS: List[str] = []
 
 
 # Application definition

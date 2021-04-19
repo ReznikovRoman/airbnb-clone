@@ -100,9 +100,7 @@ class Realty(models.Model):
         super(Realty, self).delete(using, keep_parents)
 
 
-class RealtyImageManager(models.Manager):
-    def get_queryset(self):
-        return CustomDeleteQueryset(self.model, using=self._db)
+RealtyImageModelManager = models.Manager.from_queryset(CustomDeleteQueryset)
 
 
 def get_realty_image_upload_path(instance: "RealtyImage", filename: str) -> str:
@@ -120,7 +118,7 @@ class RealtyImage(models.Model):
     )
     order = OrderField(blank=True, null=True, related_fields=['realty'])
 
-    objects = RealtyImageManager()
+    objects = RealtyImageModelManager()
 
     class Meta:
         verbose_name = 'Realty image'
@@ -132,7 +130,8 @@ class RealtyImage(models.Model):
 
     def delete(self, using=None, keep_parents=False):
         # get realty images that go after the current one (that will be deleted)
-        next_realty_images: CustomDeleteQueryset = RealtyImage.objects.filter(realty=self.realty)[self.order+1:]
+        next_realty_images: CustomDeleteQueryset[RealtyImage] = RealtyImage.objects.\
+                                                                      filter(realty=self.realty)[self.order+1:]
 
         if next_realty_images.exists():
             for realty_image in next_realty_images:

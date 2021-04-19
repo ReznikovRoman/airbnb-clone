@@ -74,6 +74,7 @@ class ActivatedAccountsManager(CustomUserManager):
 
 class CustomUser(AbstractUser, PermissionsMixin):
     """Custom user model."""
+    profile: "Profile"
     username = None
     email = models.EmailField(
         verbose_name='email',

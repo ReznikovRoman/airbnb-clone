@@ -1,14 +1,14 @@
 from typing import Optional
 
 from django.conf import settings
-from django.db.models import QuerySet
+from django.db.models.query import ValuesQuerySet
 
 from common.session_handler import SessionHandler
 from hosts.models import RealtyHost
 from ..models import Amenity, Realty, CustomDeleteQueryset
 
 
-def get_amenity_ids_from_session(session_handler: SessionHandler) -> Optional[QuerySet[int]]:
+def get_amenity_ids_from_session(session_handler: SessionHandler) -> Optional[ValuesQuerySet[Amenity, int]]:
     amenities = session_handler.get_session().get('realty_amenities', None)
     if amenities:
         amenities = Amenity.objects.filter(name__in=[*amenities]).values_list('id', flat=True)
@@ -20,7 +20,7 @@ def set_realty_host_by_user(realty: Realty, user: settings.AUTH_USER_MODEL) -> N
     realty.host = host
 
 
-def get_available_realty_by_host(realty_host: RealtyHost) -> CustomDeleteQueryset[Realty]:
+def get_available_realty_by_host(realty_host: RealtyHost) -> 'CustomDeleteQueryset[Realty]':
     return Realty.available.filter(host=realty_host)
 
 
@@ -28,5 +28,5 @@ def get_latest_realty() -> Realty:
     return Realty.objects.last()
 
 
-def get_n_latest_available_realty(realty_count: int) -> CustomDeleteQueryset[Realty]:
+def get_n_latest_available_realty(realty_count: int) -> 'CustomDeleteQueryset[Realty]':
     return Realty.available.all()[:realty_count]

@@ -80,7 +80,7 @@ def send_verification_link(request: HttpRequest, user: settings.AUTH_USER_MODEL)
 
 def get_user_from_uid(uid) -> CustomUser:
     uid = force_text(urlsafe_base64_decode(force_text(uid)))
-    user = CustomUser.objects.get(id=uid)
+    user: CustomUser = CustomUser.objects.get(id=uid)
     return user
 
 

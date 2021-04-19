@@ -85,6 +85,6 @@ RealtyImageFormSet = forms.modelformset_factory(
     form=RealtyImageForm,
     can_delete=False,
     max_num=MAX_REALTY_IMAGES_COUNT,
-    validate_max=MAX_REALTY_IMAGES_COUNT,
+    validate_max=True,
     extra=MAX_REALTY_IMAGES_COUNT,
 )

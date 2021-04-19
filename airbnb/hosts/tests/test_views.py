@@ -91,7 +91,7 @@ def user_factory(db):
             last_name: str,
             password: str = '123',
     ):
-        user = CustomUser.objects.create_user(
+        user: CustomUser = CustomUser.objects.create_user(
             email=email,
             first_name=first_name,
             last_name=last_name,

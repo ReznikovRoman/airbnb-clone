@@ -8,6 +8,7 @@ from django.contrib.auth import login
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from common.types import AuthenticatedHttpRequest
 from hosts.models import RealtyHost
 from realty.models import CustomDeleteQueryset, Realty
 from realty.services.realty import get_available_realty_by_host
@@ -185,7 +186,7 @@ class ProfileShowView(generic.base.TemplateResponseMixin,
         return super(ProfileShowView, self).dispatch(request, *args, **kwargs)
 
     def get(self, request: HttpRequest, *args, **kwargs):
-        host_listings: CustomDeleteQueryset[Realty] = Realty.available.none()
+        host_listings: 'CustomDeleteQueryset[Realty]' = Realty.available.none()
         if RealtyHost.objects.filter(user=self.profile_owner).exists():
             host_listings = get_available_realty_by_host(RealtyHost.objects.get(user=self.profile_owner))
         return self.render_to_response(
@@ -291,7 +292,7 @@ class PhoneNumberConfirmPageView(UnconfirmedPhoneNumberRequiredMixin,
         self.phone_number = request.user.profile.phone_number
         return super(PhoneNumberConfirmPageView, self).dispatch(request, *args, **kwargs)
 
-    def get(self, request: HttpRequest, *args, **kwargs):
+    def get(self, request: AuthenticatedHttpRequest, *args, **kwargs):
         return self.render_to_response(
             context={
                 'verification_code_form': self.verification_code_form,
@@ -299,7 +300,7 @@ class PhoneNumberConfirmPageView(UnconfirmedPhoneNumberRequiredMixin,
             }
         )
 
-    def post(self, request: HttpRequest, *args, **kwargs):
+    def post(self, request: AuthenticatedHttpRequest, *args, **kwargs):
         if self.verification_code_form.is_valid():
             if is_verification_code_for_profile_valid(
                     user_profile=request.user.profile,
