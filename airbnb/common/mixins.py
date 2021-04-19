@@ -1,4 +1,4 @@
-from typing import Optional, Union, Tuple, List
+from typing import Union, Tuple, List
 
 from django.http import HttpRequest, HttpResponseRedirect
 

@@ -290,7 +290,7 @@ class PhoneNumberConfirmPageView(UnconfirmedPhoneNumberRequiredMixin,
         self.verification_code_form = VerificationCodeForm(request.POST or None)
         self.phone_number = request.user.profile.phone_number
         return super(PhoneNumberConfirmPageView, self).dispatch(request, *args, **kwargs)
-    
+
     def get(self, request: HttpRequest, *args, **kwargs):
         return self.render_to_response(
             context={

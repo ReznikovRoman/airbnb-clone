@@ -94,7 +94,7 @@ class Realty(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         super(Realty, self).save(*args, **kwargs)
-    
+
     def delete(self, using=None, keep_parents=False):
         self.location.delete()
         super(Realty, self).delete(using, keep_parents)

@@ -65,7 +65,7 @@ class RealtyDetailView(generic.DetailView):
     model = Realty
     template_name = 'realty/realty/detail.html'
     queryset = Realty.available.all()
-    
+
     def get(self, request: HttpRequest, *args, **kwargs):
         # TODO: Use redis (db) to store realty views + Celery scheduled task to save `views count` to the db
         cache.set(f"realty_{self.get_object().id}_views", 0, nx=True)

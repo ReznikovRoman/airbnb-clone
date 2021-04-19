@@ -139,7 +139,7 @@ def get_profile_image_upload_path(instance: "Profile", filename: str) -> str:
 
 
 def get_default_profile_image() -> str:
-    return f"default/profile/default_profile_image.png"
+    return "default/profile/default_profile_image.png"
 
 
 def get_default_profile_image_full_url() -> str:

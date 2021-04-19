@@ -22,7 +22,7 @@ class ActivatedAccountRequiredMixin:
         if not request.user.is_email_confirmed:
             send_verification_link(request, request.user)
             return redirect(reverse('accounts:activation_required'))
-        
+
         return super(ActivatedAccountRequiredMixin, self).dispatch(request, *args, **kwargs)
 
 
@@ -35,7 +35,7 @@ class UnconfirmedPhoneNumberRequiredMixin:
         if request.user.profile.is_phone_number_confirmed or \
                 request.user.profile.phone_number is None:
             return redirect(reverse('accounts:settings_dashboard'))
-        
+
         return super(UnconfirmedPhoneNumberRequiredMixin, self).dispatch(request, *args, **kwargs)
 
 

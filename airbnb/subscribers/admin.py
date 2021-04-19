@@ -12,7 +12,7 @@ class SubscriberAdmin(admin.ModelAdmin):
     def get_user_link(self, obj: Subscriber):
         if obj.user:
             return mark_safe(
-                f"""<a href="{reverse('admin:accounts_customuser_change', args=(obj.user.id,))}">{obj.user.first_name}'s 
+                f"""<a href="{reverse('admin:accounts_customuser_change', args=(obj.user.id,))}">{obj.user.first_name}'s
                 account</a>"""
             )
         return 'No account with this email'

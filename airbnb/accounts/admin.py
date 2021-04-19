@@ -36,7 +36,7 @@ class CustomUserAdmin(UserAdmin):
 
     def get_profile_link(self, obj: CustomUser):
         return mark_safe(
-            f"""<a href="{reverse('admin:accounts_profile_change', args=(obj.profile.id,))}">{obj.first_name}'s 
+            f"""<a href="{reverse('admin:accounts_profile_change', args=(obj.profile.id,))}">{obj.first_name}'s
             profile</a>"""
         )
     get_profile_link.short_description = 'profile link'
