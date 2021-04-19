@@ -37,6 +37,7 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinxcontrib.napoleon',
     'celery.contrib.sphinx',
+    'sphinx_markdown_builder',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -45,8 +46,16 @@ templates_path = ['_templates']
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store',
- '**/*.migrations.rst', '_node_modules', '_migrations', '*migrations*']
+exclude_patterns = [
+	'_build',
+	'build/*',
+	'Thumbs.db',
+	'.DS_Store',
+	 '**/*.migrations.rst',
+	 '_node_modules',
+	'_migrations',
+	'*migrations*',
+]
 
 
 # -- Options for HTML output -------------------------------------------------
