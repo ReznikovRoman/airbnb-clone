@@ -20,6 +20,10 @@ class SignUpForm(UserCreationForm):
 
 
 class CustomPasswordResetForm(PasswordResetForm):
+    """Custom password reset form.
+
+    Sends emails using Celery.
+    """
     def send_mail(self, subject_template_name, email_template_name,
                   context, from_email, to_email, html_email_template_name=None):
         subject = loader.render_to_string(subject_template_name, context)
