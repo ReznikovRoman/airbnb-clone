@@ -48,3 +48,10 @@ realtyFilterInputs.each(function () {
         return false;
     });
 });
+
+
+// Live chat
+$('#live-chat header').on('click', function() {
+    $('.chat').slideToggle(300, 'swing');
+});
+
