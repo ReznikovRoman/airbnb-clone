@@ -2,7 +2,7 @@ import tempfile
 
 import pytest
 
-from django.test import TestCase, Client
+from django.test import TestCase, Client, override_settings
 from django.http import HttpResponse
 from django.urls import reverse
 
@@ -10,6 +10,7 @@ from accounts.models import CustomUser
 from hosts.models import RealtyHost
 
 
+@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
 class BecomeHostViewTests(TestCase):
     def setUp(self):
         # create 3 users
