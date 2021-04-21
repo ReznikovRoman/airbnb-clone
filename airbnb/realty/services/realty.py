@@ -30,3 +30,7 @@ def get_latest_realty() -> Realty:
 
 def get_n_latest_available_realty(realty_count: int) -> 'CustomDeleteQueryset[Realty]':
     return Realty.available.all()[:realty_count]
+
+
+def get_available_realty_count_by_city(city: str) -> int:
+    return Realty.available.filter(location__city__iexact=city).count()
