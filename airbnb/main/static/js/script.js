@@ -53,5 +53,71 @@ realtyFilterInputs.each(function () {
 // Live chat
 $('#live-chat header').on('click', function() {
     $('.chat').slideToggle(300, 'swing');
+    $input.focus();
 });
 
+const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
+const url = `${ws_scheme}://${window.location.host}/ws/chat-bot/`;
+
+const chatSocket = new ReconnectingWebSocket(url);
+
+const $input = $('#chat-bot-message-input');
+const $submit = $('#chat-bot-message-submit');
+
+const $chat = $('.chat-history');
+
+$chat.scrollTop($chat[0].scrollHeight);
+
+$submit.click(function () {
+    const message = $input.val();
+    if (message) {
+        // send message in a JSON format
+        chatSocket.send(JSON.stringify({'message': message}));
+
+        // clear input
+        $input.val('');
+    }
+});
+
+chatSocket.onmessage = function (e) {
+    const data = JSON.parse(e.data);
+    const message = data.message;
+
+    const dateOptions = {hour: 'numeric', minute: 'numeric', hour12: true};
+    const datetime = new Date(data['datetime']).toLocaleString('en', dateOptions);
+
+    const isMessageFromUser = data.is_message_from_user;
+
+    if (isMessageFromUser) {
+        $chat.append(
+            `<div class="chat-message message-user">
+                <div class="chat-message-content">
+                    <span class="chat-time">${datetime}</span>
+                    <p>${message}</p>
+                </div>
+             </div>`
+        );
+    } else {
+        $chat.append(
+            `<div class="chat-message message-bot">
+                <div class="chat-message-content">
+                    <span class="chat-time">${datetime}</span>
+                    <h5>Airbnb Helper</h5>
+                    <p>${message}</p>
+                </div>
+             </div>`
+        );
+    }
+    $chat.scrollTop($chat[0].scrollHeight);
+};
+
+chatSocket.onclose = function (e) {
+    console.error('Chat socket closed unexpectedly');
+};
+
+$input.keyup(function (e) {
+    if (e.which === 13) {
+        // submit with enter/return key
+        $submit.click();
+    }
+});

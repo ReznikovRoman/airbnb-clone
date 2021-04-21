@@ -72,16 +72,43 @@ services:
       - redis
       - airbnb
 
-  airbnb:
+  daphne:
+    restart: always
     env_file:
       - .env
     environment:
       - AIRBNB_REDIS_HOST=airbnb_redis
+      - CELERY_BROKER_TRANSPORT=redis
+      - CELERY_BROKER_HOST=redis
+      - CELERY_BROKER_PORT=6379
+      - CELERY_BROKER_VHOST=2
+      - CELERY_REDIS_DB=2
+      - REDIS_URL=${CELERY_BROKER_HOST}://${CELERY_BROKER_TRANSPORT}:${CELERY_BROKER_PORT}/${CELERY_REDIS_DB}
     build: .
     volumes:
       - .:/airbnb-docker
     ports:
       - 8000:8000
+    command: daphne -b 0.0.0.0 -p 8000 airbnb.asgi:application
+    depends_on:
+      - redis
+
+  airbnb:
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - AIRBNB_REDIS_HOST=airbnb_redis
+      - CELERY_BROKER_TRANSPORT=redis
+      - CELERY_BROKER_HOST=redis
+      - CELERY_BROKER_PORT=6379
+      - CELERY_BROKER_VHOST=2
+      - CELERY_REDIS_DB=2
+      - REDIS_URL=${CELERY_BROKER_HOST}://${CELERY_BROKER_TRANSPORT}:${CELERY_BROKER_PORT}/${CELERY_REDIS_DB}
+    build: .
+    volumes:
+      - .:/airbnb-docker
     image: web:airbnb-app
-    command: python manage.py runserver 0.0.0.0:8000
+    # TODO: configure nginx to run standard HTTP requests through a WSGI server (another milestone)
+    command: python manage.py runworker --settings airbnb.settings channels airbnb.routing:application
     container_name: airbnb_app

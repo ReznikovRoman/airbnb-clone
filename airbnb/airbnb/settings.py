@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'ckeditor',
     'ckeditor_uploader',
+    'channels',
     'phonenumber_field',
     'sorl.thumbnail',
 
@@ -51,12 +52,16 @@ INSTALLED_APPS = [
     'realty.apps.RealtyConfig',
     'subscribers.apps.SubscribersConfig',
     'mailings.apps.MailingsConfig',
+    'chat_bot.apps.ChatBotConfig',
 
     'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -154,6 +159,10 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media/'
 
 
+# WHITENOISE
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+
 # EMAIL
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER_ESL')
@@ -227,6 +236,18 @@ CELERY_REDIS_DB = REDIS_DB
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
+
+
+# CHANNELS
+ASGI_APPLICATION = 'airbnb.routing.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [os.environ.get('REDIS_URL', 'redis://localhost:6379/2')],
+        },
+    }
+}
 
 
 # CKEDITOR
