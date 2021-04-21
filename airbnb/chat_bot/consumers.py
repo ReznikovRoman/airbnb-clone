@@ -57,7 +57,8 @@ class ChatBotConsumer(AsyncJsonWebsocketConsumer):
         realty_count = get_available_realty_count_by_city(city=message)
         if realty_count:
             message_verb = 'is' if realty_count == 1 else 'are'
-            return f"There {message_verb} available {realty_count} places in {message.capitalize()}."
+            pluralize = '' if realty_count == 1 else 's'
+            return f"There {message_verb} {realty_count} available place{pluralize} in {message.capitalize()}."
         return f"There are no available places in {message.capitalize()}."
 
     async def chat_bot_message(self, event):
