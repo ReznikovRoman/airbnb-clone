@@ -89,6 +89,7 @@ pynliner==0.8.0
 pyOpenSSL==20.0.1
 pyparsing==2.4.7
 pytest==6.2.3
+pytest-asyncio==0.15.0
 pytest-django==4.2.0
 python-crontab==2.5.1
 python-dateutil==2.8.1
