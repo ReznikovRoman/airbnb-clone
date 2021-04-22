@@ -1,4 +1,5 @@
 version: "3.8"
+
 services:
   redis:
     env_file:
@@ -26,7 +27,7 @@ services:
       - redis
     depends_on:
       - redis
-      - airbnb
+      - web
 
   flower:
     env_file:
@@ -70,7 +71,7 @@ services:
     container_name: airbnb_celery_beat
     depends_on:
       - redis
-      - airbnb
+      - web
 
   daphne:
     restart: always
@@ -93,8 +94,7 @@ services:
     depends_on:
       - redis
 
-  airbnb:
-    restart: always
+  web:
     env_file:
       - .env
     environment:
@@ -110,5 +110,5 @@ services:
       - .:/airbnb-docker
     image: web:airbnb-app
     # TODO: configure nginx to run standard HTTP requests through a WSGI server (another milestone)
-    command: python manage.py runworker --settings airbnb.settings channels airbnb.routing:application
+    command: python manage.py runworker --settings airbnb.settings channels airbnb.asgi:application
     container_name: airbnb_app
