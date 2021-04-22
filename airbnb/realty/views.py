@@ -265,13 +265,10 @@ class RealtyLocationEditView(LoginRequiredMixin,
     """
     template_name = 'realty/realty/creation_steps/step_2_location.html'
 
-    # required_session_data = get_required_data_from_form(RealtyGeneralInfoForm,)
     required_session_data = set_prefixes_for_names(
         names=get_required_fields_from_form_with_model(
             forms_with_models=[
                 FormWithModel(RealtyGeneralInfoForm, Realty),
-                FormWithModel(AddressForm, Address),
-                FormWithModel(RealtyDescriptionForm, Realty),
             ],
         ),
         prefix=REALTY_FORM_SESSION_PREFIX,
@@ -323,7 +320,6 @@ class RealtyDescriptionEditView(LoginRequiredMixin,
             forms_with_models=[
                 FormWithModel(RealtyGeneralInfoForm, Realty),
                 FormWithModel(AddressForm, Address),
-                FormWithModel(RealtyDescriptionForm, Realty),
             ],
         ),
         prefix=REALTY_FORM_SESSION_PREFIX,
