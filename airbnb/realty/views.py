@@ -106,6 +106,12 @@ class RealtyEditView(LoginRequiredMixin,
 
         if realty_id:  # if we are editing an existing Realty object
             self.realty = get_object_or_404(Realty, id=realty_id)
+
+            # if a current user is not the host of the Realty
+            if not hasattr(request.user, 'host') or \
+                    self.realty.host != request.user.host:
+                return redirect(reverse('realty:all'))
+
             self.address = self.realty.location
             self.is_creating_new_realty = False
             self.realty_images = self.realty.images.all()
@@ -176,7 +182,6 @@ class RealtyEditView(LoginRequiredMixin,
 
                 if not realty_id:  # if it is not a new Realty
                     self.session_handler.flush_keys_collector()
-                    new_realty.is_available = False
 
                 new_realty.save()
 
