@@ -36,17 +36,10 @@ class SessionHandler:
             self.add_new_key_to_collector(session_key)
         except TypeError:
             pass
-        else:
-            return None
 
     def update_values_with_given_data(self, data: dict) -> None:
         for field_name, field_value in data.items():
-            session_key = create_name_with_prefix(field_name, self._prefix)
-            try:
-                self._session[session_key] = field_value
-                self.add_new_key_to_collector(session_key)
-            except TypeError:  # exclude non-serializable values
-                pass
+            self.add_new_item(new_key=field_name, new_value=field_value)
 
     def delete_given_keys(self, keys_to_delete: List[str]) -> None:
         for key in keys_to_delete:

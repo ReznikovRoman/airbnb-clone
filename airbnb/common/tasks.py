@@ -4,7 +4,7 @@ from configs.twilio_conf import twilio_client
 
 @app.task(name='common.send_sms_by_twilio')
 def send_sms_by_twilio(body: str, sms_from: str, sms_to: str):
-    """Sends SMS message using Twilio provider
+    """Sends SMS message using Twilio provider.
 
     Args:
         body (str): SMS message text
