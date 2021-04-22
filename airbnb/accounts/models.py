@@ -150,7 +150,7 @@ def get_default_profile_image_full_url() -> str:
 class ProfileGenderChoices(models.TextChoices):
     MALE = 'M', 'Male'
     HOTEL = 'F', 'Female'
-    APARTMENTS = 'O', 'Other'
+    OTHER = 'O', 'Other'
 
 
 class Profile(models.Model):
