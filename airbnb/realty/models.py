@@ -2,9 +2,9 @@ from django.db import models
 from django.utils.text import slugify
 from django.core.validators import MinValueValidator, MaxValueValidator
 
-from .fields import OrderField
-from addresses.models import Address
 from hosts.models import RealtyHost
+from addresses.models import Address
+from .fields import OrderField
 
 
 class Amenity(models.Model):
@@ -49,7 +49,7 @@ class Realty(models.Model):
     name = models.CharField(verbose_name="name", max_length=255)
     slug = models.SlugField(verbose_name="slug", max_length=255)
     description = models.TextField(verbose_name="description")
-    is_available = models.BooleanField(default=True)
+    is_available = models.BooleanField(verbose_name='is realty available', default=False)
     created = models.DateTimeField(verbose_name="creation date", auto_now_add=True)
     updated = models.DateTimeField(verbose_name="update date", auto_now=True)
     realty_type = models.CharField(
@@ -131,7 +131,7 @@ class RealtyImage(models.Model):
     def delete(self, using=None, keep_parents=False):
         # get realty images that go after the current one (that will be deleted)
         next_realty_images: CustomDeleteQueryset[RealtyImage] = RealtyImage.objects.\
-                                                                      filter(realty=self.realty)[self.order+1:]
+                                                                      filter(realty=self.realty)[(self.order+1):]
 
         if next_realty_images.exists():
             for realty_image in next_realty_images:
