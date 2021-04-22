@@ -22,7 +22,7 @@ urlpatterns = [
     path('settings/login-and-security/confirm-phone/',
          views.PhoneNumberConfirmPageView.as_view(),
          name='confirm_phone'),
-    path('settings/login-and-security/confirm-email/', views.ConfirmEmailView.as_view(), name='confirm_email'),
+    path('settings/login-and-security/confirm-email/', views.SendConfirmationEmailView.as_view(), name='confirm_email'),
 
     path('show/<int:user_pk>/', views.ProfileShowView.as_view(), name='profile_show'),
     path('edit-image/', views.ProfileImageEditView.as_view(), name='edit_image'),

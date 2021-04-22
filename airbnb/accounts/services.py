@@ -94,9 +94,15 @@ def generate_random_sms_code() -> str:
     return str(random.randint(0, 9999)).zfill(4)
 
 
-def set_profile_phone_number_confirmed(user_profile: Profile, is_phone_number_confirmed: bool = True) -> None:
-    user_profile.is_phone_number_confirmed = is_phone_number_confirmed
+def update_phone_number_confirmation_status(user_profile: Profile,
+                                            phone_number_confirmation_status: bool) -> None:
+    user_profile.is_phone_number_confirmed = phone_number_confirmation_status
     user_profile.save()
+
+
+def update_user_email_confirmation_status(user: CustomUser, email_confirmation_status: bool) -> None:
+    user.is_email_confirmed = email_confirmation_status
+    user.save()
 
 
 def handle_phone_number_change(user_profile: Profile, site_domain: str, new_phone_number: str) -> None:
@@ -120,7 +126,7 @@ def handle_phone_number_change(user_profile: Profile, site_domain: str, new_phon
     sms_log.sms_code = sms_verification_code
     sms_log.save()
 
-    set_profile_phone_number_confirmed(user_profile, is_phone_number_confirmed=False)
+    update_phone_number_confirmation_status(user_profile, phone_number_confirmation_status=False)
 
     send_sms_by_twilio.delay(
         body=f"Your {site_domain} verification code is: {sms_verification_code}",

@@ -17,8 +17,8 @@ from .forms import (SignUpForm, CustomPasswordResetForm,
 from .models import CustomUser, Profile
 from .mixins import (AnonymousUserRequiredMixin, UnconfirmedPhoneNumberRequiredMixin, UnconfirmedEmailRequiredMixin,)
 from .services import (get_user_from_uid, send_verification_link, handle_phone_number_change,
-                       is_verification_code_for_profile_valid, set_profile_phone_number_confirmed,
-                       get_verification_code_from_digits_dict)
+                       is_verification_code_for_profile_valid, update_phone_number_confirmation_status,
+                       get_verification_code_from_digits_dict, update_user_email_confirmation_status)
 from .tokens import account_activation_token
 
 
@@ -75,8 +75,7 @@ class AccountActivationView(generic.View):
             user = None
 
         if user is not None and account_activation_token.check_token(user, token):
-            user.is_email_confirmed = True
-            user.save()
+            update_user_email_confirmation_status(user, email_confirmation_status=True)
             login(request, user)
             messages.add_message(request, messages.SUCCESS, message='You have successfully confirmed your email.')
             return redirect(reverse('home_page'))
@@ -128,14 +127,14 @@ class PersonalInfoEditView(LoginRequiredMixin,
         if self.user_info_form.is_valid():
             user: CustomUser = self.user_info_form.save()
 
+            # if email has been changed
             if 'email' in self.user_info_form.changed_data:
                 messages.add_message(
                     request,
                     level=messages.SUCCESS,
                     message="We've sent a confirmation email to your email address"
                 )
-                user.is_email_confirmed = False
-                user.save()
+                update_user_email_confirmation_status(user, email_confirmation_status=False)
                 send_verification_link(request, user)
 
         if self.profile_form.is_valid():
@@ -157,7 +156,7 @@ class PersonalInfoEditView(LoginRequiredMixin,
                         new_phone_number=str(profile_cleaned_data.get('phone_number')),
                     )
                 else:
-                    set_profile_phone_number_confirmed(user_profile, is_phone_number_confirmed=False)
+                    update_phone_number_confirmation_status(user_profile, phone_number_confirmation_status=False)
 
             return redirect('accounts:user_info_edit')
 
@@ -306,7 +305,7 @@ class PhoneNumberConfirmPageView(UnconfirmedPhoneNumberRequiredMixin,
                     user_profile=request.user.profile,
                     verification_code=get_verification_code_from_digits_dict(self.verification_code_form.cleaned_data)
             ):
-                set_profile_phone_number_confirmed(user_profile=request.user.profile)
+                update_phone_number_confirmation_status(request.user.profile, phone_number_confirmation_status=True)
                 messages.add_message(
                     request,
                     level=messages.SUCCESS,
@@ -328,9 +327,9 @@ class PhoneNumberConfirmPageView(UnconfirmedPhoneNumberRequiredMixin,
         )
 
 
-class ConfirmEmailView(UnconfirmedEmailRequiredMixin,
-                       LoginRequiredMixin,
-                       generic.View):
+class SendConfirmationEmailView(UnconfirmedEmailRequiredMixin,
+                                LoginRequiredMixin,
+                                generic.View):
     """View for sending a confirmation email to a user."""
     def get(self, request: HttpRequest, *args, **kwargs):
         send_verification_link(request, request.user)
