@@ -1,14 +1,14 @@
-from typing import List
+from typing import List, Union
 
 from .ordering import ImageOrder
 from ..models import RealtyImage, CustomDeleteQueryset
 
 
-def get_images_by_realty_id(realty_id: int) -> 'CustomDeleteQueryset[RealtyImage]':
+def get_images_by_realty_id(realty_id: Union[int, str]) -> 'CustomDeleteQueryset[RealtyImage]':
     return RealtyImage.objects.filter(realty_id=realty_id)
 
 
-def get_image_by_id(image_id: int) -> 'CustomDeleteQueryset[RealtyImage]':
+def get_image_by_id(image_id: Union[int, str]) -> 'CustomDeleteQueryset[RealtyImage]':
     return RealtyImage.objects.filter(id=image_id)
 
 
