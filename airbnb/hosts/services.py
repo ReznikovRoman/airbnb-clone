@@ -1,8 +1,13 @@
 from django.conf import settings
 
+from accounts.models import get_default_profile_image_full_url
 
-def has_user_required_data_to_become_host(user: settings.AUTH_USER_MODEL) -> bool:
-    """Check if user that wants to become a host has a profile image and a confirmed email address."""
-    if user.profile.profile_image.exists() and user.is_email_confirmed:
+
+def has_user_profile_image(user: settings.AUTH_USER_MODEL) -> bool:
+    """Check if the User that wants to become a Host has a profile image."""
+    if (
+            user.profile.profile_image.exists() and
+            user.profile.profile_image.url != get_default_profile_image_full_url()
+    ):
         return True
     return False
