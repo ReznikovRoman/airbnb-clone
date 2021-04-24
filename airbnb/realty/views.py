@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from braces.views import JsonRequestResponseMixin
 
@@ -12,17 +12,18 @@ from addresses.forms import AddressForm
 from addresses.models import Address
 from common.session_handler import SessionHandler
 from common.services import (get_field_names_from_form,
-                             get_required_fields_from_form_with_model, set_prefixes_for_names)
+                             get_required_fields_from_form_with_model, get_keys_with_prefixes)
 from common.collections import FormWithModel
 from .constants import (MAX_REALTY_IMAGES_COUNT,
                         REALTY_FORM_SESSION_PREFIX, REALTY_FORM_KEYS_COLLECTOR_NAME)
 from .models import Realty, RealtyImage, CustomDeleteQueryset
 from .mixins import RealtySessionDataRequiredMixin
 from .forms import (RealtyForm, RealtyTypeForm, RealtyImageFormSet,
-                    RealtyGeneralInfoForm, RealtyDescriptionForm, )
+                    RealtyGeneralInfoForm, RealtyDescriptionForm)
 from .services.images import get_images_by_realty_id, update_images_order
 from .services.ordering import convert_response_to_orders
-from .services.realty import get_amenity_ids_from_session, set_realty_host_by_user
+from .services.realty import (get_amenity_ids_from_session, set_realty_host_by_user, get_available_realty_by_city_slug,
+                              get_available_realty_filtered_by_type, get_all_available_realty)
 
 
 class RealtyListView(generic.ListView):
@@ -37,15 +38,18 @@ class RealtyListView(generic.ListView):
         return super(RealtyListView, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
-        available_realty = Realty.available.all()
+        available_realty = get_all_available_realty()
 
-        city_slug = self.kwargs.get('city_slug', None)
+        city_slug: str = self.kwargs.get('city_slug', None)
         if city_slug:
-            available_realty = available_realty.filter(location__city_slug=city_slug)
+            available_realty = get_available_realty_by_city_slug(city_slug=city_slug)
 
-        realty_types = self.request.GET.getlist('realty_type', None)
+        realty_types: List[str] = self.request.GET.getlist('realty_type', None)
         if realty_types:
-            available_realty = available_realty.filter(realty_type__in=realty_types)
+            available_realty = get_available_realty_filtered_by_type(
+                realty_types=realty_types,
+                realty_qs=available_realty
+            )
 
         return available_realty
 
@@ -117,7 +121,7 @@ class RealtyEditView(LoginRequiredMixin,
             self.realty_images = self.realty.images.all()
             self.required_session_data = []
         else:
-            self.required_session_data = set_prefixes_for_names(
+            self.required_session_data = get_keys_with_prefixes(
                 names=get_required_fields_from_form_with_model(
                     forms_with_models=[
                         FormWithModel(RealtyGeneralInfoForm, Realty),
@@ -135,7 +139,7 @@ class RealtyEditView(LoginRequiredMixin,
             self.realty_info_initial['amenities'] = get_amenity_ids_from_session(self.session_handler)
 
             self.realty_address_initial = self.session_handler.create_initial_dict_with_session_data(
-                get_field_names_from_form(AddressForm)
+                initial_keys=get_field_names_from_form(AddressForm)
             )
 
         self.realty_form = RealtyForm(
@@ -270,7 +274,7 @@ class RealtyLocationEditView(LoginRequiredMixin,
     """
     template_name = 'realty/realty/creation_steps/step_2_location.html'
 
-    required_session_data = set_prefixes_for_names(
+    required_session_data = get_keys_with_prefixes(
         names=get_required_fields_from_form_with_model(
             forms_with_models=[
                 FormWithModel(RealtyGeneralInfoForm, Realty),
@@ -320,7 +324,7 @@ class RealtyDescriptionEditView(LoginRequiredMixin,
     """
     template_name = 'realty/realty/creation_steps/step_3_description.html'
 
-    required_session_data = set_prefixes_for_names(
+    required_session_data = get_keys_with_prefixes(
         names=get_required_fields_from_form_with_model(
             forms_with_models=[
                 FormWithModel(RealtyGeneralInfoForm, Realty),

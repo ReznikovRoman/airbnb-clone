@@ -22,5 +22,5 @@ def get_required_fields_from_form_with_model(forms_with_models: List[FormWithMod
     return required_fields
 
 
-def set_prefixes_for_names(names: List[str], prefix: str = '') -> List[str]:
+def get_keys_with_prefixes(names: List[str], prefix: str = '') -> List[str]:
     return [create_name_with_prefix(name, prefix) for name in names]
