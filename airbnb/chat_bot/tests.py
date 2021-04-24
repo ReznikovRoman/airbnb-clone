@@ -49,6 +49,7 @@ class ChatBotConsumerTests(TransactionTestCase):
         return test_realty
 
     async def test_consumer_connects_correctly(self):
+        """Test that consumer connects to a correct url."""
         communicator = WebsocketCommunicator(self.application, '/ws/chat-bot/')
         connected, subprotocol = await communicator.connect()
 
@@ -57,6 +58,7 @@ class ChatBotConsumerTests(TransactionTestCase):
         await communicator.disconnect()
 
     async def test_send_message_on_connect(self):
+        """Test that consumer sends a default message on connect."""
         communicator = WebsocketCommunicator(self.application, '/ws/chat-bot/')
         connected, subprotocol = await communicator.connect()
         self.assertTrue(connected)
@@ -70,6 +72,7 @@ class ChatBotConsumerTests(TransactionTestCase):
         await communicator.disconnect()
 
     async def test_correct_response_no_realty(self):
+        """Test that the response is properly formatted if there are no places in the city specified by the user."""
         communicator = WebsocketCommunicator(self.application, '/ws/chat-bot/')
         connected, subprotocol = await communicator.connect()
         self.assertTrue(connected)
@@ -90,6 +93,7 @@ class ChatBotConsumerTests(TransactionTestCase):
         await communicator.disconnect()
 
     async def test_correct_response_realty_exists(self):
+        """Test that response is correct if there are some places in the city specified by the user."""
         realty = await sync_to_async(self.create_test_realty, thread_sensitive=True)()
 
         communicator = WebsocketCommunicator(self.application, '/ws/chat-bot/')
