@@ -3,6 +3,7 @@ from typing import Dict
 
 from django.conf import settings
 from django.http import HttpRequest
+from django.db.models import QuerySet
 from django.shortcuts import get_object_or_404
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
@@ -12,7 +13,7 @@ from django.contrib.sites.shortcuts import get_current_site
 
 from common.tasks import send_sms_by_twilio
 from mailings.tasks import send_email_with_attachments
-from .models import CustomUser, Profile, SMSLog
+from .models import CustomUser, CustomUserManager, Profile, SMSLog
 from .tokens import account_activation_token
 
 
@@ -76,6 +77,10 @@ def send_verification_link(request: HttpRequest, user: settings.AUTH_USER_MODEL)
         email_to=[user.email],
         alternatives=[(html_content, 'text/html')]
     )
+
+
+def get_user_by_email(email: str) -> QuerySet[CustomUser]:
+    return CustomUser.objects.filter(email=CustomUserManager.normalize_email(email))
 
 
 def get_user_from_uid(uid) -> CustomUser:

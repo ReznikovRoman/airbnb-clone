@@ -3,6 +3,7 @@ from django.views import generic
 from django.contrib import messages
 from django.shortcuts import redirect, reverse
 
+from accounts.services import get_user_by_email
 from .models import Subscriber
 from .forms import SubscriberEmailForm
 from .services import get_subscriber_by_user
@@ -15,11 +16,13 @@ class SubscribeView(generic.View):
 
         if subscription_form.is_valid():
             new_subscriber: Subscriber = subscription_form.save(commit=False)
+            user_qs = get_user_by_email(subscription_form.cleaned_data['email'])
+            user = user_qs.first()
 
-            # if user is authenticated and not subscribed
-            if request.user.is_authenticated and \
-                    not get_subscriber_by_user(user=request.user).exists():
-                new_subscriber.user = request.user
+            # if there is a user with the given email and he is not subscribed
+            if user_qs.exists() and \
+                    not get_subscriber_by_user(user=user).exists():
+                new_subscriber.user = user
 
             new_subscriber.save()
 
