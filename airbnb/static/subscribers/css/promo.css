@@ -1,0 +1,107 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #f2f2f2;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+h1 {
+    line-height: 1.4;
+}
+
+.header-center {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.wrapper {
+    margin: 2rem auto;
+    width: 100%;
+    padding: 5rem;
+    background-color: #fff;
+}
+
+.email-content {
+    max-width: 800px;
+    width: 80%;
+    margin: auto;
+}
+
+.color-secondary {
+  color: #757987;
+}
+
+hr.divider--short {
+  color: #757987;
+  width: 15%;
+}
+
+/* Realty card */
+.realty-card {
+    display: flex;
+    height: 100%;
+    margin-bottom: 1.5rem;
+}
+
+.realty-card {
+    margin-top: 1.5rem;
+}
+
+.realty-card--image {
+    margin-right: 1rem;
+    width: 300px;
+    height: 200px;
+}
+
+.realty-card--image img {
+    border-radius: 12px;
+    width: 300px;
+    height: 200px;
+    object-fit: fill;
+}
+
+.realty-card--description {
+    display: flex;
+    flex-direction: column;
+}
+
+.rooms {
+    margin-bottom: 0;
+}
+
+hr.divider--short {
+    margin: 0.2rem;
+}
+
+.rooms > li {
+    display: inline-block;
+}
+.amenities > li {
+    display: inline-block;
+}
+
+.rooms li::after {
+  content: " \f111";
+  font: normal normal normal 7px/1 FontAwesome;
+  vertical-align: middle;
+}
+.amenities li::after {
+  content: " \f111";
+  font: normal normal normal 7px/1 FontAwesome;
+  vertical-align: middle;
+}
+
+.realty-card--footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.price {
+    color: #222;
+    font-weight: bolder;
+}
