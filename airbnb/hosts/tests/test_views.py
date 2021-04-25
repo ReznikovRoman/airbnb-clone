@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.urls import reverse
 
 from accounts.models import CustomUser
-from hosts.models import RealtyHost
+from ..models import RealtyHost
 
 
 @override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
