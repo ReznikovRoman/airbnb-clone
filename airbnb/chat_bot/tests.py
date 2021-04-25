@@ -1,5 +1,7 @@
 import datetime
 
+from model_bakery import baker
+
 from channels.routing import URLRouter
 from channels.testing import WebsocketCommunicator
 
@@ -9,8 +11,6 @@ from asgiref.sync import sync_to_async
 
 from hosts.models import RealtyHost
 from realty.models import Realty
-from accounts.models import CustomUser
-from addresses.models import Address
 from .consumers import ChatBotConsumer
 
 
@@ -21,31 +21,23 @@ class ChatBotConsumerTests(TransactionTestCase):
     ])
 
     def create_test_realty(self) -> Realty:
-        test_user = CustomUser.objects.create_user(
-            email='host@gmail.com',
-            first_name='John',
-            last_name='Doe',
-            password='123',
-        )
-        test_user.save()
+        test_user = baker.make('CustomUser')
+
         test_host = RealtyHost.objects.create(user=test_user)
         test_host.save()
-        test_address = Address.objects.create(country='Russia', city='Moscow', street='Moscow, Ulitsa Zorge')
-        test_address.save()
-        test_realty = Realty.objects.create(
-            name='SMART HOST | Bright studio | 2 guests',
-            slug='smart-host-bright-studio-2-guests',
-            description='Comfortable and cozy apartment situated in the centre of the city, 21 floor. '
-                        'One of the best views paired with perfect location.',
-            realty_type='Apartments',
-            beds_count=2,
-            max_guests_count=4,
-            price_per_night=65,
+
+        test_address = baker.make(
+            _model='Address',
+            city='Moscow',
+        )
+
+        test_realty = baker.make(
+            'Realty',
             location=test_address,
             host=test_host,
-            is_available=True
+            is_available=True,
         )
-        test_realty.save()
+
         return test_realty
 
     async def test_consumer_connects_correctly(self):
