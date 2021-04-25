@@ -13,7 +13,7 @@ from django.contrib.sites.shortcuts import get_current_site
 
 from common.tasks import send_sms_by_twilio
 from mailings.tasks import send_email_with_attachments
-from .models import CustomUser, CustomUserManager, Profile, SMSLog
+from .models import CustomUser, CustomUserManager, Profile, SMSLog, get_default_profile_image_full_url
 from .tokens import account_activation_token
 
 
@@ -92,6 +92,16 @@ def get_user_from_uid(uid) -> CustomUser:
 def add_user_to_group(user: CustomUser, group_name: str) -> None:
     group = Group.objects.get_or_create(name=group_name)[0]
     user.groups.add(group)
+
+
+def has_user_profile_image(user_profile: Profile) -> bool:
+    """Check that User has a profile image and it is not a default one."""
+    if (
+            user_profile.profile_image and
+            user_profile.profile_image.url != get_default_profile_image_full_url()
+    ):
+        return True
+    return False
 
 
 def generate_random_sms_code() -> str:
