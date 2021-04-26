@@ -1,0 +1,936 @@
+[
+{
+  "model": "admin.logentry",
+  "pk": 1,
+  "fields": {
+    "action_time": "2021-04-26T19:52:04.049Z",
+    "user": 1,
+    "content_type": 20,
+    "object_id": "1",
+    "object_repr": "Address #1",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 2,
+  "fields": {
+    "action_time": "2021-04-26T19:52:13.153Z",
+    "user": 1,
+    "content_type": 21,
+    "object_id": "1",
+    "object_repr": "Host: John Doe",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 3,
+  "fields": {
+    "action_time": "2021-04-26T19:52:25.576Z",
+    "user": 1,
+    "content_type": 17,
+    "object_id": "1",
+    "object_repr": "admin@gmail.com",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Email confirmed\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 4,
+  "fields": {
+    "action_time": "2021-04-26T19:52:54.463Z",
+    "user": 1,
+    "content_type": 22,
+    "object_id": "1",
+    "object_repr": "Wi-Fi",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 5,
+  "fields": {
+    "action_time": "2021-04-26T19:52:59.145Z",
+    "user": 1,
+    "content_type": 22,
+    "object_id": "2",
+    "object_repr": "Kitchen",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 6,
+  "fields": {
+    "action_time": "2021-04-26T19:53:03.513Z",
+    "user": 1,
+    "content_type": 22,
+    "object_id": "3",
+    "object_repr": "Washer",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 7,
+  "fields": {
+    "action_time": "2021-04-26T19:53:07.638Z",
+    "user": 1,
+    "content_type": 22,
+    "object_id": "4",
+    "object_repr": "Breakfast",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 8,
+  "fields": {
+    "action_time": "2021-04-26T19:54:20.970Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "1",
+    "object_repr": "Historic center Campo dei Fiori",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 9,
+  "fields": {
+    "action_time": "2021-04-26T19:54:31.806Z",
+    "user": 1,
+    "content_type": 24,
+    "object_id": "1",
+    "object_repr": "Image #1 for Historic center Campo dei Fiori",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 10,
+  "fields": {
+    "action_time": "2021-04-26T19:54:37.370Z",
+    "user": 1,
+    "content_type": 24,
+    "object_id": "2",
+    "object_repr": "Image #2 for Historic center Campo dei Fiori",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 11,
+  "fields": {
+    "action_time": "2021-04-26T19:55:19.289Z",
+    "user": 1,
+    "content_type": 17,
+    "object_id": "2",
+    "object_repr": "host@gmail.com",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 12,
+  "fields": {
+    "action_time": "2021-04-26T19:55:29.066Z",
+    "user": 1,
+    "content_type": 17,
+    "object_id": "2",
+    "object_repr": "host@gmail.com",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Email confirmed\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 13,
+  "fields": {
+    "action_time": "2021-04-26T19:55:33.554Z",
+    "user": 1,
+    "content_type": 17,
+    "object_id": "2",
+    "object_repr": "host@gmail.com",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 14,
+  "fields": {
+    "action_time": "2021-04-26T19:55:55.563Z",
+    "user": 1,
+    "content_type": 18,
+    "object_id": "2",
+    "object_repr": "Profile for host@gmail.com",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Profile image\", \"Date of birth\", \"Gender\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 15,
+  "fields": {
+    "action_time": "2021-04-26T19:57:06.838Z",
+    "user": 1,
+    "content_type": 20,
+    "object_id": "2",
+    "object_repr": "Address #2",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 16,
+  "fields": {
+    "action_time": "2021-04-26T19:57:11.812Z",
+    "user": 1,
+    "content_type": 21,
+    "object_id": "2",
+    "object_repr": "Host: William Kraig",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 17,
+  "fields": {
+    "action_time": "2021-04-26T19:57:47.682Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "2",
+    "object_repr": "SMART HOST | Tretyakovskaya| Novokuznetskaya",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"realty-amenity relationship\", \"object\": \"Realty_amenities object (5)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 18,
+  "fields": {
+    "action_time": "2021-04-26T19:57:57.318Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "2",
+    "object_repr": "SMART HOST | Tretyakovskaya| Novokuznetskaya",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 19,
+  "fields": {
+    "action_time": "2021-04-26T19:58:34.826Z",
+    "user": 1,
+    "content_type": 20,
+    "object_id": "3",
+    "object_repr": "Address #3",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 20,
+  "fields": {
+    "action_time": "2021-04-26T19:58:48.302Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "3",
+    "object_repr": "Cosy room in downtown",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"realty-amenity relationship\", \"object\": \"Realty_amenities object (7)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 21,
+  "fields": {
+    "action_time": "2021-04-26T20:00:48.075Z",
+    "user": 1,
+    "content_type": 20,
+    "object_id": "4",
+    "object_repr": "Address #4",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 22,
+  "fields": {
+    "action_time": "2021-04-26T20:00:58.140Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "4",
+    "object_repr": "Saddle Peak",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 23,
+  "fields": {
+    "action_time": "2021-04-26T20:01:23.727Z",
+    "user": 1,
+    "content_type": 24,
+    "object_id": "3",
+    "object_repr": "Image #3 for SMART HOST | Tretyakovskaya| Novokuznetskaya",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 24,
+  "fields": {
+    "action_time": "2021-04-26T20:01:30.931Z",
+    "user": 1,
+    "content_type": 24,
+    "object_id": "4",
+    "object_repr": "Image #4 for Cosy room in downtown",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 25,
+  "fields": {
+    "action_time": "2021-04-26T20:03:52.779Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "1",
+    "object_repr": "localhost:8000",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Domain name\", \"Display name\"]}}]"
+  }
+},
+{
+  "model": "auth.group",
+  "pk": 1,
+  "fields": {
+    "name": "common_users",
+    "permissions": []
+  }
+},
+{
+  "model": "auth.group",
+  "pk": 2,
+  "fields": {
+    "name": "hosts",
+    "permissions": []
+  }
+},
+{
+  "model": "sites.site",
+  "pk": 1,
+  "fields": {
+    "domain": "localhost:8000",
+    "name": "localhost:8000"
+  }
+},
+{
+  "model": "django_celery_beat.crontabschedule",
+  "pk": 1,
+  "fields": {
+    "minute": "0",
+    "hour": "4",
+    "day_of_week": "*",
+    "day_of_month": "*",
+    "month_of_year": "*",
+    "timezone": "Europe/Moscow"
+  }
+},
+{
+  "model": "django_celery_beat.periodictasks",
+  "pk": 1,
+  "fields": {
+    "last_update": "2021-04-26T19:49:37.285Z"
+  }
+},
+{
+  "model": "django_celery_beat.periodictask",
+  "pk": 1,
+  "fields": {
+    "name": "celery.backend_cleanup",
+    "task": "celery.backend_cleanup",
+    "interval": null,
+    "crontab": 1,
+    "solar": null,
+    "clocked": null,
+    "args": "[]",
+    "kwargs": "{}",
+    "queue": null,
+    "exchange": null,
+    "routing_key": null,
+    "headers": "{}",
+    "priority": null,
+    "expires": null,
+    "expire_seconds": 43200,
+    "one_off": false,
+    "start_time": null,
+    "enabled": true,
+    "last_run_at": null,
+    "total_run_count": 0,
+    "date_changed": "2021-04-26T19:49:37.291Z",
+    "description": ""
+  }
+},
+{
+  "model": "thumbnail.kvstore",
+  "pk": "sorl-thumbnail||image||09e8f8fc06896f8d10650d4cf1041e6e",
+  "fields": {
+    "value": "{\"name\": \"cache/e2/0f/e20f3b00445a300f0fc2e31aef56295c.jpg\", \"storage\": \"django.core.files.storage.FileSystemStorage\", \"size\": [300, 199]}"
+  }
+},
+{
+  "model": "thumbnail.kvstore",
+  "pk": "sorl-thumbnail||image||279ae8d459978e914fc1256ae3880859",
+  "fields": {
+    "value": "{\"name\": \"cache/ae/8f/ae8f89bab34330c0df06082b5c054946.jpg\", \"storage\": \"django.core.files.storage.FileSystemStorage\", \"size\": [300, 200]}"
+  }
+},
+{
+  "model": "thumbnail.kvstore",
+  "pk": "sorl-thumbnail||image||4b60eb56b66e950f346bab980a42daca",
+  "fields": {
+    "value": "{\"name\": \"upload/users/host@gmail.com/profile/upwork_image_reZ6gSL.png\", \"storage\": \"django.core.files.storage.FileSystemStorage\", \"size\": [400, 400]}"
+  }
+},
+{
+  "model": "thumbnail.kvstore",
+  "pk": "sorl-thumbnail||image||56a54692e4ecf025abff92b53f1b66c5",
+  "fields": {
+    "value": "{\"name\": \"upload/users/admin@gmail.com/profile/IMG_0567_iKGY8G8.JPG\", \"storage\": \"django.core.files.storage.FileSystemStorage\", \"size\": [1080, 1920]}"
+  }
+},
+{
+  "model": "thumbnail.kvstore",
+  "pk": "sorl-thumbnail||image||5b75eb7cf74f7d7894695b626d222671",
+  "fields": {
+    "value": "{\"name\": \"cache/56/a0/56a0a33d74be5280e310f2ad03e8f969.jpg\", \"storage\": \"django.core.files.storage.FileSystemStorage\", \"size\": [128, 128]}"
+  }
+},
+{
+  "model": "thumbnail.kvstore",
+  "pk": "sorl-thumbnail||image||5db1a12b901e51f4f2c516baa9b51c64",
+  "fields": {
+    "value": "{\"name\": \"cache/fe/c0/fec0c90b181b73bf9a7121268eaab2e8.jpg\", \"storage\": \"django.core.files.storage.FileSystemStorage\", \"size\": [306, 204]}"
+  }
+},
+{
+  "model": "thumbnail.kvstore",
+  "pk": "sorl-thumbnail||image||62697c413ea4359da759640132ef5445",
+  "fields": {
+    "value": "{\"name\": \"upload/users/romanreznikov2002@yandex.ru/profile/Screenshot_2019-04-28_PonasDumas.png\", \"storage\": \"django.core.files.storage.FileSystemStorage\", \"size\": [555, 555]}"
+  }
+},
+{
+  "model": "thumbnail.kvstore",
+  "pk": "sorl-thumbnail||image||6841306299e4dcae17252713aa770b2c",
+  "fields": {
+    "value": "{\"name\": \"default/profile/default_profile_image.png\", \"storage\": \"django.core.files.storage.FileSystemStorage\", \"size\": [860, 681]}"
+  }
+},
+{
+  "model": "thumbnail.kvstore",
+  "pk": "sorl-thumbnail||image||763ec97fea95b78f43450edfabfd3910",
+  "fields": {
+    "value": "{\"name\": \"upload/images/realty/1/flat_6.jpeg\", \"storage\": \"django.core.files.storage.FileSystemStorage\", \"size\": [275, 183]}"
+  }
+},
+{
+  "model": "thumbnail.kvstore",
+  "pk": "sorl-thumbnail||image||7bd0bfa30dd16acbe2acda8f84f9ba33",
+  "fields": {
+    "value": "{\"name\": \"cache/42/b0/42b021386fc6720457f625dfad0e3f4c.jpg\", \"storage\": \"django.core.files.storage.FileSystemStorage\", \"size\": [32, 33]}"
+  }
+},
+{
+  "model": "thumbnail.kvstore",
+  "pk": "sorl-thumbnail||image||8309c98eb65ddf7f87bde28c5a3ab5eb",
+  "fields": {
+    "value": "{\"name\": \"cache/06/d1/06d1c4c915a70863136ce0d5901d1890.jpg\", \"storage\": \"django.core.files.storage.FileSystemStorage\", \"size\": [128, 128]}"
+  }
+},
+{
+  "model": "thumbnail.kvstore",
+  "pk": "sorl-thumbnail||image||a996fda29d1deb55e5f2835ce8782f3a",
+  "fields": {
+    "value": "{\"name\": \"cache/ce/03/ce0369f8f3e5bb73106c00bb6aa81f18.jpg\", \"storage\": \"django.core.files.storage.FileSystemStorage\", \"size\": [306, 204]}"
+  }
+},
+{
+  "model": "thumbnail.kvstore",
+  "pk": "sorl-thumbnail||image||ad1c32628d2075d302240228506fc0d9",
+  "fields": {
+    "value": "{\"name\": \"upload/images/realty/2/flat_2.jpg\", \"storage\": \"django.core.files.storage.FileSystemStorage\", \"size\": [698, 463]}"
+  }
+},
+{
+  "model": "thumbnail.kvstore",
+  "pk": "sorl-thumbnail||image||adc4361099c481158840b095fa931a65",
+  "fields": {
+    "value": "{\"name\": \"cache/de/a1/dea17980bff2a46c3e814e1e352951a0.jpg\", \"storage\": \"django.core.files.storage.FileSystemStorage\", \"size\": [300, 200]}"
+  }
+},
+{
+  "model": "thumbnail.kvstore",
+  "pk": "sorl-thumbnail||image||b8063c53e1c179c5369c8c05823d45f2",
+  "fields": {
+    "value": "{\"name\": \"cache/32/05/32057b1fea80dcb19b14c073fae079f5.jpg\", \"storage\": \"django.core.files.storage.FileSystemStorage\", \"size\": [32, 33]}"
+  }
+},
+{
+  "model": "thumbnail.kvstore",
+  "pk": "sorl-thumbnail||image||b8f047f7c793a43d721be828527fbe8b",
+  "fields": {
+    "value": "{\"name\": \"cache/9d/de/9dde87bf34cea71cd55af947d660c26d.jpg\", \"storage\": \"django.core.files.storage.FileSystemStorage\", \"size\": [306, 203]}"
+  }
+},
+{
+  "model": "thumbnail.kvstore",
+  "pk": "sorl-thumbnail||image||bae42b4d3e63152de45160e87c8f9263",
+  "fields": {
+    "value": "{\"name\": \"upload/images/realty/3/flat_1.jpg\", \"storage\": \"django.core.files.storage.FileSystemStorage\", \"size\": [1300, 866]}"
+  }
+},
+{
+  "model": "thumbnail.kvstore",
+  "pk": "sorl-thumbnail||image||cdc6b7d064db9224bc9c57c7f7c4c056",
+  "fields": {
+    "value": "{\"name\": \"cache/f2/7a/f27ad4f6b380e639b00506f9a9ad5695.jpg\", \"storage\": \"django.core.files.storage.FileSystemStorage\", \"size\": [32, 33]}"
+  }
+},
+{
+  "model": "thumbnail.kvstore",
+  "pk": "sorl-thumbnail||image||e6e2a092d815cefeba134accb4f3a0de",
+  "fields": {
+    "value": "{\"name\": \"cache/68/71/6871dcbd7480556ff96bdb7734f147d3.jpg\", \"storage\": \"django.core.files.storage.FileSystemStorage\", \"size\": [128, 128]}"
+  }
+},
+{
+  "model": "thumbnail.kvstore",
+  "pk": "sorl-thumbnail||image||e93a685c443ac5f543b735a5983d940e",
+  "fields": {
+    "value": "{\"name\": \"cache/b8/64/b864a168f46d568b9d509b0361c57d05.jpg\", \"storage\": \"django.core.files.storage.FileSystemStorage\", \"size\": [128, 128]}"
+  }
+},
+{
+  "model": "thumbnail.kvstore",
+  "pk": "sorl-thumbnail||image||ebf1cb9b1b7d04845280892a3feb4e79",
+  "fields": {
+    "value": "{\"name\": \"cache/e6/59/e65998c2afe1a663c2b403d738442eff.jpg\", \"storage\": \"django.core.files.storage.FileSystemStorage\", \"size\": [32, 33]}"
+  }
+},
+{
+  "model": "thumbnail.kvstore",
+  "pk": "sorl-thumbnail||image||fcbbe85b708866e6a81c96fd8545161f",
+  "fields": {
+    "value": "{\"name\": \"cache/a8/52/a8527ec4c7b3e95e1ca74a8980bed9a5.jpg\", \"storage\": \"django.core.files.storage.FileSystemStorage\", \"size\": [56, 56]}"
+  }
+},
+{
+  "model": "thumbnail.kvstore",
+  "pk": "sorl-thumbnail||thumbnails||4b60eb56b66e950f346bab980a42daca",
+  "fields": {
+    "value": "[\"8309c98eb65ddf7f87bde28c5a3ab5eb\", \"b8063c53e1c179c5369c8c05823d45f2\"]"
+  }
+},
+{
+  "model": "thumbnail.kvstore",
+  "pk": "sorl-thumbnail||thumbnails||56a54692e4ecf025abff92b53f1b66c5",
+  "fields": {
+    "value": "[\"7bd0bfa30dd16acbe2acda8f84f9ba33\", \"e6e2a092d815cefeba134accb4f3a0de\"]"
+  }
+},
+{
+  "model": "thumbnail.kvstore",
+  "pk": "sorl-thumbnail||thumbnails||62697c413ea4359da759640132ef5445",
+  "fields": {
+    "value": "[\"5b75eb7cf74f7d7894695b626d222671\", \"cdc6b7d064db9224bc9c57c7f7c4c056\"]"
+  }
+},
+{
+  "model": "thumbnail.kvstore",
+  "pk": "sorl-thumbnail||thumbnails||6841306299e4dcae17252713aa770b2c",
+  "fields": {
+    "value": "[\"e93a685c443ac5f543b735a5983d940e\", \"ebf1cb9b1b7d04845280892a3feb4e79\", \"fcbbe85b708866e6a81c96fd8545161f\"]"
+  }
+},
+{
+  "model": "thumbnail.kvstore",
+  "pk": "sorl-thumbnail||thumbnails||763ec97fea95b78f43450edfabfd3910",
+  "fields": {
+    "value": "[\"a996fda29d1deb55e5f2835ce8782f3a\", \"adc4361099c481158840b095fa931a65\"]"
+  }
+},
+{
+  "model": "thumbnail.kvstore",
+  "pk": "sorl-thumbnail||thumbnails||ad1c32628d2075d302240228506fc0d9",
+  "fields": {
+    "value": "[\"b8f047f7c793a43d721be828527fbe8b\", \"09e8f8fc06896f8d10650d4cf1041e6e\"]"
+  }
+},
+{
+  "model": "thumbnail.kvstore",
+  "pk": "sorl-thumbnail||thumbnails||bae42b4d3e63152de45160e87c8f9263",
+  "fields": {
+    "value": "[\"279ae8d459978e914fc1256ae3880859\", \"5db1a12b901e51f4f2c516baa9b51c64\"]"
+  }
+},
+{
+  "model": "accounts.customuser",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$216000$jiefkbVPKM4p$FFPGVlxDgonBefzMeUdU4Cxek55wyaCt4ABZhKh3bWs=",
+    "email": "admin@gmail.com",
+    "first_name": "John",
+    "last_name": "Doe",
+    "is_email_confirmed": true,
+    "date_joined": "2021-04-26T19:49:28.642Z",
+    "last_login": "2021-04-26T20:06:06.026Z",
+    "is_admin": true,
+    "is_staff": true,
+    "is_superuser": true,
+    "is_active": true,
+    "groups": [
+      1,
+      2
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.customuser",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$216000$ne4NHhDzDFaU$NqZulcZOVlYlmtQ7TTIiZu+hVcwIMf/a6fzi6Z51zHI=",
+    "email": "host@gmail.com",
+    "first_name": "William",
+    "last_name": "Kraig",
+    "is_email_confirmed": true,
+    "date_joined": "2021-04-26T19:55:19.286Z",
+    "last_login": "2021-04-26T20:05:44.955Z",
+    "is_admin": false,
+    "is_staff": false,
+    "is_superuser": false,
+    "is_active": true,
+    "groups": [
+      1,
+      2
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.customuser",
+  "pk": 3,
+  "fields": {
+    "password": "pbkdf2_sha256$216000$aoI1CK6Q3tke$7dPIAhdSMXQTmHmy7m4uQ0W76AYRfjlLJgxwWg/HLr8=",
+    "email": "romanreznikov2002@yandex.ru",
+    "first_name": "Roman",
+    "last_name": "Reznikov",
+    "is_email_confirmed": true,
+    "date_joined": "2021-04-26T20:02:19.968Z",
+    "last_login": "2021-04-26T20:04:41.325Z",
+    "is_admin": false,
+    "is_staff": false,
+    "is_superuser": false,
+    "is_active": true,
+    "groups": [
+      1
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.profile",
+  "pk": 1,
+  "fields": {
+    "profile_image": "upload/users/admin@gmail.com/profile/IMG_0567_iKGY8G8.JPG",
+    "date_of_birth": "2002-03-07",
+    "gender": "M",
+    "phone_number": "+79851686043",
+    "is_phone_number_confirmed": true,
+    "description": "",
+    "user": 1
+  }
+},
+{
+  "model": "accounts.profile",
+  "pk": 2,
+  "fields": {
+    "profile_image": "upload/users/host@gmail.com/profile/upwork_image_reZ6gSL.png",
+    "date_of_birth": "1989-03-18",
+    "gender": "M",
+    "phone_number": null,
+    "is_phone_number_confirmed": false,
+    "description": "",
+    "user": 2
+  }
+},
+{
+  "model": "accounts.profile",
+  "pk": 3,
+  "fields": {
+    "profile_image": "upload/users/romanreznikov2002@yandex.ru/profile/Screenshot_2019-04-28_PonasDumas.png",
+    "date_of_birth": null,
+    "gender": "M",
+    "phone_number": null,
+    "is_phone_number_confirmed": false,
+    "description": "",
+    "user": 3
+  }
+},
+{
+  "model": "accounts.smslog",
+  "pk": 1,
+  "fields": {
+    "sms_code": "6450",
+    "profile": 1
+  }
+},
+{
+  "model": "addresses.address",
+  "pk": 1,
+  "fields": {
+    "country": "Italy",
+    "city": "Rome",
+    "street": "Roma, Via Arenula",
+    "city_slug": "rome",
+    "country_slug": "italy"
+  }
+},
+{
+  "model": "addresses.address",
+  "pk": 2,
+  "fields": {
+    "country": "Russia",
+    "city": "Moscow",
+    "street": "Moscow, Nikitski Blvd",
+    "city_slug": "moscow",
+    "country_slug": "russia"
+  }
+},
+{
+  "model": "addresses.address",
+  "pk": 3,
+  "fields": {
+    "country": "Russia",
+    "city": "Moscow",
+    "street": "Moscow, Arbat, 20",
+    "city_slug": "moscow",
+    "country_slug": "russia"
+  }
+},
+{
+  "model": "addresses.address",
+  "pk": 4,
+  "fields": {
+    "country": "United States",
+    "city": "Topanga, California",
+    "street": "Saddle Peak Rd",
+    "city_slug": "topanga-california",
+    "country_slug": "united-states"
+  }
+},
+{
+  "model": "hosts.realtyhost",
+  "pk": 1,
+  "fields": {
+    "user": 1,
+    "host_rating": null
+  }
+},
+{
+  "model": "hosts.realtyhost",
+  "pk": 2,
+  "fields": {
+    "user": 2,
+    "host_rating": null
+  }
+},
+{
+  "model": "realty.amenity",
+  "pk": 1,
+  "fields": {
+    "name": "Wi-Fi"
+  }
+},
+{
+  "model": "realty.amenity",
+  "pk": 2,
+  "fields": {
+    "name": "Kitchen"
+  }
+},
+{
+  "model": "realty.amenity",
+  "pk": 3,
+  "fields": {
+    "name": "Washer"
+  }
+},
+{
+  "model": "realty.amenity",
+  "pk": 4,
+  "fields": {
+    "name": "Breakfast"
+  }
+},
+{
+  "model": "realty.realty",
+  "pk": 1,
+  "fields": {
+    "name": "Historic center Campo dei Fiori",
+    "slug": "historic-center-campo-dei-fiori",
+    "description": "Excellent location in the heart of Rome’s historic center, situated between jewish ghetto and Campo dei fiori. It’s located in a historic building of 1700 with vaulted ceilings, ground floor, completely renovated and furnished, sleeping area with a 2 meter mezzanine, living room sofa, independent heating, washing machine, air conditioning, wi-fi.",
+    "is_available": true,
+    "created": "2021-04-26T19:54:20.968Z",
+    "updated": "2021-04-26T19:54:20.968Z",
+    "realty_type": "Apartments",
+    "beds_count": 2,
+    "max_guests_count": 3,
+    "price_per_night": 26,
+    "location": 1,
+    "host": 1,
+    "amenities": [
+      1,
+      2,
+      3
+    ]
+  }
+},
+{
+  "model": "realty.realty",
+  "pk": 2,
+  "fields": {
+    "name": "SMART HOST | Tretyakovskaya| Novokuznetskaya",
+    "slug": "smart-host-tretyakovskaya-novokuznetskaya",
+    "description": "The best place to take advantage of Moscow downtown lifestyle",
+    "is_available": true,
+    "created": "2021-04-26T19:57:47.681Z",
+    "updated": "2021-04-26T19:57:57.317Z",
+    "realty_type": "Hotel",
+    "beds_count": 1,
+    "max_guests_count": 2,
+    "price_per_night": 20,
+    "location": 2,
+    "host": 2,
+    "amenities": [
+      2,
+      4
+    ]
+  }
+},
+{
+  "model": "realty.realty",
+  "pk": 3,
+  "fields": {
+    "name": "Cosy room in downtown",
+    "slug": "cosy-room-in-downtown",
+    "description": "One of the best views paired with perfect location. 7 minutes walk to the Red Square and Kremlin",
+    "is_available": true,
+    "created": "2021-04-26T19:58:48.301Z",
+    "updated": "2021-04-26T19:58:48.301Z",
+    "realty_type": "Apartments",
+    "beds_count": 2,
+    "max_guests_count": 4,
+    "price_per_night": 45,
+    "location": 3,
+    "host": 2,
+    "amenities": [
+      1,
+      3
+    ]
+  }
+},
+{
+  "model": "realty.realty",
+  "pk": 4,
+  "fields": {
+    "name": "Saddle Peak",
+    "slug": "saddle-peak",
+    "description": "Located in the boho heart of Los Angeles, this secluded home is surrounded by nothing but wild, wide-open space. The ultra modern structure, perched at the edge of a lush escarpment, features an unimpeded view of the rugged countryside from its abundance of full-length windows. The iconic Santa Monica Pier and sprawling seaside at Venice Beach, as well as The Getty Villa, are a short drive away",
+    "is_available": false,
+    "created": "2021-04-26T20:00:58.138Z",
+    "updated": "2021-04-26T20:00:58.138Z",
+    "realty_type": "House",
+    "beds_count": 4,
+    "max_guests_count": 8,
+    "price_per_night": 1200,
+    "location": 4,
+    "host": 1,
+    "amenities": [
+      1,
+      2,
+      3,
+      4
+    ]
+  }
+},
+{
+  "model": "realty.realtyimage",
+  "pk": 1,
+  "fields": {
+    "image": "upload/images/realty/1/flat_6.jpeg",
+    "realty": 1,
+    "order": 0
+  }
+},
+{
+  "model": "realty.realtyimage",
+  "pk": 2,
+  "fields": {
+    "image": "upload/images/realty/1/flat_5.jpeg",
+    "realty": 1,
+    "order": 1
+  }
+},
+{
+  "model": "realty.realtyimage",
+  "pk": 3,
+  "fields": {
+    "image": "upload/images/realty/2/flat_2.jpg",
+    "realty": 2,
+    "order": 0
+  }
+},
+{
+  "model": "realty.realtyimage",
+  "pk": 4,
+  "fields": {
+    "image": "upload/images/realty/3/flat_1.jpg",
+    "realty": 3,
+    "order": 0
+  }
+},
+{
+  "model": "subscribers.subscriber",
+  "pk": 1,
+  "fields": {
+    "user": 3,
+    "email": "romanreznikov2002@yandex.ru"
+  }
+}
+]
