@@ -10,10 +10,6 @@ venv/
 airbnb/media/*
 !airbnb/media/default/
 
-airbnb/static/*
-!airbnb/static/accounts/
-!airbnb/static/subscribers/
-
 *.key
 *.crt
 
