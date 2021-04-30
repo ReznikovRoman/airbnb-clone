@@ -2,24 +2,27 @@ version: "3.8"
 
 services:
   redis:
+    image: redis
     env_file:
       - .env
     environment:
       - AIRBNB_REDIS_HOST=airbnb_redis
-    image: redis
     ports:
       - 6380:6379
     container_name: ${AIRBNB_REDIS_HOST}
+    networks:
+      - app-network
 
   celery:
+    restart: always
     env_file:
       - .env
     environment:
-      - AIRBNB_REDIS_HOST=airbnb_redis
       - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
       - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
-    restart: always
-    build: .
+      - AIRBNB_REDIS_HOST=airbnb_redis
+    build:
+      context: .
     command: celery -A airbnb worker -l info
     volumes:
       - .:/airbnb-docker
@@ -28,31 +31,36 @@ services:
     depends_on:
       - redis
       - web
+    networks:
+      - app-network
 
   flower:
+    image: mher/flower
+    restart: always
     env_file:
       - .env
     environment:
+      - FLOWER_PORT=5556
       - CELERY_BROKER_TRANSPORT=redis
       - CELERY_BROKER_HOST=redis
       - CELERY_BROKER_PORT=6379
       - CELERY_BROKER_VHOST=2
       - CELERY_REDIS_DB=2
       - CELERY_BROKER_URL=${CELERY_BROKER_HOST}://${CELERY_BROKER_TRANSPORT}:${CELERY_BROKER_PORT}/${CELERY_REDIS_DB}
-      - FLOWER_PORT=5555
-    image: mher/flower
     volumes:
       - .:/airbnb-docker
-    restart: always
     command: flower --broker=${CELERY_BROKER_URL}
     ports:
-      - 5555:5555
-    container_name: airbnb_flower
+      - 5556:5555
     depends_on:
       - celery
       - redis
+    container_name: airbnb_flower
+    networks:
+      - app-network
 
   celery_beat:
+    restart: on-failure
     env_file:
       - .env
     environment:
@@ -62,16 +70,34 @@ services:
       - CELERY_BROKER_VHOST=2
       - CELERY_REDIS_DB=2
       - CELERY_BROKER_URL=${CELERY_BROKER_HOST}://${CELERY_BROKER_TRANSPORT}:${CELERY_BROKER_PORT}/${CELERY_REDIS_DB}
-      - FLOWER_PORT=5555
-    build: .
-    restart: on-failure
+      - FLOWER_PORT=5556
+    build:
+      context: .
     volumes:
-    - .:/airbnb-docker
+      - .:/airbnb-docker
     command: celery -A airbnb beat -l info --pidfile= --scheduler django_celery_beat.schedulers:DatabaseScheduler
-    container_name: airbnb_celery_beat
     depends_on:
       - redis
+      - db
       - web
+    container_name: airbnb_celery_beat
+    networks:
+      - app-network
+
+  db:
+    image: postgres:11
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=airbnb_thinknetica
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    container_name: airbnb_db
+    networks:
+      - app-network
 
   daphne:
     restart: always
@@ -85,16 +111,22 @@ services:
       - CELERY_BROKER_VHOST=2
       - CELERY_REDIS_DB=2
       - REDIS_URL=${CELERY_BROKER_HOST}://${CELERY_BROKER_TRANSPORT}:${CELERY_BROKER_PORT}/${CELERY_REDIS_DB}
-    build: .
+    build:
+      context: .
     volumes:
       - .:/airbnb-docker
+    command: daphne -b 0.0.0.0 -p 8000 airbnb.asgi:application
     ports:
       - 8000:8000
-    command: daphne -b 0.0.0.0 -p 8000 airbnb.asgi:application
     depends_on:
       - redis
+      - web
+      - db
+    networks:
+      - app-network
 
   web:
+    restart: always
     env_file:
       - .env
     environment:
@@ -104,11 +136,28 @@ services:
       - CELERY_BROKER_PORT=6379
       - CELERY_BROKER_VHOST=2
       - CELERY_REDIS_DB=2
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_DEFAULT_USER=${POSTGRES_DEFAULT_USER}
+      - POSTGRES_DEFAULT_PASSWORD=${POSTGRES_DEFAULT_PASSWORD}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
       - REDIS_URL=${CELERY_BROKER_HOST}://${CELERY_BROKER_TRANSPORT}:${CELERY_BROKER_PORT}/${CELERY_REDIS_DB}
-    build: .
+    build:
+      context: .
     volumes:
       - .:/airbnb-docker
     image: web:airbnb-app
-    # TODO: configure nginx to run standard HTTP requests through a WSGI server (another milestone)
-    command: python manage.py runworker --settings airbnb.settings channels airbnb.asgi:application
+    command: python manage.py runworker --settings airbnb.settings.local channels airbnb.asgi:application
+    depends_on:
+      - db
     container_name: airbnb_app
+    networks:
+      - app-network
+
+
+volumes:
+  postgres_data:
+
+networks:
+  app-network:
+    driver: bridge

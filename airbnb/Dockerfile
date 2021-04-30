@@ -20,6 +20,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         musl-dev \
         curl \
         redis-server \
+        libc-dev \
+        postgresql-client \
+        netcat \
         && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
@@ -27,3 +30,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install project dependencies
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
+
+# Copy entrypoint.sh
+COPY entrypoint.sh .
+
+# Run entrypoint.sh
+ENTRYPOINT ["/airbnb-docker/entrypoint.sh"]
