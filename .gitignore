@@ -16,6 +16,7 @@ airbnb/static/*
 
 *.key
 *.crt
+*.log
 
 node_modules/
 
