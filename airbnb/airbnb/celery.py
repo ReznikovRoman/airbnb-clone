@@ -2,8 +2,10 @@ import os
 
 from celery import Celery
 
+from manage import django_settings_module
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'airbnb.settings')
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', django_settings_module)
 
 app = Celery('airbnb')
 

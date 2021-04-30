@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% load cache %}
-{% load thumbnail %}
 
 
 {% block title %}
@@ -69,11 +68,9 @@
                     </div>
                     <div class="host-link">
                         <a href="{% url 'accounts:profile_show' user_pk=realty.host.user.id %}">
-                            {% thumbnail realty.host.user.profile.profile_image "56x56" crop='center' as host_profile_image %}
-                                <img src="{{ host_profile_image.url }}"
-                                     width="{{ host_profile_image.width }}" height="{{ host_profile_image.height }}"
-                                     alt="Host profile image" class="rounded-circle">
-                            {% endthumbnail %}
+                            <img src="{{ realty.host.user.profile.profile_image.url }}"
+                                 width="56" height="56"
+                                 alt="Host profile image" class="rounded-circle">
                         </a>
                     </div>
                 </div>
@@ -125,11 +122,9 @@
                     <div class="realty-host">
                         <div class="host-profile">
                             <a href="{% url 'accounts:profile_show' user_pk=realty.host.user.id %}">
-                                {% thumbnail realty.host.user.profile.profile_image "56x56" crop='center' as host_profile_image %}
-                                    <img src="{{ host_profile_image.url }}"
-                                         width="{{ host_profile_image.width }}" height="{{ host_profile_image.height }}"
-                                         alt="Host profile image" class="rounded-circle">
-                                {% endthumbnail %}
+                                <img src="{{ realty.host.user.profile.profile_image.url }}"
+                                     width="56" height="56"
+                                     alt="Host profile image" class="rounded-circle">
                             </a>
                             <div class="host-content--right">
                                 <div class="host-name">

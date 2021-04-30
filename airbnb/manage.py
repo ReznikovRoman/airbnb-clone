@@ -4,9 +4,15 @@ import os
 import sys
 
 
+django_settings_module: str = 'airbnb.settings.local'
+
+if os.environ.get('ENVIRONMENT', 'local') == 'pro'.lower():
+    django_settings_module = 'airbnb.settings.pro'
+
+
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'airbnb.settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', django_settings_module)
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
