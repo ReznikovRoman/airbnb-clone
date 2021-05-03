@@ -7,6 +7,7 @@ from accounts.models import CustomUser
 
 
 class Command(BaseCommand):
+    """Custom management command that creates `realty_count` realty objects."""
     help = "Creates `realty_count` realty objects"
 
     def add_arguments(self, parser: ArgumentParser):
