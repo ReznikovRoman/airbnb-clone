@@ -99,32 +99,6 @@ services:
     networks:
       - app-network
 
-  daphne:
-    restart: always
-    env_file:
-      - .env
-    environment:
-      - AIRBNB_REDIS_HOST=airbnb_redis
-      - CELERY_BROKER_TRANSPORT=redis
-      - CELERY_BROKER_HOST=redis
-      - CELERY_BROKER_PORT=6379
-      - CELERY_BROKER_VHOST=2
-      - CELERY_REDIS_DB=2
-      - REDIS_URL=${CELERY_BROKER_HOST}://${CELERY_BROKER_TRANSPORT}:${CELERY_BROKER_PORT}/${CELERY_REDIS_DB}
-    build:
-      context: .
-    volumes:
-      - .:/airbnb-docker
-    command: daphne -b 0.0.0.0 -p 8000 airbnb.asgi:application
-    ports:
-      - 8000:8000
-    depends_on:
-      - redis
-      - web
-      - db
-    networks:
-      - app-network
-
   web:
     restart: always
     env_file:
@@ -147,7 +121,9 @@ services:
     volumes:
       - .:/airbnb-docker
     image: web:airbnb-app
-    command: python manage.py runworker --settings airbnb.settings.local channels airbnb.asgi:application
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - 8000:8000
     depends_on:
       - db
     container_name: airbnb_app
