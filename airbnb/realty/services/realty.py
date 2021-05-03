@@ -2,6 +2,7 @@ from typing import Optional, List, Union, Tuple
 
 from django.conf import settings
 from django.db.models import QuerySet
+from django.contrib.postgres.search import SearchRank, SearchVector, SearchQuery
 
 from common.session_handler import SessionHandler
 from hosts.models import RealtyHost
@@ -54,3 +55,27 @@ def get_n_latest_available_realty(realty_count: int) -> 'CustomDeleteQueryset[Re
 
 def get_available_realty_count_by_city(city: str) -> int:
     return Realty.available.filter(location__city__iexact=city).count()
+
+
+def get_available_realty_search_results(query: Optional[str]) -> 'CustomDeleteQueryset[Realty]':
+    """
+    Get all available realty filtered by a `query`.
+
+    If `query` isn't passed, return all available realty objects.
+
+    Args:
+        query(Optional[str]): search query
+
+    Returns:
+        CustomDeleteQueryset[Realty]: filtered realty
+    """
+    if query:
+        search_vector = SearchVector('location__city', weight='A') + \
+                        SearchVector('name', weight='B') + \
+                        SearchVector('description', weight='C')
+        search_query = SearchQuery(query)
+
+        return Realty.available.annotate(
+            rank=SearchRank(search_vector, search_query),
+        ).filter(rank__gte=0.3).order_by('-rank')
+    return Realty.available.all()

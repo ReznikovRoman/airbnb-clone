@@ -23,7 +23,37 @@ from .forms import (RealtyForm, RealtyTypeForm, RealtyImageFormSet,
 from .services.images import get_images_by_realty_id, update_images_order
 from .services.ordering import convert_response_to_orders
 from .services.realty import (get_amenity_ids_from_session, set_realty_host_by_user, get_available_realty_by_city_slug,
-                              get_available_realty_filtered_by_type, get_all_available_realty)
+                              get_available_realty_filtered_by_type, get_all_available_realty,
+                              get_available_realty_search_results)
+
+
+class RealtySearchResultsView(generic.ListView):
+    model = Realty
+    template_name = 'realty/realty/search_results.html'
+    realty_type_form: RealtyTypeForm = None
+
+    def dispatch(self, request, *args, **kwargs):
+        self.realty_type_form = RealtyTypeForm()
+        return super(RealtySearchResultsView, self).dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        realty_search_results = get_available_realty_search_results(self.request.GET.get('q', None))
+
+        realty_types: List[str] = self.request.GET.getlist('realty_type', None)
+        if realty_types:
+            realty_search_results = get_available_realty_filtered_by_type(
+                realty_types=realty_types,
+                realty_qs=realty_search_results,
+            )
+
+        return realty_search_results
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(RealtySearchResultsView, self).get_context_data(**kwargs)
+        context['search_query'] = self.request.GET.get('q')
+        context['realty_count'] = self.get_queryset().count()
+        context['realty_type_form'] = self.realty_type_form
+        return context
 
 
 class RealtyListView(generic.ListView):

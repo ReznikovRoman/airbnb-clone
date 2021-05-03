@@ -7,6 +7,7 @@ app_name = 'realty'
 
 urlpatterns = [
     path('', views.RealtyListView.as_view(), name='all'),
+    path('search/', views.RealtySearchResultsView.as_view(), name='search'),
     path('rooms/<int:pk>/<slug>/', views.RealtyDetailView.as_view(), name='detail'),
     path('city/<slug:city_slug>/', views.RealtyListView.as_view(), name='all_by_city'),
 

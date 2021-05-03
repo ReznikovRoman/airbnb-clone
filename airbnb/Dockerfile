@@ -22,6 +22,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         redis-server \
         libc-dev \
         postgresql-client \
+        postgresql-contrib \
         netcat \
         && \
     apt-get clean && \

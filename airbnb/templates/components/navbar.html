@@ -11,8 +11,11 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <form class="form-inline my-2 my-lg-0 search-form">
-            <input class="form-control mr-sm-2 search-field text-center" type="search" placeholder="Start your search" aria-label="Search">
+        <form class="form-inline my-2 my-lg-0 search-form" action="{% url 'realty:search' %}">
+            <input class="form-control mr-sm-2 search-field text-center"
+                   type="search" placeholder="Start your search"
+                   name="q"
+                   aria-label="Search">
         </form>
         <div class="nav-links--right">
             <ul class="navbar-nav mr-auto">

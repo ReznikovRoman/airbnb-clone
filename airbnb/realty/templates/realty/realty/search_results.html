@@ -1,16 +1,22 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load main_extras %}
 
 
 {% block title %}
-    {{ city }} &bull; Stays &bull; airbnb
+    {{ search_query|truncatechars:15 }} &bull; Stays &bull; airbnb
 {% endblock %}
 
 {% block content %}
     <div class="realty-list">
         <div class="header mb-3">
             <p class="color-secondary">{{ realty_count }}+ stay{{ realty_count|pluralize }}</p>
-            <h1>Stays in {{ city }}</h1>
+            {% if realty_count %}
+                <h1>{{ realty_count }} result{{ realty_count|pluralize }} for "{{ search_query }}"</h1>
+            {% else %}
+                <h1>Sorry, we couldn't find any results for "{{ search_query }}"</h1>
+                <h2>Try adjusting your search</h2>
+            {% endif %}
         </div>
 
         <div class="filter-row">
@@ -18,9 +24,10 @@
                 <button class="button-filter" id="realty-type--btn">
                     <span>Type of place</span>
                 </button>
-                <form action="{% url 'realty:all_by_city' city_slug=city|slugify %}"
+                <form action="{% url 'realty:search' %}"
                       class="realty-filter--form hidden" method="get">
                     {{ realty_type_form.as_p }}
+                    <input type="hidden" name="q" value="{{ search_query }}">
 
                     <hr class="form-footer--divider">
                     <div class="form-footer">
@@ -81,15 +88,15 @@
     </div>
 {% endblock %}
 
-{% block domready %}
 
+{% block domready %}
 
     // Realty filter form - checkboxes
     const filterCheckboxes = $('.realty-filter--form').find('input[type="checkbox"]');
 
     const search = window.location.search.slice(1).split('&');
     const realtyTypes = [];
-    search.forEach(realtyType => realtyTypes.push(realtyType.split('=')[1]));
+    search.forEach(realtyType => realtyTypes.push(realtyType.split('realty_type=')[1]));
 
     filterCheckboxes.each(function () {
         if (realtyTypes.indexOf($(this).val()) >= 0) $(this).prop('checked', true);
