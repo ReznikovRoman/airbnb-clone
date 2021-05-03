@@ -108,6 +108,54 @@ class Realty(models.Model):
         super(Realty, self).delete(using, keep_parents)
 
 
+class RealtyView(models.Model):
+    """Postgres View"""
+    id = models.PositiveBigIntegerField(primary_key=True)
+    name = models.CharField(verbose_name="name", max_length=255)
+    description = models.TextField(verbose_name="description")
+    is_available = models.BooleanField(verbose_name='is realty available', default=False)
+    realty_type = models.CharField(
+        verbose_name="type of the realty",
+        max_length=31,
+        choices=RealtyTypeChoices.choices,
+        default=RealtyTypeChoices.APARTMENTS,
+    )
+    beds_count = models.PositiveSmallIntegerField(
+        verbose_name='beds count',
+        validators=[
+            MinValueValidator(1),
+            MaxValueValidator(8),
+        ]
+    )
+    max_guests_count = models.PositiveSmallIntegerField(
+        validators=[
+            MinValueValidator(1),
+            MaxValueValidator(100),
+        ]
+    )
+    price_per_night = models.PositiveSmallIntegerField(
+        validators=[
+            MinValueValidator(1),
+        ]
+    )
+
+    country = models.CharField(verbose_name='location country', max_length=255)
+    city = models.CharField(verbose_name='location city', max_length=255)
+    street = models.CharField(verbose_name='location street', max_length=255)
+
+    email = models.EmailField(
+        verbose_name='host email',
+        max_length=60,
+        unique=True,
+    )
+    first_name = models.CharField(verbose_name='host first name', max_length=40)
+    last_name = models.CharField(verbose_name='host last name', max_length=40)
+
+    class Meta:
+        managed = False
+        db_table = 'realty_view'
+
+
 RealtyImageModelManager = models.Manager.from_queryset(CustomDeleteQueryset)
 
 
