@@ -10,7 +10,7 @@ if [ "$DATABASE" = "postgres" ]; then
     echo "Postgres started"
 fi
 
-python manage.py migrate --settings=airbnb.settings.pro --noinput
-python manage.py collectstatic --no-input
+python manage.py migrate --settings=airbnb.settings.local --noinput
+python manage.py collectstatic --settings=airbnb.settings.local --no-input
 
 exec "$@"
