@@ -99,10 +99,11 @@
                 <div class="realty-amenities">
                 <h3>Amenities</h3>
                     <div class="row">
-                        {% for amenity in realty.amenities.all %}
+                        {# TODO: Use `Amenity` objects (after issue #12.2) #}
+                        {% for amenity in realty.amenities %}
                             <div class="col-md-6">
                                 <div class="realty-amenity">
-                                    <span>{{ amenity.name|capfirst }}</span>
+                                    <span>{{ amenity|capfirst }}</span>
                                 </div>
                             </div>
                         {% endfor %}

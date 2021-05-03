@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.text import slugify
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.contrib.postgres.fields import ArrayField
 
 from hosts.models import RealtyHost
 from addresses.models import Address
@@ -78,7 +79,14 @@ class Realty(models.Model):
     )
     location = models.OneToOneField(Address, on_delete=models.CASCADE, verbose_name='location')
     host = models.ForeignKey(RealtyHost, on_delete=models.CASCADE, related_name='realty', verbose_name='realty host')
-    amenities = models.ManyToManyField(Amenity, related_name='realty', blank=True, verbose_name='amenities')
+
+    # TODO: remove redundant ArrayField (after issue #12.2)
+    amenities = ArrayField(
+        base_field=models.CharField(verbose_name='amenity', max_length=100),
+        size=16,
+        blank=True,
+        null=True,
+    )
 
     objects = RealtyManager()
     available = AvailableRealtyManager()
