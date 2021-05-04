@@ -24,6 +24,10 @@ class AmenityAdmin(admin.ModelAdmin):
     list_display = ('__str__',)
 
 
+class AmenityInline(admin.TabularInline):
+    model = Realty.amenities.through
+
+
 @admin.register(Realty)
 class RealtyAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'name', 'realty_type', 'is_available', 'created', 'host')
@@ -35,12 +39,13 @@ class RealtyAdmin(admin.ModelAdmin):
         }),
         ('Realty info', {
             'fields': ('description', 'is_available',
-                       'realty_type', 'beds_count', 'max_guests_count', 'price_per_night',
-                       'amenities',)
+                       'realty_type', 'beds_count', 'max_guests_count', 'price_per_night')
         }),
     )
 
-    # TODO: Use `Amenity` inline (after issue #12.2)
+    inlines = [
+        AmenityInline,
+    ]
 
     prepopulated_fields = {
         'slug': ('name',)
