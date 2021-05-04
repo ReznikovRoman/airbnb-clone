@@ -69,6 +69,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+
+    'main.middleware.MobileUserAgentMiddleware',
 ]
 
 ROOT_URLCONF = 'airbnb.urls'
