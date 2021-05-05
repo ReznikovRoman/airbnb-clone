@@ -11,15 +11,18 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from common.types import AuthenticatedHttpRequest
 from hosts.models import RealtyHost
 from realty.models import CustomDeleteQueryset, Realty
+from configs.redis_conf import r
 from realty.services.realty import get_available_realty_by_host
 from .forms import (SignUpForm, CustomPasswordResetForm,
                     ProfileForm, UserInfoForm, ProfileImageForm, ProfileDescriptionForm, VerificationCodeForm)
 from .models import CustomUser, Profile
+from .tokens import account_activation_token
 from .mixins import (AnonymousUserRequiredMixin, UnconfirmedPhoneNumberRequiredMixin, UnconfirmedEmailRequiredMixin,)
 from .services import (get_user_from_uid, send_verification_link, handle_phone_number_change,
                        is_verification_code_for_profile_valid, update_phone_number_confirmation_status,
                        get_verification_code_from_digits_dict, update_user_email_confirmation_status)
-from .tokens import account_activation_token
+from common.constants import (VERIFICATION_CODE_STATUS_DELIVERED, VERIFICATION_CODE_STATUS_FAILED,
+                              TWILIO_MESSAGE_STATUS_CODES_FAILED)
 
 
 class SignUpView(AnonymousUserRequiredMixin,
@@ -141,20 +144,32 @@ class PersonalInfoEditView(LoginRequiredMixin,
             user_profile: Profile = self.profile_form.save()
             profile_cleaned_data = self.profile_form.cleaned_data
 
-            # if phone number has been changed
-            if 'phone_number' in self.profile_form.changed_data:
+            # if phone number has been changed or verification code hasn't been delivered
+            if 'phone_number' in self.profile_form.changed_data or \
+                    r.get(f"user:{self.request.user.id}:phone_code_status") == VERIFICATION_CODE_STATUS_FAILED.encode():
                 if profile_cleaned_data.get('phone_number', None):  # if it is not blank
-                    messages.add_message(
-                        request,
-                        level=messages.SUCCESS,
-                        message="We've sent a verification code to you. "
-                                "You can confirm your phone number at the Login & Security panel."
-                    )
-                    handle_phone_number_change(
+                    twilio_payload = handle_phone_number_change(
                         user_profile=user_profile,
                         site_domain=get_current_site(request).domain,
                         new_phone_number=str(profile_cleaned_data.get('phone_number')),
                     )
+
+                    if twilio_payload.status.lower() in (TWILIO_MESSAGE_STATUS_CODES_FAILED,
+                                                         VERIFICATION_CODE_STATUS_FAILED):
+                        r.set(f"user:{self.request.user.id}:phone_code_status", VERIFICATION_CODE_STATUS_FAILED)
+                        messages.add_message(
+                            request=request,
+                            level=messages.ERROR,
+                            message="There was an error while sending a verification code. Try again later"
+                        )
+                    else:
+                        r.set(f"user:{self.request.user.id}:phone_code_status", VERIFICATION_CODE_STATUS_DELIVERED)
+                        messages.add_message(
+                            request=request,
+                            level=messages.SUCCESS,
+                            message="We've sent a verification code to you. "
+                                    "You can confirm your phone number at the Login & Security panel."
+                        )
                 else:
                     update_phone_number_confirmation_status(user_profile, phone_number_confirmation_status=False)
 
@@ -284,18 +299,23 @@ class PhoneNumberConfirmPageView(UnconfirmedPhoneNumberRequiredMixin,
     template_name = 'accounts/settings/confirm_phone.html'
 
     verification_code_form: VerificationCodeForm = None
-    phone_number: str = None
+    is_verification_code_sent: bool = False
 
     def dispatch(self, request: HttpRequest, *args, **kwargs):
         self.verification_code_form = VerificationCodeForm(request.POST or None)
-        self.phone_number = request.user.profile.phone_number
+
+        if r.get(f"user:{self.request.user.id}:phone_code_status") == VERIFICATION_CODE_STATUS_DELIVERED.encode():
+            self.is_verification_code_sent = True
+        else:
+            self.is_verification_code_sent = False
+
         return super(PhoneNumberConfirmPageView, self).dispatch(request, *args, **kwargs)
 
     def get(self, request: AuthenticatedHttpRequest, *args, **kwargs):
         return self.render_to_response(
             context={
                 'verification_code_form': self.verification_code_form,
-                'phone_number': self.phone_number,
+                'is_verification_code_sent': self.is_verification_code_sent,
             }
         )
 
@@ -322,7 +342,7 @@ class PhoneNumberConfirmPageView(UnconfirmedPhoneNumberRequiredMixin,
         return self.render_to_response(
             context={
                 'verification_code_form': self.verification_code_form,
-                'phone_number': self.phone_number,
+                'is_verification_code_sent': self.is_verification_code_sent,
             }
         )
 

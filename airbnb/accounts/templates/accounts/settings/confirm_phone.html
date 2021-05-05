@@ -22,11 +22,17 @@
 
         <div class="confirm-phone">
             <hr>
-            <p>
-                We've sent you the 4 digit code to {{ phone_number }}
-                <br>
-                Enter the code below to confirm your phone number.
-            </p>
+
+            {% if is_verification_code_sent %}
+                <p>
+                    We've sent you the 4 digit code to {{ phone_number }}
+                    <br>
+                    Enter the code below to confirm your phone number.
+                </p>
+            {% else %}
+                <p>There was an error while sending a verification code. Try again later or contact our support</p>
+            {% endif %}
+
             <div class="code-container">
                 <form action="" method="post">
                     {% csrf_token %}

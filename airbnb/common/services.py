@@ -1,7 +1,15 @@
+import logging
 from typing import List
 
-from .collections import FormWithModel
+from twilio.base.exceptions import TwilioRestException
+
+from configs.twilio_conf import twilio_client
 from .types import AbstractForm
+from .constants import VERIFICATION_CODE_STATUS_FAILED
+from .collections import FormWithModel, TwilioShortPayload
+
+
+logger = logging.getLogger(__name__)
 
 
 def get_field_names_from_form(form: AbstractForm) -> List[str]:
@@ -24,3 +32,42 @@ def get_required_fields_from_form_with_model(forms_with_models: List[FormWithMod
 
 def get_keys_with_prefixes(names: List[str], prefix: str = '') -> List[str]:
     return [create_name_with_prefix(name, prefix) for name in names]
+
+
+def _send_sms_by_twilio(body: str, sms_from: str, sms_to: str) -> TwilioShortPayload:
+    """Sends SMS message using Twilio provider.
+
+    Args:
+        body (str): SMS message text
+        sms_from (str): Twilio phone number
+        sms_to (str): Recipient's phone number
+
+    Returns:
+        TwilioShortPayload: Twilio payload
+    """
+    try:
+        logger.info(
+            msg=f"Sending phone number verification message: | "
+                f"Body: {body} | "
+                f"To: {sms_to} | "
+                f"From {sms_from}"
+        )
+        message = twilio_client.messages.create(
+            body=body,
+            from_=sms_from,
+            to=sms_to,
+        )
+    except TwilioRestException as twilio_exception:
+        logger.error(
+            msg=f"ERROR: SMS wasn't send | "
+                f"To: {sms_to} | "
+                f"Twilio exception message: {twilio_exception}"
+        )
+        return TwilioShortPayload(status=VERIFICATION_CODE_STATUS_FAILED, sid=None)
+    else:
+        logger.info(
+            msg=f"Verification message has been sent successfully | "
+                f"To: {sms_to} |"
+                f"Twilio SID: {message.sid}"
+        )
+        return TwilioShortPayload(status=message.status, sid=message.sid)

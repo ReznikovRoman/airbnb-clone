@@ -13,6 +13,7 @@ from django.contrib.sites.shortcuts import get_current_site
 
 from common.tasks import send_sms_by_twilio
 from mailings.tasks import send_email_with_attachments
+from common.collections import TwilioShortPayload
 from .models import CustomUser, CustomUserManager, Profile, SMSLog, get_default_profile_image_full_url
 from .tokens import account_activation_token
 
@@ -120,7 +121,7 @@ def update_user_email_confirmation_status(user: CustomUser, email_confirmation_s
     user.save()
 
 
-def handle_phone_number_change(user_profile: Profile, site_domain: str, new_phone_number: str) -> None:
+def handle_phone_number_change(user_profile: Profile, site_domain: str, new_phone_number: str) -> TwilioShortPayload:
     """Handles phone number change.
     - Gets or creates a SMSLog object for the given `user_profile`
     - Generates random verification code and saves it to the SMSLog object
@@ -133,7 +134,7 @@ def handle_phone_number_change(user_profile: Profile, site_domain: str, new_phon
         new_phone_number (str): User's new phone number
 
     Returns:
-        None
+        TwilioShortPayload: Twilio payload
     """
     sms_log = SMSLog.objects.get_or_create(profile=user_profile)[0]
 
@@ -143,11 +144,11 @@ def handle_phone_number_change(user_profile: Profile, site_domain: str, new_phon
 
     update_phone_number_confirmation_status(user_profile, phone_number_confirmation_status=False)
 
-    send_sms_by_twilio.delay(
+    return TwilioShortPayload.parse_raw(send_sms_by_twilio.delay(
         body=f"Your {site_domain} verification code is: {sms_verification_code}",
         sms_from=settings.TWILIO_PHONE_NUMBER,
         sms_to=new_phone_number,
-    )
+    ).get())
 
 
 def get_verification_code_from_digits_dict(digits_dict: Dict[str, str]) -> str:
