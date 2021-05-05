@@ -7,6 +7,7 @@ services:
       - .env
     environment:
       - AIRBNB_REDIS_HOST=airbnb_redis
+      - AIRBNB_SENTRY_DSN=${AIRBNB_SENTRY_DSN}
     ports:
       - 6380:6379
     container_name: ${AIRBNB_REDIS_HOST}
@@ -21,6 +22,7 @@ services:
       - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
       - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
       - AIRBNB_REDIS_HOST=airbnb_redis
+      - AIRBNB_SENTRY_DSN=${AIRBNB_SENTRY_DSN}
     build:
       context: .
     command: celery -A airbnb worker -l info
@@ -47,6 +49,7 @@ services:
       - CELERY_BROKER_VHOST=2
       - CELERY_REDIS_DB=2
       - CELERY_BROKER_URL=${CELERY_BROKER_HOST}://${CELERY_BROKER_TRANSPORT}:${CELERY_BROKER_PORT}/${CELERY_REDIS_DB}
+      - AIRBNB_SENTRY_DSN=${AIRBNB_SENTRY_DSN}
     volumes:
       - .:/airbnb-docker
     command: flower --broker=${CELERY_BROKER_URL}
@@ -71,6 +74,7 @@ services:
       - CELERY_REDIS_DB=2
       - CELERY_BROKER_URL=${CELERY_BROKER_HOST}://${CELERY_BROKER_TRANSPORT}:${CELERY_BROKER_PORT}/${CELERY_REDIS_DB}
       - FLOWER_PORT=5556
+      - AIRBNB_SENTRY_DSN=${AIRBNB_SENTRY_DSN}
     build:
       context: .
     volumes:
@@ -116,6 +120,7 @@ services:
       - POSTGRES_HOST=${POSTGRES_HOST}
       - POSTGRES_PORT=${POSTGRES_PORT}
       - REDIS_URL=${CELERY_BROKER_HOST}://${CELERY_BROKER_TRANSPORT}:${CELERY_BROKER_PORT}/${CELERY_REDIS_DB}
+      - AIRBNB_SENTRY_DSN=${AIRBNB_SENTRY_DSN}
     build:
       context: .
     volumes:

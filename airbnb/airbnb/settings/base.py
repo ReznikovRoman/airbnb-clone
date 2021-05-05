@@ -2,6 +2,9 @@ import os
 from typing import List
 from pathlib import Path
 
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
 from django.urls import reverse_lazy
 from django.contrib.messages import constants as messages_constants
 
@@ -161,6 +164,13 @@ LOGGING = {
         },
     },
 }
+
+
+# SENTRY
+sentry_sdk.init(
+    dsn=os.environ.get("AIRBNB_SENTRY_DSN"),
+    integrations=[DjangoIntegration()]
+)
 
 
 # SITES
