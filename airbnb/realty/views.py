@@ -50,9 +50,13 @@ class RealtySearchResultsView(generic.ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(RealtySearchResultsView, self).get_context_data(**kwargs)
-        context['search_query'] = self.request.GET.get('q')
+        search_query: str = self.request.GET.get('q')
+
+        context['search_query'] = search_query
         context['realty_count'] = self.get_queryset().count()
         context['realty_type_form'] = self.realty_type_form
+        context['meta_description'] = f"Search results for `{search_query}`"
+
         return context
 
 
@@ -85,12 +89,14 @@ class RealtyListView(generic.ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(RealtyListView, self).get_context_data(**kwargs)
-        context['realty_count'] = self.get_queryset().count()
-
         city_slug = self.kwargs.get('city_slug', 'All cities')
-        context['city'] = city_slug.capitalize()
+        city: str = city_slug.capitalize()
 
+        context['realty_count'] = self.get_queryset().count()
+        context['city'] = city
+        context['meta_description'] = f"List of places in {city}"
         context['realty_type_form'] = self.realty_type_form
+
         return context
 
 
@@ -108,7 +114,9 @@ class RealtyDetailView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(RealtyDetailView, self).get_context_data(**kwargs)
+
         context['realty_views_count'] = cache.get(f"realty_{self.get_object().id}_views")
+
         return context
 
 

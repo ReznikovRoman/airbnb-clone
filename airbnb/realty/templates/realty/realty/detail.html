@@ -1,9 +1,21 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load cache %}
 
 
 {% block title %}
-    {{ realty.name|slice:":30" }} &bull; Realty &bull; airbnb
+    {{ realty.name|slice:":45" }} &bull; Realty &bull; Airbnb
+{% endblock %}
+
+{% block meta_tags %}
+    <meta property="og:title" content="{{ realty.name|slice:":45" }} | Realty | Airbnb">
+    <meta name="description" property="og:description" content="{{ meta_description }}">
+    <meta property="og:type" content="realty">
+    <meta property="og:image"
+          content="{% if realty.images.exists %}{{ realty.images.first.image.url }}{% else %}{{ ABSOLUTE_ROOT }}{% static 'realty/images/default/realty_image_placeholder.png' %}{% endif %}">
+    <meta property="og:image:alt" content="Realty image">
+    <meta property="og:url" content="{{ ABSOLUTE_URL }}">
+    <meta name="twitter:card" value="summary">
 {% endblock %}
 
 {% block content %}

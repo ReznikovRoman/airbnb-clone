@@ -4,7 +4,14 @@
 
 
 {% block title %}
-    {{ search_query|truncatechars:15 }} &bull; Stays &bull; airbnb
+    {{ search_query|truncatechars:15 }} &bull; Stays &bull; Airbnb
+{% endblock %}
+
+{% block meta_tags %}
+    <meta property="og:title" content="{{ search_query|truncatechars:15 }} | Stays | Airbnb">
+    <meta name="description" property="og:description" content="{{ meta_description }}">
+    <meta property="og:url" content="{{ ABSOLUTE_URL }}">
+    <meta name="twitter:card" value="summary">
 {% endblock %}
 
 {% block content %}

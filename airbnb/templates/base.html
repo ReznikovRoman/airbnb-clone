@@ -8,11 +8,10 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>
-        {% block title %}
-            airbnb
-        {% endblock %}
-    </title>
+
+    {% block meta_tags %}{% endblock %}
+
+    <title>{% block title %}Airbnb{% endblock %}</title>
 
     <!-- Bootstrap 4 - CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"

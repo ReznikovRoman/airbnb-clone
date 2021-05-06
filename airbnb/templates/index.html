@@ -6,6 +6,33 @@
     Home Page
 {% endblock %}
 
+{% block meta_tags %}
+    <meta property="og:title" content="Home Page">
+    <meta name="description" property="og:description" content="{{ meta_description }}">
+    <meta property="og:url" content="{{ ABSOLUTE_URL }}">
+    <meta name="twitter:card" value="summary">
+
+    <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "Organization",
+            "name": "Airbnb",
+            "description": "Find vacation rentals, cabins, beach houses, unique homes and experiences around the world - all made possible by hosts on Airbnb",
+            "url": "{{ ABSOLUTE_ROOT }}"
+            "legalName": "Airbnb, Inc",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "RU",
+                "addressLocality": "Moscow",
+                "addressRegion": "Moscow",
+                "postalCode": "123557",
+                "streetAddress": "Rastorguyevskiy Pereulok, 3"
+            },
+            "telephone": "+7 985 168 60 43"
+        }
+    </script>
+{% endblock %}
+
 {% block content %}
     <div class="realty-explore">
         <h2>Explore nearby</h2>
