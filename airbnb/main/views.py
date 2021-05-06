@@ -22,6 +22,12 @@ class HomePageView(generic.TemplateView):
         return context
 
 
+class RobotsView(generic.TemplateView):
+    """Display `robots.txt` file."""
+    template_name = 'main/robots.txt'
+    content_type = 'text/plain'
+
+
 def bad_request_view(request, *args, **kwargs):
     response = render(request, 'main/errors/400.html')
     response.status_code = 400

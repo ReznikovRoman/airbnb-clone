@@ -1,0 +1,11 @@
+User-agent: Googlebot
+User-Agent: *
+
+Disallow: /static/
+Disallow: /media/
+Disallow: /admin/
+Disallow: /accounts/
+
+Host: {{ ABSOLUTE_ROOT }}
+
+Sitemap: {{ ABSOLUTE_ROOT }}/realty/sitemap.xml
