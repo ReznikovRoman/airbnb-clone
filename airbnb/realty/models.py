@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.utils.text import slugify
 from django.core.validators import MinValueValidator, MaxValueValidator
 
@@ -94,6 +95,9 @@ class Realty(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         super(Realty, self).save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('realty:detail', kwargs={"pk": self.id, "slug": self.slug})
 
     def delete(self, using=None, keep_parents=False):
         self.location.delete()

@@ -1,7 +1,13 @@
 from django.urls import path
+from django.contrib.sitemaps.views import sitemap
 
 from . import views
+from .sitemaps import RealtySiteMap
 
+
+sitemaps = {
+    'realty': RealtySiteMap,
+}
 
 app_name = 'realty'
 
@@ -22,4 +28,7 @@ urlpatterns = [
 
     # Images
     path('image/order/', views.RealtyImageOrderView.as_view(), name='image_change_order'),
+
+    # Sitemap
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
 ]
