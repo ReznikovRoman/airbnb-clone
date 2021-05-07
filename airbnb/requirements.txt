@@ -46,6 +46,7 @@ django-redis==4.12.1
 django-redis-sessions==0.6.2
 django-timezone-field==4.1.2
 django-twilio==0.13.1.post0
+djangorestframework==3.12.4
 docutils==0.16
 flake8==3.9.1
 flower==0.9.7

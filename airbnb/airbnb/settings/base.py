@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.postgres',
 
     'bootstrap4',
+    'rest_framework',
     'debug_toolbar',
     'django_inlinecss',
     'django_apscheduler',
@@ -220,6 +221,14 @@ MESSAGE_TAGS = {
     messages_constants.SUCCESS: 'alert-success',
     messages_constants.WARNING: 'alert-warning',
     messages_constants.ERROR: 'alert-danger',
+}
+
+
+# REST FRAMEWORK
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+    ]
 }
 
 
