@@ -1,0 +1,340 @@
+openapi: 3.1.0
+info:
+  title: Airbnb API
+  description: API specs for Airbnb
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1/api/v1
+  - url: https://airbnb-thinknetica.com/api/v1
+tags:
+  - name: "realty"
+paths:
+  /realty:
+    get:
+      tags:
+        - realty
+      operationId: getRealtyList
+      summary: Get all available realty
+      description: Returns all available realty
+      responses:
+        '200':
+          description: List of realty to be returned
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Realty'
+    post:
+      tags:
+        - realty
+      operationId: addRealty
+      summary: Create new realty
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Realty'
+        required: true
+      responses:
+        '201':
+          description: New realty was created
+
+        '400':
+          description: Invalid request data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: User is not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotAuthorized'
+        '403':
+          description: User cannot add new realty
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /realty/{realtyId}:
+    get:
+      tags:
+        - realty
+      operationId: getRealtyById
+      summary: Get Realty object by ID
+      parameters:
+        - name: realtyId
+          in: path
+          description: Realty ID
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '200':
+          description: Realty object to be returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Realty'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Realty not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - realty
+      operationId: updateRealtyById
+      summary: Update realty by Id
+      parameters:
+        - name: realtyId
+          in: path
+          description: Realty ID
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RealtyUpdate'
+      responses:
+        '201':
+          description: Update successful
+        '400':
+          description: The request is invalid, one or multiple fields had errors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: User is not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotAuthorized'
+        '404':
+          description: Realty not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - realty
+      operationId: deleteRealtyById
+      summary: Delete Realty object by ID
+      parameters:
+        - name: realtyId
+          in: path
+          description: Realty ID
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '204':
+          description: Realty was deleted
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: User is not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotAuthorized'
+        '404':
+          description: Realty not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Address:
+      type: object
+      properties:
+        id:
+          type: integer
+        country:
+          type: string
+        city:
+          type: string
+        street:
+          type: string
+    UserProfile:
+      type: object
+      properties:
+        id:
+          type: integer
+        profileImage:
+          type: string
+          format: binary
+        dateOfBirth:
+          type: string
+          format: date
+        gender:
+          type: string
+          maxLength: 2
+          enum:
+            - 'M'
+            - 'F'
+            - 'O'
+        phoneNumber:
+          type: string
+        isPhoneNumberConfirmed:
+          type: boolean
+        description:
+          type: string
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+          format: email
+        firstName:
+          type: string
+        lastName:
+          type: string
+        isEmailConfirmed:
+          type: boolean
+        profile:
+          $ref: '#/components/schemas/UserProfile'
+    RealtyHost:
+      type: object
+      properties:
+        id:
+          type: integer
+        rating:
+          type: integer
+          minimum: 0
+          maximum: 5
+        user:
+          $ref: '#/components/schemas/User'
+    Amenity:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    RealtyImage:
+      type: object
+      properties:
+        id:
+          type: integer
+        image:
+          type: string
+          format: binary
+        order:
+          type: integer
+          minimum: 0
+    Realty:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        created:
+          type: string
+          format: date-time
+        realtyType:
+          type: string
+          maxLength: 31
+          enum:
+            - 'House'
+            - 'Hotel'
+            - 'Apartments'
+          default: 'Apartments'
+        bedsCount:
+          type: integer
+          minimum: 1
+          maximum: 8
+        maxGuestsCount:
+          type: integer
+          minimum: 1
+          maximum: 100
+        pricePerNight:
+          type: integer
+          minimum: 1
+        location:
+          $ref: '#/components/schemas/Address'
+        host:
+          $ref: '#/components/schemas/RealtyHost'
+        amenities:
+          type: array
+          items:
+            $ref: '#/components/schemas/Amenity'
+        realtyImages:
+          type: array
+          items:
+            $ref: '#/components/schemas/RealtyImage'
+    RealtyUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        realtyType:
+          type: string
+          maxLength: 31
+          enum:
+            - 'House'
+            - 'Hotel'
+            - 'Apartments'
+        bedsCount:
+          type: integer
+          minimum: 1
+          maximum: 8
+        maxGuestsCount:
+          type: integer
+          minimum: 1
+          maximum: 100
+        pricePerNight:
+          type: integer
+          minimum: 1
+    Error:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human readable error message
+    NotAuthorized:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Authentication is required to access this resource
