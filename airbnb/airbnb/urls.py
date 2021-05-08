@@ -18,6 +18,9 @@ urlpatterns = [
     path('realty/', include('realty.urls', namespace='realty')),
     path('hosts/', include('hosts.urls', namespace='hosts')),
     path('subscribers/', include('subscribers.urls', namespace='subscribers')),
+
+    path('api/v1/', include('realty.api.urls', namespace='api')),
+
     path('', include('main.urls')),
 ]
 

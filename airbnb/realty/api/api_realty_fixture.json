@@ -1,0 +1,17 @@
+{
+    "name": "Test hotel Arbat",
+    "description": "test",
+    "is_available": true,
+    "realty_type": "Hotel",
+    "beds_count": 2,
+    "max_guests_count": 4,
+    "price_per_night": 45,
+    "location": {
+        "country": "Russia",
+        "city": "Moscow",
+        "street": "Moscow, Arbat 20"
+    },
+    "amenities": [{
+      "name": "Wi-Fi"
+    }]
+}
