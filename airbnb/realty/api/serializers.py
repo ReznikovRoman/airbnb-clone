@@ -66,7 +66,6 @@ class RealtySerializer(serializers.ModelSerializer):
         new_location = Address.objects.create(**location_data)
         amenities = [Amenity.objects.get_or_create(**amenity_data)[0] for amenity_data in amenities_data]
 
-        # TODO: set realty host properly (another issue - DRF authentication, authorization)
         realty_host_pk = validated_data.pop('host_pk')
         realty_host = get_object_or_404(RealtyHost, pk=realty_host_pk)
 

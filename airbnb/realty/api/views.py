@@ -1,10 +1,11 @@
 from rest_framework import generics, status
 from rest_framework.request import Request
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
-from hosts.models import RealtyHost
 from ..filters import RealtyFilter
 from ..services.realty import get_all_available_realty
+from .permissions import IsRealtyOwnerOrReadOnly, IsAbleToAddRealty
 from .serializers import RealtySerializer, RealtyUpdateSerializer
 
 
@@ -19,10 +20,13 @@ class RealtyListApiView(generics.ListCreateAPIView):
     queryset = get_all_available_realty()
     serializer_class = RealtySerializer
     filterset_class = RealtyFilter
+    permission_classes = (
+        IsAuthenticatedOrReadOnly,
+        IsAbleToAddRealty,
+    )
 
     def post(self, request: Request, *args, **kwargs):
-        # TODO: set realty host properly (another issue - DRF authentication, authorization)
-        host_pk = RealtyHost.objects.first().pk
+        host_pk = request.user.host.id
         request.data['host_pk'] = host_pk
         request.data['host'] = {'user': {'profile': {}}}
 
@@ -46,3 +50,7 @@ class RealtyDetailApiView(generics.RetrieveUpdateDestroyAPIView):
     """
     queryset = get_all_available_realty()
     serializer_class = RealtyUpdateSerializer
+    permission_classes = (
+        IsAuthenticatedOrReadOnly,
+        IsRealtyOwnerOrReadOnly,
+    )
