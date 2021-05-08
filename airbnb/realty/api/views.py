@@ -3,8 +3,9 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 
 from hosts.models import RealtyHost
-from .serializers import RealtySerializer, RealtyUpdateSerializer
+from ..filters import RealtyFilter
 from ..services.realty import get_all_available_realty
+from .serializers import RealtySerializer, RealtyUpdateSerializer
 
 
 class RealtyListApiView(generics.ListCreateAPIView):
@@ -17,6 +18,7 @@ class RealtyListApiView(generics.ListCreateAPIView):
     """
     queryset = get_all_available_realty()
     serializer_class = RealtySerializer
+    filterset_class = RealtyFilter
 
     def post(self, request: Request, *args, **kwargs):
         # TODO: set realty host properly (another issue - DRF authentication, authorization)

@@ -36,9 +36,10 @@ INSTALLED_APPS = [
     'django.contrib.flatpages',
     'django.contrib.postgres',
 
-    'bootstrap4',
     'rest_framework',
+    'bootstrap4',
     'debug_toolbar',
+    'django_filters',
     'django_inlinecss',
     'django_apscheduler',
     'django_celery_beat',
@@ -228,6 +229,9 @@ MESSAGE_TAGS = {
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 2,
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
     ]
