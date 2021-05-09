@@ -3,7 +3,7 @@ __pycache__/
 *.pyc
 venv/
 
-docs/_build/
+/docs/_build/
 
 *.pytest_cache
 
