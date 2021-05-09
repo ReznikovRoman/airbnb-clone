@@ -3,6 +3,8 @@ __pycache__/
 *.pyc
 venv/
 
+docs/_build/
+
 *.pytest_cache
 
 *.sqlite3
