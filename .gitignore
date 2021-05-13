@@ -7,6 +7,8 @@ venv/
 
 *.pytest_cache
 
+celerybeat-schedule
+
 *.sqlite3
 
 airbnb/media/*
@@ -19,6 +21,8 @@ airbnb/static/*
 *.key
 *.crt
 *.log
+
+prod_config/
 
 node_modules/
 
