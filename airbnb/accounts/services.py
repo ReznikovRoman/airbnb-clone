@@ -14,7 +14,8 @@ from django.contrib.sites.shortcuts import get_current_site
 from common.tasks import send_sms_by_twilio
 from mailings.tasks import send_email_with_attachments
 from common.collections import TwilioShortPayload
-from .models import CustomUser, CustomUserManager, Profile, SMSLog, get_default_profile_image_full_url
+from .models import (CustomUser, CustomUserManager, Profile, SMSLog,
+                     get_default_profile_image_full_url, get_default_profile_image)
 from .tokens import account_activation_token
 
 
@@ -99,7 +100,8 @@ def has_user_profile_image(user_profile: Profile) -> bool:
     """Check that User has a profile image and it is not a default one."""
     if (
             user_profile.profile_image and
-            user_profile.profile_image.url != get_default_profile_image_full_url()
+            user_profile.profile_image.url != get_default_profile_image_full_url() and
+            user_profile.profile_image.url != get_default_profile_image()
     ):
         return True
     return False
