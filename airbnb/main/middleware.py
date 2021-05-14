@@ -12,7 +12,7 @@ class MobileUserAgentMiddleware:
         mobile_agent_regex = re.compile(r".*(iphone|mobile|androidtouch)", re.IGNORECASE)
 
         request.is_mobile_agent = False
-        if mobile_agent_regex.match(request.META['HTTP_USER_AGENT']):
+        if mobile_agent_regex.match(request.META.get('HTTP_USER_AGENT', '')):
             request.is_mobile_agent = True
 
         response: HttpResponse = self._get_response(request)
