@@ -2,7 +2,8 @@ from django.test import TestCase
 from django.core.validators import MinLengthValidator
 from django.contrib.auth.models import Permission, ContentType
 
-from ..models import CustomUser, SMSLog
+from ..models import (CustomUser, Profile, ProfileGenderChoices, SMSLog,
+                      get_default_profile_image, get_profile_image_upload_path)
 
 
 class CustomUserModelTests(TestCase):
@@ -193,6 +194,94 @@ class CustomUserModelTests(TestCase):
         self.assertNotEqual(user, CustomUser.objects.first())
         self.assertEqual(user, CustomUser.objects.get(email="new123@gmail.com"))
         self.assertTrue(created)
+
+
+class ProfileModelTests(TestCase):
+    def setUp(self) -> None:
+        CustomUser.objects.create_user(
+            email='user1@gmail.com',
+            first_name='John',
+            last_name='Doe',
+            password='test',
+        )
+
+    def test_profile_image_verbose_name(self):
+        """Test that profile_image verbose name is set correctly."""
+        test_profile: Profile = CustomUser.objects.first().profile
+        self.assertEqual(test_profile._meta.get_field('profile_image').verbose_name, 'profile image')
+
+    def test_date_of_birth_verbose_name(self):
+        """Test that date_of_birth verbose name is set correctly."""
+        test_profile: Profile = CustomUser.objects.first().profile
+        self.assertEqual(test_profile._meta.get_field('date_of_birth').verbose_name, 'date of birth')
+
+    def test_gender_verbose_name(self):
+        """Test that gender verbose name is set correctly."""
+        test_profile: Profile = CustomUser.objects.first().profile
+        self.assertEqual(test_profile._meta.get_field('gender').verbose_name, 'gender')
+
+    def test_phone_number_verbose_name(self):
+        """Test that phone_number verbose name is set correctly."""
+        test_profile: Profile = CustomUser.objects.first().profile
+        self.assertEqual(test_profile._meta.get_field('phone_number').verbose_name, 'phone number')
+
+    def test_is_phone_number_confirmed_verbose_name(self):
+        """Test that is_phone_number_confirmed verbose name is set correctly."""
+        test_profile: Profile = CustomUser.objects.first().profile
+        self.assertEqual(test_profile._meta.get_field('is_phone_number_confirmed').verbose_name,
+                         'is phone number confirmed')
+
+    def test_description_verbose_name(self):
+        """Test that description verbose name is set correctly."""
+        test_profile: Profile = CustomUser.objects.first().profile
+        self.assertEqual(test_profile._meta.get_field('description').verbose_name, 'description')
+
+    def test_model_verbose_name_single(self):
+        """Test that model verbose name is set up correctly."""
+        self.assertEqual(Profile._meta.verbose_name, 'profile')
+
+    def test_model_verbose_name_plural(self):
+        """Test that model verbose name (in plural) is set up correctly."""
+        self.assertEqual(Profile._meta.verbose_name_plural, 'profiles')
+
+    def test_object_name_has_user_object_name(self):
+        """Test that Profile object name is set up properly."""
+        test_profile: Profile = CustomUser.objects.first().profile
+        self.assertEqual(str(test_profile), f"Profile for {test_profile.user}")
+
+    def test_gender_field_params(self):
+        """Test that gender has all required parameters (can be blank, max_length, choices)."""
+        test_profile: Profile = CustomUser.objects.first().profile
+        gender_field = test_profile._meta.get_field('gender')
+
+        self.assertTrue(gender_field.blank)
+        self.assertEqual(gender_field.max_length, 2)
+        self.assertEqual(gender_field.choices, ProfileGenderChoices.choices)
+
+    def test_gender_choices(self):
+        """Test that ProfileGenderChoices has correct choices."""
+        self.assertEqual(ProfileGenderChoices.names, ['MALE', 'FEMALE', 'OTHER'])
+        self.assertEqual(ProfileGenderChoices.values, ['M', 'F', 'O'])
+        self.assertEqual(ProfileGenderChoices.labels, ['Male', 'Female', 'Other'])
+
+    def test_profile_image_field_params(self):
+        """Test that profile_image has all required parameters (can be blank, upload_to, default)."""
+        test_profile: Profile = CustomUser.objects.first().profile
+        profile_image_field = test_profile._meta.get_field('profile_image')
+
+        self.assertTrue(profile_image_field.blank)
+        self.assertTrue(profile_image_field.null)
+        self.assertEqual(profile_image_field.upload_to, get_profile_image_upload_path)
+        self.assertEqual(profile_image_field.default, get_default_profile_image)
+
+    def test_phone_number_params(self):
+        """Test that phone_number has all required parameters (can be blank, is unique)."""
+        test_profile: Profile = CustomUser.objects.first().profile
+        phone_number_field = test_profile._meta.get_field('phone_number')
+
+        self.assertTrue(phone_number_field.blank)
+        self.assertTrue(phone_number_field.null)
+        self.assertTrue(phone_number_field.unique)
 
 
 class SMSLogModelTests(TestCase):
