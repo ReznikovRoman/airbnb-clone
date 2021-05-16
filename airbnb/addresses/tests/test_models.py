@@ -43,7 +43,7 @@ class AddressModelTests(TestCase):
         self.assertEqual(street_field.max_length, 255)
 
     def test_object_name_has_object_id(self):
-        """Test that object name is set up properly."""
+        """Test that Address object name is set up properly."""
         address: Address = Address.objects.first()
         self.assertEqual(str(address), f"Address #{address.id}")
 
