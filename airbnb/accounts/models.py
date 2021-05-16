@@ -149,7 +149,7 @@ def get_default_profile_image_full_url() -> str:
 
 class ProfileGenderChoices(models.TextChoices):
     MALE = 'M', 'Male'
-    HOTEL = 'F', 'Female'
+    FEMALE = 'F', 'Female'
     OTHER = 'O', 'Other'
 
 
@@ -187,11 +187,15 @@ class Profile(models.Model):
         verbose_name='description',
         blank=True,
     )
-    user = models.OneToOneField(
+    user: CustomUser = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         related_name='profile',
         on_delete=models.CASCADE,
     )
+
+    class Meta:
+        verbose_name = 'profile'
+        verbose_name_plural = 'profiles'
 
     def __str__(self):
         return f"Profile for {self.user}"
