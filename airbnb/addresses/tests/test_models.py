@@ -7,7 +7,7 @@ from ..models import Address
 class AddressModelTests(TestCase):
     @classmethod
     def setUpTestData(cls) -> None:
-        test_address = Address.objects.create(
+        Address.objects.create(
             country='USA',
             city='Los Angeles',
             street='Melrose Avenue',
@@ -21,29 +21,31 @@ class AddressModelTests(TestCase):
         """Test that model verbose name (in plural) is set correctly."""
         self.assertEqual(Address._meta.verbose_name_plural, 'addresses')
 
-    def test_country_verbose_name(self):
-        """Test that country verbose name is set correctly."""
-        address: Address = Address.objects.first()
-        country_verbose_name = address._meta.get_field('country').verbose_name
-        self.assertEqual(country_verbose_name, 'country')
+    def test_country_field_params(self):
+        """Test that country field has all required parameters."""
+        country_field = Address._meta.get_field('country')
 
-    def test_city_verbose_name(self):
-        """Test that city verbose name is set correctly."""
-        address: Address = Address.objects.first()
-        city_verbose_name = address._meta.get_field('city').verbose_name
-        self.assertEqual(city_verbose_name, 'city')
+        self.assertEqual(country_field.verbose_name, 'country')
+        self.assertEqual(country_field.max_length, 255)
 
-    def test_street_verbose_name(self):
-        """Test that street verbose name is set correctly."""
-        address: Address = Address.objects.first()
-        street_verbose_name = address._meta.get_field('street').verbose_name
-        self.assertEqual(street_verbose_name, 'street')
+    def test_city_field_params(self):
+        """Test that city field has all required parameters."""
+        city_field = Address._meta.get_field('city')
+
+        self.assertEqual(city_field.verbose_name, 'city')
+        self.assertEqual(city_field.max_length, 255)
+
+    def test_street_field_params(self):
+        """Test that street field has all required parameters."""
+        street_field = Address._meta.get_field('street')
+
+        self.assertEqual(street_field.verbose_name, 'street')
+        self.assertEqual(street_field.max_length, 255)
 
     def test_object_name_has_object_id(self):
         """Test that object name is set up properly."""
         address: Address = Address.objects.first()
-        expected_object_name = f"Address #{address.id}"
-        self.assertEqual(str(address), expected_object_name)
+        self.assertEqual(str(address), f"Address #{address.id}")
 
     def test_country_slug_created_on_object_save(self):
         """Test that `country_slug` is set on object save."""
