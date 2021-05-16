@@ -39,66 +39,68 @@ class CustomUserModelTests(TestCase):
         """Test that model verbose name (in plural) is set correctly."""
         self.assertEqual(CustomUser._meta.verbose_name_plural, 'users')
 
-    def test_email_verbose_name(self):
-        """Test that email verbose name is set correctly."""
-        test_user: CustomUser = CustomUser.objects.first()
-        email_verbose_name = test_user._meta.get_field('email').verbose_name
-        self.assertEqual(email_verbose_name, 'email')
+    def test_email_field_params(self):
+        """Test that email field has all required parameters."""
+        email_field = CustomUser._meta.get_field('email')
 
-    def test_first_name_verbose_name(self):
-        """Test that first_name verbose name is set correctly."""
-        test_user: CustomUser = CustomUser.objects.first()
-        first_name_verbose_name = test_user._meta.get_field('first_name').verbose_name
-        self.assertEqual(first_name_verbose_name, 'first name')
+        self.assertEqual(email_field.verbose_name, 'email')
+        self.assertEqual(email_field.max_length, 60)
+        self.assertTrue(email_field.unique)
 
-    def test_last_name_verbose_name(self):
-        """Test that last_name verbose name is set correctly."""
-        test_user: CustomUser = CustomUser.objects.first()
-        last_name_verbose_name = test_user._meta.get_field('last_name').verbose_name
-        self.assertEqual(last_name_verbose_name, 'last name')
+    def test_first_name_field_params(self):
+        """Test that first_name field has all required parameters."""
+        first_name_field = CustomUser._meta.get_field('first_name')
 
-    def test_is_email_confirmed_verbose_name(self):
-        """Test that is_email_confirmed verbose name is set correctly."""
-        test_user: CustomUser = CustomUser.objects.first()
-        is_email_confirmed_verbose_name = test_user._meta.get_field('is_email_confirmed').verbose_name
-        self.assertEqual(is_email_confirmed_verbose_name, 'email confirmed')
+        self.assertEqual(first_name_field.verbose_name, 'first name')
+        self.assertEqual(first_name_field.max_length, 40)
 
-    def test_date_joined_verbose_name(self):
-        """Test that date_joined verbose name is set correctly."""
-        test_user: CustomUser = CustomUser.objects.first()
-        date_joined_verbose_name = test_user._meta.get_field('date_joined').verbose_name
-        self.assertEqual(date_joined_verbose_name, 'date joined')
+    def test_last_name_field_params(self):
+        """Test that last_name field has all required parameters."""
+        last_name_field = CustomUser._meta.get_field('last_name')
 
-    def test_last_login_verbose_name(self):
-        """Test that last_login verbose name is set correctly."""
-        test_user: CustomUser = CustomUser.objects.first()
-        last_login_verbose_name = test_user._meta.get_field('last_login').verbose_name
-        self.assertEqual(last_login_verbose_name, 'last login')
+        self.assertEqual(last_name_field.verbose_name, 'last name')
+        self.assertEqual(last_name_field.max_length, 40)
 
-    def test_is_email_confirmed_is_false_by_default(self):
-        """Test that is_email_confirmed is set to False by default."""
-        test_user: CustomUser = CustomUser.objects.first()
-        self.assertFalse(test_user.is_email_confirmed)
+    def test_is_email_confirmed_field_params(self):
+        """Test that is_email_confirmed field has all required parameters."""
+        is_email_confirmed_field = CustomUser._meta.get_field('is_email_confirmed')
 
-    def test_is_admin_confirmed_is_false_by_default(self):
-        """Test that is_admin is set to False by default."""
-        test_user: CustomUser = CustomUser.objects.first()
-        self.assertFalse(test_user.is_admin)
+        self.assertEqual(is_email_confirmed_field.verbose_name, 'email confirmed')
+        self.assertFalse(is_email_confirmed_field.default)
 
-    def test_is_staff_confirmed_is_false_by_default(self):
-        """Test that is_staff is set to False by default."""
-        test_user: CustomUser = CustomUser.objects.first()
-        self.assertFalse(test_user.is_staff)
+    def test_date_joined_field_params(self):
+        """Test that date_joined field has all required parameters."""
+        date_joined_field = CustomUser._meta.get_field('date_joined')
 
-    def test_is_superuser_confirmed_is_false_by_default(self):
-        """Test that is_superuser is set to False by default."""
-        test_user: CustomUser = CustomUser.objects.first()
-        self.assertFalse(test_user.is_superuser)
+        self.assertEqual(date_joined_field.verbose_name, 'date joined')
+        self.assertTrue(date_joined_field.auto_now_add)
 
-    def test_is_active_confirmed_is_false_by_default(self):
-        """Test that is_active is set to True by default."""
-        test_user: CustomUser = CustomUser.objects.first()
-        self.assertTrue(test_user.is_active)
+    def test_last_login_field_params(self):
+        """Test that last_login field has all required parameters."""
+        last_login_field = CustomUser._meta.get_field('last_login')
+
+        self.assertEqual(last_login_field.verbose_name, 'last login')
+        self.assertTrue(last_login_field.auto_now)
+
+    def test_is_admin_field_params(self):
+        """Test that is_admin field has all required parameters."""
+        is_admin_field = CustomUser._meta.get_field('is_admin')
+        self.assertFalse(is_admin_field.default)
+
+    def test_is_staff_field_params(self):
+        """Test that is_staff field has all required parameters."""
+        is_staff_field = CustomUser._meta.get_field('is_staff')
+        self.assertFalse(is_staff_field.default)
+
+    def test_is_superuser_field_params(self):
+        """Test that is_superuser field has all required parameters."""
+        is_superuser_field = CustomUser._meta.get_field('is_superuser')
+        self.assertFalse(is_superuser_field.default)
+
+    def test_is_active_field_params(self):
+        """Test that is_active field has all required parameters."""
+        is_active_field = CustomUser._meta.get_field('is_active')
+        self.assertTrue(is_active_field.default)
 
     def test_object_name_is_email(self):
         """Test that CustomUser object name is set up properly."""
@@ -205,83 +207,79 @@ class ProfileModelTests(TestCase):
             password='test',
         )
 
-    def test_profile_image_verbose_name(self):
-        """Test that profile_image verbose name is set correctly."""
-        test_profile: Profile = CustomUser.objects.first().profile
-        self.assertEqual(test_profile._meta.get_field('profile_image').verbose_name, 'profile image')
+    def test_model_verbose_name_single(self):
+        """Test that model verbose name is set correctly."""
+        self.assertEqual(Profile._meta.verbose_name, 'profile')
+
+    def test_model_verbose_name_plural(self):
+        """Test that model verbose name (in plural) is set correctly."""
+        self.assertEqual(Profile._meta.verbose_name_plural, 'profiles')
+
+    def test_profile_image_field_params(self):
+        """Test that profile_image field has all required parameters."""
+        profile_image_field = Profile._meta.get_field('profile_image')
+
+        self.assertEqual(profile_image_field.verbose_name, 'profile image')
+        self.assertTrue(profile_image_field.blank)
+        self.assertTrue(profile_image_field.null)
+        self.assertEqual(profile_image_field.upload_to, get_profile_image_upload_path)
+        self.assertEqual(profile_image_field.default, get_default_profile_image)
 
     def test_date_of_birth_verbose_name(self):
         """Test that date_of_birth verbose name is set correctly."""
         test_profile: Profile = CustomUser.objects.first().profile
         self.assertEqual(test_profile._meta.get_field('date_of_birth').verbose_name, 'date of birth')
 
-    def test_gender_verbose_name(self):
-        """Test that gender verbose name is set correctly."""
-        test_profile: Profile = CustomUser.objects.first().profile
-        self.assertEqual(test_profile._meta.get_field('gender').verbose_name, 'gender')
+    def test_date_of_birth_field_params(self):
+        """Test that date_of_birth field has all required parameters."""
+        date_of_birth_field = Profile._meta.get_field('date_of_birth')
 
-    def test_phone_number_verbose_name(self):
-        """Test that phone_number verbose name is set correctly."""
-        test_profile: Profile = CustomUser.objects.first().profile
-        self.assertEqual(test_profile._meta.get_field('phone_number').verbose_name, 'phone number')
+        self.assertEqual(date_of_birth_field.verbose_name, 'date of birth')
+        self.assertTrue(date_of_birth_field.blank)
+        self.assertTrue(date_of_birth_field.null)
 
-    def test_is_phone_number_confirmed_verbose_name(self):
-        """Test that is_phone_number_confirmed verbose name is set correctly."""
-        test_profile: Profile = CustomUser.objects.first().profile
-        self.assertEqual(test_profile._meta.get_field('is_phone_number_confirmed').verbose_name,
-                         'is phone number confirmed')
+    def test_gender_field_params(self):
+        """Test that gender field has all required parameters."""
+        gender_field = Profile._meta.get_field('gender')
 
-    def test_description_verbose_name(self):
-        """Test that description verbose name is set correctly."""
-        test_profile: Profile = CustomUser.objects.first().profile
-        self.assertEqual(test_profile._meta.get_field('description').verbose_name, 'description')
+        self.assertEqual(gender_field.verbose_name, 'gender')
+        self.assertTrue(gender_field.blank)
+        self.assertEqual(gender_field.max_length, 2)
+        self.assertEqual(gender_field.choices, ProfileGenderChoices.choices)
 
-    def test_model_verbose_name_single(self):
-        """Test that model verbose name is set up correctly."""
-        self.assertEqual(Profile._meta.verbose_name, 'profile')
+    def test_phone_number_field_params(self):
+        """Test that phone_number field has all required parameters."""
+        phone_number_field = Profile._meta.get_field('phone_number')
 
-    def test_model_verbose_name_plural(self):
-        """Test that model verbose name (in plural) is set up correctly."""
-        self.assertEqual(Profile._meta.verbose_name_plural, 'profiles')
+        self.assertEqual(phone_number_field.verbose_name, 'phone number')
+        self.assertTrue(phone_number_field.blank)
+        self.assertTrue(phone_number_field.null)
+        self.assertTrue(phone_number_field.unique)
+
+    def test_is_phone_number_confirmed_field_params(self):
+        """Test that is_phone_number_confirmed field has all required parameters."""
+        is_phone_number_confirmed_field = Profile._meta.get_field('is_phone_number_confirmed')
+
+        self.assertEqual(is_phone_number_confirmed_field.verbose_name, 'is phone number confirmed')
+        self.assertFalse(is_phone_number_confirmed_field.default)
+
+    def test_description_field_params(self):
+        """Test that description field has all required parameters."""
+        description_field = Profile._meta.get_field('description')
+
+        self.assertEqual(description_field.verbose_name, 'description')
+        self.assertTrue(description_field.blank)
 
     def test_object_name_has_user_object_name(self):
         """Test that Profile object name is set up properly."""
         test_profile: Profile = CustomUser.objects.first().profile
         self.assertEqual(str(test_profile), f"Profile for {test_profile.user}")
 
-    def test_gender_field_params(self):
-        """Test that gender has all required parameters (can be blank, max_length, choices)."""
-        test_profile: Profile = CustomUser.objects.first().profile
-        gender_field = test_profile._meta.get_field('gender')
-
-        self.assertTrue(gender_field.blank)
-        self.assertEqual(gender_field.max_length, 2)
-        self.assertEqual(gender_field.choices, ProfileGenderChoices.choices)
-
     def test_gender_choices(self):
         """Test that ProfileGenderChoices has correct choices."""
         self.assertEqual(ProfileGenderChoices.names, ['MALE', 'FEMALE', 'OTHER'])
         self.assertEqual(ProfileGenderChoices.values, ['M', 'F', 'O'])
         self.assertEqual(ProfileGenderChoices.labels, ['Male', 'Female', 'Other'])
-
-    def test_profile_image_field_params(self):
-        """Test that profile_image has all required parameters (can be blank, upload_to, default)."""
-        test_profile: Profile = CustomUser.objects.first().profile
-        profile_image_field = test_profile._meta.get_field('profile_image')
-
-        self.assertTrue(profile_image_field.blank)
-        self.assertTrue(profile_image_field.null)
-        self.assertEqual(profile_image_field.upload_to, get_profile_image_upload_path)
-        self.assertEqual(profile_image_field.default, get_default_profile_image)
-
-    def test_phone_number_params(self):
-        """Test that phone_number has all required parameters (can be blank, is unique)."""
-        test_profile: Profile = CustomUser.objects.first().profile
-        phone_number_field = test_profile._meta.get_field('phone_number')
-
-        self.assertTrue(phone_number_field.blank)
-        self.assertTrue(phone_number_field.null)
-        self.assertTrue(phone_number_field.unique)
 
 
 class SMSLogModelTests(TestCase):
@@ -293,11 +291,6 @@ class SMSLogModelTests(TestCase):
             password='test',
         )
 
-    def test_sms_code_verbose_name(self):
-        """Test that sms_code verbose name is set up correctly."""
-        sms_log: SMSLog = SMSLog.objects.create(sms_code='1234', profile=CustomUser.objects.first().profile)
-        self.assertEqual(sms_log._meta.get_field('sms_code').verbose_name, '4 digits sms code')
-
     def test_model_verbose_name_single(self):
         """Test that model verbose name is set correctly."""
         self.assertEqual(SMSLog._meta.verbose_name, 'sms log')
@@ -306,16 +299,16 @@ class SMSLogModelTests(TestCase):
         """Test that model verbose name (in plural) is set correctly."""
         self.assertEqual(SMSLog._meta.verbose_name_plural, 'sms logs')
 
+    def test_sms_code_field_params(self):
+        """Test that sms_code field has all required parameters."""
+        sms_code_field = SMSLog._meta.get_field('sms_code')
+
+        self.assertEqual(sms_code_field.verbose_name, '4 digits sms code')
+        self.assertTrue(sms_code_field.blank)
+        self.assertEqual(sms_code_field.max_length, 4)
+        self.assertIn(MinLengthValidator(4), sms_code_field.validators)
+
     def test_object_name_has_sms_code_and_user_email(self):
         """Test that SMSLog object name is set up properly."""
         sms_log: SMSLog = SMSLog.objects.create(sms_code='1234', profile=CustomUser.objects.first().profile)
         self.assertEqual(str(sms_log), f"Code `{sms_log.sms_code}` for {sms_log.profile.user}")
-
-    def test_sms_code_validators(self):
-        """Test that sms_code has all required validators (max length, min length, not blank)."""
-        sms_log: SMSLog = SMSLog.objects.create(sms_code='1234', profile=CustomUser.objects.first().profile)
-        sms_code_field = sms_log._meta.get_field('sms_code')
-
-        self.assertTrue(sms_code_field.blank)
-        self.assertEqual(sms_code_field.max_length, 4)
-        self.assertIn(MinLengthValidator(4), sms_code_field.validators)
