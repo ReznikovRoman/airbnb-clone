@@ -1,7 +1,8 @@
 from django.test import TestCase
+from django.core.validators import MinLengthValidator
 from django.contrib.auth.models import Permission, ContentType
 
-from ..models import CustomUser
+from ..models import CustomUser, SMSLog
 
 
 class CustomUserModelTests(TestCase):
@@ -99,7 +100,7 @@ class CustomUserModelTests(TestCase):
         self.assertTrue(test_user.is_active)
 
     def test_object_name_is_email(self):
-        """Test that object name is set up properly."""
+        """Test that CustomUser object name is set up properly."""
         test_user: CustomUser = CustomUser.objects.first()
         self.assertEqual(str(test_user), str(test_user.email))
 
@@ -194,7 +195,38 @@ class CustomUserModelTests(TestCase):
         self.assertTrue(created)
 
 
+class SMSLogModelTests(TestCase):
+    def setUp(self) -> None:
+        CustomUser.objects.create_user(
+            email='user1@gmail.com',
+            first_name='John',
+            last_name='Doe',
+            password='test',
+        )
 
+    def test_sms_code_verbose_name(self):
+        """Test that sms_code verbose name is set up correctly."""
+        sms_log: SMSLog = SMSLog.objects.create(sms_code='1234', profile=CustomUser.objects.first().profile)
+        self.assertEqual(sms_log._meta.get_field('sms_code').verbose_name, '4 digits sms code')
 
+    def test_model_verbose_name_single(self):
+        """Test that model verbose name is set correctly."""
+        self.assertEqual(SMSLog._meta.verbose_name, 'sms log')
 
+    def test_model_verbose_name_plural(self):
+        """Test that model verbose name (in plural) is set correctly."""
+        self.assertEqual(SMSLog._meta.verbose_name_plural, 'sms logs')
 
+    def test_object_name_has_sms_code_and_user_email(self):
+        """Test that SMSLog object name is set up properly."""
+        sms_log: SMSLog = SMSLog.objects.create(sms_code='1234', profile=CustomUser.objects.first().profile)
+        self.assertEqual(str(sms_log), f"Code `{sms_log.sms_code}` for {sms_log.profile.user}")
+
+    def test_sms_code_validators(self):
+        """Test that sms_code has all required validators (max length, min length, not blank)."""
+        sms_log: SMSLog = SMSLog.objects.create(sms_code='1234', profile=CustomUser.objects.first().profile)
+        sms_code_field = sms_log._meta.get_field('sms_code')
+
+        self.assertTrue(sms_code_field.blank)
+        self.assertEqual(sms_code_field.max_length, 4)
+        self.assertIn(MinLengthValidator(4), sms_code_field.validators)
