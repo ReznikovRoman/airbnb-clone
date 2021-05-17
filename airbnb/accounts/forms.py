@@ -1,3 +1,5 @@
+from typing import Union
+
 from django import forms
 from django.utils import timezone
 from django.template import loader
@@ -143,25 +145,22 @@ class VerificationCodeForm(forms.Form):
     )
 
     def clean_digit_1(self):
-        data = self.cleaned_data['digit_1']
-        if not 0 <= int(data) <= 9:
-            raise ValidationError('Digit must be in range [0, 9].')
-        return data
+        return self._clean_digit(digit_index=1)
 
     def clean_digit_2(self):
-        data = self.cleaned_data['digit_2']
-        if not 0 <= int(data) <= 9:
-            raise ValidationError('Digit must be in range [0, 9].')
-        return data
+        return self._clean_digit(digit_index=2)
 
     def clean_digit_3(self):
-        data = self.cleaned_data['digit_3']
-        if not 0 <= int(data) <= 9:
-            raise ValidationError('Digit must be in range [0, 9].')
-        return data
+        return self._clean_digit(digit_index=3)
 
     def clean_digit_4(self):
-        data = self.cleaned_data['digit_4']
+        return self._clean_digit(digit_index=4)
+
+    def _clean_digit(self, digit_index: Union[str, int], digit_template: str = 'digit_'):
+        digit = f"{digit_template}{str(digit_index)}"
+        data = self.cleaned_data.get(digit)
+
         if not 0 <= int(data) <= 9:
             raise ValidationError('Digit must be in range [0, 9].')
+
         return data
