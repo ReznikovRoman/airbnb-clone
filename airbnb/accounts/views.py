@@ -79,7 +79,7 @@ class AccountActivationView(generic.View):
             user = None
 
         if user is not None and account_activation_token.check_token(user, token):
-            update_user_email_confirmation_status(user, email_confirmation_status=True)
+            update_user_email_confirmation_status(user, is_email_confirmed=True)
             login(request, user)
             messages.add_message(request, messages.SUCCESS, message='You have successfully confirmed your email.')
             return redirect(reverse('home_page'))
@@ -138,7 +138,7 @@ class PersonalInfoEditView(LoginRequiredMixin,
                     level=messages.SUCCESS,
                     message="We've sent a confirmation email to your email address"
                 )
-                update_user_email_confirmation_status(user, email_confirmation_status=False)
+                update_user_email_confirmation_status(user, is_email_confirmed=False)
                 send_verification_link(get_current_site(request).domain, request.scheme, user)
 
         if self.profile_form.is_valid():
@@ -172,7 +172,7 @@ class PersonalInfoEditView(LoginRequiredMixin,
                                     "You can confirm your phone number at the Login & Security panel."
                         )
                 else:
-                    update_phone_number_confirmation_status(user_profile, phone_number_confirmation_status=False)
+                    update_phone_number_confirmation_status(user_profile, is_phone_number_confirmed=False)
 
             return redirect('accounts:user_info_edit')
 
@@ -326,7 +326,7 @@ class PhoneNumberConfirmPageView(UnconfirmedPhoneNumberRequiredMixin,
                     user_profile=request.user.profile,
                     verification_code=get_verification_code_from_digits_dict(self.verification_code_form.cleaned_data)
             ):
-                update_phone_number_confirmation_status(request.user.profile, phone_number_confirmation_status=True)
+                update_phone_number_confirmation_status(request.user.profile, is_phone_number_confirmed=True)
                 messages.add_message(
                     request,
                     level=messages.SUCCESS,

@@ -81,7 +81,7 @@ def get_user_by_email(email: str) -> QuerySet[CustomUser]:
     return CustomUser.objects.filter(email=CustomUserManager.normalize_email(email))
 
 
-def get_user_from_uid(uid) -> CustomUser:
+def get_user_from_uid(uid: str) -> CustomUser:
     uid = force_text(urlsafe_base64_decode(force_text(uid)))
     user: CustomUser = CustomUser.objects.get(id=uid)
     return user
@@ -108,14 +108,13 @@ def generate_random_sms_code() -> str:
     return str(random.randint(0, 9999)).zfill(4)
 
 
-def update_phone_number_confirmation_status(user_profile: Profile,
-                                            phone_number_confirmation_status: bool) -> None:
-    user_profile.is_phone_number_confirmed = phone_number_confirmation_status
+def update_phone_number_confirmation_status(user_profile: Profile, is_phone_number_confirmed: bool) -> None:
+    user_profile.is_phone_number_confirmed = is_phone_number_confirmed
     user_profile.save()
 
 
-def update_user_email_confirmation_status(user: CustomUser, email_confirmation_status: bool) -> None:
-    user.is_email_confirmed = email_confirmation_status
+def update_user_email_confirmation_status(user: CustomUser, is_email_confirmed: bool) -> None:
+    user.is_email_confirmed = is_email_confirmed
     user.save()
 
 
@@ -140,7 +139,7 @@ def handle_phone_number_change(user_profile: Profile, site_domain: str, new_phon
     sms_log.sms_code = sms_verification_code
     sms_log.save()
 
-    update_phone_number_confirmation_status(user_profile, phone_number_confirmation_status=False)
+    update_phone_number_confirmation_status(user_profile, is_phone_number_confirmed=False)
 
     return TwilioShortPayload.parse_raw(send_sms_by_twilio.delay(
         body=f"Your {site_domain} verification code is: {sms_verification_code}",
