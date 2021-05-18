@@ -1,16 +1,18 @@
-from django.contrib.sites.shortcuts import get_current_site
-from django.views import generic
 from django.http import HttpRequest
 from django.urls import reverse_lazy
+from django.views import generic
 from django.contrib import messages
 from django.shortcuts import redirect, get_object_or_404, reverse
 from django.contrib.auth import login
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.sites.shortcuts import get_current_site
 
 from common.types import AuthenticatedHttpRequest
 from hosts.models import RealtyHost
 from realty.models import CustomDeleteQueryset, Realty
+from common.constants import (VERIFICATION_CODE_STATUS_DELIVERED, VERIFICATION_CODE_STATUS_FAILED,
+                              TWILIO_MESSAGE_STATUS_CODES_FAILED)
 from configs.redis_conf import r
 from realty.services.realty import get_available_realty_by_host
 from .forms import (SignUpForm, CustomPasswordResetForm,
@@ -21,8 +23,6 @@ from .mixins import (AnonymousUserRequiredMixin, UnconfirmedPhoneNumberRequiredM
 from .services import (get_user_from_uid, send_verification_link, handle_phone_number_change,
                        is_verification_code_for_profile_valid, update_phone_number_confirmation_status,
                        get_verification_code_from_digits_dict, update_user_email_confirmation_status)
-from common.constants import (VERIFICATION_CODE_STATUS_DELIVERED, VERIFICATION_CODE_STATUS_FAILED,
-                              TWILIO_MESSAGE_STATUS_CODES_FAILED)
 
 
 class SignUpView(AnonymousUserRequiredMixin,
@@ -44,7 +44,7 @@ class SignUpView(AnonymousUserRequiredMixin,
 
         if form.is_valid():
             user = form.save()
-            send_verification_link(request, user)
+            send_verification_link(get_current_site(request).domain, request.scheme, user)
             return redirect('accounts:login')
 
         return self.render_to_response(
@@ -71,6 +71,7 @@ class CustomPasswordResetView(auth_views.PasswordResetView):
 
 class AccountActivationView(generic.View):
     """View for confirming user's email."""
+
     def get(self, request: HttpRequest, uidb64, token, *args, **kwargs):
         try:
             user = get_user_from_uid(uidb64)
@@ -106,7 +107,7 @@ class PersonalInfoEditView(LoginRequiredMixin,
     profile_form: ProfileForm = None
     user_info_form: UserInfoForm = None
 
-    def dispatch(self, request: HttpRequest, *args, **kwargs):
+    def dispatch(self, request: AuthenticatedHttpRequest, *args, **kwargs):
         self.profile_form = ProfileForm(
             data=request.POST or None,
             files=request.FILES or None,
@@ -138,7 +139,7 @@ class PersonalInfoEditView(LoginRequiredMixin,
                     message="We've sent a confirmation email to your email address"
                 )
                 update_user_email_confirmation_status(user, email_confirmation_status=False)
-                send_verification_link(request, user)
+                send_verification_link(get_current_site(request).domain, request.scheme, user)
 
         if self.profile_form.is_valid():
             user_profile: Profile = self.profile_form.save()
@@ -220,7 +221,7 @@ class ProfileImageEditView(LoginRequiredMixin,
 
     profile_image_form: ProfileImageForm = None
 
-    def dispatch(self, request: HttpRequest, *args, **kwargs):
+    def dispatch(self, request: AuthenticatedHttpRequest, *args, **kwargs):
         self.profile_image_form = ProfileImageForm(
             data=request.POST or None,
             files=request.FILES or None,
@@ -254,7 +255,7 @@ class ProfileDescriptionEditView(LoginRequiredMixin,
 
     profile_description_form: ProfileDescriptionForm = None
 
-    def dispatch(self, request: HttpRequest, *args, **kwargs):
+    def dispatch(self, request: AuthenticatedHttpRequest, *args, **kwargs):
         self.profile_description_form = ProfileDescriptionForm(
             data=request.POST or None,
             instance=request.user.profile,
@@ -351,8 +352,9 @@ class SendConfirmationEmailView(UnconfirmedEmailRequiredMixin,
                                 LoginRequiredMixin,
                                 generic.View):
     """View for sending a confirmation email to a user."""
-    def get(self, request: HttpRequest, *args, **kwargs):
-        send_verification_link(request, request.user)
+
+    def get(self, request: AuthenticatedHttpRequest, *args, **kwargs):
+        send_verification_link(get_current_site(request).domain, request.scheme, request.user)
         messages.add_message(
             request,
             level=messages.SUCCESS,
