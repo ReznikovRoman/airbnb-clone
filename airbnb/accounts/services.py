@@ -110,12 +110,12 @@ def generate_random_sms_code() -> str:
 
 def update_phone_number_confirmation_status(user_profile: Profile, is_phone_number_confirmed: bool) -> None:
     user_profile.is_phone_number_confirmed = is_phone_number_confirmed
-    user_profile.save()
+    user_profile.save(update_fields=["is_phone_number_confirmed"])
 
 
 def update_user_email_confirmation_status(user: CustomUser, is_email_confirmed: bool) -> None:
     user.is_email_confirmed = is_email_confirmed
-    user.save()
+    user.save(update_fields=["is_email_confirmed"])
 
 
 def handle_phone_number_change(user_profile: Profile, site_domain: str, new_phone_number: str) -> TwilioShortPayload:
@@ -137,7 +137,7 @@ def handle_phone_number_change(user_profile: Profile, site_domain: str, new_phon
 
     sms_verification_code = generate_random_sms_code()
     sms_log.sms_code = sms_verification_code
-    sms_log.save()
+    sms_log.save(update_fields=["sms_code"])
 
     update_phone_number_confirmation_status(user_profile, is_phone_number_confirmed=False)
 

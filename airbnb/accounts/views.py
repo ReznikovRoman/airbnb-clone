@@ -9,8 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sites.shortcuts import get_current_site
 
 from common.types import AuthenticatedHttpRequest
-from hosts.models import RealtyHost
-from realty.models import CustomDeleteQueryset, Realty
+from hosts.services import get_host_or_none_by_user
 from common.constants import (VERIFICATION_CODE_STATUS_DELIVERED, VERIFICATION_CODE_STATUS_FAILED,
                               TWILIO_MESSAGE_STATUS_CODES_FAILED)
 from configs.redis_conf import r
@@ -201,9 +200,10 @@ class ProfileShowView(generic.base.TemplateResponseMixin,
         return super(ProfileShowView, self).dispatch(request, *args, **kwargs)
 
     def get(self, request: HttpRequest, *args, **kwargs):
-        host_listings: 'CustomDeleteQueryset[Realty]' = Realty.available.none()
-        if RealtyHost.objects.filter(user=self.profile_owner).exists():
-            host_listings = get_available_realty_by_host(RealtyHost.objects.get(user=self.profile_owner))
+        host_listings = get_available_realty_by_host(
+            realty_host=get_host_or_none_by_user(user=self.profile_owner)
+        )
+
         return self.render_to_response(
             context={
                 'profile_owner': self.profile_owner,
