@@ -1,11 +1,10 @@
 from django.core import mail
 from django.test import TestCase, override_settings
-from django.http import HttpResponse, HttpRequest
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 
 from accounts.models import CustomUser
 from .. import views
-from ..forms import SignUpForm
+from ..forms import SignUpForm, CustomPasswordResetForm
 
 
 class SignUpViewTests(TestCase):
@@ -130,3 +129,51 @@ class LoginViewTests(TestCase):
         """Test that view uses a correct HTML template."""
         response = self.client.get(reverse('accounts:login'))
         self.assertTemplateUsed(response, 'accounts/registration/login.html')
+
+
+class CustomPasswordResetViewTests(TestCase):
+    def setUp(self) -> None:
+        CustomUser.objects.create_user(
+            email='user1@gmail.com',
+            first_name='John',
+            last_name='Doe',
+            password='test'
+        )
+
+    def test_view_correct_attrs(self):
+        """Test that view has correct attributes."""
+        self.assertEqual(views.CustomPasswordResetView.template_name, 'accounts/registration/password_reset.html')
+        self.assertEqual(views.CustomPasswordResetView.success_url, reverse_lazy('accounts:password_reset_done'))
+        self.assertEqual(views.CustomPasswordResetView.html_email_template_name,
+                         'accounts/registration/password_reset_email.html')
+        self.assertEqual(views.CustomPasswordResetView.email_template_name,
+                         'accounts/registration/password_reset_email.html')
+        self.assertEqual(views.CustomPasswordResetView.form_class, CustomPasswordResetForm)
+
+    def test_view_url_accessible_by_name(self):
+        """Test that url is accessible by its name."""
+        self.client.login(email='user1@gmail.com', password='test')
+        response = self.client.get(reverse('accounts:password_reset'))
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_uses_correct_template(self):
+        """Test that view uses a correct HTML template."""
+        self.client.login(email='user1@gmail.com', password='test')
+        response = self.client.get(reverse('accounts:password_reset'))
+
+        self.assertTemplateUsed(response, 'accounts/registration/password_reset.html')
+
+    @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+    def test_sends_email_using_celery_on_success(self):
+        """Test that view sends a custom email using Celery on the successful form submission."""
+        form_data = {
+            'email': 'user1@gmail.com',
+        }
+        self.client.login(email='user1@gmail.com', password='test')
+        self.client.post(reverse('accounts:password_reset'), data=form_data)
+
+        test_email = mail.outbox[0]
+
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(test_email.to, [form_data['email']])
