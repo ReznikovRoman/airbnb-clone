@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'bootstrap4',
     'debug_toolbar',
+    'django_extensions',
     'django_filters',
     'django_inlinecss',
     'django_apscheduler',
