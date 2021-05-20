@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpRequest
 from django.urls import reverse
 
 from accounts.models import CustomUser
-from ..views import SignUpView
+from .. import views
 from ..forms import SignUpForm
 
 
@@ -17,13 +17,13 @@ class SignUpViewTests(TestCase):
             password='test'
         )
 
-    def test_view_correct_params(self):
+    def test_view_correct_attrs(self):
         """Test that view has correct attributes."""
-        self.assertEqual(SignUpView.form_class, SignUpForm)
-        self.assertEqual(SignUpView.template_name, 'accounts/registration/signup.html')
+        self.assertEqual(views.SignUpView.form_class, SignUpForm)
+        self.assertEqual(views.SignUpView.template_name, 'accounts/registration/signup.html')
 
     def test_view_url_accessible_by_name(self):
-        """Test that url is accessible by its name (`reverse url`)."""
+        """Test that url is accessible by its name."""
         response = self.client.get(reverse('accounts:signup'))
         self.assertEqual(response.status_code, 200)
 
@@ -99,3 +99,34 @@ class SignUpViewTests(TestCase):
 
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(test_email.to, [form_data['email']])
+
+
+class LoginViewTests(TestCase):
+    def setUp(self) -> None:
+        CustomUser.objects.create_user(
+            email='user1@gmail.com',
+            first_name='John',
+            last_name='Doe',
+            password='test'
+        )
+
+    def test_view_correct_attrs(self):
+        """Test that view has correct attributes."""
+        self.assertEqual(views.LoginView.template_name, 'accounts/registration/login.html')
+
+    def test_view_url_accessible_by_name(self):
+        """Test that url is accessible by its name."""
+        response = self.client.get(reverse('accounts:login'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_redirect_if_logged_in(self):
+        """Test that an authenticated user is redirected to the home page."""
+        self.client.login(email='user1@gmail.com', password='test')
+        response = self.client.get(reverse('accounts:login'))
+
+        self.assertRedirects(response, reverse('home_page'))
+
+    def test_uses_correct_template(self):
+        """Test that view uses a correct HTML template."""
+        response = self.client.get(reverse('accounts:login'))
+        self.assertTemplateUsed(response, 'accounts/registration/login.html')
