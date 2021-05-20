@@ -1,5 +1,5 @@
 import random
-from typing import Dict
+from typing import Dict, Union, Optional
 
 from django.conf import settings
 from django.db.models import QuerySet
@@ -75,6 +75,10 @@ def send_verification_link(domain: str, scheme: str, user: CustomUser) -> None:
         email_to=[user.email],
         alternatives=[(html_content, 'text/html')]
     )
+
+
+def get_user_by_pk(pk: Union[int, str]) -> Optional[CustomUser]:
+    return get_object_or_404(CustomUser, pk=pk)
 
 
 def get_user_by_email(email: str) -> QuerySet[CustomUser]:

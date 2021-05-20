@@ -2,7 +2,7 @@ from django.http import HttpRequest
 from django.urls import reverse_lazy
 from django.views import generic
 from django.contrib import messages
-from django.shortcuts import redirect, get_object_or_404, reverse
+from django.shortcuts import redirect, reverse
 from django.contrib.auth import login
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -21,7 +21,7 @@ from .tokens import account_activation_token
 from .mixins import (AnonymousUserRequiredMixin, UnconfirmedPhoneNumberRequiredMixin, UnconfirmedEmailRequiredMixin,)
 from .services import (get_user_from_uid, send_verification_link, handle_phone_number_change,
                        is_verification_code_for_profile_valid, update_phone_number_confirmation_status,
-                       get_verification_code_from_digits_dict, update_user_email_confirmation_status)
+                       get_verification_code_from_digits_dict, update_user_email_confirmation_status, get_user_by_pk)
 
 
 class SignUpView(AnonymousUserRequiredMixin,
@@ -192,7 +192,7 @@ class ProfileShowView(generic.base.TemplateResponseMixin,
     is_profile_of_current_user: bool = False  # True if the profile is the current user's profile, False otherwise
 
     def dispatch(self, request: HttpRequest, *args, **kwargs):
-        self.profile_owner = get_object_or_404(CustomUser, pk=kwargs.get('user_pk'))
+        self.profile_owner = get_user_by_pk(pk=kwargs.get('user_pk'))
 
         if self.profile_owner == request.user:
             self.is_profile_of_current_user = True

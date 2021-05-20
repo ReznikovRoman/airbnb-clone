@@ -1,6 +1,7 @@
 from unittest import mock
 
 from django.core import mail
+from django.http import Http404
 from django.test import TestCase, override_settings
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
@@ -14,7 +15,7 @@ from ..tokens import account_activation_token
 from ..services import (has_user_profile_image, get_user_by_email, get_user_from_uid, add_user_to_group,
                         update_phone_number_confirmation_status, update_user_email_confirmation_status,
                         get_verification_code_from_digits_dict, is_verification_code_for_profile_valid,
-                        handle_phone_number_change, send_greeting_email, send_verification_link)
+                        handle_phone_number_change, send_greeting_email, send_verification_link, get_user_by_pk)
 
 
 class AccountsServicesTests(TestCase):
@@ -81,8 +82,17 @@ class AccountsServicesTests(TestCase):
 
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(test_email.subject, 'Activate your account')
-        self.assertEqual(test_email.body, test_content)
+        self.assertEqual(str(test_email.body), str(test_content))
         self.assertEqual(test_email.to, [test_user.email])
+
+    def test_get_user_by_pk_existing_user(self):
+        """get_user_by_pk() returns a CustomUser object if user with the given `pk` exists."""
+        self.assertEqual(get_user_by_pk(pk=7), CustomUser.objects.get(pk=7))
+
+    def test_get_user_by_pk_invalid_pk(self):
+        """get_user_by_pk() raises a Http404 exception if there is no user with the given `pk`."""
+        with self.assertRaises(Http404):
+            get_user_by_pk(pk=1)
 
     def test_get_user_by_email_existing_user(self):
         """get_user_by_email() returns a QuerySet with a CustomUser if user with the given `email` exists."""
