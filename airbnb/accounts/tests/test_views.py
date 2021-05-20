@@ -1,3 +1,5 @@
+import re
+
 from django.core import mail
 from django.test import TestCase, override_settings
 from django.urls import reverse, reverse_lazy
@@ -177,3 +179,69 @@ class CustomPasswordResetViewTests(TestCase):
 
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(test_email.to, [form_data['email']])
+
+
+class AccountActivationViewTests(TestCase):
+    def setUp(self) -> None:
+        CustomUser.objects.create_user(
+            email='user1@gmail.com',
+            first_name='John',
+            last_name='Doe',
+            password='test'
+        )
+
+    @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+    def test_email_confirmed_on_success(self):
+        """Test that user's email is confirmed on successful activation."""
+        form_data = {
+            'email': 'new1@gmail.com',
+            'first_name': 'New 1',
+            'last_name': 'User 1',
+            'password1': 'test',
+            'password2': 'test',
+        }
+        self.client.post(reverse('accounts:signup'), data=form_data)
+
+        test_email = mail.outbox[0]
+
+        link = re.search(r'href=[\'"]?([^\'" >]+)', test_email.body).group(1)
+
+        self.client.get(link)
+
+        self.assertTrue(CustomUser.objects.get(email='new1@gmail.com').is_email_confirmed)
+
+    @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+    def test_logged_in_on_success(self):
+        """Test that user is logged in on successful activation."""
+        form_data = {
+            'email': 'new1@gmail.com',
+            'first_name': 'New 1',
+            'last_name': 'User 1',
+            'password1': 'test',
+            'password2': 'test',
+        }
+        self.client.post(reverse('accounts:signup'), data=form_data)
+        test_email = mail.outbox[0]
+        link = re.search(r'href=[\'"]?([^\'" >]+)', test_email.body).group(1)
+        self.client.get(link)
+        response = self.client.get(reverse('home_page'))
+
+        self.assertTrue(response.context['user'].is_authenticated)
+
+    @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+    def test_redirect_on_success(self):
+        """Test that user is redirected on successful activation."""
+        form_data = {
+            'email': 'new1@gmail.com',
+            'first_name': 'New 1',
+            'last_name': 'User 1',
+            'password1': 'test',
+            'password2': 'test',
+        }
+        self.client.post(reverse('accounts:signup'), data=form_data)
+        test_email = mail.outbox[0]
+        link = re.search(r'href=[\'"]?([^\'" >]+)', test_email.body).group(1)
+
+        response = self.client.get(link)
+
+        self.assertRedirects(response, reverse('home_page'))
