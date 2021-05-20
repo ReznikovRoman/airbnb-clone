@@ -225,7 +225,7 @@ class RealtyEditView(LoginRequiredMixin,
                 if not realty_id:  # if it is not a new Realty
                     self.session_handler.flush_keys_collector()
 
-                new_realty.save()
+                new_realty.save(update_fields=["location"])
 
                 self.realty_form.save_m2m()  # save many to many fields
 
@@ -235,7 +235,7 @@ class RealtyEditView(LoginRequiredMixin,
                     for image_form in valid_image_formsets:
                         new_image: RealtyImage = image_form.save(commit=False)
                         new_image.realty = new_realty
-                        new_image.save()
+                        new_image.save(update_fields=["realty"])
 
             # TODO: Redirect to Host's listings dashboard
             return redirect(reverse('realty:all'))

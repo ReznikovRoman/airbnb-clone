@@ -19,6 +19,7 @@ def get_amenity_ids_from_session(session_handler: SessionHandler) -> Optional[Qu
 def set_realty_host_by_user(realty: Realty, user: settings.AUTH_USER_MODEL) -> None:
     host = RealtyHost.objects.get_or_create(user=user)[0]
     realty.host = host
+    realty.save(update_fields=["host"])
 
 
 def get_all_available_realty() -> 'CustomDeleteQueryset[Realty]':
