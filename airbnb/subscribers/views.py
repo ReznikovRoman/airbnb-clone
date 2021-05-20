@@ -11,6 +11,7 @@ from .services import get_subscriber_by_user
 
 class SubscribeView(generic.View):
     """View for handling new subscriptions."""
+
     def post(self, request: HttpRequest, *args, **kwargs):
         subscription_form = SubscriberEmailForm(request.POST)
 
@@ -24,7 +25,7 @@ class SubscribeView(generic.View):
                     not get_subscriber_by_user(user=user).exists():
                 new_subscriber.user = user
 
-            new_subscriber.save()
+            new_subscriber.save(update_fields=["user"])
 
             messages.add_message(request, messages.SUCCESS, message='You have successfully subscribed.')
         else:
