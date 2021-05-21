@@ -13,14 +13,15 @@ def get_subscriber_by_user(user: settings.AUTH_USER_MODEL) -> QuerySet[Subscribe
     return Subscriber.objects.filter(user=user)
 
 
-def set_user_for_subscriber(user: CustomUser) -> None:
+def set_user_for_subscriber(user: CustomUser) -> bool:
     """Update user field in the Subscriber object if there is subscriber with <user.email> email."""
     subscriber_qs = get_subscriber_by_email(user.email)
     if subscriber_qs.exists():
-        subscriber_qs.update(user=user)
+        return subscriber_qs.update(user=user)
+    return False
 
 
-def update_email_for_subscriber_by_user(user: CustomUser) -> None:
+def update_email_for_subscriber_by_user(user: CustomUser) -> bool:
     """Update subscriber's email if User has changed an email, but there was subscriber with 'previous' email.
 
     E.g. user has subscribed to the newsletter with email <first@email.com>,
@@ -28,4 +29,5 @@ def update_email_for_subscriber_by_user(user: CustomUser) -> None:
     """
     subscriber_qs = get_subscriber_by_email(user.email_tracker.previous('email'))
     if subscriber_qs.exists():
-        subscriber_qs.update(email=user.email)
+        return subscriber_qs.update(email=user.email)
+    return False
