@@ -87,7 +87,7 @@ class AccountsServicesTests(TestCase):
 
     def test_get_user_by_pk_existing_user(self):
         """get_user_by_pk() returns a CustomUser object if user with the given `pk` exists."""
-        self.assertEqual(get_user_by_pk(pk=7), CustomUser.objects.get(pk=7))
+        self.assertEqual(get_user_by_pk(pk=CustomUser.objects.first().pk), CustomUser.objects.first())
 
     def test_get_user_by_pk_invalid_pk(self):
         """get_user_by_pk() raises a Http404 exception if there is no user with the given `pk`."""
