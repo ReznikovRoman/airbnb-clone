@@ -16,16 +16,14 @@ class SubscribeView(generic.View):
         subscription_form = SubscriberEmailForm(request.POST)
 
         if subscription_form.is_valid():
-            new_subscriber: Subscriber = subscription_form.save(commit=False)
+            new_subscriber: Subscriber = subscription_form.save()
             user_qs = get_user_by_email(subscription_form.cleaned_data['email'])
             user = user_qs.first()
 
             # if there is a user with the given email and he is not subscribed
-            if user_qs.exists() and \
-                    not get_subscriber_by_user(user=user).exists():
+            if user_qs.exists() and (not get_subscriber_by_user(user=user).exists()):
                 new_subscriber.user = user
-
-            new_subscriber.save(update_fields=["user"])
+                new_subscriber.save(update_fields=["user"])
 
             messages.add_message(request, messages.SUCCESS, message='You have successfully subscribed.')
         else:
