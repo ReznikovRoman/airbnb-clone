@@ -217,6 +217,10 @@ LOGIN_REDIRECT_URL = reverse_lazy('home_page')
 LOGOUT_REDIRECT_URL = reverse_lazy('home_page')
 
 
+# CHARSET
+DEFAULT_CHARSET = "utf-8"
+
+
 # MESSAGES
 MESSAGE_TAGS = {
     messages_constants.DEBUG: 'alert-secondary',
@@ -248,6 +252,7 @@ REST_FRAMEWORK = {
 REDIS_HOST = os.environ.get('AIRBNB_REDIS_HOST', 'localhost')
 REDIS_PORT = 6379
 REDIS_DB = 2
+REDIS_DECODE_RESPONSES = True
 
 
 # CACHE
