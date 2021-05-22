@@ -23,7 +23,9 @@ from .services import (get_user_from_uid, send_verification_link, handle_phone_n
                        get_verification_code_from_digits_dict, update_user_email_confirmation_status, get_user_by_pk,
                        set_phone_code_status_by_user_id, get_phone_code_status_by_user_id)
 from .constants import (EMAIL_SENT_SUCCESSFULLY_RESPONSE_MESSAGE, SMS_SENT_SUCCESSFULLY_RESPONSE_MESSAGE,
-                        SMS_NOT_DELIVERED_RESPONSE_MESSAGE)
+                        SMS_NOT_DELIVERED_RESPONSE_MESSAGE, SMS_CODE_INVALID_RESPONSE_MESSAGE,
+                        EMAIL_CONFIRMATION_FAILURE_RESPONSE_MESSAGE, EMAIL_CONFIRMATION_SUCCESS_RESPONSE_MESSAGE,
+                        PHONE_NUMBER_CONFIRMATION_SUCCESS_RESPONSE_MESSAGE)
 
 
 class SignUpView(AnonymousUserRequiredMixin,
@@ -82,10 +84,10 @@ class AccountActivationView(generic.View):
         if user is not None and account_activation_token.check_token(user, token):
             update_user_email_confirmation_status(user, is_email_confirmed=True)
             login(request, user)
-            messages.add_message(request, messages.SUCCESS, message='You have successfully confirmed your email.')
+            messages.add_message(request, messages.SUCCESS, EMAIL_CONFIRMATION_SUCCESS_RESPONSE_MESSAGE)
             return redirect(reverse('home_page'))
 
-        messages.add_message(request, messages.ERROR, message='There was an error while confirming your email.')
+        messages.add_message(request, messages.ERROR, EMAIL_CONFIRMATION_FAILURE_RESPONSE_MESSAGE)
         return redirect(reverse('home_page'))
 
 
@@ -323,18 +325,10 @@ class PhoneNumberConfirmPageView(UnconfirmedPhoneNumberRequiredMixin,
                     verification_code=get_verification_code_from_digits_dict(self.verification_code_form.cleaned_data)
             ):
                 update_phone_number_confirmation_status(request.user.profile, is_phone_number_confirmed=True)
-                messages.add_message(
-                    request,
-                    level=messages.SUCCESS,
-                    message='You have successfully confirmed your phone number'
-                )
+                messages.add_message(request, messages.SUCCESS, PHONE_NUMBER_CONFIRMATION_SUCCESS_RESPONSE_MESSAGE)
                 return redirect(reverse('accounts:settings_dashboard'))
             else:
-                messages.add_message(
-                    request,
-                    level=messages.ERROR,
-                    message='Error: Your code is invalid'
-                )
+                messages.add_message(request, messages.ERROR, SMS_CODE_INVALID_RESPONSE_MESSAGE)
 
         return self.render_to_response(
             context={
@@ -351,9 +345,5 @@ class SendConfirmationEmailView(UnconfirmedEmailRequiredMixin,
 
     def get(self, request: AuthenticatedHttpRequest, *args, **kwargs):
         send_verification_link(get_current_site(request).domain, request.scheme, request.user)
-        messages.add_message(
-            request,
-            level=messages.SUCCESS,
-            message="We've sent a confirmation email to your email address"
-        )
+        messages.add_message(request, messages.SUCCESS, EMAIL_SENT_SUCCESSFULLY_RESPONSE_MESSAGE)
         return redirect(reverse('accounts:security_dashboard'))
