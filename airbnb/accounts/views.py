@@ -17,11 +17,13 @@ from .forms import (SignUpForm, CustomPasswordResetForm,
                     ProfileForm, UserInfoForm, ProfileImageForm, ProfileDescriptionForm, VerificationCodeForm)
 from .models import CustomUser, Profile
 from .tokens import account_activation_token
-from .mixins import (AnonymousUserRequiredMixin, UnconfirmedPhoneNumberRequiredMixin, UnconfirmedEmailRequiredMixin,)
+from .mixins import (AnonymousUserRequiredMixin, UnconfirmedPhoneNumberRequiredMixin, UnconfirmedEmailRequiredMixin, )
 from .services import (get_user_from_uid, send_verification_link, handle_phone_number_change,
                        is_verification_code_for_profile_valid, update_phone_number_confirmation_status,
                        get_verification_code_from_digits_dict, update_user_email_confirmation_status, get_user_by_pk,
                        set_phone_code_status_by_user_id, get_phone_code_status_by_user_id)
+from .constants import (EMAIL_SENT_SUCCESSFULLY_RESPONSE_MESSAGE, SMS_SENT_SUCCESSFULLY_RESPONSE_MESSAGE,
+                        SMS_NOT_DELIVERED_RESPONSE_MESSAGE)
 
 
 class SignUpView(AnonymousUserRequiredMixin,
@@ -135,11 +137,7 @@ class PersonalInfoEditView(LoginRequiredMixin,
 
             # if email has been changed
             if 'email' in self.user_info_form.changed_data:
-                messages.add_message(
-                    request,
-                    level=messages.SUCCESS,
-                    message="We've sent a confirmation email to your email address"
-                )
+                messages.add_message(request, messages.SUCCESS, EMAIL_SENT_SUCCESSFULLY_RESPONSE_MESSAGE)
                 update_user_email_confirmation_status(user, is_email_confirmed=False)
                 send_verification_link(get_current_site(request).domain, request.scheme, user)
 
@@ -161,22 +159,13 @@ class PersonalInfoEditView(LoginRequiredMixin,
                             user_id=user_id,
                             phone_code_status=VERIFICATION_CODE_STATUS_FAILED,
                         )
-                        messages.add_message(
-                            request=request,
-                            level=messages.ERROR,
-                            message="There was an error while sending a verification code. Try again later",
-                        )
+                        messages.add_message(request, messages.ERROR, SMS_NOT_DELIVERED_RESPONSE_MESSAGE)
                     else:
                         set_phone_code_status_by_user_id(
                             user_id=user_id,
                             phone_code_status=VERIFICATION_CODE_STATUS_DELIVERED,
                         )
-                        messages.add_message(
-                            request=request,
-                            level=messages.SUCCESS,
-                            message="We've sent a verification code to you. "
-                                    "You can confirm your phone number at the Login & Security panel.",
-                        )
+                        messages.add_message(request, messages.SUCCESS, SMS_SENT_SUCCESSFULLY_RESPONSE_MESSAGE)
                 else:  # if phone number has been removed
                     update_phone_number_confirmation_status(user_profile, is_phone_number_confirmed=False)
 
