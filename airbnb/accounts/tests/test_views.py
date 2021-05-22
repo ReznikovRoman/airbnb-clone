@@ -739,3 +739,33 @@ class ProfileDescriptionEditViewTests(TestCase):
 
         self.assertRedirects(response, reverse('accounts:profile_show', kwargs={'user_pk': test_user.pk}))
         self.assertEqual(test_user.profile.description, form_data['description'])
+
+
+class SecurityDashboardViewTests(TestCase):
+    def setUp(self) -> None:
+        CustomUser.objects.create_user(
+            email='user1@gmail.com',
+            first_name='John',
+            last_name='Doe',
+            password='test',
+        )
+
+    def test_view_correct_attrs(self):
+        """Test that view has correct attributes."""
+        self.assertEqual(views.SecurityDashboardView.template_name, 'accounts/settings/security_dashboard.html')
+
+    def test_view_url_accessible_by_name(self):
+        """Test that url is accessible by its name."""
+        self.client.login(email='user1@gmail.com', password='test')
+        response = self.client.get(reverse('accounts:security_dashboard'))
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_correct_context_data_if_logged_in(self):
+        """Test that request.context is correct if user is logged in."""
+        test_user = CustomUser.objects.get(email='user1@gmail.com')
+        self.client.login(email='user1@gmail.com', password='test')
+        response = self.client.get(reverse('accounts:security_dashboard'))
+
+        self.assertEqual(response.context['phone_number'], test_user.profile.phone_number)
+        self.assertEqual(response.context['email'], test_user.email)
