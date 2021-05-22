@@ -67,7 +67,7 @@ def _send_sms_by_twilio(body: str, sms_from: str, sms_to: str) -> TwilioShortPay
     else:
         logger.info(
             msg=f"Verification message has been sent successfully | "
-                f"To: {sms_to} |"
+                f"To: {sms_to} | "
                 f"Twilio SID: {message.sid}"
         )
         return TwilioShortPayload(status=message.status, sid=message.sid)
