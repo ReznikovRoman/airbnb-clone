@@ -1,4 +1,7 @@
 import re
+import base64
+import shutil
+import tempfile
 from unittest import mock
 
 import fakeredis
@@ -6,6 +9,7 @@ import fakeredis
 from django.core import mail
 from django.test import SimpleTestCase, TestCase, override_settings
 from django.urls import reverse, reverse_lazy
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 from hosts.models import RealtyHost
 from hosts.services import get_host_or_none_by_user
@@ -16,7 +20,10 @@ from accounts.models import CustomUser
 from addresses.models import Address
 from realty.services.realty import get_available_realty_by_host
 from .. import views
-from ..forms import (SignUpForm, CustomPasswordResetForm, ProfileForm, UserInfoForm)
+from ..forms import (SignUpForm, CustomPasswordResetForm, ProfileForm, UserInfoForm, ProfileImageForm)
+
+
+MEDIA_ROOT = tempfile.mkdtemp()
 
 
 class SignUpViewTests(TestCase):
@@ -302,89 +309,6 @@ class AccountSettingsDashboardViewTests(TestCase):
         self.assertTemplateUsed(response, 'accounts/settings/settings_dashboard.html')
 
 
-class ProfileShowViewTests(TestCase):
-    def setUp(self) -> None:
-        user1 = CustomUser.objects.create_user(
-            email='user1@gmail.com',
-            first_name='John',
-            last_name='Doe',
-            password='test'
-        )
-        host1 = RealtyHost.objects.create(user=user1)
-        location1 = Address.objects.create(
-            country='Russia',
-            city='Moscow',
-            street='Arbat, 20'
-        )
-        Realty.objects.create(
-            host=host1,
-            location=location1,
-            name='test',
-            description='test',
-            is_available=True,
-            beds_count=2,
-            max_guests_count=4,
-            price_per_night=100,
-        )
-
-        CustomUser.objects.create_user(
-            email='user2@gmail.com',
-            first_name='Mike',
-            last_name='Smith',
-            password='test'
-        )
-
-    def test_view_correct_attrs(self):
-        """Test that view has correct attributes."""
-        self.assertEqual(views.ProfileShowView.template_name, 'accounts/profile/show.html')
-        self.assertTrue(hasattr(views.ProfileShowView, 'profile_owner'))
-        self.assertTrue(hasattr(views.ProfileShowView, 'is_profile_of_current_user'))
-
-    def test_view_url_accessible_by_name(self):
-        """Test that url is accessible by its name."""
-        response = self.client.get(reverse('accounts:profile_show', kwargs={'user_pk': CustomUser.objects.first().id}))
-        self.assertEqual(response.status_code, 200)
-
-    def test_correct_context_data_if_profile_owner(self):
-        """Test that request.context is correct if current user is a profile owner."""
-        self.client.login(email='user1@gmail.com', password='test')
-        current_user = CustomUser.objects.get(email='user1@gmail.com')
-        response = self.client.get(reverse('accounts:profile_show', kwargs={'user_pk': current_user.pk}))
-
-        self.assertEqual(response.context['profile_owner'], current_user)
-        self.assertTrue(response.context['is_profile_of_current_user'])
-        self.assertQuerysetEqual(
-            response.context['host_listings'],
-            get_available_realty_by_host(get_host_or_none_by_user(user=current_user)),
-            transform=lambda qs: qs,
-        )
-
-    def test_correct_context_data_if_not_a_profile_owner(self):
-        """Test that request.context is correct if current user is not a profile owner."""
-        self.client.login(email='user2@gmail.com', password='test')
-        response = self.client.get(reverse('accounts:profile_show', kwargs={'user_pk': CustomUser.objects.first().id}))
-
-        self.assertEqual(response.context['profile_owner'], CustomUser.objects.first())
-        self.assertFalse(response.context['is_profile_of_current_user'])
-        self.assertQuerysetEqual(
-            response.context['host_listings'],
-            get_available_realty_by_host(get_host_or_none_by_user(user=CustomUser.objects.first())),
-            transform=lambda qs: qs,
-        )
-
-    def test_correct_context_data_if_not_logged_in(self):
-        """Test that request.context is correct if current user is a `AnonymousUser`."""
-        response = self.client.get(reverse('accounts:profile_show', kwargs={'user_pk': CustomUser.objects.first().id}))
-
-        self.assertEqual(response.context['profile_owner'], CustomUser.objects.first())
-        self.assertFalse(response.context['is_profile_of_current_user'])
-        self.assertQuerysetEqual(
-            response.context['host_listings'],
-            get_available_realty_by_host(get_host_or_none_by_user(user=CustomUser.objects.first())),
-            transform=lambda qs: qs,
-        )
-
-
 class PersonalInfoEditViewTests(TestCase):
     redis_server = fakeredis.FakeServer()
 
@@ -575,3 +499,171 @@ class PersonalInfoEditViewTests(TestCase):
 
         # No phone_number --> phone_number is `unconfirmed`
         self.assertFalse(test_user.profile.is_phone_number_confirmed)
+
+
+class ProfileShowViewTests(TestCase):
+    def setUp(self) -> None:
+        user1 = CustomUser.objects.create_user(
+            email='user1@gmail.com',
+            first_name='John',
+            last_name='Doe',
+            password='test'
+        )
+        host1 = RealtyHost.objects.create(user=user1)
+        location1 = Address.objects.create(
+            country='Russia',
+            city='Moscow',
+            street='Arbat, 20'
+        )
+        Realty.objects.create(
+            host=host1,
+            location=location1,
+            name='test',
+            description='test',
+            is_available=True,
+            beds_count=2,
+            max_guests_count=4,
+            price_per_night=100,
+        )
+
+        CustomUser.objects.create_user(
+            email='user2@gmail.com',
+            first_name='Mike',
+            last_name='Smith',
+            password='test'
+        )
+
+    def test_view_correct_attrs(self):
+        """Test that view has correct attributes."""
+        self.assertEqual(views.ProfileShowView.template_name, 'accounts/profile/show.html')
+        self.assertTrue(hasattr(views.ProfileShowView, 'profile_owner'))
+        self.assertTrue(hasattr(views.ProfileShowView, 'is_profile_of_current_user'))
+
+    def test_view_url_accessible_by_name(self):
+        """Test that url is accessible by its name."""
+        response = self.client.get(reverse('accounts:profile_show', kwargs={'user_pk': CustomUser.objects.first().id}))
+        self.assertEqual(response.status_code, 200)
+
+    def test_correct_context_data_if_profile_owner(self):
+        """Test that request.context is correct if current user is a profile owner."""
+        self.client.login(email='user1@gmail.com', password='test')
+        current_user = CustomUser.objects.get(email='user1@gmail.com')
+        response = self.client.get(reverse('accounts:profile_show', kwargs={'user_pk': current_user.pk}))
+
+        self.assertEqual(response.context['profile_owner'], current_user)
+        self.assertTrue(response.context['is_profile_of_current_user'])
+        self.assertQuerysetEqual(
+            response.context['host_listings'],
+            get_available_realty_by_host(get_host_or_none_by_user(user=current_user)),
+            transform=lambda qs: qs,
+        )
+
+    def test_correct_context_data_if_not_a_profile_owner(self):
+        """Test that request.context is correct if current user is not a profile owner."""
+        self.client.login(email='user2@gmail.com', password='test')
+        response = self.client.get(reverse('accounts:profile_show', kwargs={'user_pk': CustomUser.objects.first().id}))
+
+        self.assertEqual(response.context['profile_owner'], CustomUser.objects.first())
+        self.assertFalse(response.context['is_profile_of_current_user'])
+        self.assertQuerysetEqual(
+            response.context['host_listings'],
+            get_available_realty_by_host(get_host_or_none_by_user(user=CustomUser.objects.first())),
+            transform=lambda qs: qs,
+        )
+
+    def test_correct_context_data_if_not_logged_in(self):
+        """Test that request.context is correct if current user is a `AnonymousUser`."""
+        response = self.client.get(reverse('accounts:profile_show', kwargs={'user_pk': CustomUser.objects.first().id}))
+
+        self.assertEqual(response.context['profile_owner'], CustomUser.objects.first())
+        self.assertFalse(response.context['is_profile_of_current_user'])
+        self.assertQuerysetEqual(
+            response.context['host_listings'],
+            get_available_realty_by_host(get_host_or_none_by_user(user=CustomUser.objects.first())),
+            transform=lambda qs: qs,
+        )
+
+
+@override_settings(MEDIA_ROOT=MEDIA_ROOT)
+class ProfileImageEditViewTests(TestCase):
+    def setUp(self) -> None:
+        CustomUser.objects.create_user(
+            email='user1@gmail.com',
+            first_name='John',
+            last_name='Doe',
+            password='test',
+        )
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        shutil.rmtree(MEDIA_ROOT, ignore_errors=True)  # delete temp media dir
+        super().tearDownClass()
+
+    def test_view_correct_attrs(self):
+        """Test that view has correct attributes."""
+        self.assertEqual(views.ProfileImageEditView.template_name, 'accounts/profile/edit_image.html')
+        self.assertTrue(hasattr(views.ProfileImageEditView, 'profile_image_form'))
+
+    def test_view_url_accessible_by_name(self):
+        """Test that url is accessible by its name."""
+        self.client.login(email='user1@gmail.com', password='test')
+        response = self.client.get(reverse('accounts:edit_image'))
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_correct_context_data_if_logged_in(self):
+        """Test that request.context is correct if user is logged in."""
+        test_user = CustomUser.objects.get(email='user1@gmail.com')
+        self.client.login(email='user1@gmail.com', password='test')
+        response = self.client.get(reverse('accounts:edit_image'))
+
+        self.assertIsInstance(response.context['profile_image_form'], ProfileImageForm)
+        self.assertEqual(response.context['profile_image_form'].instance, test_user.profile)
+
+    def test_view_uses_correct_template(self):
+        """Test that view uses a correct HTML template."""
+        self.client.login(email='user1@gmail.com', password='test')
+        response = self.client.get(reverse('accounts:edit_image'))
+
+        self.assertTemplateUsed(response, 'accounts/profile/edit_image.html')
+
+    def test_post_image_success(self):
+        """Test that user can upload a profile image."""
+        test_user = CustomUser.objects.get(email='user1@gmail.com')
+        test_image_name = 'image.png'
+        test_image = SimpleUploadedFile(
+            name=test_image_name,
+            content=base64.b64decode("iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4"
+                                     "//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="),
+            content_type='image/png',
+        )
+
+        form_data = {
+            'profile_image': test_image,
+        }
+
+        self.client.login(email='user1@gmail.com', password='test')
+        response = self.client.post(reverse('accounts:edit_image'), data=form_data)
+
+        self.assertRedirects(response, reverse('accounts:profile_show', kwargs={'user_pk': test_user.pk}))
+        self.assertIsNotNone(test_user.profile.profile_image)
+        self.assertEqual(test_user.profile.profile_image.name,
+                         f"upload/users/{test_user.email}/profile/{test_image_name}")
+
+    def test_post_image_fail(self):
+        """Test that form errors are rendered correctly if uploaded image is not valid."""
+        test_image_name = 'image.png'
+        test_image = SimpleUploadedFile(
+            name=test_image_name,
+            content=b"_",  # invalid image
+        )
+
+        form_data = {
+            'profile_image': test_image,
+        }
+
+        self.client.login(email='user1@gmail.com', password='test')
+        response = self.client.post(reverse('accounts:edit_image'), data=form_data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.context['profile_image_form'].is_valid())
