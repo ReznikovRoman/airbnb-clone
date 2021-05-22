@@ -16,5 +16,9 @@ class Subscriber(models.Model):
 
     # TODO: Add json field to filter realty (Postgres - JSON field, another milestone)
 
+    class Meta:
+        verbose_name = 'subscriber'
+        verbose_name_plural = 'subscribers'
+
     def __str__(self):
         return f"Subscriber: {self.email}"
