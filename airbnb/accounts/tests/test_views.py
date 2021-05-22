@@ -1,12 +1,22 @@
 import re
+from unittest import mock
+
+import fakeredis
 
 from django.core import mail
-from django.test import TestCase, override_settings
+from django.test import SimpleTestCase, TestCase, override_settings
 from django.urls import reverse, reverse_lazy
 
+from hosts.models import RealtyHost
+from hosts.services import get_host_or_none_by_user
+from realty.models import Realty
+from common.constants import VERIFICATION_CODE_STATUS_DELIVERED
+from common.collections import TwilioShortPayload
 from accounts.models import CustomUser
+from addresses.models import Address
+from realty.services.realty import get_available_realty_by_host
 from .. import views
-from ..forms import SignUpForm, CustomPasswordResetForm
+from ..forms import (SignUpForm, CustomPasswordResetForm, ProfileForm, UserInfoForm)
 
 
 class SignUpViewTests(TestCase):
@@ -245,3 +255,323 @@ class AccountActivationViewTests(TestCase):
         response = self.client.get(link)
 
         self.assertRedirects(response, reverse('home_page'))
+
+
+class ActivationRequiredViewTests(SimpleTestCase):
+    def test_view_correct_attrs(self):
+        """Test that view has correct attributes."""
+        self.assertEqual(views.ActivationRequiredView.template_name,
+                         'accounts/registration/account_activation_required.html')
+
+    def test_view_url_accessible_by_name(self):
+        """Test that url is accessible by its name."""
+        response = self.client.get(reverse('accounts:activation_required'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_uses_correct_template(self):
+        """Test that view uses a correct HTML template."""
+        response = self.client.get(reverse('accounts:activation_required'))
+        self.assertTemplateUsed(response, 'accounts/registration/account_activation_required.html')
+
+
+class AccountSettingsDashboardViewTests(TestCase):
+    def setUp(self) -> None:
+        CustomUser.objects.create_user(
+            email='user1@gmail.com',
+            first_name='John',
+            last_name='Doe',
+            password='test'
+        )
+
+    def test_view_correct_attrs(self):
+        """Test that view has correct attributes."""
+        self.assertEqual(views.AccountSettingsDashboardView.template_name,
+                         'accounts/settings/settings_dashboard.html')
+
+    def test_view_url_accessible_by_name(self):
+        """Test that url is accessible by its name."""
+        self.client.login(email='user1@gmail.com', password='test')
+        response = self.client.get(reverse('accounts:settings_dashboard'))
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_uses_correct_template(self):
+        """Test that view uses a correct HTML template."""
+        self.client.login(email='user1@gmail.com', password='test')
+        response = self.client.get(reverse('accounts:settings_dashboard'))
+        self.assertTemplateUsed(response, 'accounts/settings/settings_dashboard.html')
+
+
+class ProfileShowViewTests(TestCase):
+    def setUp(self) -> None:
+        user1 = CustomUser.objects.create_user(
+            email='user1@gmail.com',
+            first_name='John',
+            last_name='Doe',
+            password='test'
+        )
+        host1 = RealtyHost.objects.create(user=user1)
+        location1 = Address.objects.create(
+            country='Russia',
+            city='Moscow',
+            street='Arbat, 20'
+        )
+        Realty.objects.create(
+            host=host1,
+            location=location1,
+            name='test',
+            description='test',
+            is_available=True,
+            beds_count=2,
+            max_guests_count=4,
+            price_per_night=100,
+        )
+
+        CustomUser.objects.create_user(
+            email='user2@gmail.com',
+            first_name='Mike',
+            last_name='Smith',
+            password='test'
+        )
+
+    def test_view_correct_attrs(self):
+        """Test that view has correct attributes."""
+        self.assertEqual(views.ProfileShowView.template_name, 'accounts/profile/show.html')
+        self.assertTrue(hasattr(views.ProfileShowView, 'profile_owner'))
+        self.assertTrue(hasattr(views.ProfileShowView, 'is_profile_of_current_user'))
+
+    def test_view_url_accessible_by_name(self):
+        """Test that url is accessible by its name."""
+        response = self.client.get(reverse('accounts:profile_show', kwargs={'user_pk': CustomUser.objects.first().id}))
+        self.assertEqual(response.status_code, 200)
+
+    def test_correct_context_data_if_profile_owner(self):
+        """Test that request.context is correct if current user is a profile owner."""
+        self.client.login(email='user1@gmail.com', password='test')
+        current_user = CustomUser.objects.get(email='user1@gmail.com')
+        response = self.client.get(reverse('accounts:profile_show', kwargs={'user_pk': current_user.pk}))
+
+        self.assertEqual(response.context['profile_owner'], current_user)
+        self.assertTrue(response.context['is_profile_of_current_user'])
+        self.assertQuerysetEqual(
+            response.context['host_listings'],
+            get_available_realty_by_host(get_host_or_none_by_user(user=current_user)),
+            transform=lambda qs: qs,
+        )
+
+    def test_correct_context_data_if_not_a_profile_owner(self):
+        """Test that request.context is correct if current user is not a profile owner."""
+        self.client.login(email='user2@gmail.com', password='test')
+        response = self.client.get(reverse('accounts:profile_show', kwargs={'user_pk': CustomUser.objects.first().id}))
+
+        self.assertEqual(response.context['profile_owner'], CustomUser.objects.first())
+        self.assertFalse(response.context['is_profile_of_current_user'])
+        self.assertQuerysetEqual(
+            response.context['host_listings'],
+            get_available_realty_by_host(get_host_or_none_by_user(user=CustomUser.objects.first())),
+            transform=lambda qs: qs,
+        )
+
+    def test_correct_context_data_if_not_logged_in(self):
+        """Test that request.context is correct if current user is a `AnonymousUser`."""
+        response = self.client.get(reverse('accounts:profile_show', kwargs={'user_pk': CustomUser.objects.first().id}))
+
+        self.assertEqual(response.context['profile_owner'], CustomUser.objects.first())
+        self.assertFalse(response.context['is_profile_of_current_user'])
+        self.assertQuerysetEqual(
+            response.context['host_listings'],
+            get_available_realty_by_host(get_host_or_none_by_user(user=CustomUser.objects.first())),
+            transform=lambda qs: qs,
+        )
+
+
+class PersonalInfoEditViewTests(TestCase):
+    redis_server = fakeredis.FakeServer()
+
+    def setUp(self) -> None:
+        CustomUser.objects.create_user(
+            email='user1@gmail.com',
+            first_name='John',
+            last_name='Doe',
+            password='test',
+        )
+
+        # create user with the phone number
+        test_user2 = CustomUser.objects.create_user(
+            email='user2@gmail.com',
+            first_name='Mike',
+            last_name='Williams',
+            password='test',
+        )
+        test_user2.profile.phone_number = '+79851234567'
+        test_user2.profile.save()
+
+    def test_view_correct_attrs(self):
+        """Test that view has correct attributes."""
+        self.assertEqual(views.PersonalInfoEditView.template_name, 'accounts/settings/user_form.html')
+        self.assertTrue(hasattr(views.PersonalInfoEditView, 'profile_form'))
+        self.assertTrue(hasattr(views.PersonalInfoEditView, 'user_info_form'))
+
+    def test_view_url_accessible_by_name(self):
+        """Test that url is accessible by its name."""
+        self.client.login(email='user1@gmail.com', password='test')
+        response = self.client.get(reverse('accounts:user_info_edit'))
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_correct_context_data(self):
+        """Test that request.context is correct."""
+        self.client.login(email='user1@gmail.com', password='test')
+        response = self.client.get(reverse('accounts:user_info_edit'))
+
+        self.assertIsInstance(response.context['user_info_form'], UserInfoForm)
+        self.assertIsInstance(response.context['profile_form'], ProfileForm)
+
+    def test_correct_user_instance(self):
+        """Test that we are editing the logged in user."""
+        self.client.login(email='user1@gmail.com', password='test')
+        response = self.client.get(reverse('accounts:user_info_edit'))
+
+        user_form: UserInfoForm = response.context['user_info_form']
+        profile_form: ProfileForm = response.context['profile_form']
+
+        self.assertEqual(user_form.instance, CustomUser.objects.get(email='user1@gmail.com'))
+        self.assertEqual(profile_form.instance, CustomUser.objects.get(email='user1@gmail.com').profile)
+
+    @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+    @mock.patch('accounts.services.r',
+                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    def test_email_update_successful(self):
+        """Test that if email has been changed, new email should be `unconfirmed` and verification should be sent."""
+        test_user = CustomUser.objects.get(email='user1@gmail.com')
+        form_data = {
+            'first_name': test_user.first_name,
+            'last_name': test_user.last_name,
+            'email': 'new1@gmail.com',
+        }
+
+        self.client.login(email='user1@gmail.com', password='test')
+        response = self.client.post(reverse('accounts:user_info_edit'), data=form_data)
+
+        test_email = mail.outbox[0]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('accounts:user_info_edit'))
+
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(test_email.to, [form_data['email']])
+
+        self.assertFalse(test_user.is_email_confirmed)
+
+    @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+    @mock.patch('accounts.services.r',
+                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    def test_renders_form_errors_on_failure(self):
+        """Test that form errors are rendered correctly if there are any errors in the form."""
+        test_user = CustomUser.objects.get(email='user1@gmail.com')
+        form_data = {
+            'first_name': test_user.first_name,
+            'last_name': test_user.last_name,
+            'email': 'user2@gmail.com',  # error: email is not unique
+        }
+
+        self.client.login(email='user1@gmail.com', password='test')
+        response = self.client.post(reverse('accounts:user_info_edit'), data=form_data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'accounts/settings/user_form.html')
+        self.assertFalse(response.context['user_info_form'].is_valid())
+
+    @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+    @mock.patch('configs.twilio_conf.twilio_client.messages.create')
+    @mock.patch('accounts.services.r',
+                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    def test_phone_number_new(self, message_mock):
+        """Test that if phone number has been added,
+        SMS code should be sent, `phone_number` is `unconfirmed` and `phone_code_status` should be updated.
+        """
+        test_user = CustomUser.objects.get(email='user1@gmail.com')
+        redis_key = f"user:{test_user.id}:phone_code_status"
+        form_data = {
+            'first_name': test_user.first_name,
+            'last_name': test_user.last_name,
+            'email': test_user.email,
+            'phone_number': '+79851686043',  # add new phone number
+        }
+
+        expected_sid = 'SM87105da94bff44b999e4e6eb90d8eb6a'
+        message_mock.return_value = TwilioShortPayload(status=VERIFICATION_CODE_STATUS_DELIVERED, sid=expected_sid)
+
+        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+
+        self.client.login(email='user1@gmail.com', password='test')
+        self.client.post(reverse('accounts:user_info_edit'), data=form_data)
+
+        # SMS has been sent by Twilio
+        self.assertTrue(message_mock.called)
+
+        # Message has been delivered --> `phone_code_status` has appropriate value
+        self.assertEqual(r.get(redis_key), VERIFICATION_CODE_STATUS_DELIVERED)
+
+        # New phone number has been added --> it isn't `confirmed` yet
+        self.assertFalse(test_user.profile.is_phone_number_confirmed)
+
+    @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+    @mock.patch('configs.twilio_conf.twilio_client.messages.create')
+    @mock.patch('accounts.services.r',
+                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    def test_phone_number_update(self, message_mock):
+        """Test that if phone number has been updated,
+        SMS code should be sent, `phone_number` is `unconfirmed` and `phone_code_status` should be updated.
+        """
+        test_user = CustomUser.objects.get(email='user2@gmail.com')
+        redis_key = f"user:{test_user.id}:phone_code_status"
+        form_data = {
+            'first_name': test_user.first_name,
+            'last_name': test_user.last_name,
+            'email': test_user.email,
+            'phone_number': '8 (301) 123-45-67',  # update phone number
+        }
+
+        expected_sid = 'SM87105da94bff44b999e4e6eb90d8eb6a'
+        message_mock.return_value = TwilioShortPayload(status=VERIFICATION_CODE_STATUS_DELIVERED, sid=expected_sid)
+
+        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+
+        self.client.login(email='user2@gmail.com', password='test')
+        self.client.post(reverse('accounts:user_info_edit'), data=form_data)
+
+        # SMS has been sent by Twilio
+        self.assertTrue(message_mock.called)
+
+        # Message has been delivered --> `phone_code_status` has appropriate value
+        self.assertEqual(r.get(redis_key), VERIFICATION_CODE_STATUS_DELIVERED)
+
+        # Phone number has been updated --> it isn't `confirmed` yet
+        self.assertFalse(test_user.profile.is_phone_number_confirmed)
+
+    @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+    @mock.patch('configs.twilio_conf.twilio_client.messages.create')
+    @mock.patch('accounts.services.r',
+                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    def test_phone_number_remove(self, message_mock):
+        """Test that if phone number has been removed, phone number is `unconfirmed`."""
+        test_user = CustomUser.objects.get(email='user2@gmail.com')
+        form_data = {
+            'first_name': test_user.first_name,
+            'last_name': test_user.last_name,
+            'email': test_user.email,
+            'phone_number': '',  # remove existing phone number
+        }
+
+        expected_sid = 'SM87105da94bff44b999e4e6eb90d8eb6a'
+        message_mock.return_value = TwilioShortPayload(status=VERIFICATION_CODE_STATUS_DELIVERED, sid=expected_sid)
+
+        self.client.login(email='user2@gmail.com', password='test')
+        self.client.post(reverse('accounts:user_info_edit'), data=form_data)
+
+        # No SMS has been sent
+        self.assertFalse(message_mock.called)
+
+        # No phone_number --> phone_number is `unconfirmed`
+        self.assertFalse(test_user.profile.is_phone_number_confirmed)
