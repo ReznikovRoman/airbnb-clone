@@ -14,15 +14,14 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from hosts.models import RealtyHost
 from hosts.services import get_host_or_none_by_user
 from realty.models import Realty
-from common.constants import VERIFICATION_CODE_STATUS_DELIVERED
+from common.constants import (VERIFICATION_CODE_STATUS_DELIVERED, VERIFICATION_CODE_STATUS_FAILED)
 from common.collections import TwilioShortPayload
-from accounts.models import CustomUser
+from accounts.models import CustomUser, SMSLog
 from addresses.models import Address
 from realty.services.realty import get_available_realty_by_host
 from .. import views
 from ..forms import (SignUpForm, CustomPasswordResetForm, ProfileForm, UserInfoForm, ProfileImageForm,
-                     ProfileDescriptionForm)
-
+                     ProfileDescriptionForm, VerificationCodeForm)
 
 MEDIA_ROOT = tempfile.mkdtemp()
 
@@ -769,3 +768,256 @@ class SecurityDashboardViewTests(TestCase):
 
         self.assertEqual(response.context['phone_number'], test_user.profile.phone_number)
         self.assertEqual(response.context['email'], test_user.email)
+
+
+class PhoneNumberConfirmPageViewTests(TestCase):
+    redis_server = fakeredis.FakeServer()
+
+    def setUp(self) -> None:
+        test_user1 = CustomUser.objects.create_user(
+            email='user1@gmail.com',
+            first_name='John',
+            last_name='Doe',
+            password='test',
+        )
+        test_user1.profile.phone_number = '+79851686043'
+        test_user1.profile.save()
+
+        CustomUser.objects.create_user(
+            email='user2@gmail.com',
+            first_name='Bill',
+            last_name='Smith',
+            password='test',
+        )
+
+        test_user3 = CustomUser.objects.create_user(
+            email='user3@gmail.com',
+            first_name='Mike',
+            last_name='Williams',
+            password='test',
+        )
+        test_user3.profile.phone_number = '89261234567'
+        test_user3.profile.is_phone_number_confirmed = True
+        test_user3.profile.save()
+
+    def test_view_correct_attrs(self):
+        """Test that view has correct attributes."""
+        self.assertEqual(views.PhoneNumberConfirmPageView.template_name, 'accounts/settings/confirm_phone.html')
+        self.assertTrue(hasattr(views.PhoneNumberConfirmPageView, 'verification_code_form'))
+        self.assertTrue(hasattr(views.PhoneNumberConfirmPageView, 'is_verification_code_sent'))
+
+    @mock.patch('accounts.services.r',
+                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    def test_view_url_accessible_by_name(self):
+        """Test that url is accessible by its name."""
+        self.client.login(email='user1@gmail.com', password='test')
+        response = self.client.get(reverse('accounts:confirm_phone'))
+
+        self.assertEqual(response.status_code, 200)
+
+    @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+    @mock.patch('configs.twilio_conf.twilio_client.messages.create')
+    @mock.patch('accounts.services.r',
+                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    def test_correct_context_data_if_verification_code_sent(self, message_mock):
+        """Test that request.context is correct if verification code has been sent."""
+        test_user = CustomUser.objects.get(email='user2@gmail.com')
+        test_phone_number = '89851234567'
+        user_form_data = {
+            'email': test_user.email,
+            'first_name': test_user.first_name,
+            'last_name': test_user.last_name,
+            'phone_number': test_phone_number,
+        }
+
+        expected_sid = 'SM87105da94bff44b999e4e6eb90d8eb6a'
+        message_mock.return_value = TwilioShortPayload(status=VERIFICATION_CODE_STATUS_DELIVERED, sid=expected_sid)
+
+        # user without a phone_number
+        self.client.login(email='user2@gmail.com', password='test')
+
+        # add new phone number
+        self.client.post(reverse('accounts:user_info_edit'), data=user_form_data)
+
+        response = self.client.get(reverse('accounts:confirm_phone'))
+
+        self.assertIsInstance(response.context['verification_code_form'], VerificationCodeForm)
+        self.assertTrue(response.context['is_verification_code_sent'])
+
+    @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+    @mock.patch('configs.twilio_conf.twilio_client.messages.create')
+    @mock.patch('accounts.services.r',
+                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    def test_correct_context_data_if_verification_code_not_sent(self, message_mock):
+        """Test that request.context is correct if verification code hasn't been sent."""
+        test_user = CustomUser.objects.get(email='user2@gmail.com')
+        test_phone_number = '89851234567'
+        user_form_data = {
+            'email': test_user.email,
+            'first_name': test_user.first_name,
+            'last_name': test_user.last_name,
+            'phone_number': test_phone_number,
+        }
+
+        expected_sid = 'SM87105da94bff44b999e4e6eb90d8eb6a'
+        message_mock.return_value = TwilioShortPayload(status=VERIFICATION_CODE_STATUS_FAILED, sid=expected_sid)
+
+        # user without a phone_number
+        self.client.login(email='user2@gmail.com', password='test')
+
+        # add new phone number
+        self.client.post(reverse('accounts:user_info_edit'), data=user_form_data)
+
+        response = self.client.get(reverse('accounts:confirm_phone'))
+
+        self.assertIsInstance(response.context['verification_code_form'], VerificationCodeForm)
+        self.assertFalse(response.context['is_verification_code_sent'])
+
+    @mock.patch('accounts.services.r',
+                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    def test_redirect_if_no_phone_number(self):
+        """Test that if user has no `phone_number`, he should be redirected."""
+        self.client.login(email='user2@gmail.com', password='test')  # user without phone_number
+        response = self.client.get(reverse('accounts:confirm_phone'))
+
+        self.assertRedirects(response, reverse('accounts:settings_dashboard'))
+
+    @mock.patch('accounts.services.r',
+                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    def test_redirect_if_phone_number_confirmed(self):
+        """Test that if user has a `confirmed` `phone_number`, he should be redirected."""
+        self.client.login(email='user3@gmail.com', password='test')  # user with a `confirmed` phone_number
+        response = self.client.get(reverse('accounts:confirm_phone'))
+
+        self.assertRedirects(response, reverse('accounts:settings_dashboard'))
+
+    @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+    @mock.patch('configs.twilio_conf.twilio_client.messages.create')
+    @mock.patch('accounts.services.r',
+                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    def test_confirm_phone_number_success(self, message_mock):
+        """Test that user can confirm a phone number."""
+        test_user = CustomUser.objects.get(email='user2@gmail.com')
+        test_phone_number = '89851234567'
+        user_form_data = {
+            'email': test_user.email,
+            'first_name': test_user.first_name,
+            'last_name': test_user.last_name,
+            'phone_number': test_phone_number,
+        }
+
+        expected_sid = 'SM87105da94bff44b999e4e6eb90d8eb6a'
+        message_mock.return_value = TwilioShortPayload(status=VERIFICATION_CODE_STATUS_DELIVERED, sid=expected_sid)
+
+        # user without a phone_number
+        self.client.login(email='user2@gmail.com', password='test')
+
+        # add new phone number
+        self.client.post(reverse('accounts:user_info_edit'), data=user_form_data)
+
+        test_sms_log = SMSLog.objects.get(profile=test_user.profile)
+        test_verification_code = test_sms_log.sms_code
+        code_form_data = {
+            'digit_1': test_verification_code[0],
+            'digit_2': test_verification_code[1],
+            'digit_3': test_verification_code[2],
+            'digit_4': test_verification_code[3],
+        }
+
+        response_get = self.client.get(reverse('accounts:confirm_phone'))
+        response_post = self.client.post(reverse('accounts:confirm_phone'), data=code_form_data)
+
+        # `is_verification_code_sent` from request.context should be `True`
+        self.assertTrue(response_get.context['is_verification_code_sent'])
+
+        self.assertRedirects(response_post, reverse('accounts:settings_dashboard'))
+        # phone number is now `confirmed`
+        self.assertTrue(CustomUser.objects.get(email=test_user.email).profile.is_phone_number_confirmed)
+
+    @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+    @mock.patch('configs.twilio_conf.twilio_client.messages.create')
+    @mock.patch('accounts.services.r',
+                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    def test_confirm_phone_number_invalid_code(self, message_mock):
+        """Test that user can't confirm phone number with the invalid verification code."""
+        test_user = CustomUser.objects.get(email='user2@gmail.com')
+        test_phone_number = '89851234567'
+        user_form_data = {
+            'email': test_user.email,
+            'first_name': test_user.first_name,
+            'last_name': test_user.last_name,
+            'phone_number': test_phone_number,
+        }
+
+        expected_sid = 'SM87105da94bff44b999e4e6eb90d8eb6a'
+        message_mock.return_value = TwilioShortPayload(status=VERIFICATION_CODE_STATUS_DELIVERED, sid=expected_sid)
+
+        # user without a phone_number
+        self.client.login(email='user2@gmail.com', password='test')
+
+        # add new phone number
+        self.client.post(reverse('accounts:user_info_edit'), data=user_form_data)
+
+        test_sms_log = SMSLog.objects.get(profile=test_user.profile)
+        test_verification_code = test_sms_log.sms_code
+        invalid_code_form_data = {
+            'digit_1': test_verification_code[0],
+            'digit_2': test_verification_code[1],
+            'digit_3': test_verification_code[2],
+            'digit_4': str(9 - int(test_verification_code[3])),
+        }
+
+        response_get = self.client.get(reverse('accounts:confirm_phone'))
+        response_post = self.client.post(reverse('accounts:confirm_phone'), data=invalid_code_form_data)
+
+        # `is_verification_code_sent` from request.context should be `True`
+        self.assertTrue(response_get.context['is_verification_code_sent'])
+
+        self.assertTemplateUsed(response_post, 'accounts/settings/confirm_phone.html')
+        # phone number is not `confirmed` (invalid verification code)
+        self.assertFalse(CustomUser.objects.get(email=test_user.email).profile.is_phone_number_confirmed)
+
+
+class SendConfirmationEmailViewTests(TestCase):
+    def setUp(self) -> None:
+        test_user1 = CustomUser.objects.create_user(
+            email='user1@gmail.com',
+            first_name='John',
+            last_name='Doe',
+            password='test',
+        )
+        test_user1.is_email_confirmed = True
+        test_user1.save()
+
+        CustomUser.objects.create_user(
+            email='user2@gmail.com',
+            first_name='Bill',
+            last_name='Smith',
+            password='test',
+        )
+
+    @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+    def test_view_url_accessible_by_name(self):
+        """Test that view is accessible by its name."""
+        self.client.login(email='user2@gmail.com', password='test')
+        response = self.client.get(reverse('accounts:confirm_email'))
+
+        self.assertRedirects(response, reverse('accounts:security_dashboard'))
+
+    def test_redirect_if_confirmed_email(self):
+        """Test that if user's email is `confirmed`, he is redirected."""
+        self.client.login(email='user1@gmail.com', password='test')  # user with a `confirmed` email
+        response = self.client.get(reverse('accounts:confirm_email'))
+
+        self.assertRedirects(response, reverse('accounts:settings_dashboard'))
+
+    @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+    def test_email_sent_if_unconfirmed_email(self):
+        """Test that verification email is sent, if user's email is `unconfirmed` yet."""
+        self.client.login(email='user2@gmail.com', password='test')  # user with a `unconfirmed` email
+        response = self.client.get(reverse('accounts:confirm_email'))
+
+        # email has been sent
+        self.assertEqual(len(mail.outbox), 1)
+
+        self.assertRedirects(response, reverse('accounts:security_dashboard'))
