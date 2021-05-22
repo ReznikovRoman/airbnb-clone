@@ -11,6 +11,8 @@ from django.contrib.auth.models import Group
 
 from common.tasks import send_sms_by_twilio
 from mailings.tasks import send_email_with_attachments
+from common.constants import VERIFICATION_CODE_STATUS_FAILED, VERIFICATION_CODE_STATUS_DELIVERED
+from configs.redis_conf import r
 from common.collections import TwilioShortPayload
 from .models import (CustomUser, CustomUserManager, Profile, SMSLog,
                      get_default_profile_image_full_url, get_default_profile_image)
@@ -162,3 +164,18 @@ def is_verification_code_for_profile_valid(user_profile: Profile, verification_c
     if valid_verification_code == verification_code:
         return True
     return False
+
+
+def set_phone_code_status_by_user_id(
+        user_id: Union[int, str],
+        phone_code_status: Union[VERIFICATION_CODE_STATUS_FAILED, VERIFICATION_CODE_STATUS_DELIVERED]
+) -> bool:
+    key = f"user:{user_id}:phone_code_status"
+    return r.set(key, phone_code_status)
+
+
+def get_phone_code_status_by_user_id(
+        user_id: Union[int, str]
+) -> Union[VERIFICATION_CODE_STATUS_FAILED, VERIFICATION_CODE_STATUS_DELIVERED, None]:
+    key = f"user:{user_id}:phone_code_status"
+    return r.get(key)

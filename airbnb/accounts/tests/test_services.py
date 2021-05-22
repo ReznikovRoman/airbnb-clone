@@ -1,5 +1,7 @@
 from unittest import mock
 
+import fakeredis
+
 from django.core import mail
 from django.http import Http404
 from django.test import TestCase, override_settings
@@ -9,16 +11,19 @@ from django.template.loader import render_to_string
 from django.contrib.auth.models import Group
 
 from accounts.models import CustomUser, Profile, SMSLog
-from common.constants import VERIFICATION_CODE_STATUS_DELIVERED
+from common.constants import VERIFICATION_CODE_STATUS_DELIVERED, VERIFICATION_CODE_STATUS_FAILED
 from common.collections import TwilioShortPayload
 from ..tokens import account_activation_token
 from ..services import (has_user_profile_image, get_user_by_email, get_user_from_uid, add_user_to_group,
                         update_phone_number_confirmation_status, update_user_email_confirmation_status,
                         get_verification_code_from_digits_dict, is_verification_code_for_profile_valid,
-                        handle_phone_number_change, send_greeting_email, send_verification_link, get_user_by_pk)
+                        handle_phone_number_change, send_greeting_email, send_verification_link, get_user_by_pk,
+                        get_phone_code_status_by_user_id, set_phone_code_status_by_user_id)
 
 
 class AccountsServicesTests(TestCase):
+    redis_server = fakeredis.FakeServer()
+
     def setUp(self):
         test_user1 = CustomUser.objects.create_user(
             email='user1@gmail.com',
@@ -87,7 +92,7 @@ class AccountsServicesTests(TestCase):
 
     def test_get_user_by_pk_existing_user(self):
         """get_user_by_pk() returns a CustomUser object if user with the given `pk` exists."""
-        self.assertEqual(get_user_by_pk(pk=7), CustomUser.objects.get(pk=7))
+        self.assertEqual(get_user_by_pk(pk=CustomUser.objects.first().pk), CustomUser.objects.first())
 
     def test_get_user_by_pk_invalid_pk(self):
         """get_user_by_pk() raises a Http404 exception if there is no user with the given `pk`."""
@@ -193,3 +198,62 @@ class AccountsServicesTests(TestCase):
         test_sms_code: str = SMSLog.objects.create(sms_code='1234', profile=test_profile).sms_code
 
         self.assertFalse(is_verification_code_for_profile_valid(test_profile, test_sms_code + '1'))
+
+    @mock.patch('accounts.services.r',
+                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    def test_set_phone_code_status_by_user_id_new_item(self):
+        """set_phone_code_status_by_user_id() creates `phone_code_status` with the given `user_id` and code_status."""
+        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+
+        user_id = 1
+        test_value = VERIFICATION_CODE_STATUS_FAILED
+
+        set_phone_code_status_by_user_id(user_id, test_value)
+
+        self.assertEqual(r.get(f"user:{user_id}:phone_code_status"), test_value)
+
+    @mock.patch('accounts.services.r',
+                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    def test_set_phone_code_status_by_user_id_overwrite_existing(self):
+        """set_phone_code_status_by_user_id() overwrites `phone_code_status` if it already exists."""
+        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+
+        user_id = 1
+        test_key = f"user:{user_id}:phone_code_status"
+        initial_value = VERIFICATION_CODE_STATUS_FAILED
+
+        r.set(test_key, initial_value)
+
+        new_value = VERIFICATION_CODE_STATUS_DELIVERED
+
+        set_phone_code_status_by_user_id(user_id, new_value)
+
+        self.assertEqual(r.get(f"user:{user_id}:phone_code_status"), new_value)
+
+    @mock.patch('accounts.services.r',
+                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    def test_get_phone_code_status_by_user_id_existing_key(self):
+        """get_phone_code_status_by_user_id() returns `phone_code_status` from Redis by the given `user_id`."""
+        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+
+        user_id = 1
+        test_key = f"user:{user_id}:phone_code_status"
+        test_value = VERIFICATION_CODE_STATUS_FAILED
+
+        r.set(test_key, test_value)
+
+        self.assertEqual(get_phone_code_status_by_user_id(user_id), test_value)
+
+    @mock.patch('accounts.services.r',
+                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    def test_get_phone_code_status_by_user_id_no_key(self):
+        """get_phone_code_status_by_user_id() returns None if key with the given `user_id` doesn't exist."""
+        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+
+        user_id = 1
+        test_key = f"user:{user_id}:phone_code_status"
+        test_value = VERIFICATION_CODE_STATUS_FAILED
+
+        r.set(test_key, test_value)
+
+        self.assertIsNone(get_phone_code_status_by_user_id(2))
