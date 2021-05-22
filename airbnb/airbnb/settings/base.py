@@ -174,7 +174,7 @@ LOGGING = {
 
 
 # SENTRY
-sentry_sdk.init(
+SENTRY_CONF = sentry_sdk.init(
     dsn=os.environ.get("AIRBNB_SENTRY_DSN"),
     integrations=[DjangoIntegration()]
 )
