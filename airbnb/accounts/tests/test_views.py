@@ -228,6 +228,26 @@ class AccountActivationViewTests(TestCase):
         self.assertTrue(CustomUser.objects.get(email='new1@gmail.com').is_email_confirmed)
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+    def test_email_unconfirmed_on_failure(self):
+        """Test that user's email is unconfirmed if activation fails."""
+        form_data = {
+            'email': 'new1@gmail.com',
+            'first_name': 'New 1',
+            'last_name': 'User 1',
+            'password1': 'test',
+            'password2': 'test',
+        }
+        self.client.post(reverse('accounts:signup'), data=form_data)
+
+        test_email = mail.outbox[0]
+
+        link = re.search(r'href=[\'"]?([^\'" >]+)', test_email.body).group(1)
+
+        self.client.get(link[:-3])  # link with the invalid token
+
+        self.assertFalse(CustomUser.objects.get(email='new1@gmail.com').is_email_confirmed)
+
+    @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
     def test_logged_in_on_success(self):
         """Test that user is logged in on successful activation."""
         form_data = {
@@ -473,6 +493,41 @@ class PersonalInfoEditViewTests(TestCase):
 
         # Phone number has been updated --> it isn't `confirmed` yet
         self.assertFalse(test_user.profile.is_phone_number_confirmed)
+
+    @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+    @mock.patch('configs.twilio_conf.twilio_client.messages.create')
+    @mock.patch('accounts.services.r',
+                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    def test_phone_number_resend(self, message_mock):
+        """Test that if verification code hasn't been sent, new code will be sent."""
+        test_user = CustomUser.objects.get(email='user2@gmail.com')
+        redis_key = f"user:{test_user.id}:phone_code_status"
+        form_data = {
+            'first_name': test_user.first_name,
+            'last_name': test_user.last_name,
+            'email': test_user.email,
+            'phone_number': '8 (301) 123-45-67',  # update phone number
+        }
+
+        expected_sid = 'SM87105da94bff44b999e4e6eb90d8eb6a'
+        message_mock.return_value = TwilioShortPayload(status=VERIFICATION_CODE_STATUS_FAILED, sid=expected_sid)
+
+        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+
+        self.client.login(email='user2@gmail.com', password='test')
+        self.client.post(reverse('accounts:user_info_edit'), data=form_data)
+
+        # Twilio SMS
+        self.assertTrue(message_mock.called)
+
+        # Message has been delivered --> `phone_code_status` has appropriate value
+        self.assertEqual(r.get(redis_key), VERIFICATION_CODE_STATUS_FAILED)
+
+        # Try to post form data again
+        self.client.post(reverse('accounts:user_info_edit'), data=form_data)
+
+        # Twilio tries to send a verification code again (because it wasn't delivered earlier)
+        self.assertTrue(message_mock.called)
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
     @mock.patch('configs.twilio_conf.twilio_client.messages.create')
