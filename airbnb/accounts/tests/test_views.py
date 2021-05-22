@@ -20,7 +20,8 @@ from accounts.models import CustomUser
 from addresses.models import Address
 from realty.services.realty import get_available_realty_by_host
 from .. import views
-from ..forms import (SignUpForm, CustomPasswordResetForm, ProfileForm, UserInfoForm, ProfileImageForm)
+from ..forms import (SignUpForm, CustomPasswordResetForm, ProfileForm, UserInfoForm, ProfileImageForm,
+                     ProfileDescriptionForm)
 
 
 MEDIA_ROOT = tempfile.mkdtemp()
@@ -667,3 +668,74 @@ class ProfileImageEditViewTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertFalse(response.context['profile_image_form'].is_valid())
+
+
+class ProfileDescriptionEditViewTests(TestCase):
+    def setUp(self) -> None:
+        CustomUser.objects.create_user(
+            email='user1@gmail.com',
+            first_name='John',
+            last_name='Doe',
+            password='test',
+        )
+
+        test_user2 = CustomUser.objects.create_user(
+            email='user2@gmail.com',
+            first_name='Bill',
+            last_name='Smith',
+            password='test',
+        )
+        test_user2.profile.description = "First desc"
+        test_user2.profile.save()
+
+    def test_view_correct_attrs(self):
+        """Test that view has correct attributes."""
+        self.assertEqual(views.ProfileDescriptionEditView.template_name, 'accounts/profile/edit_description.html')
+        self.assertTrue(hasattr(views.ProfileDescriptionEditView, 'profile_description_form'))
+
+    def test_view_url_accessible_by_name(self):
+        """Test that url is accessible by its name."""
+        self.client.login(email='user1@gmail.com', password='test')
+        response = self.client.get(reverse('accounts:edit_description'))
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        """Test that view uses a correct HTML template."""
+        self.client.login(email='user1@gmail.com', password='test')
+        response = self.client.get(reverse('accounts:edit_description'))
+
+        self.assertTemplateUsed(response, 'accounts/profile/edit_description.html')
+
+    def test_correct_context_data_if_logged_in(self):
+        """Test that request.context is correct if user is logged in."""
+        test_user = CustomUser.objects.get(email='user1@gmail.com')
+        self.client.login(email='user1@gmail.com', password='test')
+        response = self.client.get(reverse('accounts:edit_description'))
+
+        self.assertIsInstance(response.context['profile_description_form'], ProfileDescriptionForm)
+        self.assertEqual(response.context['profile_description_form'].instance, test_user.profile)
+
+    def test_add_description_success(self):
+        """Test that user can add `description`."""
+        test_user = CustomUser.objects.get(email='user1@gmail.com')
+        form_data = {
+            'description': 'Test desc',
+        }
+        self.client.login(email='user1@gmail.com', password='test')
+        response = self.client.post(reverse('accounts:edit_description'), data=form_data)
+
+        self.assertRedirects(response, reverse('accounts:profile_show', kwargs={'user_pk': test_user.pk}))
+        self.assertEqual(test_user.profile.description, form_data['description'])
+
+    def test_update_description_success(self):
+        """Test that user can edit `description`."""
+        test_user = CustomUser.objects.get(email='user2@gmail.com')
+        form_data = {
+            'description': '',
+        }
+        self.client.login(email='user2@gmail.com', password='test')
+        response = self.client.post(reverse('accounts:edit_description'), data=form_data)
+
+        self.assertRedirects(response, reverse('accounts:profile_show', kwargs={'user_pk': test_user.pk}))
+        self.assertEqual(test_user.profile.description, form_data['description'])
