@@ -1,9 +1,10 @@
 from unittest import mock
 
 import sentry_sdk
+from twilio.base.exceptions import TwilioRestException
+
 from django.conf import settings
 from django.test import SimpleTestCase, override_settings
-from twilio.base.exceptions import TwilioRestException
 
 from accounts.forms import UserInfoForm, ProfileForm
 from accounts.models import CustomUser, Profile
