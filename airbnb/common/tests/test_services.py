@@ -21,9 +21,9 @@ class CommonServicesTests(SimpleTestCase):
         self.assertListEqual(result, ['first_name', 'last_name', 'email'])
 
     def test_create_name_with_prefix_no_prefix(self):
-        """create_name_with_prefix() returns _`name` if no `prefix` is given."""
+        """create_name_with_prefix() returns `name` if no `prefix` is given."""
         result = create_name_with_prefix('name', '')
-        self.assertEqual(result, '_name')
+        self.assertEqual(result, 'name')
 
     def test_create_name_with_prefix_custom_prefix(self):
         """create_name_with_prefix() returns `prefix``name` if prefix is given."""
@@ -38,7 +38,7 @@ class CommonServicesTests(SimpleTestCase):
     def test_create_name_with_prefix_no_name_no_prefix(self):
         """create_name_with_prefix() returns '_' if both `name` and `prefix` are empty strings."""
         result = create_name_with_prefix('', '')
-        self.assertEqual(result, '_')
+        self.assertEqual(result, '')
 
     def test_create_name_with_prefix_no_name_with_prefix(self):
         """create_name_with_prefix() returns `prefix`_ if `name` is an empty string."""
@@ -72,10 +72,10 @@ class CommonServicesTests(SimpleTestCase):
         self.assertListEqual(result, ['first_name', 'last_name', 'email'])
 
     def test_get_keys_with_prefixes_no_prefix(self):
-        """get_keys_with_prefixes() returns list of names with prefixes. If given `prefix` is empty, name -> `_name`."""
+        """get_keys_with_prefixes() returns list of names with prefixes. If given `prefix` is empty, name -> `name`."""
         names = ['name1', 'name2']
         result = get_keys_with_prefixes(names)
-        self.assertListEqual(result, ['_name1', '_name2'])
+        self.assertListEqual(result, ['name1', 'name2'])
 
     def test_get_keys_with_prefixes_custom_prefix(self):
         """get_keys_with_prefixes() returns list of names with prefixes. If `prefix` is given, name -> prefix_name."""

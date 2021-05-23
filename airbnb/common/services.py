@@ -17,7 +17,8 @@ def get_field_names_from_form(form: AbstractForm) -> List[str]:
 
 
 def create_name_with_prefix(name: str, prefix: str) -> str:
-    prefix = f"{prefix}_" if not prefix.endswith('_') else prefix
+    if prefix:
+        prefix = f"{prefix}_" if not prefix.endswith('_') else prefix
     return f"{prefix}{name}" if not name.startswith(prefix) else name
 
 
