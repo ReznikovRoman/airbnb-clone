@@ -1,11 +1,20 @@
-from django.test import TestCase
+import shutil
+import tempfile
+
+from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 from hosts.models import RealtyHost
 from accounts.models import CustomUser
 from addresses.models import Address
-from ..models import (Amenity, Realty, RealtyTypeChoices, RealtyManager, AvailableRealtyManager)
+from common.testing_utils import create_valid_image
+from ..fields import OrderField
+from ..models import (Amenity, Realty, RealtyTypeChoices, RealtyManager, AvailableRealtyManager, RealtyImage,
+                      get_realty_image_upload_path, RealtyImageModelManager)
+
+
+MEDIA_ROOT = tempfile.mkdtemp()
 
 
 class AmenityModelTests(TestCase):
@@ -221,3 +230,232 @@ class RealtyModelTests(TestCase):
         Realty.objects.filter(slug='realty-1').delete()
 
         self.assertFalse(Address.objects.filter(id=test_address_id).exists())
+
+
+@override_settings(MEDIA_ROOT=MEDIA_ROOT)
+class RealtyImageModelTests(TestCase):
+    def setUp(self) -> None:
+        test_user1 = CustomUser.objects.create_user(
+            email='user1@gmail.com',
+            first_name='John',
+            last_name='Doe',
+            password='test',
+        )
+        test_host1 = RealtyHost.objects.create(user=test_user1)
+        test_location1 = Address.objects.create(
+            country='Russia',
+            city='Moscow',
+            street='Arbat, 20',
+        )
+        test_realty1 = Realty.objects.create(
+            name='Realty 1',
+            description='Desc 1',
+            is_available=True,
+            realty_type=RealtyTypeChoices.APARTMENTS,
+            beds_count=1,
+            max_guests_count=2,
+            price_per_night=40,
+            location=test_location1,
+            host=test_host1,
+        )
+
+        test_location2 = Address.objects.create(
+            country='Russia',
+            city='Moscow',
+            street='Ulitsa Zorge, 14',
+        )
+        Realty.objects.create(
+            name='Image test',
+            description='Desc 1',
+            is_available=True,
+            realty_type=RealtyTypeChoices.APARTMENTS,
+            beds_count=1,
+            max_guests_count=2,
+            price_per_night=40,
+            location=test_location2,
+            host=test_host1,
+        )
+
+        test_image_name1 = 'image1.png'
+        test_image1 = create_valid_image(test_image_name1)
+
+        RealtyImage.objects.create(
+            image=test_image1,
+            realty=test_realty1,
+        )
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        shutil.rmtree(MEDIA_ROOT, ignore_errors=True)  # delete temp media dir
+        super().tearDownClass()
+
+    def test_model_verbose_name_single(self):
+        """Test that model verbose name is set correctly."""
+        self.assertEqual(RealtyImage._meta.verbose_name, 'realty image')
+
+    def test_model_verbose_name_plural(self):
+        """Test that model verbose name (in plural) is set correctly."""
+        self.assertEqual(RealtyImage._meta.verbose_name_plural, 'realty images')
+
+    def test_model_ordering_is_asc_created(self):
+        """Test that model's default ordering is correct."""
+        self.assertTupleEqual(RealtyImage._meta.ordering, ('order',))
+
+    def test_get_realty_image_upload_path(self):
+        """get_realty_image_upload_path() returns path to the file based on `realty.id` and `filename`."""
+        test_realty_image = RealtyImage.objects.first()
+        test_filename = 'image.png'
+
+        upload_path = get_realty_image_upload_path(instance=test_realty_image, filename=test_filename)
+
+        self.assertEqual(upload_path, f"upload/images/realty/{test_realty_image.realty.id}/{test_filename}")
+
+    def test_image_field_params(self):
+        """Test that `image` field has all required parameters."""
+        image_field = RealtyImage._meta.get_field('image')
+
+        self.assertEqual(image_field.verbose_name, 'image')
+        self.assertEqual(image_field.upload_to, get_realty_image_upload_path)
+
+    def test_realty_field_params(self):
+        """Test that `realty` field has all required parameters."""
+        realty_field = RealtyImage._meta.get_field('realty')
+
+        self.assertEqual(realty_field.verbose_name, 'realty')
+
+    def test_order_field_params(self):
+        """Test that `order` field has all required parameters and it is a custom `OrderField`."""
+        order_field = RealtyImage._meta.get_field('order')
+
+        self.assertIsInstance(order_field, OrderField)
+        self.assertEqual(order_field.verbose_name, 'order')
+        self.assertTrue(order_field.blank)
+        self.assertTrue(order_field.null)
+        self.assertListEqual(order_field.related_fields, ['realty'])
+
+    def test_objects_manager(self):
+        """Test that default object manager is a custom manager."""
+        self.assertIsInstance(RealtyImage.objects, RealtyImageModelManager)
+
+    def test_object_name_has_id_and_realty_name(self):
+        """Test that RealtyImage is set up correctly."""
+        test_realty_image = RealtyImage.objects.first()
+        self.assertEqual(str(test_realty_image), f"Image #{test_realty_image.id} for {test_realty_image.realty.name}")
+
+    def test_delete_object_updates_ordering_first_image(self):
+        """Test that if RealtyImage object is deleted, ordering of images is updated."""
+        test_realty = Realty.objects.get(slug='image-test')
+
+        # create 3 RealtyImage objects
+        test_image1 = create_valid_image('image1')
+        test_realty_image1 = RealtyImage.objects.create(realty=test_realty, image=test_image1)
+
+        test_image2 = create_valid_image('image2')
+        test_realty_image2 = RealtyImage.objects.create(realty=test_realty, image=test_image2)
+
+        test_image3 = create_valid_image('image3')
+        test_realty_image3 = RealtyImage.objects.create(realty=test_realty, image=test_image3)
+
+        # delete the first RealtyImage
+        test_realty_image1.delete()
+
+        # refresh remaining objects
+        test_realty_image2.refresh_from_db()
+        test_realty_image3.refresh_from_db()
+
+        ordering = test_realty.images.values_list('order', flat=True)
+
+        # first image has been deleted --> image ordering has been changed
+        self.assertListEqual(list(ordering), [0, 1])
+        self.assertEqual(test_realty_image2.order, 0)
+        self.assertEqual(test_realty_image3.order, 1)
+
+    def test_delete_object_updates_ordering_middle_image(self):
+        """Test that if RealtyImage object is deleted, ordering of images is updated.
+        If image was not the first, order of previous images remains the same.
+        """
+        test_realty = Realty.objects.get(slug='image-test')
+
+        # create 3 RealtyImage objects
+        test_image1 = create_valid_image('image1')
+        test_realty_image1 = RealtyImage.objects.create(realty=test_realty, image=test_image1)
+
+        test_image2 = create_valid_image('image2')
+        test_realty_image2 = RealtyImage.objects.create(realty=test_realty, image=test_image2)
+
+        test_image3 = create_valid_image('image3')
+        test_realty_image3 = RealtyImage.objects.create(realty=test_realty, image=test_image3)
+
+        # delete the second RealtyImage
+        test_realty_image2.delete()
+
+        # refresh remaining objects
+        test_realty_image1.refresh_from_db()
+        test_realty_image3.refresh_from_db()
+
+        ordering = test_realty.images.values_list('order', flat=True)
+
+        # first image has been deleted --> image ordering has been changed
+        self.assertListEqual(list(ordering), [0, 1])
+        self.assertEqual(test_realty_image1.order, 0)
+        self.assertEqual(test_realty_image3.order, 1)
+
+    def test_delete_object_updates_ordering_last_image(self):
+        """Test that if RealtyImage object is deleted, ordering of images is updated.
+        If image was the last, order of previous images remains the same.
+        """
+        test_realty = Realty.objects.get(slug='image-test')
+
+        # create 3 RealtyImage objects
+        test_image1 = create_valid_image('image1')
+        test_realty_image1 = RealtyImage.objects.create(realty=test_realty, image=test_image1)
+
+        test_image2 = create_valid_image('image2')
+        test_realty_image2 = RealtyImage.objects.create(realty=test_realty, image=test_image2)
+
+        test_image3 = create_valid_image('image3')
+        test_realty_image3 = RealtyImage.objects.create(realty=test_realty, image=test_image3)
+
+        # delete the last RealtyImage
+        test_realty_image3.delete()
+
+        # refresh remaining objects
+        test_realty_image1.refresh_from_db()
+        test_realty_image2.refresh_from_db()
+
+        ordering = test_realty.images.values_list('order', flat=True)
+
+        # last image has been deleted --> image ordering hasn't changed
+        self.assertListEqual(list(ordering), [0, 1])
+        self.assertEqual(test_realty_image1.order, 0)
+        self.assertEqual(test_realty_image2.order, 1)
+
+    def test_delete_qs_updates_ordering_middle_image(self):
+        """Test that if RealtyImage QuerySet is deleted, ordering of images is updated.
+        If image was not the first, order of previous images remains the same.
+        """
+        test_realty = Realty.objects.get(slug='image-test')
+
+        # create 3 RealtyImage objects
+        test_image1 = create_valid_image('image1')
+        test_realty_image1 = RealtyImage.objects.create(realty=test_realty, image=test_image1)
+
+        test_image2 = create_valid_image('image2')
+        test_realty_image2 = RealtyImage.objects.create(realty=test_realty, image=test_image2)
+
+        test_image3 = create_valid_image('image3')
+        test_realty_image3 = RealtyImage.objects.create(realty=test_realty, image=test_image3)
+
+        # delete QuerySet (with the second image)
+        RealtyImage.objects.filter(id=test_realty_image2.id).delete()
+
+        # refresh remaining objects
+        test_realty_image1.refresh_from_db()
+        test_realty_image3.refresh_from_db()
+
+        ordering = test_realty.images.values_list('order', flat=True)
+
+        # first image has been deleted --> image ordering has been changed
+        self.assertListEqual(list(ordering), [0, 1])
+        self.assertEqual(test_realty_image1.order, 0)
+        self.assertEqual(test_realty_image3.order, 1)
