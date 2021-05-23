@@ -1,5 +1,4 @@
 import re
-import base64
 import shutil
 import tempfile
 from unittest import mock
@@ -9,13 +8,13 @@ import fakeredis
 from django.core import mail
 from django.test import SimpleTestCase, TestCase, override_settings
 from django.urls import reverse, reverse_lazy
-from django.core.files.uploadedfile import SimpleUploadedFile
 
 from hosts.models import RealtyHost
 from hosts.services import get_host_or_none_by_user
 from realty.models import Realty
 from common.constants import (VERIFICATION_CODE_STATUS_DELIVERED, VERIFICATION_CODE_STATUS_FAILED)
 from common.collections import TwilioShortPayload
+from common.testing_utils import (create_invalid_image, create_valid_image)
 from accounts.models import CustomUser, SMSLog
 from addresses.models import Address
 from realty.services.realty import get_available_realty_by_host
@@ -686,12 +685,7 @@ class ProfileImageEditViewTests(TestCase):
         """Test that user can upload a profile image."""
         test_user = CustomUser.objects.get(email='user1@gmail.com')
         test_image_name = 'image.png'
-        test_image = SimpleUploadedFile(
-            name=test_image_name,
-            content=base64.b64decode("iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4"
-                                     "//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="),
-            content_type='image/png',
-        )
+        test_image = create_valid_image(test_image_name)
 
         form_data = {
             'profile_image': test_image,
@@ -708,10 +702,7 @@ class ProfileImageEditViewTests(TestCase):
     def test_post_image_fail(self):
         """Test that form errors are rendered correctly if uploaded image is not valid."""
         test_image_name = 'image.png'
-        test_image = SimpleUploadedFile(
-            name=test_image_name,
-            content=b"_",  # invalid image
-        )
+        test_image = create_invalid_image(test_image_name)
 
         form_data = {
             'profile_image': test_image,
