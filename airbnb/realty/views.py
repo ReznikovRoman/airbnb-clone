@@ -170,14 +170,14 @@ class RealtyEditView(LoginRequiredMixin,
                 prefix=REALTY_FORM_SESSION_PREFIX,
             )
 
-            self.realty_info_initial = self.session_handler.create_initial_dict_with_session_data(
-                initial_keys=get_field_names_from_form(RealtyForm)
+            self.realty_info_initial = self.session_handler.get_items_by_keys(
+                keys=get_field_names_from_form(RealtyForm)
             )
             # handle m2m field
             self.realty_info_initial['amenities'] = get_amenity_ids_from_session(self.session_handler)
 
-            self.realty_address_initial = self.session_handler.create_initial_dict_with_session_data(
-                initial_keys=get_field_names_from_form(AddressForm)
+            self.realty_address_initial = self.session_handler.get_items_by_keys(
+                keys=get_field_names_from_form(AddressForm)
             )
 
         self.realty_form = RealtyForm(
@@ -270,8 +270,8 @@ class RealtyGeneralInfoEditView(LoginRequiredMixin,
             keys_collector_name=REALTY_FORM_KEYS_COLLECTOR_NAME,
             session_prefix=REALTY_FORM_SESSION_PREFIX,
         )
-        initial = self.session_handler.create_initial_dict_with_session_data(
-            initial_keys=get_field_names_from_form(RealtyGeneralInfoForm)
+        initial = self.session_handler.get_items_by_keys(
+            keys=get_field_names_from_form(RealtyGeneralInfoForm)
         )
         # handle m2m field
         initial['amenities'] = get_amenity_ids_from_session(self.session_handler)
@@ -288,7 +288,7 @@ class RealtyGeneralInfoEditView(LoginRequiredMixin,
 
     def post(self, request: HttpRequest, *args, **kwargs):
         if self.realty_form.is_valid():
-            self.session_handler.update_values_with_given_data(self.realty_form.cleaned_data)
+            self.session_handler.create_or_update_items(data=self.realty_form.cleaned_data)
 
             # 'serialize' m2m field
             self.session_handler.add_new_item('amenities',
@@ -329,7 +329,7 @@ class RealtyLocationEditView(LoginRequiredMixin,
             keys_collector_name=REALTY_FORM_KEYS_COLLECTOR_NAME,
             session_prefix=REALTY_FORM_SESSION_PREFIX,
         )
-        initial = self.session_handler.create_initial_dict_with_session_data(get_field_names_from_form(AddressForm))
+        initial = self.session_handler.get_items_by_keys(keys=get_field_names_from_form(AddressForm))
         self.location_form = AddressForm(request.POST or None, initial=initial)
         return super(RealtyLocationEditView, self).dispatch(request, *args, **kwargs)
 
@@ -342,7 +342,7 @@ class RealtyLocationEditView(LoginRequiredMixin,
 
     def post(self, request: HttpRequest, *args, **kwargs):
         if self.location_form.is_valid():
-            self.session_handler.update_values_with_given_data(self.location_form.cleaned_data)
+            self.session_handler.create_or_update_items(data=self.location_form.cleaned_data)
             return redirect(reverse('realty:new_realty_description'))
 
         return self.render_to_response(
@@ -380,8 +380,8 @@ class RealtyDescriptionEditView(LoginRequiredMixin,
             keys_collector_name=REALTY_FORM_KEYS_COLLECTOR_NAME,
             session_prefix=REALTY_FORM_SESSION_PREFIX,
         )
-        initial = self.session_handler.create_initial_dict_with_session_data(
-            initial_keys=get_field_names_from_form(RealtyDescriptionForm)
+        initial = self.session_handler.get_items_by_keys(
+            keys=get_field_names_from_form(RealtyDescriptionForm)
         )
         self.description_form = RealtyDescriptionForm(request.POST or None, initial=initial)
         return super(RealtyDescriptionEditView, self).dispatch(request, *args, **kwargs)
@@ -395,7 +395,7 @@ class RealtyDescriptionEditView(LoginRequiredMixin,
 
     def post(self, request: HttpRequest, *args, **kwargs):
         if self.description_form.is_valid():
-            self.session_handler.update_values_with_given_data(self.description_form.cleaned_data)
+            self.session_handler.create_or_update_items(data=self.description_form.cleaned_data)
             return redirect(reverse('realty:new_realty'))
         return self.render_to_response(
             context={
