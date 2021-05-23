@@ -67,12 +67,14 @@ class Realty(models.Model):
         ]
     )
     max_guests_count = models.PositiveSmallIntegerField(
+        verbose_name='maximum guests amount',
         validators=[
             MinValueValidator(1),
             MaxValueValidator(100),
         ]
     )
     price_per_night = models.PositiveSmallIntegerField(
+        verbose_name='price per night',
         validators=[
             MinValueValidator(1),
         ]
