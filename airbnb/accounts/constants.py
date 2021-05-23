@@ -20,3 +20,6 @@ SMS_NOT_DELIVERED_RESPONSE_MESSAGE = "There was an error while sending a verific
 
 # Indicates that phone number has been confirmed successfully
 PHONE_NUMBER_CONFIRMATION_SUCCESS_RESPONSE_MESSAGE = "You have successfully confirmed your phone number"
+
+# Indicates that profile has been successfully updated
+PROFILE_INFO_EDIT_SUCCESS_RESPONSE_MESSAGE = "Your profile has been successfully updated"

@@ -25,7 +25,7 @@ from .services import (get_user_from_uid, send_verification_link, handle_phone_n
 from .constants import (EMAIL_SENT_SUCCESSFULLY_RESPONSE_MESSAGE, SMS_SENT_SUCCESSFULLY_RESPONSE_MESSAGE,
                         SMS_NOT_DELIVERED_RESPONSE_MESSAGE, SMS_CODE_INVALID_RESPONSE_MESSAGE,
                         EMAIL_CONFIRMATION_FAILURE_RESPONSE_MESSAGE, EMAIL_CONFIRMATION_SUCCESS_RESPONSE_MESSAGE,
-                        PHONE_NUMBER_CONFIRMATION_SUCCESS_RESPONSE_MESSAGE)
+                        PHONE_NUMBER_CONFIRMATION_SUCCESS_RESPONSE_MESSAGE, PROFILE_INFO_EDIT_SUCCESS_RESPONSE_MESSAGE)
 
 
 class SignUpView(AnonymousUserRequiredMixin,
@@ -171,6 +171,8 @@ class PersonalInfoEditView(LoginRequiredMixin,
                 else:  # if phone number has been removed
                     update_phone_number_confirmation_status(user_profile, is_phone_number_confirmed=False)
 
+            if self.profile_form.changed_data or self.user_info_form.changed_data:
+                messages.add_message(request, messages.SUCCESS, PROFILE_INFO_EDIT_SUCCESS_RESPONSE_MESSAGE)
             return redirect('accounts:user_info_edit')
 
         return self.render_to_response(
