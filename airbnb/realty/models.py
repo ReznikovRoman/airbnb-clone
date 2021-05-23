@@ -170,13 +170,18 @@ class RealtyImage(models.Model):
         related_name='images',
         verbose_name='realty',
     )
-    order = OrderField(blank=True, null=True, related_fields=['realty'])
+    order = OrderField(
+        verbose_name='order',
+        blank=True,
+        null=True,
+        related_fields=['realty'],
+    )
 
     objects = RealtyImageModelManager()
 
     class Meta:
-        verbose_name = 'Realty image'
-        verbose_name_plural = 'Realty images'
+        verbose_name = 'realty image'
+        verbose_name_plural = 'realty images'
         ordering = ('order',)
 
     def __str__(self):
@@ -189,7 +194,7 @@ class RealtyImage(models.Model):
 
         if next_realty_images.exists():
             for realty_image in next_realty_images:
-                realty_image.order -= 1
-                realty_image.save()
+                realty_image.order = models.F('order') - 1
+                realty_image.save(update_fields=['order'])
 
         super(RealtyImage, self).delete(using, keep_parents)
