@@ -1,7 +1,7 @@
 import shutil
 import tempfile
 
-from django.test import TestCase, override_settings
+from django.test import SimpleTestCase, TestCase, override_settings
 
 from hosts.models import RealtyHost
 from accounts.models import CustomUser
@@ -10,13 +10,12 @@ from common.testing_utils import create_valid_image
 from common.session_handler import SessionHandler
 from ..models import Amenity, Realty, RealtyTypeChoices, RealtyImage
 from ..constants import REALTY_FORM_SESSION_PREFIX, REALTY_FORM_KEYS_COLLECTOR_NAME
+from ..services.order import ImageOrder, convert_response_to_orders
 from ..services.images import (get_images_by_realty_id, get_image_by_id, update_images_order)
 from ..services.realty import (get_amenity_ids_from_session, set_realty_host_by_user, get_all_available_realty,
                                get_available_realty_by_city_slug, get_available_realty_by_host,
                                get_available_realty_filtered_by_type, get_last_realty, get_n_latest_available_realty,
                                get_available_realty_count_by_city, get_available_realty_search_results)
-from ..services.ordering import ImageOrder
-
 
 MEDIA_ROOT = tempfile.mkdtemp()
 
@@ -362,3 +361,24 @@ class RealtyServicesImagesTests(TestCase):
         self.assertEqual(test_image1.order, 1)
         self.assertEqual(test_image2.order, 0)
         self.assertEqual(test_image3.order, 2)
+
+
+class RealtyServicesOrderTests(SimpleTestCase):
+    def test_convert_response_to_orders(self):
+        """convert_response_to_orders() converts response to the list of ImageOrders."""
+        # Response: list of tuples where the first element is a RealtyImage ID and the last one - image order
+        test_response = [
+            ('5', 1),
+            ('6', 0),
+            ('7', 2),
+            ('', 3),  # should skip all items, where image id is not a digit
+        ]
+
+        self.assertListEqual(
+            convert_response_to_orders(test_response),
+            list2=[
+                ImageOrder('5', 1),
+                ImageOrder('6', 0),
+                ImageOrder('7', 2),
+            ],
+        )
