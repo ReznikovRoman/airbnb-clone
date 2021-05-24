@@ -34,19 +34,19 @@ def get_available_realty_by_city_slug(city_slug: str,
                                       realty_qs: Optional['CustomDeleteQueryset[Realty]'] = None
                                       ) -> 'CustomDeleteQueryset[Realty]':
     if realty_qs is not None:
-        return realty_qs.filter(location_city__slug=city_slug)
+        return realty_qs.filter(location__city_slug=city_slug)
     return Realty.available.filter(location__city_slug=city_slug)
 
 
 def get_available_realty_filtered_by_type(realty_types: Union[List[str], Tuple[str, ...]],
-                                          realty_qs: Optional['CustomDeleteQueryset[Realty]']
+                                          realty_qs: Optional['CustomDeleteQueryset[Realty]'] = None
                                           ) -> 'CustomDeleteQueryset[Realty]':
     if realty_qs is not None:
         return realty_qs.filter(realty_type__in=realty_types)
     return Realty.available.filter(realty_type__in=realty_types)
 
 
-def get_latest_realty() -> Realty:
+def get_last_realty() -> Realty:
     return Realty.objects.last()
 
 
@@ -58,7 +58,7 @@ def get_available_realty_count_by_city(city: str) -> int:
     return Realty.available.filter(location__city__iexact=city).count()
 
 
-def get_available_realty_search_results(query: Optional[str]) -> 'CustomDeleteQueryset[Realty]':
+def get_available_realty_search_results(query: Optional[str] = None) -> 'CustomDeleteQueryset[Realty]':
     """
     Get all available realty filtered by a `query`.
 
