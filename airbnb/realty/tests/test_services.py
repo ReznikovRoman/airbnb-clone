@@ -1,15 +1,24 @@
-from django.test import TestCase
+import shutil
+import tempfile
+
+from django.test import TestCase, override_settings
 
 from hosts.models import RealtyHost
 from accounts.models import CustomUser
 from addresses.models import Address
+from common.testing_utils import create_valid_image
 from common.session_handler import SessionHandler
-from ..models import Amenity, Realty, RealtyTypeChoices
+from ..models import Amenity, Realty, RealtyTypeChoices, RealtyImage
+from ..constants import REALTY_FORM_SESSION_PREFIX, REALTY_FORM_KEYS_COLLECTOR_NAME
+from ..services.images import (get_images_by_realty_id, get_image_by_id, update_images_order)
 from ..services.realty import (get_amenity_ids_from_session, set_realty_host_by_user, get_all_available_realty,
                                get_available_realty_by_city_slug, get_available_realty_by_host,
                                get_available_realty_filtered_by_type, get_last_realty, get_n_latest_available_realty,
                                get_available_realty_count_by_city, get_available_realty_search_results)
-from ..constants import REALTY_FORM_SESSION_PREFIX, REALTY_FORM_KEYS_COLLECTOR_NAME
+from ..services.ordering import ImageOrder
+
+
+MEDIA_ROOT = tempfile.mkdtemp()
 
 
 class RealtyServicesRealtyTests(TestCase):
@@ -237,3 +246,119 @@ class RealtyServicesRealtyTests(TestCase):
             list(get_available_realty_search_results(test_query)),
             [Realty.objects.get(slug='realty-1')],
         )
+
+
+@override_settings(MEDIA_ROOT=MEDIA_ROOT)
+class RealtyServicesImagesTests(TestCase):
+    def setUp(self) -> None:
+        test_user1 = CustomUser.objects.create_user(
+            email='user1@gmail.com',
+            first_name='John',
+            last_name='Doe',
+            password='test',
+        )
+        test_host1 = RealtyHost.objects.create(user=test_user1)
+        test_location1 = Address.objects.create(
+            country='Russia',
+            city='Moscow',
+            street='Arbat, 20',
+        )
+        test_realty1 = Realty.objects.create(
+            name='Realty 1',
+            description='Desc 1',
+            is_available=True,
+            realty_type=RealtyTypeChoices.APARTMENTS,
+            beds_count=1,
+            max_guests_count=2,
+            price_per_night=40,
+            location=test_location1,
+            host=test_host1,
+        )
+
+        test_location2 = Address.objects.create(
+            country='Russia',
+            city='Moscow',
+            street='Ulitsa Zorge, 14',
+        )
+        test_realty2 = Realty.objects.create(
+            name='Image test',
+            description='Desc 1',
+            is_available=True,
+            realty_type=RealtyTypeChoices.APARTMENTS,
+            beds_count=1,
+            max_guests_count=2,
+            price_per_night=40,
+            location=test_location2,
+            host=test_host1,
+        )
+
+        test_image_name1_1 = 'image1_1.png'
+        test_image1_1 = create_valid_image(test_image_name1_1)
+        RealtyImage.objects.create(
+            image=test_image1_1,
+            realty=test_realty1,
+        )
+
+        test_image_name1_2 = 'image1_2.png'
+        test_image1_2 = create_valid_image(test_image_name1_2)
+        RealtyImage.objects.create(
+            image=test_image1_2,
+            realty=test_realty1,
+        )
+
+        test_image_name1_3 = 'image1_3.png'
+        test_image1_3 = create_valid_image(test_image_name1_3)
+        RealtyImage.objects.create(
+            image=test_image1_3,
+            realty=test_realty1,
+        )
+
+        test_image_name2 = 'image2.png'
+        test_image2 = create_valid_image(test_image_name2)
+        RealtyImage.objects.create(
+            image=test_image2,
+            realty=test_realty2,
+        )
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        shutil.rmtree(MEDIA_ROOT, ignore_errors=True)  # delete temp media dir
+        super().tearDownClass()
+
+    def test_get_images_by_realty_id(self):
+        """get_images_by_realty_id() returns RealtyImage objects by the given `realty_id`."""
+        test_realty_id = Realty.objects.first().id
+        self.assertListEqual(
+            list(get_images_by_realty_id(test_realty_id)),
+            [Realty.objects.first().images.first()],
+        )
+
+    def test_get_image_by_id(self):
+        """get_image_by_id() returns a RealtyImage object by the given `image_id`."""
+        test_image_id = RealtyImage.objects.first().id
+        self.assertListEqual(
+            list(get_image_by_id(test_image_id)),
+            [RealtyImage.objects.get(id=test_image_id)],
+        )
+
+    def test_update_images_order(self):
+        test_realty: Realty = Realty.objects.get(slug='realty-1')
+        test_image1: RealtyImage = test_realty.images.all()[0]
+        test_image2: RealtyImage = test_realty.images.all()[1]
+        test_image3: RealtyImage = test_realty.images.all()[2]
+
+        new_order = [
+            ImageOrder(image_id=test_image1.id, order=1),
+            ImageOrder(image_id=test_image2.id, order=0),
+            ImageOrder(image_id=test_image3.id, order=2),
+        ]
+
+        update_images_order(new_order)
+
+        test_image1.refresh_from_db()
+        test_image2.refresh_from_db()
+        test_image3.refresh_from_db()
+
+        self.assertEqual(test_image1.order, 1)
+        self.assertEqual(test_image2.order, 0)
+        self.assertEqual(test_image3.order, 2)
