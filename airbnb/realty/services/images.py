@@ -1,6 +1,6 @@
 from typing import List, Union
 
-from .ordering import ImageOrder
+from .order import ImageOrder
 from ..models import RealtyImage, CustomDeleteQueryset
 
 

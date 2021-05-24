@@ -21,7 +21,7 @@ from .mixins import RealtySessionDataRequiredMixin
 from .forms import (RealtyForm, RealtyTypeForm, RealtyImageFormSet,
                     RealtyGeneralInfoForm, RealtyDescriptionForm)
 from .services.images import get_images_by_realty_id, update_images_order
-from .services.ordering import convert_response_to_orders
+from .services.order import convert_response_to_orders
 from .services.realty import (get_amenity_ids_from_session, set_realty_host_by_user, get_available_realty_by_city_slug,
                               get_available_realty_filtered_by_type, get_all_available_realty,
                               get_available_realty_search_results)
