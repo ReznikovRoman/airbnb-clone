@@ -12,7 +12,7 @@ def get_image_by_id(image_id: Union[int, str]) -> 'CustomDeleteQueryset[RealtyIm
     return RealtyImage.objects.filter(id=image_id)
 
 
-def update_images_order(new_ordering: List[ImageOrder]) -> None:
-    """Update images order with the given ordering."""
-    for image_order in new_ordering:
+def update_images_order(new_order: List[ImageOrder]) -> None:
+    """Update images order with the given `new_order`."""
+    for image_order in new_order:
         get_image_by_id(image_order.image_id).update(order=image_order.order)

@@ -411,7 +411,7 @@ class RealtyImageOrderView(LoginRequiredMixin,
 
     def post(self, request, *args, **kwargs):
         response = list(self.request_json.items())
-        update_images_order(new_ordering=convert_response_to_orders(response))
+        update_images_order(new_order=convert_response_to_orders(response))
         return self.render_json_response(
             context_dict={
                 'saved': 'OK',
