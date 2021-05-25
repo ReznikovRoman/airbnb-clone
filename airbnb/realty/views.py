@@ -104,18 +104,18 @@ class RealtyDetailView(generic.DetailView):
     """Display a single available Realty."""
     model = Realty
     template_name = 'realty/realty/detail.html'
-    queryset = Realty.available.all()
+    queryset = get_all_available_realty()
 
     def get(self, request: HttpRequest, *args, **kwargs):
         # TODO: Use redis (db) to store realty views + Celery scheduled task to save `views count` to the db
-        cache.set(f"realty_{self.get_object().id}_views", 0, nx=True)
-        cache.incr(f"realty_{self.get_object().id}_views")
+        cache.set(f"realty:{self.get_object().id}:views_count", 0, nx=True)
+        cache.incr(f"realty:{self.get_object().id}:views_count")
         return super(RealtyDetailView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(RealtyDetailView, self).get_context_data(**kwargs)
 
-        context['realty_views_count'] = cache.get(f"realty_{self.get_object().id}_views")
+        context['realty_views_count'] = cache.get(f"realty:{self.get_object().id}:views_count")
 
         return context
 
