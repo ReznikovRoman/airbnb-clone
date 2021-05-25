@@ -1,3 +1,7 @@
+from unittest import mock
+
+import fakeredis
+
 from django.test import TestCase
 from django.urls import reverse
 
@@ -337,3 +341,79 @@ class RealtyListViewTests(TestCase):
             Realty.available.filter(realty_type=realty_type_param, location__city__iexact='moscow')[:3],
             transform=lambda x: x,
         )
+
+
+class RealtyDetailViewTests(TestCase):
+    redis_server = fakeredis.FakeServer()
+
+    def setUp(self) -> None:
+        test_user1 = CustomUser.objects.create_user(
+            email='user1@gmail.com',
+            first_name='John',
+            last_name='Doe',
+            password='test',
+        )
+        test_host1 = RealtyHost.objects.create(user=test_user1)
+        test_location1 = Address.objects.create(
+            country='Russia',
+            city='Moscow',
+            street='Arbat, 20',
+        )
+        Realty.objects.create(
+            name='Realty 1',
+            description='Desc 1',
+            is_available=True,
+            realty_type=RealtyTypeChoices.HOTEL,
+            beds_count=1,
+            max_guests_count=2,
+            price_per_night=40,
+            location=test_location1,
+            host=test_host1,
+        )
+
+    def test_view_correct_attrs(self):
+        """Test that view has correct attributes."""
+        self.assertEqual(views.RealtyDetailView.model, Realty)
+        self.assertEqual(views.RealtyDetailView.template_name, 'realty/realty/detail.html')
+        self.assertQuerysetEqual(
+            views.RealtyDetailView.queryset,
+            Realty.available.all(),
+            transform=lambda x: x,
+        )
+
+    @mock.patch('realty.views.cache',
+                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    def test_view_url_accessible_by_name(self):
+        """Test that url is accessible by its name."""
+        test_realty: Realty = Realty.objects.get(slug='realty-1')
+        response = self.client.get(reverse('realty:detail', kwargs={'pk': test_realty.pk, 'slug': test_realty.slug}))
+
+        self.assertEqual(response.status_code, 200)
+
+    @mock.patch('realty.views.cache',
+                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    def test_view_uses_correct_template(self):
+        """Test that view uses a correct HTML template."""
+        test_realty: Realty = Realty.objects.get(slug='realty-1')
+        response = self.client.get(reverse('realty:detail', kwargs={'pk': test_realty.pk, 'slug': test_realty.slug}))
+
+        self.assertTemplateUsed(response, 'realty/realty/detail.html')
+
+    @mock.patch('realty.views.cache',
+                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    def test_context_correct_data(self):
+        """Test that request.context has correct data (views count)."""
+        test_realty: Realty = Realty.objects.get(slug='realty-1')
+
+        # visit page 3 times
+        self.client.get(reverse('realty:detail', kwargs={'pk': test_realty.pk, 'slug': test_realty.slug}))
+        self.client.get(reverse('realty:detail', kwargs={'pk': test_realty.pk, 'slug': test_realty.slug}))
+        response = self.client.get(reverse('realty:detail', kwargs={'pk': test_realty.pk, 'slug': test_realty.slug}))
+
+        self.assertEqual(int(response.context['realty_views_count']), 3)
+
+        # visit page 1 more time
+        response = self.client.get(reverse('realty:detail', kwargs={'pk': test_realty.pk, 'slug': test_realty.slug}))
+
+        # views count should change
+        self.assertEqual(int(response.context['realty_views_count']), 4)
