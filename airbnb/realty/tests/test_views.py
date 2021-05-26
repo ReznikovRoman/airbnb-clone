@@ -1,16 +1,25 @@
+import shutil
+import tempfile
 from unittest import mock
 
 import fakeredis
 
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
 
+from common.session_handler import SessionHandler
 from hosts.models import RealtyHost
 from accounts.models import CustomUser
+from addresses.forms import AddressForm
 from addresses.models import Address
+from common.testing_utils import create_valid_image
 from .. import views
-from ..forms import (RealtyTypeForm)
-from ..models import (Realty, RealtyTypeChoices)
+from ..forms import (RealtyTypeForm, RealtyForm, RealtyImageFormSet)
+from ..models import (Realty, RealtyTypeChoices, RealtyImage, Amenity)
+from ..constants import MAX_REALTY_IMAGES_COUNT, REALTY_FORM_KEYS_COLLECTOR_NAME, REALTY_FORM_SESSION_PREFIX
+
+
+MEDIA_ROOT = tempfile.mkdtemp()
 
 
 class RealtySearchResultsViewTests(TestCase):
@@ -105,12 +114,12 @@ class RealtySearchResultsViewTests(TestCase):
         response = self.client.get(reverse('realty:search'))
         self.assertTemplateUsed(response, 'realty/realty/search_results.html')
 
-    def test_context_correct_data_if_no_query_params(self):
+    def test_correct_context_data_if_no_query_params(self):
         """Test that request.context has correct data (if there are no query parameters in the URL)."""
         response = self.client.get(reverse('realty:search'))
         self.assertIsInstance(response.context['realty_type_form'], RealtyTypeForm)
 
-    def test_context_correct_data_if_query_params(self):
+    def test_correct_context_data_if_query_params(self):
         """Test that request.context has correct data (if there are some query parameters in the URL)."""
         realty_type_param = 'Apartments'
         query_param = 'Moscow'
@@ -247,7 +256,7 @@ class RealtyListViewTests(TestCase):
         response = self.client.get(reverse('realty:all'))
         self.assertTemplateUsed(response, 'realty/realty/list.html')
 
-    def test_context_correct_data(self):
+    def test_correct_context_data(self):
         """Test that request.context has correct data."""
         response = self.client.get(reverse('realty:all'))
 
@@ -295,7 +304,7 @@ class RealtyListViewTests(TestCase):
         response = self.client.get(reverse('realty:all_by_city', kwargs={'city_slug': 'moscow'}))
         self.assertTemplateUsed(response, 'realty/realty/list.html')
 
-    def test_context_correct_data_with_city_arg(self):
+    def test_correct_context_data_with_city_arg(self):
         """Test that request.context (from view with additional args) has correct data."""
         response = self.client.get(reverse('realty:all_by_city', kwargs={'city_slug': 'moscow'}))
 
@@ -401,7 +410,7 @@ class RealtyDetailViewTests(TestCase):
 
     @mock.patch('realty.views.cache',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
-    def test_context_correct_data(self):
+    def test_correct_context_data(self):
         """Test that request.context has correct data (views count)."""
         test_realty: Realty = Realty.objects.get(slug='realty-1')
 
@@ -417,3 +426,633 @@ class RealtyDetailViewTests(TestCase):
 
         # views count should change
         self.assertEqual(int(response.context['realty_views_count']), 4)
+
+
+@override_settings(MEDIA_ROOT=MEDIA_ROOT)
+class RealtyEditViewTests(TestCase):
+    def setUp(self) -> None:
+        Amenity.objects.create(name='wifi')
+        Amenity.objects.create(name='kitchen')
+        test_user1 = CustomUser.objects.create_user(
+            email='user1@gmail.com',
+            first_name='John',
+            last_name='Doe',
+            password='test',
+        )
+        test_host1 = RealtyHost.objects.create(user=test_user1)
+        test_location1 = Address.objects.create(
+            country='Russia',
+            city='Moscow',
+            street='Arbat, 20',
+        )
+        test_realty1 = Realty.objects.create(
+            name='Realty 1',
+            description='Desc 1',
+            is_available=True,
+            realty_type=RealtyTypeChoices.HOTEL,
+            beds_count=1,
+            max_guests_count=2,
+            price_per_night=40,
+            location=test_location1,
+            host=test_host1,
+        )
+        test_image_name1 = 'image1.png'
+        test_image1 = create_valid_image(test_image_name1)
+
+        RealtyImage.objects.create(
+            image=test_image1,
+            realty=test_realty1,
+        )
+
+        CustomUser.objects.create_user(
+            email='user2@gmail.com',
+            first_name='Peter',
+            last_name='Collins',
+            password='test',
+        )
+
+        test_user3 = CustomUser.objects.create_user(
+            email='user3@gmail.com',
+            first_name='Mike',
+            last_name='Williams',
+            password='test',
+        )
+        test_host2 = RealtyHost.objects.create(user=test_user3)
+        test_location2 = Address.objects.create(
+            country='Russia',
+            city='Moscow',
+            street='Ulitsa Zorge, 12',
+        )
+        Realty.objects.create(
+            name='Realty 2',
+            description='Desc 2',
+            is_available=True,
+            realty_type=RealtyTypeChoices.APARTMENTS,
+            beds_count=1,
+            max_guests_count=2,
+            price_per_night=40,
+            location=test_location2,
+            host=test_host2,
+        )
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        shutil.rmtree(MEDIA_ROOT, ignore_errors=True)  # delete temp media dir
+        super().tearDownClass()
+
+    def test_view_correct_attrs(self):
+        """Test that view has correct attributes."""
+        self.assertEqual(views.RealtyEditView.template_name, 'realty/realty/form.html')
+
+        self.assertTrue(hasattr(views.RealtyEditView, 'realty'))
+        self.assertTrue(hasattr(views.RealtyEditView, 'address'))
+        self.assertTrue(hasattr(views.RealtyEditView, 'realty_images'))
+
+        self.assertTrue(hasattr(views.RealtyEditView, 'is_creating_new_realty'))
+        self.assertTrue(views.RealtyEditView.is_creating_new_realty)
+        self.assertTrue(hasattr(views.RealtyEditView, 'realty_form'))
+        self.assertTrue(hasattr(views.RealtyEditView, 'address_form'))
+        self.assertTrue(hasattr(views.RealtyEditView, 'realty_address_initial'))
+        self.assertTrue(hasattr(views.RealtyEditView, 'realty_info_initial'))
+
+        self.assertTrue(hasattr(views.RealtyEditView, 'session_handler'))
+
+    def test_view_url_accessible_by_name(self):
+        """Test that url is accessible by its name."""
+        test_realty_id = Realty.objects.get(slug='realty-1').id
+
+        self.client.login(email='user1@gmail.com', password='test')
+        response = self.client.get(reverse('realty:edit_realty', kwargs={'realty_id': test_realty_id}))
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        """Test that view uses a correct HTML template."""
+        test_realty_id = Realty.objects.get(slug='realty-1').id
+
+        self.client.login(email='user1@gmail.com', password='test')
+        response = self.client.get(reverse('realty:edit_realty', kwargs={'realty_id': test_realty_id}))
+
+        self.assertTemplateUsed(response, 'realty/realty/form.html')
+
+    def test_redirect_if_user_not_a_host(self):
+        """Test that an existing Realty object can be edited only by the RealtyHost, otherwise view redirects user."""
+        test_realty_id = Realty.objects.get(slug='realty-1').id
+
+        self.client.login(email='user2@gmail.com', password='test')  # login as a default user (not a host)
+        response = self.client.get(reverse('realty:edit_realty', kwargs={'realty_id': test_realty_id}))
+
+        # redirects, because user is not a host
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('realty:all'))
+
+    def test_redirect_if_user_not_an_owner(self):
+        """Test that an existing Realty object can be edited only by the owner, otherwise view redirects user."""
+        test_realty_id = Realty.objects.get(slug='realty-1').id
+
+        self.client.login(email='user2@gmail.com', password='test')  # login as a host, but not the owner of Realty-1
+        response = self.client.get(reverse('realty:edit_realty', kwargs={'realty_id': test_realty_id}))
+
+        # redirects, because Host is not an owner of realty-1
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('realty:all'))
+
+    def test_correct_context_data_if_existing_realty(self):
+        """Test that request.context is correct if we're editing an existing Realty object (`realty_id` in URL args)."""
+        test_realty: Realty = Realty.objects.get(slug='realty-1')
+
+        self.client.login(email='user1@gmail.com', password='test')
+        response = self.client.get(reverse('realty:edit_realty', kwargs={'realty_id': test_realty.id}))
+
+        realty_form: RealtyForm = response.context['realty_form']
+        address_form: AddressForm = response.context['address_form']
+        realty_image_formset: RealtyImageFormSet = response.context['realty_image_formset']
+
+        self.assertEqual(realty_form.instance, test_realty)
+        self.assertEqual(address_form.instance, test_realty.location)
+        self.assertQuerysetEqual(
+            realty_image_formset.queryset,
+            test_realty.images.all(),
+            transform=lambda x: x,
+        )
+        self.assertFalse(response.context['is_creating_new_realty'])
+        self.assertQuerysetEqual(
+            response.context['realty_images'],
+            test_realty.images.all(),
+            transform=lambda x: x,
+        )
+        self.assertEqual(response.context['max_realty_images_count'], MAX_REALTY_IMAGES_COUNT)
+
+    def test_update_existing_realty_success(self):
+        """Test that Host can update an existing Realty object."""
+        test_realty: Realty = Realty.objects.get(slug='realty-1')
+        test_image = test_realty.images.first()
+
+        new_description = 'New Desc 1'
+        new_amenities = Amenity.objects.values_list('id', flat=True)
+        new_image = create_valid_image('new_image1.png')
+
+        self.client.login(email='user1@gmail.com', password='test')
+        response_get = self.client.get(reverse('realty:edit_realty', kwargs={'realty_id': test_realty.id}))
+
+        realty_form = response_get.context['realty_form']
+        address_form = response_get.context['address_form']
+
+        form_data = {
+            'form-TOTAL_FORMS': '6',
+            'form-INITIAL_FORMS': '1',
+            'form-MAX_NUM_FORMS': '0',
+            'form-MIN_NUM_FORMS': '6',
+            'form-0-image': test_image,
+            'form-0-id': test_image.id,
+            # new fields
+            'form-1-image': new_image,
+            'description': new_description,
+            'amenities': new_amenities,
+        }
+        form_data = dict(realty_form.initial, **address_form.initial, **form_data)
+
+        response = self.client.post(reverse('realty:edit_realty', kwargs={'realty_id': test_realty.id}), data=form_data)
+
+        test_realty.refresh_from_db()
+
+        self.assertRedirects(response, reverse('realty:all'))
+        self.assertEqual(test_realty.description, new_description)
+        self.assertListEqual(list(test_realty.amenities.values_list('id', flat=True)), list(new_amenities))
+        self.assertEqual(test_realty.images.count(), 2)
+        self.assertIn(test_image, test_realty.images.all())
+
+    def test_view_renders_errors_on_failure_existing_realty(self):
+        """Test that if there are some errors in the forms, those errors will be successfully rendered."""
+        test_realty: Realty = Realty.objects.get(slug='realty-1')
+        test_image = test_realty.images.first()
+
+        new_beds_count = 100  # invalid value: beds count must be < 9
+
+        self.client.login(email='user1@gmail.com', password='test')
+        response_get = self.client.get(reverse('realty:edit_realty', kwargs={'realty_id': test_realty.id}))
+
+        realty_form = response_get.context['realty_form']
+        address_form = response_get.context['address_form']
+
+        form_data = {
+            'form-TOTAL_FORMS': '6',
+            'form-INITIAL_FORMS': '1',
+            'form-MAX_NUM_FORMS': '0',
+            'form-MIN_NUM_FORMS': '6',
+            'form-0-image': test_image,
+            'form-0-id': test_image.id,
+            # new fields
+            'beds_count': new_beds_count,
+        }
+        form_data = dict(realty_form.initial, **address_form.initial, **form_data)
+
+        response = self.client.post(reverse('realty:edit_realty', kwargs={'realty_id': test_realty.id}), data=form_data)
+
+        test_realty.refresh_from_db()
+
+        self.assertTemplateUsed(response, 'realty/realty/form.html')
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.context['realty_form'].is_valid())
+
+    def test_redirect_if_no_required_session_data(self):
+        """Test that user is redirected if there is no required data in the session (when creating a new Realty)."""
+        self.client.login(email='user2@gmail.com', password='test')
+        response = self.client.get(reverse('realty:new_realty'))
+
+        self.assertRedirects(response, reverse('realty:new_realty_info'))
+
+    def test_redirect_if_only_some_required_session_data(self):
+        """Test that user is redirected if there is not all required data in the session."""
+        test_session = self.client.session
+        keys_collector_name = REALTY_FORM_KEYS_COLLECTOR_NAME
+        prefix = REALTY_FORM_SESSION_PREFIX
+        session_handler = SessionHandler(
+            session=test_session,
+            keys_collector_name=keys_collector_name,
+            session_prefix=prefix,
+        )
+
+        # add some data to the session
+        session_handler.add_new_item('name', 'test name')
+        session_handler.add_new_item('city', 'test city')
+        session_handler.get_session().save()
+
+        self.client.login(email='user2@gmail.com', password='test')
+        response = self.client.get(reverse('realty:new_realty'))
+
+        # redirect, because there is no all required data in the session
+        self.assertRedirects(response, reverse('realty:new_realty_info'))
+
+    def test_correct_response_if_required_session_data_exists(self):
+        """Test that user can access page if there is all required session data."""
+        test_session = self.client.session
+        keys_collector_name = REALTY_FORM_KEYS_COLLECTOR_NAME
+        prefix = REALTY_FORM_SESSION_PREFIX
+        session_handler = SessionHandler(
+            session=test_session,
+            keys_collector_name=keys_collector_name,
+            session_prefix=prefix,
+        )
+
+        # add all required data to the session
+        session_handler.add_new_item('name', 'New realty')
+        session_handler.add_new_item('type', 'Apartments')
+        session_handler.add_new_item('beds_count', '2')
+        session_handler.add_new_item('max_guests_count', '4')
+        session_handler.add_new_item('price_per_night', '100')
+        session_handler.add_new_item('country', 'Russia')
+        session_handler.add_new_item('city', 'Moscow')
+        session_handler.add_new_item('street', 'Test street')
+        session_handler.add_new_item('description', 'New desc')
+
+        session_handler.add_new_item('amenities', ['wifi'])
+
+        # have to save session manually to be able to use it in other modules (only while testing)
+        session_handler.get_session().save()
+
+        self.client.login(email='user2@gmail.com', password='test')
+        response = self.client.get(reverse('realty:new_realty'))
+
+        realty_form = response.context['realty_form']
+        address_form = response.context['address_form']
+
+        self.assertEqual(response.status_code, 200)
+
+        # form initial from session
+        self.assertEqual(realty_form.initial['name'], 'New realty')
+        self.assertEqual(address_form.initial['city'], 'Moscow')
+        self.assertEqual(realty_form.initial['description'], 'New desc')
+        self.assertQuerysetEqual(
+            realty_form.initial['amenities'],
+            Amenity.objects.filter(name='wifi').values_list('id', flat=True),
+            transform=lambda x: x,
+        )
+
+    def test_correct_context_data_if_creating_new_realty(self):
+        """Test that request.context is correct if we're creating a new Realty object."""
+        test_session = self.client.session
+        keys_collector_name = REALTY_FORM_KEYS_COLLECTOR_NAME
+        prefix = REALTY_FORM_SESSION_PREFIX
+        session_handler = SessionHandler(
+            session=test_session,
+            keys_collector_name=keys_collector_name,
+            session_prefix=prefix,
+        )
+
+        # add all required data to the session
+        session_handler.add_new_item('name', 'New realty')
+        session_handler.add_new_item('type', 'Apartments')
+        session_handler.add_new_item('beds_count', '2')
+        session_handler.add_new_item('max_guests_count', '4')
+        session_handler.add_new_item('price_per_night', '100')
+        session_handler.add_new_item('country', 'Russia')
+        session_handler.add_new_item('city', 'Moscow')
+        session_handler.add_new_item('street', 'Test street')
+        session_handler.add_new_item('description', 'New desc')
+
+        session_handler.add_new_item('amenities', ['wifi'])
+
+        # have to save session manually to be able to use it in other modules (only while testing)
+        session_handler.get_session().save()
+
+        self.client.login(email='user2@gmail.com', password='test')
+        response = self.client.get(reverse('realty:new_realty'))
+
+        self.assertTrue(response.context['is_creating_new_realty'])
+        self.assertEqual(response.context['realty_image_formset'].queryset.count(), 0)
+        self.assertIsNone(response.context['realty_images'])
+        self.assertEqual(response.context['max_realty_images_count'], MAX_REALTY_IMAGES_COUNT)
+
+    def test_view_renders_errors_on_creation_failure(self):
+        """Test that if there are some errors in the forms (while creating new realty), they are rendered correctly."""
+        test_session = self.client.session
+        keys_collector_name = REALTY_FORM_KEYS_COLLECTOR_NAME
+        prefix = REALTY_FORM_SESSION_PREFIX
+        session_handler = SessionHandler(
+            session=test_session,
+            keys_collector_name=keys_collector_name,
+            session_prefix=prefix,
+        )
+
+        # add all required data to the session
+        session_handler.add_new_item('name', 'New realty')
+        session_handler.add_new_item('type', 'Apartments')
+        session_handler.add_new_item('beds_count', 100)  # invalid value: beds count must be < 9
+        session_handler.add_new_item('max_guests_count', 4)
+        session_handler.add_new_item('price_per_night', 100)
+        session_handler.add_new_item('country', 'Russia')
+        session_handler.add_new_item('city', 'Moscow')
+        session_handler.add_new_item('street', 'Test street')
+        session_handler.add_new_item('description', 'New desc')
+
+        # have to save session manually to be able to use it in other modules (only while testing)
+        session_handler.get_session().save()
+
+        self.client.login(email='user2@gmail.com', password='test')
+        response_get = self.client.get(reverse('realty:new_realty'))
+
+        realty_form = response_get.context['realty_form']
+        address_form = response_get.context['address_form']
+        form_data = {
+            'form-TOTAL_FORMS': '6',
+            'form-INITIAL_FORMS': '1',
+            'form-MAX_NUM_FORMS': '0',
+            'form-MIN_NUM_FORMS': '6',
+            'amenities': [],
+        }
+        form_data = dict(realty_form.initial, **address_form.initial, **form_data)
+
+        # try to create a new realty with data from the form's initial
+        response_post = self.client.post(reverse('realty:new_realty'), data=form_data)
+
+        self.assertEqual(response_post.status_code, 200)
+        self.assertFalse(response_post.context['realty_form'].is_valid())
+
+    def test_can_create_new_realty_success(self):
+        """Test that user can successfully create new realty."""
+        test_session = self.client.session
+        keys_collector_name = REALTY_FORM_KEYS_COLLECTOR_NAME
+        prefix = REALTY_FORM_SESSION_PREFIX
+        session_handler = SessionHandler(
+            session=test_session,
+            keys_collector_name=keys_collector_name,
+            session_prefix=prefix,
+        )
+
+        # add all required data to the session
+        session_handler.add_new_item('name', 'New realty')
+        session_handler.add_new_item('type', 'Apartments')
+        session_handler.add_new_item('beds_count', 2)
+        session_handler.add_new_item('max_guests_count', 4)
+        session_handler.add_new_item('price_per_night', 100)
+        session_handler.add_new_item('country', 'Russia')
+        session_handler.add_new_item('city', 'Moscow')
+        session_handler.add_new_item('street', 'Test street')
+        session_handler.add_new_item('description', 'New desc')
+
+        session_handler.add_new_item('amenities', ['wifi'])
+
+        # have to save session manually to be able to use it in other modules (only while testing)
+        session_handler.get_session().save()
+
+        self.client.login(email='user2@gmail.com', password='test')
+        response_get = self.client.get(reverse('realty:new_realty'))
+
+        realty_form = response_get.context['realty_form']
+        address_form = response_get.context['address_form']
+        form_data = {
+            'form-TOTAL_FORMS': '6',
+            'form-INITIAL_FORMS': '1',
+            'form-MAX_NUM_FORMS': '0',
+            'form-MIN_NUM_FORMS': '6',
+        }
+        form_data = dict(realty_form.initial, **address_form.initial, **form_data)
+
+        # create new realty using initial form values
+        response_post = self.client.post(reverse('realty:new_realty'), data=form_data)
+
+        test_new_realty = Realty.objects.get(slug='new-realty')
+
+        self.assertRedirects(response_post, reverse('realty:all'))
+
+        # test that new realty has been successfully created
+        self.assertEqual(test_new_realty.name, 'New realty')
+        self.assertEqual(test_new_realty.location.city, 'Moscow')
+        self.assertEqual(test_new_realty.amenities.first().name, 'wifi')
+
+    def test_creating_new_host_on_realty_creation(self):
+        """Test that new RealtyHost is created on realty creation (if current user is not already a host)."""
+        test_session = self.client.session
+        keys_collector_name = REALTY_FORM_KEYS_COLLECTOR_NAME
+        prefix = REALTY_FORM_SESSION_PREFIX
+        session_handler = SessionHandler(
+            session=test_session,
+            keys_collector_name=keys_collector_name,
+            session_prefix=prefix,
+        )
+
+        # add all required data to the session
+        session_handler.add_new_item('name', 'New realty')
+        session_handler.add_new_item('type', 'Apartments')
+        session_handler.add_new_item('beds_count', 4)
+        session_handler.add_new_item('max_guests_count', 4)
+        session_handler.add_new_item('price_per_night', 100)
+        session_handler.add_new_item('country', 'Russia')
+        session_handler.add_new_item('city', 'Moscow')
+        session_handler.add_new_item('street', 'Test street')
+        session_handler.add_new_item('description', 'New desc')
+
+        # have to save session manually to be able to use it in other modules (only while testing)
+        session_handler.get_session().save()
+
+        test_user = CustomUser.objects.get(email='user2@gmail.com')
+        self.client.login(email='user2@gmail.com', password='test')
+        response_get = self.client.get(reverse('realty:new_realty'))
+
+        realty_form = response_get.context['realty_form']
+        address_form = response_get.context['address_form']
+        form_data = {
+            'form-TOTAL_FORMS': '6',
+            'form-INITIAL_FORMS': '1',
+            'form-MAX_NUM_FORMS': '0',
+            'form-MIN_NUM_FORMS': '6',
+            'amenities': [],
+        }
+        form_data = dict(realty_form.initial, **address_form.initial, **form_data)
+
+        # create a new realty with data from the form's initial
+        response_post = self.client.post(reverse('realty:new_realty'), data=form_data)
+
+        new_host_qs = RealtyHost.objects.filter(user=test_user)
+
+        self.assertRedirects(response_post, reverse('realty:all'))
+        self.assertTrue(new_host_qs.exists())
+        self.assertEqual(new_host_qs.first().realty.count(), 1)
+
+    def test_creating_no_new_host_on_realty_creation_if_user_is_a_host(self):
+        """Test that new RealtyHost is not created on realty creation if current user is already a host."""
+        test_session = self.client.session
+        keys_collector_name = REALTY_FORM_KEYS_COLLECTOR_NAME
+        prefix = REALTY_FORM_SESSION_PREFIX
+        session_handler = SessionHandler(
+            session=test_session,
+            keys_collector_name=keys_collector_name,
+            session_prefix=prefix,
+        )
+
+        # add all required data to the session
+        session_handler.add_new_item('name', 'New realty')
+        session_handler.add_new_item('type', 'Apartments')
+        session_handler.add_new_item('beds_count', 4)
+        session_handler.add_new_item('max_guests_count', 4)
+        session_handler.add_new_item('price_per_night', 100)
+        session_handler.add_new_item('country', 'Russia')
+        session_handler.add_new_item('city', 'Moscow')
+        session_handler.add_new_item('street', 'Test street')
+        session_handler.add_new_item('description', 'New desc')
+
+        # have to save session manually to be able to use it in other modules (only while testing)
+        session_handler.get_session().save()
+
+        # user3@gmail.com - is a RealtyHost
+        test_user = CustomUser.objects.get(email='user3@gmail.com')
+        self.client.login(email='user3@gmail.com', password='test')
+        response_get = self.client.get(reverse('realty:new_realty'))
+
+        realty_form = response_get.context['realty_form']
+        address_form = response_get.context['address_form']
+        form_data = {
+            'form-TOTAL_FORMS': '6',
+            'form-INITIAL_FORMS': '1',
+            'form-MAX_NUM_FORMS': '0',
+            'form-MIN_NUM_FORMS': '6',
+            'amenities': [],
+        }
+        form_data = dict(realty_form.initial, **address_form.initial, **form_data)
+
+        current_hosts_count = RealtyHost.objects.count()
+
+        # create a new realty with data from the form's initial
+        response_post = self.client.post(reverse('realty:new_realty'), data=form_data)
+
+        new_host_qs = RealtyHost.objects.filter(user=test_user)
+
+        self.assertRedirects(response_post, reverse('realty:all'))
+        self.assertTrue(new_host_qs.exists())
+        self.assertEqual(new_host_qs.first().realty.count(), 2)
+        self.assertEqual(current_hosts_count, RealtyHost.objects.count())
+
+    def test_flushes_session_after_realty_creation(self):
+        """Test that session is flushed after successful realty creation."""
+        test_session = self.client.session
+        keys_collector_name = REALTY_FORM_KEYS_COLLECTOR_NAME
+        prefix = REALTY_FORM_SESSION_PREFIX
+        session_handler = SessionHandler(
+            session=test_session,
+            keys_collector_name=keys_collector_name,
+            session_prefix=prefix,
+        )
+
+        # add all required data to the session
+        session_handler.add_new_item('name', 'New realty')
+        session_handler.add_new_item('type', 'Apartments')
+        session_handler.add_new_item('beds_count', 4)
+        session_handler.add_new_item('max_guests_count', 4)
+        session_handler.add_new_item('price_per_night', 100)
+        session_handler.add_new_item('country', 'Russia')
+        session_handler.add_new_item('city', 'Moscow')
+        session_handler.add_new_item('street', 'Test street')
+        session_handler.add_new_item('description', 'New desc')
+
+        # have to save session manually to be able to use it in other modules (only while testing)
+        session_handler.get_session().save()
+
+        test_user = CustomUser.objects.get(email='user2@gmail.com')
+        self.client.login(email='user2@gmail.com', password='test')
+        response_get = self.client.get(reverse('realty:new_realty'))
+
+        realty_form = response_get.context['realty_form']
+        address_form = response_get.context['address_form']
+        form_data = {
+            'form-TOTAL_FORMS': '6',
+            'form-INITIAL_FORMS': '1',
+            'form-MAX_NUM_FORMS': '0',
+            'form-MIN_NUM_FORMS': '6',
+            'amenities': [],
+        }
+        form_data = dict(realty_form.initial, **address_form.initial, **form_data)
+
+        # create a new realty with data from the form's initial
+        self.client.post(reverse('realty:new_realty'), data=form_data)
+
+        self.assertNotIn('name', self.client.session)
+        self.assertNotIn('city', self.client.session)
+        self.assertNotIn('description', self.client.session)
+
+    def test_session_data_remains_on_failure(self):
+        """Test that if there is an error while creating new Realty, session data is not removed."""
+        test_session = self.client.session
+        keys_collector_name = REALTY_FORM_KEYS_COLLECTOR_NAME
+        prefix = REALTY_FORM_SESSION_PREFIX
+        session_handler = SessionHandler(
+            session=test_session,
+            keys_collector_name=keys_collector_name,
+            session_prefix=prefix,
+        )
+
+        # add all required data to the session
+        session_handler.add_new_item('name', 'New realty')
+        session_handler.add_new_item('type', 'Apartments')
+        session_handler.add_new_item('beds_count', 100)  # invalid value: beds count must be < 9
+        session_handler.add_new_item('max_guests_count', 4)
+        session_handler.add_new_item('price_per_night', 100)
+        session_handler.add_new_item('country', 'Russia')
+        session_handler.add_new_item('city', 'Moscow')
+        session_handler.add_new_item('street', 'Test street')
+        session_handler.add_new_item('description', 'New desc')
+
+        # have to save session manually to be able to use it in other modules (only while testing)
+        session_handler.get_session().save()
+
+        test_user = CustomUser.objects.get(email='user2@gmail.com')
+        self.client.login(email='user2@gmail.com', password='test')
+        response_get = self.client.get(reverse('realty:new_realty'))
+
+        realty_form = response_get.context['realty_form']
+        address_form = response_get.context['address_form']
+        form_data = {
+            'form-TOTAL_FORMS': '6',
+            'form-INITIAL_FORMS': '1',
+            'form-MAX_NUM_FORMS': '0',
+            'form-MIN_NUM_FORMS': '6',
+            'amenities': [],
+        }
+        form_data = dict(realty_form.initial, **address_form.initial, **form_data)
+
+        # create a new realty with data from the form's initial
+        self.client.post(reverse('realty:new_realty'), data=form_data)
+
+        self.assertIn(f'{REALTY_FORM_SESSION_PREFIX}_name', self.client.session)
+        self.assertIn(f'{REALTY_FORM_SESSION_PREFIX}_city', self.client.session)
+        self.assertIn(f'{REALTY_FORM_SESSION_PREFIX}_description', self.client.session)
