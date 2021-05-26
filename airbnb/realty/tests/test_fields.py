@@ -1,4 +1,7 @@
-from django.test import TestCase
+import shutil
+import tempfile
+
+from django.test import TestCase, override_settings
 
 from hosts.models import RealtyHost
 from accounts.models import CustomUser
@@ -7,6 +10,10 @@ from common.testing_utils import create_valid_image
 from ..models import (Realty, RealtyImage, RealtyTypeChoices)
 
 
+MEDIA_ROOT = tempfile.mkdtemp()
+
+
+@override_settings(MEDIA_ROOT=MEDIA_ROOT)
 class OrderFieldTests(TestCase):
     def setUp(self) -> None:
         test_user1 = CustomUser.objects.create_user(
@@ -40,6 +47,11 @@ class OrderFieldTests(TestCase):
             image=test_image1,
             realty=self.test_realty1,
         )
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        shutil.rmtree(MEDIA_ROOT, ignore_errors=True)  # delete temp media dir
+        super().tearDownClass()
 
     def test_initial_order_is_zero(self):
         """Test that if there are no items related to the model, initial order is 0."""
