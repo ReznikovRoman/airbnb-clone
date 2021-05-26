@@ -8,12 +8,13 @@ from django.shortcuts import get_object_or_404, reverse, redirect
 from django.core.cache import cache
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from hosts.models import RealtyHost
 from addresses.forms import AddressForm
 from addresses.models import Address
-from common.session_handler import SessionHandler
 from common.services import (get_field_names_from_form,
                              get_required_fields_from_form_with_model, get_keys_with_prefixes)
 from common.collections import FormWithModel
+from common.session_handler import SessionHandler
 from .constants import (MAX_REALTY_IMAGES_COUNT,
                         REALTY_FORM_SESSION_PREFIX, REALTY_FORM_KEYS_COLLECTOR_NAME)
 from .models import Realty, RealtyImage, CustomDeleteQueryset
@@ -22,9 +23,9 @@ from .forms import (RealtyForm, RealtyTypeForm, RealtyImageFormSet,
                     RealtyGeneralInfoForm, RealtyDescriptionForm)
 from .services.images import get_images_by_realty_id, update_images_order
 from .services.order import convert_response_to_orders
-from .services.realty import (get_amenity_ids_from_session, set_realty_host_by_user, get_available_realty_by_city_slug,
-                              get_available_realty_filtered_by_type, get_all_available_realty,
-                              get_available_realty_search_results)
+from .services.realty import (get_amenity_ids_from_session, get_or_create_realty_host_by_user,
+                              get_available_realty_by_city_slug, get_all_available_realty,
+                              get_available_realty_filtered_by_type, get_available_realty_search_results)
 
 
 class RealtySearchResultsView(generic.ListView):
@@ -146,12 +147,11 @@ class RealtyEditView(LoginRequiredMixin,
             session_prefix=REALTY_FORM_SESSION_PREFIX,
         )
 
-        if realty_id:  # if we are editing an existing Realty object
+        if realty_id is not None:  # if we are editing an existing Realty object
             self.realty = get_object_or_404(Realty, id=realty_id)
 
             # if a current user is not the host of the Realty
-            if not hasattr(request.user, 'host') or \
-                    self.realty.host != request.user.host:
+            if (not hasattr(request.user, 'host')) or (self.realty.host != request.user.host):
                 return redirect(reverse('realty:all'))
 
             self.address = self.realty.location
@@ -215,19 +215,18 @@ class RealtyEditView(LoginRequiredMixin,
 
         if self.realty_form.is_valid():
             new_realty: Realty = self.realty_form.save(commit=False)
-
-            set_realty_host_by_user(realty=new_realty, user=request.user)
+            realty_host: RealtyHost = get_or_create_realty_host_by_user(user=request.user)[0]
+            new_realty.host = realty_host
 
             if self.address_form.is_valid():
                 new_address: Address = self.address_form.save()
                 new_realty.location = new_address
 
-                if not realty_id:  # if it is not a new Realty
+                if realty_id is None:  # if it is a new Realty
                     self.session_handler.flush_keys_collector()
 
-                new_realty.save(update_fields=["location"])
-
-                self.realty_form.save_m2m()  # save many to many fields
+                new_realty.save()
+                self.realty_form.save_m2m()
 
                 if realty_image_formset.is_valid():
                     valid_image_formsets = [image_formset for image_formset in realty_image_formset
@@ -235,7 +234,7 @@ class RealtyEditView(LoginRequiredMixin,
                     for image_form in valid_image_formsets:
                         new_image: RealtyImage = image_form.save(commit=False)
                         new_image.realty = new_realty
-                        new_image.save(update_fields=["realty"])
+                        new_image.save()
 
             # TODO: Redirect to Host's listings dashboard
             return redirect(reverse('realty:all'))
