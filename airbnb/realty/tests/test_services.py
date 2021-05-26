@@ -12,10 +12,11 @@ from ..models import Amenity, Realty, RealtyTypeChoices, RealtyImage
 from ..constants import REALTY_FORM_SESSION_PREFIX, REALTY_FORM_KEYS_COLLECTOR_NAME
 from ..services.order import ImageOrder, convert_response_to_orders
 from ..services.images import (get_images_by_realty_id, get_image_by_id, update_images_order)
-from ..services.realty import (get_amenity_ids_from_session, set_realty_host_by_user, get_all_available_realty,
+from ..services.realty import (get_amenity_ids_from_session, get_all_available_realty,
                                get_available_realty_by_city_slug, get_available_realty_by_host,
                                get_available_realty_filtered_by_type, get_last_realty, get_n_latest_available_realty,
-                               get_available_realty_count_by_city, get_available_realty_search_results)
+                               get_available_realty_count_by_city, get_available_realty_search_results,
+                               get_or_create_realty_host_by_user)
 
 MEDIA_ROOT = tempfile.mkdtemp()
 
@@ -133,33 +134,25 @@ class RealtyServicesRealtyTests(TestCase):
 
         self.assertIsNone(amenity_ids)
 
-    def test_set_realty_host_by_user_new_host(self):
-        """set_realty_host_by_user() updates `host` field with the new host."""
+    def test_get_or_create_realty_host_by_user_new_host(self):
+        """get_or_create_realty_host_by_user() returns the created RealtyHost object."""
         # user2 is not a host yet
         test_user = CustomUser.objects.get(email='user2@gmail.com')
 
-        test_realty = Realty.objects.get(slug='realty-1')
+        host, created = get_or_create_realty_host_by_user(test_user)
 
-        set_realty_host_by_user(test_realty, test_user)
-        new_host = RealtyHost.objects.get(user=test_user)
+        self.assertTrue(created)
+        self.assertEqual(host, RealtyHost.objects.get(user=test_user))
 
-        test_realty.refresh_from_db()
-
-        self.assertEqual(test_realty.host, new_host)
-
-    def test_set_realty_host_by_user_existing_host(self):
-        """set_realty_host_by_user() updates `host` field with the existing host."""
+    def test_get_or_create_realty_host_by_user_existing_host(self):
+        """get_or_create_realty_host_by_user() returns an existing RealtyHost object (by a given `user`)."""
         # user1 is a host
         test_user = CustomUser.objects.get(email='user1@gmail.com')
 
-        test_realty = Realty.objects.get(slug='realty-1')
+        host, created = get_or_create_realty_host_by_user(test_user)
 
-        set_realty_host_by_user(test_realty, test_user)
-        new_host = RealtyHost.objects.get(user=test_user)
-
-        test_realty.refresh_from_db()
-
-        self.assertEqual(test_realty.host, new_host)
+        self.assertFalse(created)
+        self.assertEqual(host, RealtyHost.objects.get(user=test_user))
 
     def test_get_all_available_realty(self):
         """get_all_available_realty() returns all Realty objects that are `available`."""
@@ -322,6 +315,7 @@ class RealtyServicesImagesTests(TestCase):
     @classmethod
     def tearDownClass(cls) -> None:
         shutil.rmtree(MEDIA_ROOT, ignore_errors=True)  # delete temp media dir
+        RealtyImage.objects.delete()
         super().tearDownClass()
 
     def test_get_images_by_realty_id(self):

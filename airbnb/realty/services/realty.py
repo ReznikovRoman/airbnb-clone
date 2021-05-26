@@ -7,19 +7,18 @@ from django.contrib.postgres.search import SearchRank, SearchVector, SearchQuery
 from common.session_handler import SessionHandler
 from hosts.models import RealtyHost
 from ..models import Amenity, Realty, CustomDeleteQueryset
+from ..constants import REALTY_FORM_SESSION_PREFIX
 
 
 def get_amenity_ids_from_session(session_handler: SessionHandler) -> Optional[QuerySet[int]]:
-    amenities = session_handler.get_session().get('realty_amenities', None)
+    amenities = session_handler.get_session().get(f"{REALTY_FORM_SESSION_PREFIX}_amenities", None)
     if amenities:
         amenities = Amenity.objects.filter(name__in=[*amenities]).values_list('id', flat=True)
     return amenities
 
 
-def set_realty_host_by_user(realty: Realty, user: settings.AUTH_USER_MODEL) -> None:
-    host = RealtyHost.objects.get_or_create(user=user)[0]
-    realty.host = host
-    realty.save(update_fields=["host"])
+def get_or_create_realty_host_by_user(user: settings.AUTH_USER_MODEL) -> Tuple[RealtyHost, bool]:
+    return RealtyHost.objects.get_or_create(user=user)
 
 
 def get_all_available_realty() -> 'CustomDeleteQueryset[Realty]':
