@@ -22,6 +22,7 @@ from .. import views
 from ..forms import (SignUpForm, CustomPasswordResetForm, ProfileForm, UserInfoForm, ProfileImageForm,
                      ProfileDescriptionForm, VerificationCodeForm)
 
+
 MEDIA_ROOT = tempfile.mkdtemp()
 
 

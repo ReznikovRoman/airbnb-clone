@@ -18,6 +18,7 @@ from ..services.realty import (get_amenity_ids_from_session, get_all_available_r
                                get_available_realty_count_by_city, get_available_realty_search_results,
                                get_or_create_realty_host_by_user)
 
+
 MEDIA_ROOT = tempfile.mkdtemp()
 
 
