@@ -290,8 +290,10 @@ class RealtyGeneralInfoEditView(LoginRequiredMixin,
             self.session_handler.create_or_update_items(data=self.realty_form.cleaned_data)
 
             # 'serialize' m2m field
-            self.session_handler.add_new_item('amenities',
-                                              [amenity.name for amenity in self.realty_form.cleaned_data['amenities']])
+            self.session_handler.add_new_item(
+                new_key='amenities',
+                new_value=[amenity.name for amenity in self.realty_form.cleaned_data['amenities']],
+            )
 
             return redirect(reverse('realty:new_realty_location'))
         return self.render_to_response(
