@@ -1,8 +1,9 @@
 import logging
-from typing import List
+from typing import List, Any
 
 from twilio.base.exceptions import TwilioRestException
 
+from configs.redis_conf import r
 from configs.twilio_conf import twilio_client
 from .types import AbstractForm
 from .constants import VERIFICATION_CODE_STATUS_FAILED
@@ -33,6 +34,15 @@ def get_required_fields_from_form_with_model(forms_with_models: List[FormWithMod
 
 def get_keys_with_prefixes(names: List[str], prefix: str = '') -> List[str]:
     return [create_name_with_prefix(name, prefix) for name in names]
+
+
+def is_cooldown_ended(key: str) -> bool:
+    """Return True if cooldown has ended, False otherwise."""
+    return not(bool(r.get(key)))
+
+
+def set_key_with_timeout(key: str, timeout: int, value: int) -> Any:
+    return r.setex(key, timeout, value)
 
 
 def _send_sms_by_twilio(body: str, sms_from: str, sms_to: str) -> TwilioShortPayload:
