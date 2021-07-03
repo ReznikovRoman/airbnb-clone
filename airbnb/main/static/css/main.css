@@ -408,7 +408,7 @@ form input:focus, form select:focus, form textarea:focus {
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: #fff;
-  padding: 2rem 3rem;
+  padding: 2rem 4rem;
   border-radius: 5px;
   box-shadow: 0 3rem 5rem rgba(0, 0, 0, 0.3);
   z-index: 10; }
@@ -430,17 +430,17 @@ form input:focus, form select:focus, form textarea:focus {
     margin-bottom: 1rem; }
   .filter-popup .form-section .form-input label {
     margin-left: .7rem; }
-  .filter-popup .form-section#section--rooms label {
+  .filter-popup .form-section#section--guests label {
     margin: 0; }
-  .filter-popup .form-section#section--rooms .form-input {
+  .filter-popup .form-section#section--guests .form-input {
     margin-top: 1rem;
     display: flex;
     justify-content: space-between; }
-    .filter-popup .form-section#section--rooms .form-input .input-number--select {
+    .filter-popup .form-section#section--guests .form-input .input-number--select {
       display: inline-block;
       position: relative;
       width: 100px; }
-      .filter-popup .form-section#section--rooms .form-input .input-number--select input[type="number"] {
+      .filter-popup .form-section#section--guests .form-input .input-number--select input[type="number"] {
         display: block;
         height: 32px;
         line-height: 32px;
@@ -449,9 +449,9 @@ form input:focus, form select:focus, form textarea:focus {
         margin: 0;
         text-align: center;
         border: none; }
-      .filter-popup .form-section#section--rooms .form-input .input-number--select input[type="number"]::-webkit-outer-spin-button, .filter-popup .form-section#section--rooms .form-input .input-number--select input[type="number"]::-webkit-inner-spin-button {
+      .filter-popup .form-section#section--guests .form-input .input-number--select input[type="number"]::-webkit-outer-spin-button, .filter-popup .form-section#section--guests .form-input .input-number--select input[type="number"]::-webkit-inner-spin-button {
         display: none; }
-    .filter-popup .form-section#section--rooms .form-input .input-number--subtract, .filter-popup .form-section#section--rooms .form-input .input-number--add {
+    .filter-popup .form-section#section--guests .form-input .input-number--subtract, .filter-popup .form-section#section--guests .form-input .input-number--add {
       background-color: #fff;
       color: #757987;
       position: absolute;
@@ -465,12 +465,15 @@ form input:focus, form select:focus, form textarea:focus {
       border: 1px solid #b0b0b0;
       font-size: 16px;
       font-weight: 600; }
-    .filter-popup .form-section#section--rooms .form-input .input-number--subtract {
+    .filter-popup .form-section#section--guests .form-input .input-number--subtract {
       left: 1px;
       text-align: center; }
-    .filter-popup .form-section#section--rooms .form-input .input-number--add {
+    .filter-popup .form-section#section--guests .form-input .input-number--add {
       right: 1px;
       padding: 0; }
+  .filter-popup .form-section#section--amenities ul {
+    column-count: 2;
+    column-gap: 5rem; }
 
 .realty-list .header p {
   margin-bottom: 0; }

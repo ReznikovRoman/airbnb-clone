@@ -42,66 +42,58 @@
             </div>
         </div>
 
-        {# TODO: изменить форму #}
         <div class="filter-popup hidden">
             <button class="close-popup">&times;</button>
             <div class="popup-header">
                 <h3>More filters</h3>
             </div>
-            <form action="" class="property-filter-all--form">
-                <div class="form-section" id="section--rooms">
-                    <div class="form-section--header">
-                        <h2>Rooms and beds</h2>
-                    </div>
-                    <div class="form-input">
-                        <label for="input--beds-count">Beds</label>
-                        <div class="input-number--select">
-                            <button class="input-number--subtract" type="button">-</button>
-                            <input type="number" min="0" value="1" max="8" id="input--beds-count">
-                            <button class="input-number--add" type="button">+</button>
-                        </div>
-                    </div>
-                    <div class="form-input">
-                        <label for="input--rooms-count">Rooms</label>
-                        <div class="input-number--select">
-                            <button class="input-number--subtract" type="button">-</button>
-                            <input type="number" min="0" value="1" max="8" id="input--rooms-count">
-                            <button class="input-number--add" type="button">+</button>
-                        </div>
-                    </div>
-                </div>
+            <form action="{% url 'realty:all_by_city' city_slug=city|slugify %}"
+                      class="property-filter-all--form" method="get">
+                {% if realty_filters_form %}
+                    <!-- Form Errors -->
+                    {% if realty_filters_form.errors %}
+                        <ul class="errors">
+                            {% for error in realty_filters_form.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
 
-                <div class="form-section" id="section--amenities">
-                    <div class="form-section--header">
-                        <h2>Amenities</h2>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-input">
-                                <input type="checkbox" value="apartments" id="realty-amenity--kitchen">
-                                <label for="realty-amenity--kitchen">Kitchen</label>
+                    {% regroup realty_filters_form by field.group as field_groups %}
+                    {% for field_group in field_groups %}
+                        {% if field_group.grouper == 1 %}
+                            <div class="form-section" id="section--guests">
+                                <div class="form-section--header">
+                                    <h2>Guests and beds</h2>
+                                </div>
+                                {% for field in field_group.list %}
+                                    <div class="form-input">
+                                        <label>{{ field.label }}</label>
+                                        <div class="input-number--select">
+                                            <button class="input-number--subtract" type="button">-</button>
+                                            {{ field }}
+                                            <button class="input-number--add" type="button">+</button>
+                                        </div>
+                                    </div>
+                                {% endfor %}
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-input">
-                                <input type="checkbox" value="apartments" id="realty-amenity--washer">
-                                <label for="realty-amenity--washer">Washer</label>
+                        {% else %}
+                            <div class="form-section" id="section--amenities">
+                                <div class="form-section--header">
+                                    <h2>Amenities</h2>
+                                </div>
+                                {% for field in field_group.list %}
+                                    <div class="form-input">
+                                        <div class="form-input">
+                                            {{ field }}
+                                            <label>{{ field.label }}</label>
+                                        </div>
+                                    </div>
+                                {% endfor %}
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-input">
-                                <input type="checkbox" value="apartments" id="realty-amenity--wifi">
-                                <label for="realty-amenity--wifi">Wifi</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-input">
-                                <input type="checkbox" value="apartments" id="realty-amenity--breakfast">
-                                <label for="realty-amenity--breakfast">Breakfast</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
 
                 <hr class="form-footer--divider">
                 <div class="form-footer">

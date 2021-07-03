@@ -42,8 +42,72 @@
                     </div>
                 </form>
             </div>
+            <div class="filter--dropdown" id="filters-all--dropdown">
+                <button class="button-filter" id="realty-filters-all--btn">
+                    <span>More filters</span>
+                </button>
+            </div>
         </div>
 
+        <div class="filter-popup hidden">
+            <button class="close-popup">&times;</button>
+            <div class="popup-header">
+                <h3>More filters</h3>
+            </div>
+            <form action="{% url 'realty:search' %}"
+                      class="property-filter-all--form" method="get">
+                {% if realty_filters_form %}
+                    <!-- Form Errors -->
+                    {% if realty_filters_form.errors %}
+                        <ul class="errors">
+                            {% for error in realty_filters_form.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+
+                    {% regroup realty_filters_form by field.group as field_groups %}
+                    {% for field_group in field_groups %}
+                        {% if field_group.grouper == 1 %}
+                            <div class="form-section" id="section--guests">
+                                <div class="form-section--header">
+                                    <h2>Guests and beds</h2>
+                                </div>
+                                {% for field in field_group.list %}
+                                    <div class="form-input">
+                                        <label>{{ field.label }}</label>
+                                        <div class="input-number--select">
+                                            <button class="input-number--subtract" type="button">-</button>
+                                            {{ field }}
+                                            <button class="input-number--add" type="button">+</button>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="form-section" id="section--amenities">
+                                <div class="form-section--header">
+                                    <h2>Amenities</h2>
+                                </div>
+                                {% for field in field_group.list %}
+                                    <div class="form-input">
+                                        <div class="form-input">
+                                            {{ field }}
+                                            <label>{{ field.label }}</label>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                <input type="hidden" name="q" value="{{ search_query }}">
+                <hr class="form-footer--divider">
+                <div class="form-footer">
+                    <input type="submit" value="Show places">
+                </div>
+            </form>
+        </div>
         <div class="realty">
             {% for realty in realty_list %}
                 <div class="realty-card">
