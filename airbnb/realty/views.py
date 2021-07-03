@@ -79,6 +79,7 @@ class RealtyListView(generic.ListView):
         if city_slug:
             available_realty = get_available_realty_by_city_slug(city_slug=city_slug)
 
+        print(self.request.GET)
         realty_types: List[str] = self.request.GET.getlist('realty_type', None)
         if realty_types:
             available_realty = get_available_realty_filtered_by_type(

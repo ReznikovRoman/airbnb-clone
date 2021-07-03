@@ -436,6 +436,41 @@ form input:focus, form select:focus, form textarea:focus {
     margin-top: 1rem;
     display: flex;
     justify-content: space-between; }
+    .filter-popup .form-section#section--rooms .form-input .input-number--select {
+      display: inline-block;
+      position: relative;
+      width: 100px; }
+      .filter-popup .form-section#section--rooms .form-input .input-number--select input[type="number"] {
+        display: block;
+        height: 32px;
+        line-height: 32px;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+        text-align: center;
+        border: none; }
+      .filter-popup .form-section#section--rooms .form-input .input-number--select input[type="number"]::-webkit-outer-spin-button, .filter-popup .form-section#section--rooms .form-input .input-number--select input[type="number"]::-webkit-inner-spin-button {
+        display: none; }
+    .filter-popup .form-section#section--rooms .form-input .input-number--subtract, .filter-popup .form-section#section--rooms .form-input .input-number--add {
+      background-color: #fff;
+      color: #757987;
+      position: absolute;
+      top: 1px;
+      bottom: 1px;
+      width: 30px;
+      padding: 0;
+      display: block;
+      text-align: center;
+      border-radius: 50%;
+      border: 1px solid #b0b0b0;
+      font-size: 16px;
+      font-weight: 600; }
+    .filter-popup .form-section#section--rooms .form-input .input-number--subtract {
+      left: 1px;
+      text-align: center; }
+    .filter-popup .form-section#section--rooms .form-input .input-number--add {
+      right: 1px;
+      padding: 0; }
 
 .realty-list .header p {
   margin-bottom: 0; }
