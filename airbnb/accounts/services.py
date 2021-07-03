@@ -11,6 +11,7 @@ from django.contrib.auth.models import Group
 
 from common.tasks import send_sms_by_twilio
 from mailings.tasks import send_email_with_attachments
+from common.services import is_cooldown_ended, set_key_with_timeout
 from common.constants import VERIFICATION_CODE_STATUS_FAILED, VERIFICATION_CODE_STATUS_DELIVERED
 from configs.redis_conf import r
 from common.collections import TwilioShortPayload
@@ -48,19 +49,24 @@ def send_greeting_email(domain: str, scheme: str, user: CustomUser) -> None:
 
 def send_verification_link(domain: str, scheme: str, user: CustomUser) -> None:
     """Send email verification link."""
-    subject = 'Activate your account'
+    user_id = user.pk
+    email_sent_key = f"accounts:user:{user_id}:email.sent"
+    if not is_cooldown_ended(email_sent_key):
+        return
 
+    set_key_with_timeout(email_sent_key, 60, 1)
+
+    subject = 'Activate your account'
     text_content = render_to_string(
         template_name='accounts/registration/account_activation_email.html',
         context={
             'user': user,
             'protocol': scheme,
             'domain': domain,
-            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+            'uid': urlsafe_base64_encode(force_bytes(user_id)),
             'token': account_activation_token.make_token(user),
         }
     )
-
     html = get_template(template_name='accounts/registration/account_activation_email.html')
     html_content = html.render(
         context={

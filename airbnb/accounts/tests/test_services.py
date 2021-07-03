@@ -1,3 +1,4 @@
+from time import sleep
 from unittest import mock
 
 import fakeredis
@@ -65,6 +66,8 @@ class AccountsServicesTests(TestCase):
         self.assertEqual(test_email.to, [test_user.email])
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+    @mock.patch('common.services.r',
+                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
     def test_send_verification_link_correct_body(self):
         """Test that Verification Email's body is correct (subject, content, recipient)."""
         test_user: CustomUser = CustomUser.objects.first()
@@ -80,6 +83,8 @@ class AccountsServicesTests(TestCase):
                 'token': account_activation_token.make_token(test_user),
             }
         )
+        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+        r.flushall()
 
         send_verification_link(domain=test_domain, scheme=test_scheme, user=test_user)
 
@@ -89,6 +94,92 @@ class AccountsServicesTests(TestCase):
         self.assertEqual(test_email.subject, 'Activate your account')
         self.assertEqual(str(test_email.body), str(test_content))
         self.assertEqual(test_email.to, [test_user.email])
+
+    @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+    @mock.patch('common.services.r',
+                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    def test_send_verification_link_sends_email_if_no_cooldown_yet(self):
+        """Test that email is sent if there is no cooldown yet."""
+        test_user: CustomUser = CustomUser.objects.first()
+        test_domain = 'airbnb'
+        test_scheme = 'https'
+        render_to_string(
+            template_name='accounts/registration/account_activation_email.html',
+            context={
+                'user': test_user,
+                'protocol': test_scheme,
+                'domain': test_domain,
+                'uid': urlsafe_base64_encode(force_bytes(test_user.pk)),
+                'token': account_activation_token.make_token(test_user),
+            }
+        )
+
+        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+        r.flushall()
+
+        send_verification_link(domain=test_domain, scheme=test_scheme, user=test_user)
+
+        self.assertEqual(len(mail.outbox), 1)
+
+    @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+    @mock.patch('common.services.r',
+                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    def test_send_verification_link_no_email_if_cooldown(self):
+        """Test that email is not sent if cooldown hasn't ended."""
+        test_user: CustomUser = CustomUser.objects.first()
+        test_domain = 'airbnb'
+        test_scheme = 'https'
+        render_to_string(
+            template_name='accounts/registration/account_activation_email.html',
+            context={
+                'user': test_user,
+                'protocol': test_scheme,
+                'domain': test_domain,
+                'uid': urlsafe_base64_encode(force_bytes(test_user.pk)),
+                'token': account_activation_token.make_token(test_user),
+            },
+        )
+
+        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+        r.flushall()
+        key = f"accounts:user:{test_user.pk}:email.sent"
+        timeout = 5
+        r.setex(key, timeout, 1)
+
+        send_verification_link(domain=test_domain, scheme=test_scheme, user=test_user)
+
+        self.assertEqual(len(mail.outbox), 0)
+
+    @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+    @mock.patch('common.services.r',
+                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    def test_send_verification_link_sends_email_after_cooldown(self):
+        """Test that email is sent if cooldown has ended."""
+        test_user: CustomUser = CustomUser.objects.first()
+        test_domain = 'airbnb'
+        test_scheme = 'https'
+        render_to_string(
+            template_name='accounts/registration/account_activation_email.html',
+            context={
+                'user': test_user,
+                'protocol': test_scheme,
+                'domain': test_domain,
+                'uid': urlsafe_base64_encode(force_bytes(test_user.pk)),
+                'token': account_activation_token.make_token(test_user),
+            },
+        )
+
+        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+        r.flushall()
+        key = f"accounts:user:{test_user.pk}:email.sent"
+        timeout = 1
+        r.setex(key, timeout, 1)
+
+        sleep(timeout)
+
+        send_verification_link(domain=test_domain, scheme=test_scheme, user=test_user)
+
+        self.assertEqual(len(mail.outbox), 1)
 
     def test_get_user_by_pk_existing_user(self):
         """get_user_by_pk() returns a CustomUser object if user with the given `pk` exists."""
