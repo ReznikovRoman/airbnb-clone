@@ -5,11 +5,10 @@
   - Django 3
   - Django Channels
   - DRF
-  - sqlite / Postgres
+  - Postgres
   - Celery
   - Redis
 - Frontend
   - HTML
-  - CSS
+  - CSS (Bootstrap 4)
   - JavaScript
-  - Bootstrap 4
