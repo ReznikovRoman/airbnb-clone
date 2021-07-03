@@ -35,8 +35,80 @@
                     </div>
                 </form>
             </div>
+            <div class="filter--dropdown" id="filters-all--dropdown">
+                <button class="button-filter" id="realty-filters-all--btn">
+                    <span>More filters</span>
+                </button>
+            </div>
         </div>
 
+        {# TODO: изменить форму #}
+        <div class="filter-popup hidden">
+            <button class="close-popup">&times;</button>
+            <div class="popup-header">
+                <h3>More filters</h3>
+            </div>
+            <form action="" class="property-filter-all--form">
+                <div class="form-section" id="section--rooms">
+                    <div class="form-section--header">
+                        <h2>Rooms and beds</h2>
+                    </div>
+                    <div class="form-input">
+                        <label for="input--beds-count">Beds</label>
+                        <div class="input-number--select">
+                            <button class="input-number--subtract" type="button">-</button>
+                            <input type="number" min="0" value="1" max="8" id="input--beds-count">
+                            <button class="input-number--add" type="button">+</button>
+                        </div>
+                    </div>
+                    <div class="form-input">
+                        <label for="input--rooms-count">Rooms</label>
+                        <div class="input-number--select">
+                            <button class="input-number--subtract" type="button">-</button>
+                            <input type="number" min="0" value="1" max="8" id="input--rooms-count">
+                            <button class="input-number--add" type="button">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section" id="section--amenities">
+                    <div class="form-section--header">
+                        <h2>Amenities</h2>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-input">
+                                <input type="checkbox" value="apartments" id="realty-amenity--kitchen">
+                                <label for="realty-amenity--kitchen">Kitchen</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-input">
+                                <input type="checkbox" value="apartments" id="realty-amenity--washer">
+                                <label for="realty-amenity--washer">Washer</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-input">
+                                <input type="checkbox" value="apartments" id="realty-amenity--wifi">
+                                <label for="realty-amenity--wifi">Wifi</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-input">
+                                <input type="checkbox" value="apartments" id="realty-amenity--breakfast">
+                                <label for="realty-amenity--breakfast">Breakfast</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="form-footer--divider">
+                <div class="form-footer">
+                    <input type="submit" value="Show places">
+                </div>
+            </form>
+        </div>
         <div class="realty">
             {% for realty in realty_list %}
                 <div class="realty-card">
@@ -88,8 +160,8 @@
     </div>
 {% endblock %}
 
-{% block domready %}
 
+{% block domready %}
 
     // Realty filter form - checkboxes
     const filterCheckboxes = $('.realty-filter--form').find('input[type="checkbox"]');

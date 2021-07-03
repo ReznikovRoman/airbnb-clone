@@ -1,6 +1,61 @@
 "use strict";
 
 
+const realtyTypeBtn = $('#realty-type--btn');
+const realtyTypeForm = realtyTypeBtn.siblings('form');
+const realtyFiltersBtn = $('#realty-filters-all--btn');
+
+const overlayEl = $('.overlay');
+const popupEl = $('.filter-popup');
+const closePopupEl = $('.close-popup');
+
+const realtyFilterButtonsSubtract = $('.input-number--subtract');
+const realtyFilterButtonsAdd = $('.input-number--add');
+const realtyFilterInputs = $('.input-number--custom-wrapper input');
+
+
+realtyTypeForm.click(function (e) {
+    e.stopPropagation();
+});
+
+$('body').click(function () {
+    if (!realtyTypeForm.hasClass('hidden')) realtyTypeForm.toggleClass('hidden');
+});
+
+
+function closePopup() {
+    popupEl.toggleClass('hidden');
+    overlayEl.toggleClass('hidden');
+    $('html, body').css({
+        overflow: 'auto',
+        height: 'auto'
+    });
+}
+
+document.addEventListener(
+    'keydown',
+    function (event) {
+        if (event.key === 'Escape') {
+            if (!popupEl.hasClass('hidden')) closePopup();
+            if (!realtyTypeForm.hasClass('hidden')) realtyTypeForm.toggleClass('hidden');
+        }
+    }
+);
+closePopupEl.click(closePopup);
+overlayEl.click(closePopup);
+
+realtyFiltersBtn.click(
+    function () {
+        popupEl.toggleClass('hidden');
+        overlayEl.toggleClass('hidden');
+        $('html, body').css({
+            overflow: 'hidden',
+            height: '100%'
+        });
+    }
+);
+
+
 // Custom number input (add and subtract buttons)
 const customNumberInputs = $('.input-number--custom-field');
 customNumberInputs.each(function () {
@@ -10,11 +65,6 @@ customNumberInputs.each(function () {
     $(this).before('<button class="input-number--subtract" type="button">-</button>');
     $(this).after('<button class="input-number--add" type="button">+</button>');
 });
-
-
-const realtyFilterButtonsSubtract = $('.input-number--subtract');
-const realtyFilterButtonsAdd = $('.input-number--add');
-const realtyFilterInputs = $('.input-number--custom-wrapper input');
 
 
 function getInputDataFromContext(context) {
