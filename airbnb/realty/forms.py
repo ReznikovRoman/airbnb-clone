@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Realty, RealtyImage, RealtyTypeChoices
+from .models import Realty, RealtyImage, RealtyTypeChoices, Amenity
 from .constants import (MAX_REALTY_IMAGES_COUNT, MAX_BEDS_COUNT, MAX_GUESTS_COUNT)
 
 
@@ -33,6 +33,41 @@ class RealtyTypeForm(forms.Form):
         choices=RealtyTypeChoices.choices,
         widget=forms.CheckboxSelectMultiple()
     )
+
+
+class RealtyFiltersForm(forms.Form):
+    """Form for filtering realty objects."""
+    beds_count = forms.DecimalField(
+        widget=forms.NumberInput(attrs={
+            'id': 'input--beds-count',
+            'step': '1',
+            'min': '0',
+            'value': '1',
+            'max': '8',
+        }),
+        required=False,
+        label='Beds',
+    )
+    beds_count.group = 1
+    guests_count = forms.DecimalField(
+        widget=forms.NumberInput(attrs={
+            'id': 'input--guests-count',
+            'step': '1',
+            'min': '0',
+            'value': '1',
+            'max': '8',
+        }),
+        required=False,
+        label='Guests',
+    )
+    guests_count.group = 1
+    amenities = forms.ModelMultipleChoiceField(
+        widget=forms.CheckboxSelectMultiple(),
+        queryset=Amenity.objects.all(),
+        label='',
+        required=False,
+    )
+    amenities.group = 2
 
 
 class RealtyForm(forms.ModelForm):

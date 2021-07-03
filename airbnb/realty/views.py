@@ -15,12 +15,13 @@ from common.services import (get_field_names_from_form,
                              get_required_fields_from_form_with_model, get_keys_with_prefixes)
 from common.collections import FormWithModel
 from common.session_handler import SessionHandler
-from .constants import (MAX_REALTY_IMAGES_COUNT,
-                        REALTY_FORM_SESSION_PREFIX, REALTY_FORM_KEYS_COLLECTOR_NAME)
+from .forms import (RealtyForm, RealtyTypeForm, RealtyImageFormSet,
+                    RealtyGeneralInfoForm, RealtyDescriptionForm, RealtyFiltersForm)
 from .models import Realty, RealtyImage, CustomDeleteQueryset
 from .mixins import RealtySessionDataRequiredMixin
-from .forms import (RealtyForm, RealtyTypeForm, RealtyImageFormSet,
-                    RealtyGeneralInfoForm, RealtyDescriptionForm)
+from .filters import RealtyShortFilter
+from .constants import (MAX_REALTY_IMAGES_COUNT,
+                        REALTY_FORM_SESSION_PREFIX, REALTY_FORM_KEYS_COLLECTOR_NAME)
 from .services.images import get_images_by_realty_id, update_images_order
 from .services.order import convert_response_to_orders
 from .services.realty import (get_amenity_ids_from_session, get_or_create_realty_host_by_user,
@@ -32,9 +33,11 @@ class RealtySearchResultsView(generic.ListView):
     model = Realty
     template_name = 'realty/realty/search_results.html'
     realty_type_form: RealtyTypeForm = None
+    realty_filters_form: RealtyFiltersForm = None
 
     def dispatch(self, request, *args, **kwargs):
         self.realty_type_form = RealtyTypeForm()
+        self.realty_filters_form = RealtyFiltersForm()
         return super(RealtySearchResultsView, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
@@ -47,6 +50,8 @@ class RealtySearchResultsView(generic.ListView):
                 realty_qs=realty_search_results,
             )
 
+        realty_search_results = RealtyShortFilter(self.request.GET, realty_search_results).qs
+
         return realty_search_results
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -56,6 +61,7 @@ class RealtySearchResultsView(generic.ListView):
         context['search_query'] = search_query
         context['realty_count'] = self.get_queryset().count()
         context['realty_type_form'] = self.realty_type_form
+        context['realty_filters_form'] = self.realty_filters_form
         context['meta_description'] = f"Search results for `{search_query}`"
 
         return context
@@ -67,9 +73,11 @@ class RealtyListView(generic.ListView):
     template_name = 'realty/realty/list.html'
     paginate_by = 3
     realty_type_form: RealtyTypeForm = None
+    realty_filters_form: RealtyFiltersForm = None
 
     def dispatch(self, request, *args, **kwargs):
         self.realty_type_form = RealtyTypeForm()
+        self.realty_filters_form = RealtyFiltersForm()
         return super(RealtyListView, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
@@ -79,13 +87,14 @@ class RealtyListView(generic.ListView):
         if city_slug:
             available_realty = get_available_realty_by_city_slug(city_slug=city_slug)
 
-        print(self.request.GET)
         realty_types: List[str] = self.request.GET.getlist('realty_type', None)
         if realty_types:
             available_realty = get_available_realty_filtered_by_type(
                 realty_types=realty_types,
                 realty_qs=available_realty
             )
+
+        available_realty = RealtyShortFilter(self.request.GET, available_realty).qs
 
         return available_realty
 
@@ -98,6 +107,7 @@ class RealtyListView(generic.ListView):
         context['city'] = city
         context['meta_description'] = f"List of places in {city}"
         context['realty_type_form'] = self.realty_type_form
+        context['realty_filters_form'] = self.realty_filters_form
 
         return context
 
