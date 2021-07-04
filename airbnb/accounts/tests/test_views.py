@@ -331,6 +331,7 @@ class AccountSettingsDashboardViewTests(TestCase):
 
 class PersonalInfoEditViewTests(TestCase):
     redis_server = fakeredis.FakeServer()
+    common_redis_server = fakeredis.FakeServer()
 
     def setUp(self) -> None:
         CustomUser.objects.create_user(
@@ -385,6 +386,8 @@ class PersonalInfoEditViewTests(TestCase):
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
     @mock.patch('accounts.services.r',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch('common.services.r',
+                fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True))
     def test_email_update_successful(self):
         """Test that if email has been changed, new email should be `unconfirmed` and verification should be sent."""
         test_user = CustomUser.objects.get(email='user1@gmail.com')
@@ -393,6 +396,8 @@ class PersonalInfoEditViewTests(TestCase):
             'last_name': test_user.last_name,
             'email': 'new1@gmail.com',
         }
+        r = fakeredis.FakeStrictRedis(server=self.common_redis_server, charset="utf-8", decode_responses=True)
+        r.flushall()
 
         self.client.login(email='user1@gmail.com', password='test')
         response = self.client.post(reverse('accounts:user_info_edit'), data=form_data)
@@ -410,6 +415,8 @@ class PersonalInfoEditViewTests(TestCase):
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
     @mock.patch('accounts.services.r',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch('common.services.r',
+                fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True))
     def test_renders_form_errors_on_failure(self):
         """Test that form errors are rendered correctly if there are any errors in the form."""
         test_user = CustomUser.objects.get(email='user1@gmail.com')
@@ -418,6 +425,8 @@ class PersonalInfoEditViewTests(TestCase):
             'last_name': test_user.last_name,
             'email': 'user2@gmail.com',  # error: email is not unique
         }
+        r = fakeredis.FakeStrictRedis(server=self.common_redis_server, charset="utf-8", decode_responses=True)
+        r.flushall()
 
         self.client.login(email='user1@gmail.com', password='test')
         response = self.client.post(reverse('accounts:user_info_edit'), data=form_data)
@@ -430,6 +439,8 @@ class PersonalInfoEditViewTests(TestCase):
     @mock.patch('configs.twilio_conf.twilio_client.messages.create')
     @mock.patch('accounts.services.r',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch('common.services.r',
+                fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True))
     def test_phone_number_new(self, message_mock):
         """Test that if phone number has been added,
         SMS code should be sent, `phone_number` is `unconfirmed` and `phone_code_status` should be updated.
@@ -447,6 +458,8 @@ class PersonalInfoEditViewTests(TestCase):
         message_mock.return_value = TwilioShortPayload(status=VERIFICATION_CODE_STATUS_DELIVERED, sid=expected_sid)
 
         r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+        r_common = fakeredis.FakeStrictRedis(server=self.common_redis_server, charset="utf-8", decode_responses=True)
+        r_common.flushall()
 
         self.client.login(email='user1@gmail.com', password='test')
         self.client.post(reverse('accounts:user_info_edit'), data=form_data)
@@ -464,6 +477,8 @@ class PersonalInfoEditViewTests(TestCase):
     @mock.patch('configs.twilio_conf.twilio_client.messages.create')
     @mock.patch('accounts.services.r',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch('common.services.r',
+                fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True))
     def test_phone_number_update(self, message_mock):
         """Test that if phone number has been updated,
         SMS code should be sent, `phone_number` is `unconfirmed` and `phone_code_status` should be updated.
@@ -481,6 +496,8 @@ class PersonalInfoEditViewTests(TestCase):
         message_mock.return_value = TwilioShortPayload(status=VERIFICATION_CODE_STATUS_DELIVERED, sid=expected_sid)
 
         r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+        r_common = fakeredis.FakeStrictRedis(server=self.common_redis_server, charset="utf-8", decode_responses=True)
+        r_common.flushall()
 
         self.client.login(email='user2@gmail.com', password='test')
         self.client.post(reverse('accounts:user_info_edit'), data=form_data)
@@ -498,6 +515,8 @@ class PersonalInfoEditViewTests(TestCase):
     @mock.patch('configs.twilio_conf.twilio_client.messages.create')
     @mock.patch('accounts.services.r',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch('common.services.r',
+                fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True))
     def test_phone_number_resend(self, message_mock):
         """Test that if verification code hasn't been sent, new code will be sent."""
         test_user = CustomUser.objects.get(email='user2@gmail.com')
@@ -513,6 +532,8 @@ class PersonalInfoEditViewTests(TestCase):
         message_mock.return_value = TwilioShortPayload(status=VERIFICATION_CODE_STATUS_FAILED, sid=expected_sid)
 
         r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+        r_common = fakeredis.FakeStrictRedis(server=self.common_redis_server, charset="utf-8", decode_responses=True)
+        r_common.flushall()
 
         self.client.login(email='user2@gmail.com', password='test')
         self.client.post(reverse('accounts:user_info_edit'), data=form_data)
@@ -533,6 +554,8 @@ class PersonalInfoEditViewTests(TestCase):
     @mock.patch('configs.twilio_conf.twilio_client.messages.create')
     @mock.patch('accounts.services.r',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch('common.services.r',
+                fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True))
     def test_phone_number_remove(self, message_mock):
         """Test that if phone number has been removed, phone number is `unconfirmed`."""
         test_user = CustomUser.objects.get(email='user2@gmail.com')
@@ -542,6 +565,8 @@ class PersonalInfoEditViewTests(TestCase):
             'email': test_user.email,
             'phone_number': '',  # remove existing phone number
         }
+        r_common = fakeredis.FakeStrictRedis(server=self.common_redis_server, charset="utf-8", decode_responses=True)
+        r_common.flushall()
 
         expected_sid = 'SM87105da94bff44b999e4e6eb90d8eb6a'
         message_mock.return_value = TwilioShortPayload(status=VERIFICATION_CODE_STATUS_DELIVERED, sid=expected_sid)
@@ -819,6 +844,7 @@ class SecurityDashboardViewTests(TestCase):
 
 class PhoneNumberConfirmPageViewTests(TestCase):
     redis_server = fakeredis.FakeServer()
+    common_redis_server = fakeredis.FakeServer()
 
     def setUp(self) -> None:
         test_user1 = CustomUser.objects.create_user(
@@ -855,6 +881,8 @@ class PhoneNumberConfirmPageViewTests(TestCase):
 
     @mock.patch('accounts.services.r',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch('common.services.r',
+                fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True))
     def test_view_url_accessible_by_name(self):
         """Test that url is accessible by its name."""
         self.client.login(email='user1@gmail.com', password='test')
@@ -866,6 +894,8 @@ class PhoneNumberConfirmPageViewTests(TestCase):
     @mock.patch('configs.twilio_conf.twilio_client.messages.create')
     @mock.patch('accounts.services.r',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch('common.services.r',
+                fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True))
     def test_correct_context_data_if_verification_code_sent(self, message_mock):
         """Test that request.context is correct if verification code has been sent."""
         test_user = CustomUser.objects.get(email='user2@gmail.com')
@@ -876,6 +906,9 @@ class PhoneNumberConfirmPageViewTests(TestCase):
             'last_name': test_user.last_name,
             'phone_number': test_phone_number,
         }
+
+        r = fakeredis.FakeStrictRedis(server=self.common_redis_server, charset="utf-8", decode_responses=True)
+        r.flushall()
 
         expected_sid = 'SM87105da94bff44b999e4e6eb90d8eb6a'
         message_mock.return_value = TwilioShortPayload(status=VERIFICATION_CODE_STATUS_DELIVERED, sid=expected_sid)
@@ -895,6 +928,8 @@ class PhoneNumberConfirmPageViewTests(TestCase):
     @mock.patch('configs.twilio_conf.twilio_client.messages.create')
     @mock.patch('accounts.services.r',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch('common.services.r',
+                fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True))
     def test_correct_context_data_if_verification_code_not_sent(self, message_mock):
         """Test that request.context is correct if verification code hasn't been sent."""
         test_user = CustomUser.objects.get(email='user2@gmail.com')
@@ -905,6 +940,9 @@ class PhoneNumberConfirmPageViewTests(TestCase):
             'last_name': test_user.last_name,
             'phone_number': test_phone_number,
         }
+
+        r = fakeredis.FakeStrictRedis(server=self.common_redis_server, charset="utf-8", decode_responses=True)
+        r.flushall()
 
         expected_sid = 'SM87105da94bff44b999e4e6eb90d8eb6a'
         message_mock.return_value = TwilioShortPayload(status=VERIFICATION_CODE_STATUS_FAILED, sid=expected_sid)
@@ -922,18 +960,27 @@ class PhoneNumberConfirmPageViewTests(TestCase):
 
     @mock.patch('accounts.services.r',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch('common.services.r',
+                fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True))
     def test_redirect_if_no_phone_number(self):
         """Test that if user has no `phone_number`, he should be redirected."""
         self.client.login(email='user2@gmail.com', password='test')  # user without phone_number
+        r = fakeredis.FakeStrictRedis(server=self.common_redis_server, charset="utf-8", decode_responses=True)
+        r.flushall()
         response = self.client.get(reverse('accounts:confirm_phone'))
 
         self.assertRedirects(response, reverse('accounts:settings_dashboard'))
 
     @mock.patch('accounts.services.r',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch('common.services.r',
+                fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True))
     def test_redirect_if_phone_number_confirmed(self):
         """Test that if user has a `confirmed` `phone_number`, he should be redirected."""
         self.client.login(email='user3@gmail.com', password='test')  # user with a `confirmed` phone_number
+        r = fakeredis.FakeStrictRedis(server=self.common_redis_server, charset="utf-8", decode_responses=True)
+        r.flushall()
+
         response = self.client.get(reverse('accounts:confirm_phone'))
 
         self.assertRedirects(response, reverse('accounts:settings_dashboard'))
@@ -942,6 +989,8 @@ class PhoneNumberConfirmPageViewTests(TestCase):
     @mock.patch('configs.twilio_conf.twilio_client.messages.create')
     @mock.patch('accounts.services.r',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch('common.services.r',
+                fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True))
     def test_confirm_phone_number_success(self, message_mock):
         """Test that user can confirm a phone number."""
         test_user = CustomUser.objects.get(email='user2@gmail.com')
@@ -958,6 +1007,9 @@ class PhoneNumberConfirmPageViewTests(TestCase):
 
         # user without a phone_number
         self.client.login(email='user2@gmail.com', password='test')
+
+        r = fakeredis.FakeStrictRedis(server=self.common_redis_server, charset="utf-8", decode_responses=True)
+        r.flushall()
 
         # add new phone number
         self.client.post(reverse('accounts:user_info_edit'), data=user_form_data)
@@ -985,6 +1037,8 @@ class PhoneNumberConfirmPageViewTests(TestCase):
     @mock.patch('configs.twilio_conf.twilio_client.messages.create')
     @mock.patch('accounts.services.r',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch('common.services.r',
+                fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True))
     def test_confirm_phone_number_invalid_code(self, message_mock):
         """Test that user can't confirm phone number with the invalid verification code."""
         test_user = CustomUser.objects.get(email='user2@gmail.com')
@@ -998,6 +1052,9 @@ class PhoneNumberConfirmPageViewTests(TestCase):
 
         expected_sid = 'SM87105da94bff44b999e4e6eb90d8eb6a'
         message_mock.return_value = TwilioShortPayload(status=VERIFICATION_CODE_STATUS_DELIVERED, sid=expected_sid)
+
+        r = fakeredis.FakeStrictRedis(server=self.common_redis_server, charset="utf-8", decode_responses=True)
+        r.flushall()
 
         # user without a phone_number
         self.client.login(email='user2@gmail.com', password='test')
@@ -1059,6 +1116,8 @@ class SendConfirmationEmailViewTests(TestCase):
         self.assertRedirects(response, reverse('accounts:settings_dashboard'))
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+    @mock.patch('common.services.r',
+                fakeredis.FakeStrictRedis(server=fakeredis.FakeServer(), charset="utf-8", decode_responses=True))
     def test_email_sent_if_unconfirmed_email(self):
         """Test that verification email is sent, if user's email is `unconfirmed` yet."""
         self.client.login(email='user2@gmail.com', password='test')  # user with a `unconfirmed` email
