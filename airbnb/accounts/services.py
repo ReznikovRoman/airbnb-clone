@@ -16,9 +16,9 @@ from common.constants import (VERIFICATION_CODE_STATUS_FAILED, VERIFICATION_CODE
                               VERIFICATION_CODE_STATUS_COOLDOWN)
 from configs.redis_conf import r
 from common.collections import TwilioShortPayload
+from .tokens import account_activation_token
 from .models import (CustomUser, CustomUserManager, Profile, SMSLog,
                      get_default_profile_image_full_url, get_default_profile_image)
-from .tokens import account_activation_token
 
 
 def send_greeting_email(domain: str, scheme: str, user: CustomUser) -> None:
@@ -30,7 +30,7 @@ def send_greeting_email(domain: str, scheme: str, user: CustomUser) -> None:
         context={
             'protocol': scheme,
             'domain': domain,
-        }
+        },
     )
 
     html = get_template(template_name='accounts/emails/greeting_email.html')
@@ -38,13 +38,13 @@ def send_greeting_email(domain: str, scheme: str, user: CustomUser) -> None:
         context={
             'protocol': scheme,
             'domain': domain,
-        }
+        },
     )
     send_email_with_attachments.delay(
         subject,
         text_content,
         email_to=[user.email],
-        alternatives=[(html_content, 'text/html')]
+        alternatives=[(html_content, 'text/html')],
     )
 
 
@@ -54,7 +54,6 @@ def send_verification_link(domain: str, scheme: str, user: CustomUser) -> None:
     email_sent_key = f"accounts:user:{user_id}:email.sent"
     if not is_cooldown_ended(email_sent_key):
         return
-
     set_key_with_timeout(email_sent_key, 60, 1)
 
     subject = 'Activate your account'
@@ -66,7 +65,7 @@ def send_verification_link(domain: str, scheme: str, user: CustomUser) -> None:
             'domain': domain,
             'uid': urlsafe_base64_encode(force_bytes(user_id)),
             'token': account_activation_token.make_token(user),
-        }
+        },
     )
     html = get_template(template_name='accounts/registration/account_activation_email.html')
     html_content = html.render(
@@ -74,15 +73,15 @@ def send_verification_link(domain: str, scheme: str, user: CustomUser) -> None:
             'user': user,
             'protocol': scheme,
             'domain': domain,
-            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+            'uid': urlsafe_base64_encode(force_bytes(user_id)),
             'token': account_activation_token.make_token(user),
-        }
+        },
     )
     send_email_with_attachments.delay(
         subject,
         text_content,
         email_to=[user.email],
-        alternatives=[(html_content, 'text/html')]
+        alternatives=[(html_content, 'text/html')],
     )
 
 
@@ -152,9 +151,8 @@ def handle_phone_number_change(user_profile: Profile, site_domain: str, new_phon
         return TwilioShortPayload(status=VERIFICATION_CODE_STATUS_COOLDOWN, sid=None)
     set_key_with_timeout(sms_sent_key, 60, 1)
 
-    sms_log = SMSLog.objects.get_or_create(profile=user_profile)[0]
-
     sms_verification_code = generate_random_sms_code()
+    sms_log = SMSLog.objects.get_or_create(profile=user_profile)[0]
     sms_log.sms_code = sms_verification_code
     sms_log.save(update_fields=["sms_code"])
 
@@ -181,14 +179,14 @@ def is_verification_code_for_profile_valid(user_profile: Profile, verification_c
 
 def set_phone_code_status_by_user_id(
         user_id: Union[int, str],
-        phone_code_status: Union[VERIFICATION_CODE_STATUS_FAILED, VERIFICATION_CODE_STATUS_DELIVERED]
+        phone_code_status: Union[VERIFICATION_CODE_STATUS_FAILED, VERIFICATION_CODE_STATUS_DELIVERED],
 ) -> bool:
     key = f"user:{user_id}:phone_code_status"
     return r.set(key, phone_code_status)
 
 
 def get_phone_code_status_by_user_id(
-        user_id: Union[int, str]
+        user_id: Union[int, str],
 ) -> Union[VERIFICATION_CODE_STATUS_FAILED, VERIFICATION_CODE_STATUS_DELIVERED, None]:
     key = f"user:{user_id}:phone_code_status"
     return r.get(key)

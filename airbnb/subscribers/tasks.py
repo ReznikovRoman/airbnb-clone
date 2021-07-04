@@ -28,7 +28,7 @@ def email_subscribers_about_latest_realty(latest_realty_count: Optional[int] = 3
                 'realty_list': latest_realty,
                 'protocol': protocol,
                 'domain': domain,
-            }
+            },
         )
 
         html = get_template(template_name='subscribers/promo/new_realty.html')
@@ -38,12 +38,12 @@ def email_subscribers_about_latest_realty(latest_realty_count: Optional[int] = 3
                 'realty_list': latest_realty,
                 'protocol': protocol,
                 'domain': domain,
-            }
+            },
         )
 
         send_email_with_attachments.delay(
             subject,
             text_content,
             email_to=[subscriber.email],
-            alternatives=[(html_content, 'text/html')]
+            alternatives=[(html_content, 'text/html')],
         )
