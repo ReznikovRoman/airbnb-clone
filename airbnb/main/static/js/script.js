@@ -25,7 +25,7 @@ $('body').click(function () {
 
 function closePopup() {
     popupEl.toggleClass('hidden');
-    overlayEl.toggleClass('hidden');
+    overlayEl.addClass('hidden');
     $('html, body').css({
         overflow: 'auto',
         height: 'auto'
@@ -36,8 +36,12 @@ document.addEventListener(
     'keydown',
     function (event) {
         if (event.key === 'Escape') {
-            if (!popupEl.hasClass('hidden')) closePopup();
-            if (!realtyTypeForm.hasClass('hidden')) realtyTypeForm.toggleClass('hidden');
+            if (!popupEl.hasClass('hidden')) {
+                closePopup();
+            }
+            if (!realtyTypeForm.hasClass('hidden')) {
+                realtyTypeForm.toggleClass('hidden');
+            }
         }
     }
 );
