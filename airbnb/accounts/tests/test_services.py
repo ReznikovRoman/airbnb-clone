@@ -253,6 +253,8 @@ class AccountsServicesTests(TestCase):
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
     @mock.patch('configs.twilio_conf.twilio_client.messages.create')
+    @mock.patch('common.services.r',
+                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
     def test_handle_phone_number_change(self, message_mock):
         """Test that user's phone number is now unconfirmed, and SMS verification code was sent."""
         test_profile: Profile = CustomUser.objects.first().profile
@@ -268,6 +270,69 @@ class AccountsServicesTests(TestCase):
 
         self.assertTrue(message_mock.called)
         self.assertTrue(twilio_payload.sid, expected_sid)
+
+    @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+    @mock.patch('configs.twilio_conf.twilio_client.messages.create')
+    @mock.patch('common.services.r',
+                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    def test_handle_phone_number_change_send_sms_if_no_cooldown(self, message_mock):
+        """handle_phone_number_change() sends SMS if there is no cooldown."""
+        test_profile: Profile = CustomUser.objects.first().profile
+        test_domain: str = 'airbnb'
+        test_phone_number = "+7 (985) 168-60-43"
+        expected_sid = 'SM87105da94bff44b999e4e6eb90d8eb6a'
+        message_mock.return_value = TwilioShortPayload(status=VERIFICATION_CODE_STATUS_DELIVERED, sid=expected_sid)
+
+        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+        r.flushall()
+
+        handle_phone_number_change(test_profile, test_domain, test_phone_number)
+
+        self.assertTrue(message_mock.called)
+
+    @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+    @mock.patch('configs.twilio_conf.twilio_client.messages.create')
+    @mock.patch('common.services.r',
+                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    def test_handle_phone_number_change_send_sms_if_cooldown_ended(self, message_mock):
+        """handle_phone_number_change() sends SMS if cooldown has ended."""
+        test_profile: Profile = CustomUser.objects.first().profile
+        test_domain: str = 'airbnb'
+        test_phone_number = "+7 (985) 168-60-43"
+        expected_sid = 'SM87105da94bff44b999e4e6eb90d8eb6a'
+        message_mock.return_value = TwilioShortPayload(status=VERIFICATION_CODE_STATUS_DELIVERED, sid=expected_sid)
+
+        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+        r.flushall()
+        key = "phone:79851686043:sms.sent"
+        r.setex(key, 1, 1)
+
+        sleep(1)
+
+        handle_phone_number_change(test_profile, test_domain, test_phone_number)
+
+        self.assertTrue(message_mock.called)
+
+    @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+    @mock.patch('configs.twilio_conf.twilio_client.messages.create')
+    @mock.patch('common.services.r',
+                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    def test_handle_phone_number_change_no_sms_if_cooldown_did_not_end(self, message_mock):
+        """handle_phone_number_change() doesn't send SMS if cooldown hasn't ended."""
+        test_profile: Profile = CustomUser.objects.first().profile
+        test_domain: str = 'airbnb'
+        test_phone_number = "+7 (985) 168-60-43"
+        expected_sid = 'SM87105da94bff44b999e4e6eb90d8eb6a'
+        message_mock.return_value = TwilioShortPayload(status=VERIFICATION_CODE_STATUS_DELIVERED, sid=expected_sid)
+
+        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+        r.flushall()
+        key = "phone:79851686043:sms.sent"
+        r.setex(key, 5, 1)
+
+        handle_phone_number_change(test_profile, test_domain, test_phone_number)
+
+        self.assertFalse(message_mock.called)
 
     def test_get_verification_code_from_digits_dict_correct_result(self):
         """get_verification_code_from_digits_dict() joins values of a given dict and returns result."""

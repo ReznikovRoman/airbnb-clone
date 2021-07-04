@@ -12,7 +12,8 @@ from django.contrib.auth.models import Group
 from common.tasks import send_sms_by_twilio
 from mailings.tasks import send_email_with_attachments
 from common.services import is_cooldown_ended, set_key_with_timeout
-from common.constants import VERIFICATION_CODE_STATUS_FAILED, VERIFICATION_CODE_STATUS_DELIVERED
+from common.constants import (VERIFICATION_CODE_STATUS_FAILED, VERIFICATION_CODE_STATUS_DELIVERED,
+                              VERIFICATION_CODE_STATUS_COOLDOWN)
 from configs.redis_conf import r
 from common.collections import TwilioShortPayload
 from .models import (CustomUser, CustomUserManager, Profile, SMSLog,
@@ -145,6 +146,12 @@ def handle_phone_number_change(user_profile: Profile, site_domain: str, new_phon
     Returns:
         TwilioShortPayload: Twilio payload
     """
+    phone_number_digits = ''.join(char for char in new_phone_number if char.isdigit())
+    sms_sent_key = f"phone:{phone_number_digits}:sms.sent"
+    if not is_cooldown_ended(sms_sent_key):
+        return TwilioShortPayload(status=VERIFICATION_CODE_STATUS_COOLDOWN, sid=None)
+    set_key_with_timeout(sms_sent_key, 60, 1)
+
     sms_log = SMSLog.objects.get_or_create(profile=user_profile)[0]
 
     sms_verification_code = generate_random_sms_code()
