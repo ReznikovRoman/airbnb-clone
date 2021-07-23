@@ -393,7 +393,7 @@ class RealtyDetailViewTests(TestCase):
             transform=lambda x: x,
         )
 
-    @mock.patch('realty.views.cache',
+    @mock.patch('realty.services.realty.r',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
     def test_view_url_accessible_by_name(self):
         """Test that url is accessible by its name."""
@@ -402,7 +402,7 @@ class RealtyDetailViewTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-    @mock.patch('realty.views.cache',
+    @mock.patch('realty.services.realty.r',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
     def test_view_uses_correct_template(self):
         """Test that view uses a correct HTML template."""
@@ -411,7 +411,7 @@ class RealtyDetailViewTests(TestCase):
 
         self.assertTemplateUsed(response, 'realty/realty/detail.html')
 
-    @mock.patch('realty.views.cache',
+    @mock.patch('realty.services.realty.r',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
     def test_correct_context_data(self):
         """Test that request.context has correct data (views count)."""
