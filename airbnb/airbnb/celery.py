@@ -1,6 +1,7 @@
 import os
 
 from celery import Celery
+from celery.schedules import crontab
 
 from manage import django_settings_module
 
@@ -12,3 +13,13 @@ app = Celery('airbnb')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
 app.autodiscover_tasks()
+
+
+# CELERY PERIODIC TASKS
+# https://docs.celeryproject.org/en/stable/userguide/periodic-tasks.html
+app.conf.beat_schedule = {
+    'update_realty_visits_count_from_redis': {
+        'task': 'realty.tasks.update_realty_visits_count_from_redis',
+        'schedule': crontab(minute='*/5'),  # every 5 minutes
+    },
+}

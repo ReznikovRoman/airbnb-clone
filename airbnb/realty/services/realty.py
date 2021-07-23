@@ -89,3 +89,10 @@ def update_realty_visits_count(realty_id: Union[int, str]) -> int:
 def get_cached_realty_visits_count_by_realty_id(realty_id: Union[int, str]) -> int:
     views_count = r.get(f"realty:{str(realty_id)}:views_count")
     return int(views_count) if views_count is not None else 0
+
+
+def update_realty_visits_from_redis() -> None:
+    for key in r.scan_iter("realty:*:views_count"):
+        realty_id = int(key.split(":")[1])
+        visits_count = r.get(key)
+        Realty.objects.filter(id=realty_id).update(visits_count=visits_count)

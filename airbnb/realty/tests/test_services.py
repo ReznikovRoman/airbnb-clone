@@ -20,7 +20,7 @@ from ..services.realty import (get_amenity_ids_from_session, get_all_available_r
                                get_available_realty_filtered_by_type, get_last_realty, get_n_latest_available_realty,
                                get_available_realty_count_by_city, get_available_realty_search_results,
                                get_or_create_realty_host_by_user, get_cached_realty_visits_count_by_realty_id,
-                               update_realty_visits_count)
+                               update_realty_visits_count, update_realty_visits_from_redis)
 
 
 MEDIA_ROOT = tempfile.mkdtemp()
@@ -271,6 +271,23 @@ class RealtyServicesRealtyTests(TestCase):
 
         update_realty_visits_count(realty_id)
         self.assertEqual(get_cached_realty_visits_count_by_realty_id(realty_id), 1)
+
+    @mock.patch('realty.services.realty.r',
+                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    def test_update_realty_visits_from_redis(self):
+        """update_realty_visits_from_redis() updates `visits_count` field in DB using Redis values."""
+        realty = Realty.objects.first()
+        visits_count = 10
+        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+        r.flushall()
+
+        self.assertEqual(realty.visits_count, 0)
+
+        r.set(f"realty:{realty.id}:views_count", visits_count)
+        update_realty_visits_from_redis()
+        realty.refresh_from_db()
+
+        self.assertEqual(realty.visits_count, visits_count)
 
 
 @override_settings(MEDIA_ROOT=MEDIA_ROOT)
