@@ -142,6 +142,13 @@ class RealtyModelTests(TestCase):
         self.assertEqual(updated_field.verbose_name, 'update date')
         self.assertTrue(updated_field.auto_now)
 
+    def test_visits_count_field_correct_params(self):
+        """Test that `visits_count` field has all required parameters."""
+        visits_count_field = Realty._meta.get_field('visits_count')
+
+        self.assertEqual(visits_count_field.verbose_name, 'visits count')
+        self.assertEqual(visits_count_field.default, 0)
+
     def test_realty_type_field_correct_params(self):
         """Test that `realty_type` field has all required parameters."""
         realty_type_field = Realty._meta.get_field('realty_type')

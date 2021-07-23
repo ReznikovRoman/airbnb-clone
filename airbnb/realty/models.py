@@ -53,6 +53,7 @@ class Realty(models.Model):
     is_available = models.BooleanField(verbose_name='is realty available', default=False)
     created = models.DateTimeField(verbose_name="creation date", auto_now_add=True)
     updated = models.DateTimeField(verbose_name="update date", auto_now=True)
+    visits_count = models.PositiveIntegerField(verbose_name='visits count', default=0)
     realty_type = models.CharField(
         verbose_name="type of the realty",
         max_length=31,

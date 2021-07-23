@@ -39,7 +39,7 @@ class RealtyAdmin(admin.ModelAdmin):
         }),
         ('Realty info', {
             'fields': ('description', 'is_available',
-                       'realty_type', 'beds_count', 'max_guests_count', 'price_per_night')
+                       'realty_type', 'beds_count', 'max_guests_count', 'price_per_night', 'visits_count')
         }),
     )
 
