@@ -41,7 +41,7 @@ class RealtyFiltersForm(forms.Form):
         widget=forms.NumberInput(attrs={
             'id': 'input--beds-count',
             'step': '1',
-            'min': '0',
+            'min': '1',
             'value': '1',
             'max': '8',
         }),
@@ -53,7 +53,7 @@ class RealtyFiltersForm(forms.Form):
         widget=forms.NumberInput(attrs={
             'id': 'input--guests-count',
             'step': '1',
-            'min': '0',
+            'min': '1',
             'value': '1',
             'max': '8',
         }),
