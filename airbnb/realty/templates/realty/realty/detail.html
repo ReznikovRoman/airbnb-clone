@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load cache %}
 
 
 {% block title %}
@@ -31,9 +30,7 @@
                             </a>
 
                             {# TODO: Show realty views in the host listings dashboard #}
-                            {% cache 0 realty_views_count %}
-                                <span class="ml-2">{{ realty_views_count }} view{{ realty_views_count|pluralize }}</span>
-                            {% endcache %}
+                            <span class="ml-2">{{ realty_views_count }} view{{ realty_views_count|pluralize }}</span>
                         </li>
                     </ul>
                 </div>
@@ -48,7 +45,8 @@
                             {% for realty_image in realty.images.all %}
                                 <li class="carousel-content splide__slide">
                                     <a href="{{ realty_image.image.url }}" data-lightbox="realty_images">
-                                        <img class="realty-image" src="{{ realty_image.image.url }}"
+                                        <img class="realty-image"
+                                             src="{{ realty_image.image.url }}"
                                              alt="Realty image">
                                     </a>
                                 </li>

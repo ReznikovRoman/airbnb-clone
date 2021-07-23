@@ -4,8 +4,9 @@ from django.conf import settings
 from django.db.models import QuerySet
 from django.contrib.postgres.search import SearchRank, SearchVector, SearchQuery
 
-from common.session_handler import SessionHandler
 from hosts.models import RealtyHost
+from configs.redis_conf import r
+from common.session_handler import SessionHandler
 from ..models import Amenity, Realty, CustomDeleteQueryset
 from ..constants import REALTY_FORM_SESSION_PREFIX
 
@@ -79,3 +80,12 @@ def get_available_realty_search_results(query: Optional[str] = None) -> 'CustomD
             rank=SearchRank(search_vector, search_query),
         ).filter(rank__gte=0.3).order_by('-rank')
     return Realty.available.all()
+
+
+def update_realty_visits_count(realty_id: Union[int, str]) -> int:
+    return int(r.incr(f"realty:{str(realty_id)}:views_count"))
+
+
+def get_cached_realty_visits_count_by_realty_id(realty_id: Union[int, str]) -> int:
+    views_count = r.get(f"realty:{str(realty_id)}:views_count")
+    return int(views_count) if views_count is not None else 0

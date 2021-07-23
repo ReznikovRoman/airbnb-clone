@@ -98,12 +98,18 @@ class Realty(models.Model):
         self.slug = slugify(self.name)
         super(Realty, self).save(*args, **kwargs)
 
-    def get_absolute_url(self):
-        return reverse('realty:detail', kwargs={"pk": self.id, "slug": self.slug})
-
     def delete(self, using=None, keep_parents=False):
         self.location.delete()
         super(Realty, self).delete(using, keep_parents)
+
+    def get_absolute_url(self):
+        return reverse('realty:detail', kwargs={"pk": self.id, "slug": self.slug})
+
+    @property
+    def get_cached_visits_count(self):
+        from .services.realty import get_cached_realty_visits_count_by_realty_id
+
+        return get_cached_realty_visits_count_by_realty_id(self.id)
 
 
 class RealtyView(models.Model):

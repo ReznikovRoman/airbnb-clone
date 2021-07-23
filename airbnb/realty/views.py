@@ -26,7 +26,8 @@ from .services.images import get_images_by_realty_id, update_images_order
 from .services.order import convert_response_to_orders
 from .services.realty import (get_amenity_ids_from_session, get_or_create_realty_host_by_user,
                               get_available_realty_by_city_slug, get_all_available_realty,
-                              get_available_realty_filtered_by_type, get_available_realty_search_results)
+                              get_available_realty_filtered_by_type, get_available_realty_search_results,
+                              update_realty_visits_count, get_cached_realty_visits_count_by_realty_id)
 
 
 class RealtySearchResultsView(generic.ListView):
@@ -119,15 +120,13 @@ class RealtyDetailView(generic.DetailView):
     queryset = get_all_available_realty()
 
     def get(self, request: HttpRequest, *args, **kwargs):
-        # TODO: Use redis (db) to store realty views + Celery scheduled task to save `views count` to the db
-        cache.set(f"realty:{self.get_object().id}:views_count", 0, nx=True)
-        cache.incr(f"realty:{self.get_object().id}:views_count")
+        update_realty_visits_count(self.get_object().id)
         return super(RealtyDetailView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(RealtyDetailView, self).get_context_data(**kwargs)
 
-        context['realty_views_count'] = cache.get(f"realty:{self.get_object().id}:views_count")
+        context['realty_views_count'] = get_cached_realty_visits_count_by_realty_id(self.get_object().id)
 
         return context
 

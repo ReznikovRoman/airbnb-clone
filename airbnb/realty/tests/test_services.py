@@ -1,5 +1,8 @@
 import shutil
 import tempfile
+from unittest import mock
+
+import fakeredis
 
 from django.test import SimpleTestCase, TestCase, override_settings
 
@@ -16,13 +19,16 @@ from ..services.realty import (get_amenity_ids_from_session, get_all_available_r
                                get_available_realty_by_city_slug, get_available_realty_by_host,
                                get_available_realty_filtered_by_type, get_last_realty, get_n_latest_available_realty,
                                get_available_realty_count_by_city, get_available_realty_search_results,
-                               get_or_create_realty_host_by_user)
+                               get_or_create_realty_host_by_user, get_cached_realty_visits_count_by_realty_id,
+                               update_realty_visits_count)
 
 
 MEDIA_ROOT = tempfile.mkdtemp()
 
 
 class RealtyServicesRealtyTests(TestCase):
+    redis_server = fakeredis.FakeServer()
+
     def setUp(self) -> None:
         test_user1 = CustomUser.objects.create_user(
             email='user1@gmail.com',
@@ -232,7 +238,7 @@ class RealtyServicesRealtyTests(TestCase):
         )
 
     def test_get_available_realty_search_results_with_query(self):
-        """get_available_realty_search_results() returns available Realty objects filtered by the `query` ."""
+        """get_available_realty_search_results() returns available Realty objects filtered by the `query`."""
         test_query = 'realty 1'
 
         self.assertListEqual(
@@ -240,9 +246,36 @@ class RealtyServicesRealtyTests(TestCase):
             [Realty.objects.get(slug='realty-1')],
         )
 
+    @mock.patch('realty.services.realty.r',
+                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    def test_get_cached_realty_visits_count_by_id(self):
+        """get_cached_realty_visits_count_by_id() returns realty visits count from Redis DB."""
+        realty_id = 5
+        realty_visits_count = 5
+        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+        r.flushall()
+
+        r.set(f"realty:{str(realty_id)}:views_count", realty_visits_count)
+
+        self.assertEqual(get_cached_realty_visits_count_by_realty_id(realty_id), realty_visits_count)
+
+    @mock.patch('realty.services.realty.r',
+                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    def test_update_realty_visits_count(self):
+        """update_realty_visits_count() increments counter in the Redis DB."""
+        realty_id = 5
+        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+        r.flushall()
+
+        self.assertEqual(get_cached_realty_visits_count_by_realty_id(realty_id), 0)
+
+        update_realty_visits_count(realty_id)
+        self.assertEqual(get_cached_realty_visits_count_by_realty_id(realty_id), 1)
+
 
 @override_settings(MEDIA_ROOT=MEDIA_ROOT)
 class RealtyServicesImagesTests(TestCase):
+
     def setUp(self) -> None:
         test_user1 = CustomUser.objects.create_user(
             email='user1@gmail.com',
