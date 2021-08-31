@@ -1,6 +1,6 @@
 # Airbnb Clone
 
-## Technologies:
+### Technologies:
 - Django 3
 - Django Channels
 - DRF
