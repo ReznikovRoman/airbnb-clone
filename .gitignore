@@ -1,4 +1,5 @@
 syntax: glob
+# base
 *.pyc
 *.pyo
 *.DS_Store
