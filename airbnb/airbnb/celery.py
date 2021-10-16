@@ -3,10 +3,10 @@ import os
 from celery import Celery
 from celery.schedules import crontab
 
-from manage import django_settings_module
 
+settings_module = os.environ.get('DJANGO_SETTINGS_MODULE', 'airbnb.settings.local')
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', django_settings_module)
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', settings_module)
 
 app = Celery('airbnb')
 

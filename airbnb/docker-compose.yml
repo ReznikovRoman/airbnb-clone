@@ -1,60 +1,74 @@
 version: "3.8"
 
 services:
+  db:
+    image: postgres:11
+    restart: always
+    env_file:
+      - ${ENV}
+    environment:
+      - POSTGRES_USER=${POSTGRES_DEFAULT_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_DEFAULT_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - .:/app
+      - postgres_data:/var/lib/postgresql/data/
+    container_name: airbnb_db
+    networks:
+      - app-network
+
   redis:
     image: redis
     env_file:
-      - .env
-    environment:
-      - AIRBNB_REDIS_HOST=airbnb_redis
-      - AIRBNB_SENTRY_DSN=${AIRBNB_SENTRY_DSN}
+      - ${ENV}
     ports:
-      - 6380:6379
+      - "6380:6379"
     container_name: ${AIRBNB_REDIS_HOST}
+    volumes:
+      - redis_data:/data
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      - app-network
+
+  server:
+    restart: always
+    env_file:
+      - ${ENV}
+    build:
+      context: .
+    volumes:
+      - .:/app
+    image: server:airbnb-app
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    container_name: airbnb_app
     networks:
       - app-network
 
   celery:
     restart: always
     env_file:
-      - .env
-    environment:
-      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
-      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
-      - AIRBNB_REDIS_HOST=airbnb_redis
-      - AIRBNB_SENTRY_DSN=${AIRBNB_SENTRY_DSN}
+      - ${ENV}
     build:
       context: .
     command: celery -A airbnb worker -l info
     volumes:
-      - .:/airbnb-docker
+      - .:/app
     links:
       - redis
     depends_on:
       - redis
-      - web
+      - server
     networks:
       - app-network
 
   flower:
-    image: mher/flower
-    restart: always
+    image: mher/flower:0.9.5
     env_file:
-      - .env
-    environment:
-      - FLOWER_PORT=${FLOWER_PORT}
-      - CELERY_BROKER_TRANSPORT=redis
-      - CELERY_BROKER_HOST=redis
-      - CELERY_BROKER_PORT=6379
-      - CELERY_BROKER_VHOST=2
-      - CELERY_REDIS_DB=2
-      - CELERY_BROKER_URL=${CELERY_BROKER_HOST}://${CELERY_BROKER_TRANSPORT}:${CELERY_BROKER_PORT}/${CELERY_REDIS_DB}
-      - AIRBNB_SENTRY_DSN=${AIRBNB_SENTRY_DSN}
-    volumes:
-      - .:/airbnb-docker
-    command: flower --broker=${CELERY_BROKER_URL}  --port=${FLOWER_PORT}
-    ports:
-      - ${FLOWER_PORT}:${FLOWER_PORT}
+      - ${ENV}
     depends_on:
       - celery
       - redis
@@ -65,79 +79,24 @@ services:
   celery_beat:
     restart: on-failure
     env_file:
-      - .env
-    environment:
-      - CELERY_BROKER_TRANSPORT=redis
-      - CELERY_BROKER_HOST=redis
-      - CELERY_BROKER_PORT=6379
-      - CELERY_BROKER_VHOST=2
-      - CELERY_REDIS_DB=2
-      - CELERY_BROKER_URL=${CELERY_BROKER_HOST}://${CELERY_BROKER_TRANSPORT}:${CELERY_BROKER_PORT}/${CELERY_REDIS_DB}
-      - FLOWER_PORT=${FLOWER_PORT}
-      - AIRBNB_SENTRY_DSN=${AIRBNB_SENTRY_DSN}
+      - ${ENV}
     build:
       context: .
     volumes:
-      - .:/airbnb-docker
+      - .:/app
     command: celery -A airbnb beat -l info --pidfile= --scheduler django_celery_beat.schedulers:DatabaseScheduler
     depends_on:
       - redis
       - db
-      - web
+      - server
     container_name: airbnb_celery_beat
-    networks:
-      - app-network
-
-  db:
-    image: postgres:11
-    restart: always
-    env_file:
-      - .env
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=airbnb_thinknetica
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
-    container_name: airbnb_db
-    networks:
-      - app-network
-
-  web:
-    restart: always
-    env_file:
-      - .env
-    environment:
-      - AIRBNB_REDIS_HOST=airbnb_redis
-      - CELERY_BROKER_TRANSPORT=redis
-      - CELERY_BROKER_HOST=redis
-      - CELERY_BROKER_PORT=6379
-      - CELERY_BROKER_VHOST=2
-      - CELERY_REDIS_DB=2
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_DEFAULT_USER=${POSTGRES_DEFAULT_USER}
-      - POSTGRES_DEFAULT_PASSWORD=${POSTGRES_DEFAULT_PASSWORD}
-      - POSTGRES_HOST=${POSTGRES_HOST}
-      - POSTGRES_PORT=${POSTGRES_PORT}
-      - REDIS_URL=${CELERY_BROKER_HOST}://${CELERY_BROKER_TRANSPORT}:${CELERY_BROKER_PORT}/${CELERY_REDIS_DB}
-      - AIRBNB_SENTRY_DSN=${AIRBNB_SENTRY_DSN}
-    build:
-      context: .
-    volumes:
-      - .:/airbnb-docker
-    image: web:airbnb-app
-    command: python manage.py runserver 0.0.0.0:8000
-    ports:
-      - 8000:8000
-    depends_on:
-      - db
-    container_name: airbnb_app
     networks:
       - app-network
 
 
 volumes:
   postgres_data:
+  redis_data:
 
 networks:
   app-network:

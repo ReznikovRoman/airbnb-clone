@@ -4,10 +4,7 @@ import os
 import sys
 
 
-django_settings_module: str = 'airbnb.settings.local'
-
-if os.environ.get('ENVIRONMENT', 'local') == 'pro'.lower():
-    django_settings_module = 'airbnb.settings.pro'
+django_settings_module: str = os.environ.get('DJANGO_SETTINGS_MODULE', 'airbnb.settings.local')
 
 
 def main():
@@ -19,7 +16,7 @@ def main():
         raise ImportError(
             "Couldn't import Django. Are you sure it's installed and "
             "available on your PYTHONPATH environment variable? Did you "
-            "forget to activate a virtual environment?"
+            "forget to activate a virtual environment?",
         ) from exc
     execute_from_command_line(sys.argv)
 

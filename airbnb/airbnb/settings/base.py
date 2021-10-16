@@ -25,6 +25,7 @@ ALLOWED_HOSTS: List[str] = []
 
 # Application definition
 INSTALLED_APPS = [
+    # django
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -36,13 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.flatpages',
     'django.contrib.postgres',
 
+    # django
     'rest_framework',
     'bootstrap4',
     'debug_toolbar',
     'django_extensions',
     'django_filters',
     'django_inlinecss',
-    'django_apscheduler',
     'django_celery_beat',
     'ckeditor',
     'ckeditor_uploader',
@@ -50,6 +51,7 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'sorl.thumbnail',
 
+    # local
     'main.apps.MainConfig',
     'accounts.apps.AccountsConfig',
     'addresses.apps.AddressesConfig',
@@ -59,6 +61,7 @@ INSTALLED_APPS = [
     'mailings.apps.MailingsConfig',
     'chat_bot.apps.ChatBotConfig',
 
+    # cleanup
     'django_cleanup.apps.CleanupConfig',
 ]
 

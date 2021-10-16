@@ -27,6 +27,7 @@ prod_config/
 node_modules/
 
 drafts/
+req.old.txt
 
 *.env*
 *.pid

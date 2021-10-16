@@ -2,7 +2,8 @@
 FROM python:3.8
 
 # Set working directory
-WORKDIR /airbnb-docker
+WORKDIR /app
+RUN mkdir -p /var/log/gunicorn
 
 # Set default environment variables
 ENV PYTHONUNBUFFERED=1
@@ -36,4 +37,4 @@ RUN pip install -r requirements.txt
 COPY entrypoint.sh .
 
 # Run entrypoint.sh
-ENTRYPOINT ["/airbnb-docker/entrypoint.sh"]
+ENTRYPOINT ["/app/entrypoint.sh"]
