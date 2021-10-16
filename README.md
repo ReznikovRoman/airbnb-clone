@@ -10,7 +10,7 @@
 
 
 ## Configuration
-There are following docker containers in this project:
+Docker containers:
  1. nginx
  2. db
  3. redis
@@ -20,10 +20,10 @@ There are following docker containers in this project:
  7. flower
  8. celery_beat
 
-There are following docker-compose files:
+docker-compose files:
  1. `docker-compose-local.yml` - for local development
 
-To run docker containers you have to create `.env` file at the root of the project.
+To run docker containers you have to create a `.env` file in the root directory.
 
 **Example of `.env` file:**
 
@@ -86,7 +86,7 @@ FLOWER_PORT=
 
 ```
 
-**To start the project run:**
+**Start project:**
 
 Local:
 ```shell
@@ -97,7 +97,7 @@ docker-compose -f docker-compose-local.yml up
 Migrations will be applied automatically.
 
 
-**Code style**
+**Code style:**
 
 Before pushing a commit make sure that your code passes all linters:
 
@@ -111,15 +111,14 @@ You can also add a `makefile.env` file:
 DOCKER_COMPOSE_FILENAME=docker-compose-local.yml
 ```
 
-And then run linters like that:
+And then run linters:
 ```shell
 make check-docker
 ```
 
 
-**pre-commit**
+**pre-commit:**
 
-There is also a pre-commit configuration in project (runs linter before each commit to reduce CI minutes).
 To configure pre-commit on your local machine:
 ```shell
 docker-compose -f docker-compose-local.yml build
