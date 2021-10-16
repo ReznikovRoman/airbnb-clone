@@ -18,13 +18,20 @@ django-tinymce==3.3.0
 django-celery-beat==2.2.1
 django-cleanup==5.2.0
 django-debug-toolbar==3.2.2
-channels==3.0.4
-channels-redis==3.3.1
 django-ckeditor==6.1.0
 django-phonenumber-field==5.2.0
-django-redis-sessions==0.6.2
 django-twilio==0.13.1.post0
 model-bakery==1.3.3
+
+# Django channels
+Twisted==21.7.0
+h2==3.2.0
+hpack==3.0.0
+hyperframe==5.2.0
+priority==1.3.0
+channels==3.0.4
+channels-redis==3.3.1
+django-redis-sessions==0.6.2
 
 # DRF
 django-rest-auth==0.9.5

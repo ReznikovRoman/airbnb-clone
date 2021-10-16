@@ -10,7 +10,4 @@ if [ "$DATABASE" = "postgres" ]; then
     echo "Postgres started"
 fi
 
-python manage.py migrate --settings="$DJANGO_SETTINGS_MODULE" --noinput
-python manage.py collectstatic --settings="$DJANGO_SETTINGS_MODULE" --no-input
-
 exec "$@"

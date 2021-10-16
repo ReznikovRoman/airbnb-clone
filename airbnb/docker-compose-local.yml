@@ -1,6 +1,21 @@
 version: "3.8"
 
 services:
+  nginx:
+    restart: on-failure
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - .:/app
+      - ./configs/nginx/local.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - server
+    networks:
+      app-network:
+        aliases:
+          - nginx
+
   db:
     image: postgres:11
     restart: always
@@ -30,6 +45,26 @@ services:
     networks:
       - app-network
 
+  daphne:
+    restart: always
+    env_file:
+      - ${ENV}
+    build:
+      context: .
+    volumes:
+      - .:/app
+    image: daphne:airbnb-app
+    command: >
+      bash -c "daphne -b 0.0.0.0 -p 8001 airbnb.asgi:application"
+    expose:
+      - 8001
+    depends_on:
+      - db
+    networks:
+      app-network:
+        aliases:
+          - daphne
+
   server:
     restart: always
     env_file:
@@ -39,14 +74,18 @@ services:
     volumes:
       - .:/app
     image: server:airbnb-app
-    command: python manage.py runserver 0.0.0.0:8000
-    ports:
-      - "8000:8000"
+    command: >
+      bash -c "python manage.py migrate --noinput
+      && python manage.py collectstatic --no-input
+      && gunicorn --reload -c /app/configs/gunicorn_config.py airbnb.wsgi"
+    expose:
+      - 8000
     depends_on:
       - db
-    container_name: airbnb_app
     networks:
-      - app-network
+        app-network:
+            aliases:
+                - server
 
   celery:
     restart: always
