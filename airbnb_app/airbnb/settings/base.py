@@ -13,9 +13,6 @@ from django.contrib.messages import constants as messages_constants
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '=g(33qw)hiwuk&$nrdwr#=xd2cblmh0&k^*he)-gq^4#a$b6*r'
 
@@ -111,21 +108,38 @@ TEMPLATES = [
 WSGI_APPLICATION = 'airbnb.wsgi.application'
 
 
+# DATABASE
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get('POSTGRES_DB', 'airbnb_thinknetica'),
+        'USER': os.environ.get('POSTGRES_DEFAULT_USER', 'postgres'),
+        'PASSWORD': os.environ.get('POSTGRES_DEFAULT_PASSWORD', 'postgres'),
+        'HOST': os.environ.get('POSTGRES_HOST', 'localhost'),
+        'PORT': os.environ.get('POSTGRES_PORT', 5432),
+    },
+}
+
+
 # Password validation
-# https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
 
+
+# AUTHENTICATION
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
+AUTH_USER_MODEL = 'accounts.CustomUser'
+LOGIN_URL = reverse_lazy('accounts:login')
+LOGIN_REDIRECT_URL = reverse_lazy('home_page')
+LOGOUT_REDIRECT_URL = reverse_lazy('home_page')
 
 
 # Internationalization
-# https://docs.djangoproject.com/en/3.1/topics/i18n/
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Europe/Moscow'
 USE_I18N = True
@@ -187,14 +201,13 @@ DEFAULT_PROTOCOL = 'http'
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.1/howto/static-files/
-STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'static/'
+STATIC_URL = os.environ.get('STATIC_URL', '/static/')
+STATIC_ROOT = BASE_DIR / 'airbnb/static/'
 
 
 # MEDIA
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media/'
+MEDIA_URL = os.environ.get('MEDIA_URL', '/media/')
+MEDIA_ROOT = BASE_DIR / 'airbnb/media/'
 
 
 # EMAIL
@@ -205,13 +218,6 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD_ESL')
-
-
-# LOGIN
-AUTH_USER_MODEL = 'accounts.CustomUser'
-LOGIN_URL = reverse_lazy('accounts:login')
-LOGIN_REDIRECT_URL = reverse_lazy('home_page')
-LOGOUT_REDIRECT_URL = reverse_lazy('home_page')
 
 
 # CHARSET
@@ -241,7 +247,7 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
-    ]
+    ],
 }
 
 
@@ -252,15 +258,15 @@ REDIS_DB = 2
 REDIS_DECODE_RESPONSES = True
 
 
-# CACHE
+# CACHES
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
         'LOCATION': f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}",
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-        }
-    }
+        },
+    },
 }
 
 
@@ -302,7 +308,7 @@ CHANNEL_LAYERS = {
         'CONFIG': {
             'hosts': [os.environ.get('REDIS_URL', 'redis://localhost:6379/2')],
         },
-    }
+    },
 }
 
 
@@ -363,7 +369,7 @@ CKEDITOR_CONFIGS = {
             'dialogui',
             'elementspath',
         ]),
-    }
+    },
 }
 
 
