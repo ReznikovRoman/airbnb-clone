@@ -279,7 +279,7 @@ SESSION_REDIS = {
     'db': REDIS_DB,
     'prefix': 'session',
     'socket_timeout': 1,
-    'retry_on_timeout': False
+    'retry_on_timeout': False,
 }
 
 

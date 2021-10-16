@@ -95,6 +95,11 @@ services:
     command: >
       bash -c "cd /app/airbnb_app/
       && celery -A airbnb worker -l info"
+    healthcheck:
+      test: celery -A airbnb inspect ping
+      interval: 10s
+      timeout: 10s
+      retries: 3
     volumes:
       - .:/app
     links:
@@ -109,6 +114,10 @@ services:
     image: mher/flower:0.9.5
     env_file:
       - ${ENV}
+    command: celery flower --broker=${CELERY_BROKER_URL} --port=${FLOWER_PORT}
+    ports:
+      - "8888:${FLOWER_PORT}"
+    restart: unless-stopped
     depends_on:
       - celery
       - redis
