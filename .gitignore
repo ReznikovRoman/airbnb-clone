@@ -1,33 +1,67 @@
+syntax: glob
+*.pyc
+*.pyo
+*.DS_Store
+*.installed.cfg
+*build/
+local_settings.py
+*dist/
+*.egg-info/
+*~
+media*
 .idea/
 __pycache__/
-*.pyc
-venv/
-
-/docs/_build/
-
 *.pytest_cache
-
-celerybeat-schedule
-
 *.sqlite3
+*.log
 
+# local files
+*docker-compose-dev.yml
+*local.Dockerfile
+*local.Makefile
+*local-linter.sh
+*dev.conf
+prod_config/
+drafts/
+req.old.txt
+
+# ENV data
+env*
+venv*
+venv/
+*.env
+.env.local
+.env.*.local
+
+# celery, celery beat
+celerybeat-schedule
+*.pid
+
+# media
 airbnb/media/*
 !airbnb/media/default/
 
+# static
 airbnb/static/*
 !airbnb/static/accounts/
 !airbnb/static/subscribers/
 
+# whoosh index
+*.toc
+*.seg
+english_daily_yt/english_daily/whoosh_index/
+
+# js
+*comment.jsx
+*commentbox.jsx
+*commentform.jsx
+
+# docs
+/docs/_build/
+
+# ssl
 *.key
 *.crt
-*.log
 
-prod_config/
-
+# node modules
 node_modules/
-
-drafts/
-req.old.txt
-
-*.env*
-*.pid
