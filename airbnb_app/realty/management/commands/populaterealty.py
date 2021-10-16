@@ -1,13 +1,14 @@
 from model_bakery import baker
 
-from django.core.management.base import BaseCommand, ArgumentParser
+from django.core.management.base import ArgumentParser, BaseCommand
 
-from hosts.models import RealtyHost
 from accounts.models import CustomUser
+from hosts.models import RealtyHost
 
 
 class Command(BaseCommand):
     """Custom management command that creates `realty_count` realty objects."""
+
     help = "Creates `realty_count` realty objects"
 
     def add_arguments(self, parser: ArgumentParser):

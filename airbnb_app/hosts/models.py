@@ -1,11 +1,12 @@
-from django.db import models
 from django.conf import settings
-from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import Group
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
 
 
 class RealtyHost(models.Model):
     """Realty host."""
+
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -18,7 +19,7 @@ class RealtyHost(models.Model):
         validators=[
             MinValueValidator(0),
             MaxValueValidator(5),
-        ]
+        ],
     )
 
     class Meta:

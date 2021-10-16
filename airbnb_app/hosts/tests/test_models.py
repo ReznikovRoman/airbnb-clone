@@ -1,7 +1,7 @@
 from model_bakery import baker
 
-from django.test import TestCase
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.test import TestCase
 
 from ..models import RealtyHost
 

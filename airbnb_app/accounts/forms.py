@@ -1,17 +1,19 @@
 from typing import Union
 
 from django import forms
-from django.utils import timezone
-from django.template import loader
+from django.contrib.auth.forms import PasswordResetForm, UserChangeForm, UserCreationForm
 from django.core.exceptions import ValidationError
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordResetForm
+from django.template import loader
+from django.utils import timezone
 
 from mailings.tasks import send_email_with_attachments
+
 from .models import CustomUser, Profile
 
 
 class SignUpForm(UserCreationForm):
     """Form for signing up/creating new account."""
+
     class Meta:
         model = CustomUser
         fields = ('email', 'first_name', 'last_name', 'password1', 'password2')
@@ -26,6 +28,7 @@ class CustomPasswordResetForm(PasswordResetForm):
 
     Sends emails using Celery.
     """
+
     def send_mail(self, subject_template_name, email_template_name,
                   context, from_email, to_email, html_email_template_name=None):
         subject = loader.render_to_string(subject_template_name, context)
@@ -42,12 +45,13 @@ class CustomPasswordResetForm(PasswordResetForm):
             body=body,
             email_to=[to_email],
             email_from=from_email,
-            alternatives=[(html_content, 'text/html')]
+            alternatives=[(html_content, 'text/html')],
         )
 
 
 class AdminCustomUserChangeForm(UserChangeForm):
     """Form for editing CustomUser (used on the admin panel)."""
+
     class Meta:
         model = CustomUser
         fields = ('email', 'first_name', 'last_name', 'is_email_confirmed')
@@ -55,6 +59,7 @@ class AdminCustomUserChangeForm(UserChangeForm):
 
 class UserInfoForm(forms.ModelForm):
     """Form for editing user info."""
+
     class Meta:
         model = CustomUser
         fields = ('first_name', 'last_name', 'email')
@@ -62,6 +67,7 @@ class UserInfoForm(forms.ModelForm):
 
 class ProfileForm(forms.ModelForm):
     """Form for editing user profile."""
+
     class Meta:
         model = Profile
         fields = ('gender', 'date_of_birth', 'phone_number')
@@ -70,7 +76,7 @@ class ProfileForm(forms.ModelForm):
                 attrs={
                     'class': 'form-control',
                     'placeholder': 'Select a date',
-                    'type': 'date'
+                    'type': 'date',
                 },
             ),
         }
@@ -83,8 +89,8 @@ class ProfileForm(forms.ModelForm):
         date_of_birth = self.cleaned_data['date_of_birth']
         if date_of_birth:
             date_now = timezone.now().date()
-            host_age = date_now.year - date_of_birth.year - ((date_now.month, date_now.day) <
-                                                             (date_of_birth.month, date_of_birth.day))
+            year_diff = (date_now.month, date_now.day) < (date_of_birth.month, date_of_birth.day)
+            host_age = date_now.year - date_of_birth.year - year_diff
             if date_of_birth > date_now:
                 raise ValidationError('Invalid date: date of birth in the future.', code='invalid')
             elif host_age < 18:
@@ -94,6 +100,7 @@ class ProfileForm(forms.ModelForm):
 
 class ProfileImageForm(forms.ModelForm):
     """Form for uploading profile image."""
+
     class Meta:
         model = Profile
         fields = ('profile_image',)
@@ -104,6 +111,7 @@ class ProfileImageForm(forms.ModelForm):
 
 class ProfileDescriptionForm(forms.ModelForm):
     """Form for editing user description ('about me' section)."""
+
     class Meta:
         model = Profile
         fields = ('description',)
@@ -111,6 +119,7 @@ class ProfileDescriptionForm(forms.ModelForm):
 
 class VerificationCodeForm(forms.Form):
     """Form for entering a SMS verification code."""
+
     digit_1 = forms.CharField(
         min_length=1,
         max_length=1,

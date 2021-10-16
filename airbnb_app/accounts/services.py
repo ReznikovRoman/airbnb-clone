@@ -1,24 +1,25 @@
 import random
-from typing import Dict, Union, Optional
+from typing import Dict, Optional, Union
 
 from django.conf import settings
+from django.contrib.auth.models import Group
 from django.db.models import QuerySet
 from django.shortcuts import get_object_or_404
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.template.loader import get_template, render_to_string
 from django.utils.encoding import force_bytes, force_text
-from django.template.loader import render_to_string, get_template
-from django.contrib.auth.models import Group
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
-from common.tasks import send_sms_by_twilio
-from mailings.tasks import send_email_with_attachments
-from common.services import is_cooldown_ended, set_key_with_timeout
-from common.constants import (VERIFICATION_CODE_STATUS_FAILED, VERIFICATION_CODE_STATUS_DELIVERED,
-                              VERIFICATION_CODE_STATUS_COOLDOWN)
-from configs.redis_conf import r
 from common.collections import TwilioShortPayload
+from common.constants import (VERIFICATION_CODE_STATUS_COOLDOWN, VERIFICATION_CODE_STATUS_DELIVERED,
+                              VERIFICATION_CODE_STATUS_FAILED)
+from common.services import is_cooldown_ended, set_key_with_timeout
+from common.tasks import send_sms_by_twilio
+from configs.redis_conf import r
+from mailings.tasks import send_email_with_attachments
+
+from .models import (CustomUser, CustomUserManager, Profile, SMSLog, get_default_profile_image,
+                     get_default_profile_image_full_url)
 from .tokens import account_activation_token
-from .models import (CustomUser, CustomUserManager, Profile, SMSLog,
-                     get_default_profile_image_full_url, get_default_profile_image)
 
 
 def send_greeting_email(domain: str, scheme: str, user: CustomUser) -> None:
@@ -132,6 +133,7 @@ def update_user_email_confirmation_status(user: CustomUser, is_email_confirmed: 
 
 def handle_phone_number_change(user_profile: Profile, site_domain: str, new_phone_number: str) -> TwilioShortPayload:
     """Handles phone number change.
+
     - Gets or creates a SMSLog object for the given `user_profile`
     - Generates random verification code and saves it to the SMSLog object
     - Sets `profile.is_phone_number_confirmed` to False

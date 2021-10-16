@@ -15,6 +15,7 @@ class RealtyFilter(django_filters.FilterSet):
 
 class RealtyShortFilter(django_filters.FilterSet):
     """Short filter for a Realty model."""
+
     guests_count = django_filters.NumberFilter(field_name='max_guests_count')
 
     class Meta:

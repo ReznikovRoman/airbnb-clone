@@ -1,8 +1,9 @@
-from django.test import TestCase, override_settings
 from django.http import HttpResponse
+from django.test import TestCase, override_settings
 from django.urls import reverse
 
 from accounts.models import CustomUser
+
 from ..models import RealtyHost
 
 
@@ -54,7 +55,7 @@ class BecomeHostViewTests(TestCase):
 
     def test_redirect_if_not_email_confirmed(self):
         """Request with a User that hasn't confirmed an email address which yields a redirect to a activation page."""
-        login = self.client.login(username='test3@gmail.com', password='123')
+        self.client.login(username='test3@gmail.com', password='123')
         response = self.client.get('/hosts/become-a-host/')
 
         # check that user is logged in
@@ -65,21 +66,21 @@ class BecomeHostViewTests(TestCase):
 
     def test_redirect_if_no_profile_image(self):
         """Request with User that has no profile image which yields a redirect to a `missing image` page."""
-        login = self.client.login(username='test2@gmail.com', password='123')
+        self.client.login(username='test2@gmail.com', password='123')
         response = self.client.get('/hosts/become-a-host/')
 
         self.assertRedirects(response, '/hosts/become-a-host/missing-image/')
 
     def test_desired_redirect_if_required_data_exists(self):
         """Request with `valid` user which yields redirect to a Realty creation page."""
-        login = self.client.login(username='test1@gmail.com', password='123')
+        self.client.login(username='test1@gmail.com', password='123')
         response = self.client.get('/hosts/become-a-host/', follow=True)
 
         self.assertRedirects(response, '/realty/new/info/')
 
     def test_view_url_accessible_by_name(self):
         """Test that url is accessible by its name (`reverse url`)."""
-        login = self.client.login(username='test1@gmail.com', password='123')
+        self.client.login(username='test1@gmail.com', password='123')
         response = self.client.get(reverse('hosts:become_a_host'), follow=True)
 
         self.assertRedirects(response, '/realty/new/info/')

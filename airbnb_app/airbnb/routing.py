@@ -1,5 +1,5 @@
-from channels.http import AsgiHandler
 from channels.auth import AuthMiddlewareStack
+from channels.http import AsgiHandler
 from channels.routing import ProtocolTypeRouter, URLRouter
 
 import chat_bot.routing

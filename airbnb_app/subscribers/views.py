@@ -1,11 +1,12 @@
-from django.http import HttpRequest
-from django.views import generic
 from django.contrib import messages
+from django.http import HttpRequest
 from django.shortcuts import redirect, reverse
+from django.views import generic
 
 from accounts.services import get_user_by_email
-from .models import Subscriber
+
 from .forms import SubscriberEmailForm
+from .models import Subscriber
 from .services import get_subscriber_by_user
 
 

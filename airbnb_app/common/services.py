@@ -1,13 +1,14 @@
 import logging
-from typing import List, Any
+from typing import Any, List
 
 from twilio.base.exceptions import TwilioRestException
 
 from configs.redis_conf import r
 from configs.twilio_conf import twilio_client
-from .types import AbstractForm
-from .constants import VERIFICATION_CODE_STATUS_FAILED
+
 from .collections import FormWithModel, TwilioShortPayload
+from .constants import VERIFICATION_CODE_STATUS_FAILED
+from .types import AbstractForm
 
 
 logger = logging.getLogger(__name__)
@@ -27,8 +28,13 @@ def get_required_fields_from_form_with_model(forms_with_models: List[FormWithMod
     """Return all required fields (fields that cannot be blank) from form and linked model."""
     required_fields: List[str] = []
     for form_with_model in forms_with_models:
-        required_fields.extend([field for field in form_with_model.form.base_fields
-                                if not form_with_model.model._meta.get_field(field).blank])
+        required_fields.extend(
+            [
+                field
+                for field in form_with_model.form.base_fields
+                if not form_with_model.model._meta.get_field(field).blank
+            ],
+        )
     return required_fields
 
 
@@ -61,7 +67,7 @@ def _send_sms_by_twilio(body: str, sms_from: str, sms_to: str) -> TwilioShortPay
             msg=f"Sending phone number verification message: | "
                 f"Body: {body} | "
                 f"To: {sms_to} | "
-                f"From {sms_from}"
+                f"From {sms_from}",
         )
         message = twilio_client.messages.create(
             body=body,
@@ -72,13 +78,13 @@ def _send_sms_by_twilio(body: str, sms_from: str, sms_to: str) -> TwilioShortPay
         logger.error(
             msg=f"ERROR: SMS wasn't send | "
                 f"To: {sms_to} | "
-                f"Twilio exception message: {twilio_exception}"
+                f"Twilio exception message: {twilio_exception}",
         )
         return TwilioShortPayload(status=VERIFICATION_CODE_STATUS_FAILED, sid=None)
     else:
         logger.info(
             msg=f"Verification message has been sent successfully | "
                 f"To: {sms_to} | "
-                f"Twilio SID: {message.sid}"
+                f"Twilio SID: {message.sid}",
         )
         return TwilioShortPayload(status=message.status, sid=message.sid)

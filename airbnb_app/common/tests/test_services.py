@@ -8,18 +8,19 @@ from twilio.base.exceptions import TwilioRestException
 from django.conf import settings
 from django.test import SimpleTestCase, override_settings
 
-from accounts.forms import UserInfoForm, ProfileForm
+from accounts.forms import ProfileForm, UserInfoForm
 from accounts.models import CustomUser, Profile
+
 from ..collections import FormWithModel, TwilioShortPayload
 from ..constants import VERIFICATION_CODE_STATUS_DELIVERED, VERIFICATION_CODE_STATUS_FAILED
-from ..services import (create_name_with_prefix, get_field_names_from_form, get_required_fields_from_form_with_model,
-                        get_keys_with_prefixes, _send_sms_by_twilio, is_cooldown_ended, set_key_with_timeout)
+from ..services import (_send_sms_by_twilio, create_name_with_prefix, get_field_names_from_form, get_keys_with_prefixes,
+                        get_required_fields_from_form_with_model, is_cooldown_ended, set_key_with_timeout)
 
 
 class CommonServicesTests(SimpleTestCase):
     redis_server = fakeredis.FakeServer()
 
-    def get_field_names_from_form(self):
+    def test_get_field_names_from_form(self):
         """get_field_names_from_form() returns list of form fields."""
         result = get_field_names_from_form(form=UserInfoForm)
         self.assertListEqual(result, ['first_name', 'last_name', 'email'])

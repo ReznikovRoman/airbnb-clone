@@ -5,6 +5,7 @@ from .models import Realty
 
 class RealtySiteMap(Sitemap):
     """SiteMap for Realty objects."""
+
     changefreq = 'weekly'
     priority = 0.9
 

@@ -1,5 +1,5 @@
-from django.test import SimpleTestCase
 from django.contrib.sessions.backends.db import SessionStore
+from django.test import SimpleTestCase
 
 from ..services import create_name_with_prefix
 from ..session_handler import SessionHandler

@@ -1,7 +1,8 @@
+from rest_framework.permissions import SAFE_METHODS, BasePermission
 from rest_framework.request import HttpRequest
-from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 from accounts.services import has_user_profile_image
+
 from ..models import Realty
 
 

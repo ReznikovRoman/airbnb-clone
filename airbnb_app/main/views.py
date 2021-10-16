@@ -1,13 +1,14 @@
+from django.db.models import QuerySet
 from django.shortcuts import render
 from django.views import generic
-from django.db.models import QuerySet
 
-from .services import get_all_realty_cities
 from .constants import DISPLAYED_CITIES_COUNT
+from .services import get_all_realty_cities
 
 
 class HomePageView(generic.TemplateView):
     """Display home page."""
+
     template_name = 'index.html'
 
     def get_context_data(self, **kwargs):
@@ -24,6 +25,7 @@ class HomePageView(generic.TemplateView):
 
 class RobotsView(generic.TemplateView):
     """Display `robots.txt` file."""
+
     template_name = 'main/robots.txt'
     content_type = 'text/plain'
 

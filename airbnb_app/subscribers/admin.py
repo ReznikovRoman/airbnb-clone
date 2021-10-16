@@ -7,13 +7,13 @@ from .models import Subscriber
 
 @admin.register(Subscriber)
 class SubscriberAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'get_user_link',)
+    list_display = ('__str__', 'get_user_link')
 
     def get_user_link(self, obj: Subscriber):
         if obj.user:
             return mark_safe(
                 f"""<a href="{reverse('admin:accounts_customuser_change', args=(obj.user.id,))}">{obj.user.first_name}'s
-                account</a>"""
+                account</a>""",
             )
         return 'No account with this email'
     get_user_link.short_description = 'user link'

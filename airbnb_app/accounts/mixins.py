@@ -1,15 +1,17 @@
 from typing import Union
 
+from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpRequest
 from django.shortcuts import redirect, reverse
-from django.contrib.sites.shortcuts import get_current_site
 
 from common.types import AuthenticatedHttpRequest
+
 from .services import send_verification_link
 
 
 class AnonymousUserRequiredMixin:
     """Verify that current user is not logged in."""
+
     def dispatch(self, request: HttpRequest, *args, **kwargs):
         if request.user.is_authenticated:
             return redirect(reverse('home_page'))
@@ -18,6 +20,7 @@ class AnonymousUserRequiredMixin:
 
 class ActivatedAccountRequiredMixin:
     """Verify that current user has confirmed an email."""
+
     def dispatch(self, request: Union[HttpRequest, AuthenticatedHttpRequest], *args, **kwargs):
         if not request.user.is_authenticated:
             return redirect(reverse('accounts:login'))
@@ -32,6 +35,7 @@ class ActivatedAccountRequiredMixin:
 
 class UnconfirmedPhoneNumberRequiredMixin:
     """Verify that current user has not confirmed his phone number yet."""
+
     def dispatch(self, request: Union[HttpRequest, AuthenticatedHttpRequest], *args, **kwargs):
         if not request.user.is_authenticated:
             return redirect(reverse('accounts:login'))
@@ -45,6 +49,7 @@ class UnconfirmedPhoneNumberRequiredMixin:
 
 class UnconfirmedEmailRequiredMixin:
     """Verify that current user has not confirmed an email address yet."""
+
     def dispatch(self, request: Union[HttpRequest, AuthenticatedHttpRequest], *args, **kwargs):
         if not request.user.is_authenticated:
             return redirect(reverse('accounts:login'))

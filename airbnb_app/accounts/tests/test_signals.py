@@ -1,6 +1,7 @@
 from django.test import TestCase
 
 from subscribers.models import Subscriber
+
 from ..models import CustomUser
 
 
@@ -10,7 +11,7 @@ class AccountsSignalsTests(TestCase):
             email='user1@gmail.com',
             first_name='John',
             last_name='Doe',
-            password='test'
+            password='test',
         )
 
         Subscriber.objects.create(email='user2@gmail.com')
@@ -18,7 +19,7 @@ class AccountsSignalsTests(TestCase):
             email='user2@gmail.com',
             first_name='Bill',
             last_name='White',
-            password='test'
+            password='test',
         )
 
     def test_handle_user_sign_up_new_user_has_common_group(self):

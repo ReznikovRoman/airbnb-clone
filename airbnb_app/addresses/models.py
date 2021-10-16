@@ -4,6 +4,7 @@ from django.utils.text import slugify
 
 class Address(models.Model):
     """Address."""
+
     country = models.CharField(verbose_name='country', max_length=255)
     city = models.CharField(verbose_name='city', max_length=255)
     street = models.CharField(verbose_name='street', max_length=255)

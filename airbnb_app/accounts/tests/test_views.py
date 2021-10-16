@@ -9,18 +9,19 @@ from django.core import mail
 from django.test import SimpleTestCase, TestCase, override_settings
 from django.urls import reverse, reverse_lazy
 
+from accounts.models import CustomUser, SMSLog
+from addresses.models import Address
+from common.collections import TwilioShortPayload
+from common.constants import VERIFICATION_CODE_STATUS_DELIVERED, VERIFICATION_CODE_STATUS_FAILED
+from common.testing_utils import create_invalid_image, create_valid_image
 from hosts.models import RealtyHost
 from hosts.services import get_host_or_none_by_user
 from realty.models import Realty
-from common.constants import (VERIFICATION_CODE_STATUS_DELIVERED, VERIFICATION_CODE_STATUS_FAILED)
-from common.collections import TwilioShortPayload
-from common.testing_utils import (create_invalid_image, create_valid_image)
-from accounts.models import CustomUser, SMSLog
-from addresses.models import Address
 from realty.services.realty import get_available_realty_by_host
+
 from .. import views
-from ..forms import (SignUpForm, CustomPasswordResetForm, ProfileForm, UserInfoForm, ProfileImageForm,
-                     ProfileDescriptionForm, VerificationCodeForm)
+from ..forms import (CustomPasswordResetForm, ProfileDescriptionForm, ProfileForm, ProfileImageForm, SignUpForm,
+                     UserInfoForm, VerificationCodeForm)
 
 
 MEDIA_ROOT = tempfile.mkdtemp()
@@ -32,7 +33,7 @@ class SignUpViewTests(TestCase):
             email='user1@gmail.com',
             first_name='John',
             last_name='Doe',
-            password='test'
+            password='test',
         )
 
     def test_view_correct_attrs(self):
@@ -125,7 +126,7 @@ class LoginViewTests(TestCase):
             email='user1@gmail.com',
             first_name='John',
             last_name='Doe',
-            password='test'
+            password='test',
         )
 
     def test_view_correct_attrs(self):
@@ -156,7 +157,7 @@ class CustomPasswordResetViewTests(TestCase):
             email='user1@gmail.com',
             first_name='John',
             last_name='Doe',
-            password='test'
+            password='test',
         )
 
     def test_view_correct_attrs(self):
@@ -204,7 +205,7 @@ class AccountActivationViewTests(TestCase):
             email='user1@gmail.com',
             first_name='John',
             last_name='Doe',
-            password='test'
+            password='test',
         )
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
@@ -307,7 +308,7 @@ class AccountSettingsDashboardViewTests(TestCase):
             email='user1@gmail.com',
             first_name='John',
             last_name='Doe',
-            password='test'
+            password='test',
         )
 
     def test_view_correct_attrs(self):
@@ -587,13 +588,13 @@ class ProfileShowViewTests(TestCase):
             email='user1@gmail.com',
             first_name='John',
             last_name='Doe',
-            password='test'
+            password='test',
         )
         host1 = RealtyHost.objects.create(user=user1)
         location1 = Address.objects.create(
             country='Russia',
             city='Moscow',
-            street='Arbat, 20'
+            street='Arbat, 20',
         )
         Realty.objects.create(
             host=host1,
@@ -610,7 +611,7 @@ class ProfileShowViewTests(TestCase):
             email='user2@gmail.com',
             first_name='Mike',
             last_name='Smith',
-            password='test'
+            password='test',
         )
 
     def test_view_correct_attrs(self):

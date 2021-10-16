@@ -1,10 +1,10 @@
+from django.forms import CheckboxSelectMultiple, FileInput, Textarea
 from django.test import SimpleTestCase
-from django.forms import (CheckboxSelectMultiple, FileInput, Textarea)
 
-from ..forms import (RealtyTypeForm, RealtyForm, REALTY_FORM_WIDGETS, RealtyImageForm, RealtyGeneralInfoForm,
-                     RealtyDescriptionForm, RealtyImageFormSet)
-from ..models import (RealtyTypeChoices, Realty, RealtyImage)
 from ..constants import MAX_REALTY_IMAGES_COUNT
+from ..forms import (REALTY_FORM_WIDGETS, RealtyDescriptionForm, RealtyForm, RealtyGeneralInfoForm, RealtyImageForm,
+                     RealtyImageFormSet, RealtyTypeForm)
+from ..models import Realty, RealtyImage, RealtyTypeChoices
 
 
 class RealtyTypeFormTests(SimpleTestCase):

@@ -1,6 +1,7 @@
 from django.test import TestCase
 
 from accounts.models import CustomUser
+
 from ..models import RealtyHost
 from ..services import get_host_or_none_by_user
 
@@ -11,14 +12,14 @@ class HostsServicesTests(TestCase):
             email='user@gmail.com',
             first_name='Peter',
             last_name='Smith',
-            password='test'
+            password='test',
         )
 
         user1 = CustomUser.objects.create_user(
             email='host@gmail.com',
             first_name='John',
             last_name='Doe',
-            password='test'
+            password='test',
         )
         RealtyHost.objects.create(user=user1)
 

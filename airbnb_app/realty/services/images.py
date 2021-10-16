@@ -1,7 +1,7 @@
 from typing import List, Union
 
+from ..models import CustomDeleteQueryset, RealtyImage
 from .order import ImageOrder
-from ..models import RealtyImage, CustomDeleteQueryset
 
 
 def get_images_by_realty_id(realty_id: Union[int, str]) -> 'CustomDeleteQueryset[RealtyImage]':

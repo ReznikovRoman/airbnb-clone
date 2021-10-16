@@ -3,11 +3,12 @@ import tempfile
 
 from django.test import TestCase, override_settings
 
-from hosts.models import RealtyHost
 from accounts.models import CustomUser
 from addresses.models import Address
 from common.testing_utils import create_valid_image
-from ..models import (Realty, RealtyImage, RealtyTypeChoices)
+from hosts.models import RealtyHost
+
+from ..models import Realty, RealtyImage, RealtyTypeChoices
 
 
 MEDIA_ROOT = tempfile.mkdtemp()

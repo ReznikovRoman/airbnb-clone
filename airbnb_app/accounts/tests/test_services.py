@@ -3,23 +3,24 @@ from unittest import mock
 
 import fakeredis
 
+from django.contrib.auth.models import Group
 from django.core import mail
 from django.http import Http404
-from django.test import TestCase, override_settings
-from django.utils.http import urlsafe_base64_encode
-from django.utils.encoding import force_bytes
 from django.template.loader import render_to_string
-from django.contrib.auth.models import Group
+from django.test import TestCase, override_settings
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 
 from accounts.models import CustomUser, Profile, SMSLog
-from common.constants import VERIFICATION_CODE_STATUS_DELIVERED, VERIFICATION_CODE_STATUS_FAILED
 from common.collections import TwilioShortPayload
+from common.constants import VERIFICATION_CODE_STATUS_DELIVERED, VERIFICATION_CODE_STATUS_FAILED
+
+from ..services import (add_user_to_group, get_phone_code_status_by_user_id, get_user_by_email, get_user_by_pk,
+                        get_user_from_uid, get_verification_code_from_digits_dict, handle_phone_number_change,
+                        has_user_profile_image, is_verification_code_for_profile_valid, send_greeting_email,
+                        send_verification_link, set_phone_code_status_by_user_id,
+                        update_phone_number_confirmation_status, update_user_email_confirmation_status)
 from ..tokens import account_activation_token
-from ..services import (has_user_profile_image, get_user_by_email, get_user_from_uid, add_user_to_group,
-                        update_phone_number_confirmation_status, update_user_email_confirmation_status,
-                        get_verification_code_from_digits_dict, is_verification_code_for_profile_valid,
-                        handle_phone_number_change, send_greeting_email, send_verification_link, get_user_by_pk,
-                        get_phone_code_status_by_user_id, set_phone_code_status_by_user_id)
 
 
 class AccountsServicesTests(TestCase):
@@ -53,7 +54,7 @@ class AccountsServicesTests(TestCase):
             context={
                 'protocol': test_scheme,
                 'domain': test_domain,
-            }
+            },
         )
 
         send_greeting_email(domain=test_domain, scheme=test_scheme, user=test_user)
@@ -81,7 +82,7 @@ class AccountsServicesTests(TestCase):
                 'domain': test_domain,
                 'uid': urlsafe_base64_encode(force_bytes(test_user.pk)),
                 'token': account_activation_token.make_token(test_user),
-            }
+            },
         )
         r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
         r.flushall()
@@ -111,7 +112,7 @@ class AccountsServicesTests(TestCase):
                 'domain': test_domain,
                 'uid': urlsafe_base64_encode(force_bytes(test_user.pk)),
                 'token': account_activation_token.make_token(test_user),
-            }
+            },
         )
 
         r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)

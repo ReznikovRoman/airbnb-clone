@@ -1,12 +1,13 @@
 import datetime
 
 from django import forms
-from django.test import SimpleTestCase
 from django.core.exceptions import ValidationError
+from django.test import SimpleTestCase
 
 from accounts.models import CustomUser, Profile
-from ..forms import (SignUpForm, AdminCustomUserChangeForm, UserInfoForm, ProfileForm, ProfileImageForm,
-                     ProfileDescriptionForm, VerificationCodeForm)
+
+from ..forms import (AdminCustomUserChangeForm, ProfileDescriptionForm, ProfileForm, ProfileImageForm, SignUpForm,
+                     UserInfoForm, VerificationCodeForm)
 
 
 class SignUpFormTests(SimpleTestCase):
@@ -20,7 +21,7 @@ class SignUpFormTests(SimpleTestCase):
         form = SignUpForm()
         self.assertEqual(
             form._meta.fields,
-            ('email', 'first_name', 'last_name', 'password1', 'password2')
+            ('email', 'first_name', 'last_name', 'password1', 'password2'),
         )
 
     def test_email_field_params(self):
@@ -41,7 +42,7 @@ class AdminCustomUserChangeFormTests(SimpleTestCase):
         form = AdminCustomUserChangeForm()
         self.assertEqual(
             form._meta.fields,
-            ('email', 'first_name', 'last_name', 'is_email_confirmed')
+            ('email', 'first_name', 'last_name', 'is_email_confirmed'),
         )
 
 
@@ -56,7 +57,7 @@ class UserInfoFormTests(SimpleTestCase):
         form = UserInfoForm()
         self.assertEqual(
             form._meta.fields,
-            ('first_name', 'last_name', 'email')
+            ('first_name', 'last_name', 'email'),
         )
 
 
@@ -71,7 +72,7 @@ class ProfileFormTests(SimpleTestCase):
         form = ProfileForm()
         self.assertEqual(
             form._meta.fields,
-            ('gender', 'date_of_birth', 'phone_number')
+            ('gender', 'date_of_birth', 'phone_number'),
         )
 
     def test_form_correct_widgets(self):
@@ -114,7 +115,7 @@ class ProfileImageFormTests(SimpleTestCase):
         form = ProfileImageForm()
         self.assertEqual(
             form._meta.fields,
-            ('profile_image',)
+            ('profile_image',),
         )
 
     def test_form_correct_widgets(self):
@@ -134,7 +135,7 @@ class ProfileDescriptionFormTests(SimpleTestCase):
         form = ProfileDescriptionForm()
         self.assertEqual(
             form._meta.fields,
-            ('description',)
+            ('description',),
         )
 
 
@@ -160,7 +161,7 @@ class VerificationCodeFormTests(SimpleTestCase):
     def test_clean_digit_less_than_zero(self):
         """Test that digit cannot be less than 0 (zero)."""
         form = VerificationCodeForm(
-            data={'digit_1': '-1', 'digit_2': '2', 'digit_3': '3', 'digit_4': '4', }
+            data={'digit_1': '-1', 'digit_2': '2', 'digit_3': '3', 'digit_4': '4'},
         )
 
         self.assertFalse(form.is_valid())
@@ -169,7 +170,7 @@ class VerificationCodeFormTests(SimpleTestCase):
     def test_clean_digit_greater_than_nine(self):
         """Test that digit cannot be greater than 9 (nine)."""
         form = VerificationCodeForm(
-            data={'digit_1': '10', 'digit_2': '2', 'digit_3': '3', 'digit_4': '4', }
+            data={'digit_1': '10', 'digit_2': '2', 'digit_3': '3', 'digit_4': '4'},
         )
 
         self.assertFalse(form.is_valid())
@@ -178,7 +179,7 @@ class VerificationCodeFormTests(SimpleTestCase):
     def test_clean_digit_valid_digit(self):
         """clean_digit_*() returns `digit_*` if digit is in range [0, 9]."""
         form = VerificationCodeForm(
-            data={'digit_1': '1', 'digit_2': '2', 'digit_3': '3', 'digit_4': '4', }
+            data={'digit_1': '1', 'digit_2': '2', 'digit_3': '3', 'digit_4': '4'},
         )
 
         self.assertTrue(form.is_valid())

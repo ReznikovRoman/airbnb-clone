@@ -1,37 +1,39 @@
-from django.http import HttpRequest
-from django.urls import reverse_lazy
-from django.views import generic
 from django.contrib import messages
-from django.shortcuts import redirect, reverse
 from django.contrib.auth import login
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sites.shortcuts import get_current_site
+from django.http import HttpRequest
+from django.shortcuts import redirect, reverse
+from django.urls import reverse_lazy
+from django.views import generic
 
+from common.constants import (TWILIO_MESSAGE_STATUS_CODES_FAILED, VERIFICATION_CODE_STATUS_DELIVERED,
+                              VERIFICATION_CODE_STATUS_FAILED)
 from common.types import AuthenticatedHttpRequest
 from hosts.services import get_host_or_none_by_user
-from common.constants import (VERIFICATION_CODE_STATUS_DELIVERED, VERIFICATION_CODE_STATUS_FAILED,
-                              TWILIO_MESSAGE_STATUS_CODES_FAILED)
 from realty.services.realty import get_available_realty_by_host
-from .forms import (SignUpForm, CustomPasswordResetForm,
-                    ProfileForm, UserInfoForm, ProfileImageForm, ProfileDescriptionForm, VerificationCodeForm)
+
+from .constants import (EMAIL_CONFIRMATION_FAILURE_RESPONSE_MESSAGE, EMAIL_CONFIRMATION_SUCCESS_RESPONSE_MESSAGE,
+                        EMAIL_SENT_SUCCESSFULLY_RESPONSE_MESSAGE, PHONE_NUMBER_CONFIRMATION_SUCCESS_RESPONSE_MESSAGE,
+                        PROFILE_INFO_EDIT_SUCCESS_RESPONSE_MESSAGE, SMS_CODE_INVALID_RESPONSE_MESSAGE,
+                        SMS_NOT_DELIVERED_RESPONSE_MESSAGE, SMS_SENT_SUCCESSFULLY_RESPONSE_MESSAGE)
+from .forms import (CustomPasswordResetForm, ProfileDescriptionForm, ProfileForm, ProfileImageForm, SignUpForm,
+                    UserInfoForm, VerificationCodeForm)
+from .mixins import AnonymousUserRequiredMixin, UnconfirmedEmailRequiredMixin, UnconfirmedPhoneNumberRequiredMixin
 from .models import CustomUser, Profile
+from .services import (get_phone_code_status_by_user_id, get_user_by_pk, get_user_from_uid,
+                       get_verification_code_from_digits_dict, handle_phone_number_change,
+                       is_verification_code_for_profile_valid, send_verification_link, set_phone_code_status_by_user_id,
+                       update_phone_number_confirmation_status, update_user_email_confirmation_status)
 from .tokens import account_activation_token
-from .mixins import (AnonymousUserRequiredMixin, UnconfirmedPhoneNumberRequiredMixin, UnconfirmedEmailRequiredMixin, )
-from .services import (get_user_from_uid, send_verification_link, handle_phone_number_change,
-                       is_verification_code_for_profile_valid, update_phone_number_confirmation_status,
-                       get_verification_code_from_digits_dict, update_user_email_confirmation_status, get_user_by_pk,
-                       set_phone_code_status_by_user_id, get_phone_code_status_by_user_id)
-from .constants import (EMAIL_SENT_SUCCESSFULLY_RESPONSE_MESSAGE, SMS_SENT_SUCCESSFULLY_RESPONSE_MESSAGE,
-                        SMS_NOT_DELIVERED_RESPONSE_MESSAGE, SMS_CODE_INVALID_RESPONSE_MESSAGE,
-                        EMAIL_CONFIRMATION_FAILURE_RESPONSE_MESSAGE, EMAIL_CONFIRMATION_SUCCESS_RESPONSE_MESSAGE,
-                        PHONE_NUMBER_CONFIRMATION_SUCCESS_RESPONSE_MESSAGE, PROFILE_INFO_EDIT_SUCCESS_RESPONSE_MESSAGE)
 
 
 class SignUpView(AnonymousUserRequiredMixin,
                  generic.base.TemplateResponseMixin,
                  generic.View):
     """View for creating a new account."""
+
     form_class = SignUpForm
     template_name = 'accounts/registration/signup.html'
 
@@ -39,7 +41,7 @@ class SignUpView(AnonymousUserRequiredMixin,
         return self.render_to_response(
             context={
                 'form': self.form_class(),
-            }
+            },
         )
 
     def post(self, request: HttpRequest, *args, **kwargs):
@@ -53,18 +55,20 @@ class SignUpView(AnonymousUserRequiredMixin,
         return self.render_to_response(
             context={
                 'form': form,
-            }
+            },
         )
 
 
 class LoginView(AnonymousUserRequiredMixin,
                 auth_views.LoginView):
     """View for signing in."""
+
     template_name = 'accounts/registration/login.html'
 
 
 class CustomPasswordResetView(auth_views.PasswordResetView):
     """View for resetting a password."""
+
     template_name = 'accounts/registration/password_reset.html'
     success_url = reverse_lazy('accounts:password_reset_done')
     html_email_template_name = 'accounts/registration/password_reset_email.html'
@@ -93,12 +97,14 @@ class AccountActivationView(generic.View):
 
 class ActivationRequiredView(generic.TemplateView):
     """Display error page - page requires confirmed email."""
+
     template_name = 'accounts/registration/account_activation_required.html'
 
 
 class AccountSettingsDashboardView(LoginRequiredMixin,
                                    generic.TemplateView):
     """View for showing an account dashboard."""
+
     template_name = 'accounts/settings/settings_dashboard.html'
 
 
@@ -106,6 +112,7 @@ class PersonalInfoEditView(LoginRequiredMixin,
                            generic.base.TemplateResponseMixin,
                            generic.View):
     """View for editing user personal info."""
+
     template_name = 'accounts/settings/user_form.html'
     profile_form: ProfileForm = None
     user_info_form: UserInfoForm = None
@@ -127,7 +134,7 @@ class PersonalInfoEditView(LoginRequiredMixin,
             context={
                 'user_info_form': self.user_info_form,
                 'profile_form': self.profile_form,
-            }
+            },
         )
 
     def post(self, request: HttpRequest, *args, **kwargs):
@@ -179,13 +186,14 @@ class PersonalInfoEditView(LoginRequiredMixin,
             context={
                 'user_info_form': self.user_info_form,
                 'profile_form': self.profile_form,
-            }
+            },
         )
 
 
 class ProfileShowView(generic.base.TemplateResponseMixin,
                       generic.View):
     """View for displaying a user profile."""
+
     template_name = 'accounts/profile/show.html'
 
     profile_owner: CustomUser = None
@@ -201,7 +209,7 @@ class ProfileShowView(generic.base.TemplateResponseMixin,
 
     def get(self, request: HttpRequest, *args, **kwargs):
         host_listings = get_available_realty_by_host(
-            realty_host=get_host_or_none_by_user(user=self.profile_owner)
+            realty_host=get_host_or_none_by_user(user=self.profile_owner),
         )
 
         return self.render_to_response(
@@ -209,7 +217,7 @@ class ProfileShowView(generic.base.TemplateResponseMixin,
                 'profile_owner': self.profile_owner,
                 'is_profile_of_current_user': self.is_profile_of_current_user,
                 'host_listings': host_listings,
-            }
+            },
         )
 
 
@@ -217,6 +225,7 @@ class ProfileImageEditView(LoginRequiredMixin,
                            generic.base.TemplateResponseMixin,
                            generic.View):
     """View for editing a profile image."""
+
     template_name = 'accounts/profile/edit_image.html'
 
     profile_image_form: ProfileImageForm = None
@@ -233,7 +242,7 @@ class ProfileImageEditView(LoginRequiredMixin,
         return self.render_to_response(
             context={
                 'profile_image_form': self.profile_image_form,
-            }
+            },
         )
 
     def post(self, request: HttpRequest, *args, **kwargs):
@@ -243,7 +252,7 @@ class ProfileImageEditView(LoginRequiredMixin,
         return self.render_to_response(
             context={
                 'profile_image_form': self.profile_image_form,
-            }
+            },
         )
 
 
@@ -251,6 +260,7 @@ class ProfileDescriptionEditView(LoginRequiredMixin,
                                  generic.base.TemplateResponseMixin,
                                  generic.View):
     """View for editing profile description."""
+
     template_name = 'accounts/profile/edit_description.html'
 
     profile_description_form: ProfileDescriptionForm = None
@@ -266,7 +276,7 @@ class ProfileDescriptionEditView(LoginRequiredMixin,
         return self.render_to_response(
             context={
                 'profile_description_form': self.profile_description_form,
-            }
+            },
         )
 
     def post(self, request: HttpRequest, *args, **kwargs):
@@ -276,13 +286,14 @@ class ProfileDescriptionEditView(LoginRequiredMixin,
         return self.render_to_response(
             context={
                 'profile_description_form': self.profile_description_form,
-            }
+            },
         )
 
 
 class SecurityDashboardView(LoginRequiredMixin,
                             generic.TemplateView):
     """View for showing a `Login & Security` dashboard."""
+
     template_name = 'accounts/settings/security_dashboard.html'
 
     def get_context_data(self, **kwargs):
@@ -297,6 +308,7 @@ class PhoneNumberConfirmPageView(UnconfirmedPhoneNumberRequiredMixin,
                                  generic.base.TemplateResponseMixin,
                                  generic.View):
     """View for confirming a phone number (by a verification SMS code)."""
+
     template_name = 'accounts/settings/confirm_phone.html'
 
     verification_code_form: VerificationCodeForm = None
@@ -317,14 +329,14 @@ class PhoneNumberConfirmPageView(UnconfirmedPhoneNumberRequiredMixin,
             context={
                 'verification_code_form': self.verification_code_form,
                 'is_verification_code_sent': self.is_verification_code_sent,
-            }
+            },
         )
 
     def post(self, request: AuthenticatedHttpRequest, *args, **kwargs):
         if self.verification_code_form.is_valid():
             if is_verification_code_for_profile_valid(
                     user_profile=request.user.profile,
-                    verification_code=get_verification_code_from_digits_dict(self.verification_code_form.cleaned_data)
+                    verification_code=get_verification_code_from_digits_dict(self.verification_code_form.cleaned_data),
             ):
                 update_phone_number_confirmation_status(request.user.profile, is_phone_number_confirmed=True)
                 messages.add_message(request, messages.SUCCESS, PHONE_NUMBER_CONFIRMATION_SUCCESS_RESPONSE_MESSAGE)
@@ -336,7 +348,7 @@ class PhoneNumberConfirmPageView(UnconfirmedPhoneNumberRequiredMixin,
             context={
                 'verification_code_form': self.verification_code_form,
                 'is_verification_code_sent': self.is_verification_code_sent,
-            }
+            },
         )
 
 

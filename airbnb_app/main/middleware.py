@@ -5,6 +5,7 @@ from django.http import HttpRequest, HttpResponse
 
 class MobileUserAgentMiddleware:
     """Middleware for checking whether the request comes from a mobile device."""
+
     def __init__(self, get_response):
         self._get_response = get_response
 

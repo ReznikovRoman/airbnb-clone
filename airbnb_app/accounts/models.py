@@ -1,15 +1,15 @@
 from model_utils import FieldTracker
 from phonenumber_field.modelfields import PhoneNumberField
 
-from django.db import models
 from django.conf import settings
+from django.contrib.auth.models import AbstractUser, BaseUserManager, Permission, PermissionsMixin
 from django.core.validators import MinLengthValidator
-from django.contrib.auth.models import (AbstractUser, BaseUserManager,
-                                        PermissionsMixin, Permission)
+from django.db import models
 
 
 class CustomUserManager(BaseUserManager):
     """Manager for CustomUser model."""
+
     def create_user(self, email: str, first_name: str, last_name: str, password: str = None):
         if not email:
             raise ValueError('Users must have an email address.')
@@ -51,7 +51,7 @@ class CustomUserManager(BaseUserManager):
         created = True
         try:
             user = self.get(
-                email=self.normalize_email(email)
+                email=self.normalize_email(email),
             )
             created = False
         except CustomUser.DoesNotExist:
@@ -67,6 +67,7 @@ class CustomUserManager(BaseUserManager):
 
 class ActivatedAccountsManager(CustomUserManager):
     """Manager for all users that have confirmed their email."""
+
     def get_queryset(self):
         base_qs = super(ActivatedAccountsManager, self).get_queryset()
         return base_qs.filter(is_email_confirmed=True)
@@ -74,6 +75,7 @@ class ActivatedAccountsManager(CustomUserManager):
 
 class CustomUser(AbstractUser, PermissionsMixin):
     """Custom user model."""
+
     profile: "Profile"
     username = None
     email = models.EmailField(
@@ -155,6 +157,7 @@ class ProfileGenderChoices(models.TextChoices):
 
 class Profile(models.Model):
     """Profile for CustomUser."""
+
     profile_image = models.ImageField(
         verbose_name='profile image',
         blank=True,
@@ -203,6 +206,7 @@ class Profile(models.Model):
 
 class SMSLog(models.Model):
     """Log of sms message that is sent to User to verify his phone number."""
+
     sms_code = models.CharField(
         verbose_name='4 digits sms code',
         blank=True,

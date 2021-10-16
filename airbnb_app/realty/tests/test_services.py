@@ -6,20 +6,21 @@ import fakeredis
 
 from django.test import SimpleTestCase, TestCase, override_settings
 
-from hosts.models import RealtyHost
 from accounts.models import CustomUser
 from addresses.models import Address
-from common.testing_utils import create_valid_image
 from common.session_handler import SessionHandler
-from ..models import Amenity, Realty, RealtyTypeChoices, RealtyImage
-from ..constants import REALTY_FORM_SESSION_PREFIX, REALTY_FORM_KEYS_COLLECTOR_NAME
+from common.testing_utils import create_valid_image
+from hosts.models import RealtyHost
+
+from ..constants import REALTY_FORM_KEYS_COLLECTOR_NAME, REALTY_FORM_SESSION_PREFIX
+from ..models import Amenity, Realty, RealtyImage, RealtyTypeChoices
+from ..services.images import get_image_by_id, get_images_by_realty_id, update_images_order
 from ..services.order import ImageOrder, convert_response_to_orders
-from ..services.images import (get_images_by_realty_id, get_image_by_id, update_images_order)
-from ..services.realty import (get_amenity_ids_from_session, get_all_available_realty,
+from ..services.realty import (get_all_available_realty, get_amenity_ids_from_session,
                                get_available_realty_by_city_slug, get_available_realty_by_host,
-                               get_available_realty_filtered_by_type, get_last_realty, get_n_latest_available_realty,
-                               get_available_realty_count_by_city, get_available_realty_search_results,
-                               get_or_create_realty_host_by_user, get_cached_realty_visits_count_by_realty_id,
+                               get_available_realty_count_by_city, get_available_realty_filtered_by_type,
+                               get_available_realty_search_results, get_cached_realty_visits_count_by_realty_id,
+                               get_last_realty, get_n_latest_available_realty, get_or_create_realty_host_by_user,
                                update_realty_visits_count, update_realty_visits_from_redis)
 
 

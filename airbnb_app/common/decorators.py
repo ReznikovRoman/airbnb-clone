@@ -1,5 +1,5 @@
-from typing import Callable
 from functools import wraps
+from typing import Callable
 
 
 def disable_for_loaddata(signal_handler: Callable):

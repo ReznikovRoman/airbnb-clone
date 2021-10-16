@@ -1,9 +1,10 @@
-from django.db import models
 from django.conf import settings
+from django.db import models
 
 
 class Subscriber(models.Model):
     """Subscriber that receives email notifications about new realty."""
+
     user = models.OneToOneField(
         to=settings.AUTH_USER_MODEL,
         verbose_name='subscriber',

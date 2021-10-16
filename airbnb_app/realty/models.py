@@ -1,15 +1,17 @@
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
-from django.core.validators import MinValueValidator, MaxValueValidator
 
-from hosts.models import RealtyHost
 from addresses.models import Address
+from hosts.models import RealtyHost
+
 from .fields import OrderField
 
 
 class Amenity(models.Model):
     """Realty amenity."""
+
     name = models.CharField(verbose_name='name', max_length=100)
 
     class Meta:
@@ -34,6 +36,7 @@ class RealtyManager(models.Manager):
 
 class AvailableRealtyManager(models.Manager):
     """Manager for all realty that is available."""
+
     def get_queryset(self):
         base_qs = super(AvailableRealtyManager, self).get_queryset()
         return base_qs.filter(is_available=True)
@@ -47,6 +50,7 @@ class RealtyTypeChoices(models.TextChoices):
 
 class Realty(models.Model):
     """Realty in an online marketplace (airbnb)."""
+
     name = models.CharField(verbose_name="name", max_length=255)
     slug = models.SlugField(verbose_name="slug", max_length=255)
     description = models.TextField(verbose_name="description")
@@ -65,20 +69,20 @@ class Realty(models.Model):
         validators=[
             MinValueValidator(1),
             MaxValueValidator(8),
-        ]
+        ],
     )
     max_guests_count = models.PositiveSmallIntegerField(
         verbose_name='maximum guests amount',
         validators=[
             MinValueValidator(1),
             MaxValueValidator(100),
-        ]
+        ],
     )
     price_per_night = models.PositiveSmallIntegerField(
         verbose_name='price per night',
         validators=[
             MinValueValidator(1),
-        ]
+        ],
     )
     location = models.OneToOneField(Address, on_delete=models.CASCADE, verbose_name='location')
     host = models.ForeignKey(RealtyHost, on_delete=models.CASCADE, related_name='realty', verbose_name='realty host')
@@ -99,12 +103,12 @@ class Realty(models.Model):
         self.slug = slugify(self.name)
         super(Realty, self).save(*args, **kwargs)
 
+    def get_absolute_url(self):
+        return reverse('realty:detail', kwargs={"pk": self.id, "slug": self.slug})
+
     def delete(self, using=None, keep_parents=False):
         self.location.delete()
         super(Realty, self).delete(using, keep_parents)
-
-    def get_absolute_url(self):
-        return reverse('realty:detail', kwargs={"pk": self.id, "slug": self.slug})
 
     @property
     def get_cached_visits_count(self):
@@ -113,8 +117,9 @@ class Realty(models.Model):
         return get_cached_realty_visits_count_by_realty_id(self.id)
 
 
-class RealtyView(models.Model):
-    """Postgres View"""
+class RealtyView(models.Model):  # noqa: DJ10, DJ08, DJ11
+    """Postgres View."""
+
     id = models.PositiveBigIntegerField(primary_key=True)
     name = models.CharField(verbose_name="name", max_length=255)
     description = models.TextField(verbose_name="description")
@@ -130,18 +135,18 @@ class RealtyView(models.Model):
         validators=[
             MinValueValidator(1),
             MaxValueValidator(8),
-        ]
+        ],
     )
     max_guests_count = models.PositiveSmallIntegerField(
         validators=[
             MinValueValidator(1),
             MaxValueValidator(100),
-        ]
+        ],
     )
     price_per_night = models.PositiveSmallIntegerField(
         validators=[
             MinValueValidator(1),
-        ]
+        ],
     )
 
     country = models.CharField(verbose_name='location country', max_length=255)
@@ -170,6 +175,7 @@ def get_realty_image_upload_path(instance: "RealtyImage", filename: str) -> str:
 
 class RealtyImage(models.Model):
     """Image of a realty."""
+
     image = models.ImageField(upload_to=get_realty_image_upload_path, verbose_name='image')
     realty = models.ForeignKey(
         Realty,
@@ -196,8 +202,9 @@ class RealtyImage(models.Model):
 
     def delete(self, using=None, keep_parents=False):
         # get realty images that go after the current one (that will be deleted)
-        next_realty_images: CustomDeleteQueryset[RealtyImage] = RealtyImage.objects.\
-                                                                      filter(realty=self.realty)[(self.order+1):]
+        next_realty_images: CustomDeleteQueryset[RealtyImage] = (
+            RealtyImage.objects.filter(realty=self.realty)[(self.order + 1):]
+        )
 
         if next_realty_images.exists():
             for realty_image in next_realty_images:

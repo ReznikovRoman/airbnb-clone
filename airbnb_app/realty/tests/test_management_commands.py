@@ -2,13 +2,13 @@ from io import StringIO
 
 from model_bakery import baker
 
-from django.test import TestCase
 from django.core.management import call_command, color_style, load_command_class
+from django.test import TestCase
 
-from hosts.models import RealtyHost
-from realty.models import Realty
 from accounts.models import CustomUser
+from hosts.models import RealtyHost
 from realty.management.commands.populaterealty import Command
+from realty.models import Realty
 
 
 class PopulateRealtyTests(TestCase):

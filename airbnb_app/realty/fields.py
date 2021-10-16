@@ -1,7 +1,7 @@
 from typing import List, Optional
 
-from django.db import models
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import models
 
 
 class OrderField(models.PositiveSmallIntegerField):
@@ -11,6 +11,7 @@ class OrderField(models.PositiveSmallIntegerField):
         related_fields (Optional[List[str]]): fields, with the respect to which the order is calculated
         (e.g. for each Realty object we start image ordering from 0 and each next image has a larger order)
     """
+
     def __init__(self, related_fields: Optional[List[str]] = None, *args, **kwargs):
         self.related_fields = related_fields
         super(OrderField, self).__init__(*args, **kwargs)

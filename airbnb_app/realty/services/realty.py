@@ -1,14 +1,15 @@
-from typing import Optional, List, Union, Tuple
+from typing import List, Optional, Tuple, Union
 
 from django.conf import settings
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.db.models import QuerySet
-from django.contrib.postgres.search import SearchRank, SearchVector, SearchQuery
 
-from hosts.models import RealtyHost
-from configs.redis_conf import r
 from common.session_handler import SessionHandler
-from ..models import Amenity, Realty, CustomDeleteQueryset
+from configs.redis_conf import r
+from hosts.models import RealtyHost
+
 from ..constants import REALTY_FORM_SESSION_PREFIX
+from ..models import Amenity, Realty
 
 
 def get_amenity_ids_from_session(session_handler: SessionHandler) -> Optional[QuerySet[int]]:
@@ -22,25 +23,27 @@ def get_or_create_realty_host_by_user(user: settings.AUTH_USER_MODEL) -> Tuple[R
     return RealtyHost.objects.get_or_create(user=user)
 
 
-def get_all_available_realty() -> 'CustomDeleteQueryset[Realty]':
+def get_all_available_realty() -> 'QuerySet[Realty]':
     return Realty.available.all()
 
 
-def get_available_realty_by_host(realty_host: RealtyHost) -> 'CustomDeleteQueryset[Realty]':
+def get_available_realty_by_host(realty_host: RealtyHost) -> 'QuerySet[Realty]':
     return Realty.available.filter(host=realty_host)
 
 
-def get_available_realty_by_city_slug(city_slug: str,
-                                      realty_qs: Optional['CustomDeleteQueryset[Realty]'] = None
-                                      ) -> 'CustomDeleteQueryset[Realty]':
+def get_available_realty_by_city_slug(
+        city_slug: str,
+        realty_qs: Optional['QuerySet[Realty]'] = None,
+) -> 'QuerySet[Realty]':
     if realty_qs is not None:
         return realty_qs.filter(location__city_slug=city_slug)
     return Realty.available.filter(location__city_slug=city_slug)
 
 
-def get_available_realty_filtered_by_type(realty_types: Union[List[str], Tuple[str, ...]],
-                                          realty_qs: Optional['CustomDeleteQueryset[Realty]'] = None
-                                          ) -> 'CustomDeleteQueryset[Realty]':
+def get_available_realty_filtered_by_type(
+        realty_types: Union[List[str], Tuple[str, ...]],
+        realty_qs: Optional['QuerySet[Realty]'] = None,
+) -> 'QuerySet[Realty]':
     if realty_qs is not None:
         return realty_qs.filter(realty_type__in=realty_types)
     return Realty.available.filter(realty_type__in=realty_types)
@@ -50,7 +53,7 @@ def get_last_realty() -> Realty:
     return Realty.objects.last()
 
 
-def get_n_latest_available_realty(realty_count: int) -> 'CustomDeleteQueryset[Realty]':
+def get_n_latest_available_realty(realty_count: int) -> 'QuerySet[Realty]':
     return Realty.available.all()[:realty_count]
 
 
@@ -58,9 +61,8 @@ def get_available_realty_count_by_city(city: str) -> int:
     return Realty.available.filter(location__city__iexact=city).count()
 
 
-def get_available_realty_search_results(query: Optional[str] = None) -> 'CustomDeleteQueryset[Realty]':
-    """
-    Get all available realty filtered by a `query`.
+def get_available_realty_search_results(query: Optional[str] = None) -> 'QuerySet[Realty]':
+    """Get all available realty filtered by a `query`.
 
     If `query` isn't passed, return all available realty objects.
 

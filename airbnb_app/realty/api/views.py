@@ -1,22 +1,24 @@
 from rest_framework import generics, status
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from ..filters import RealtyFilter
 from ..services.realty import get_all_available_realty
-from .permissions import IsRealtyOwnerOrReadOnly, IsAbleToAddRealty
+from .permissions import IsAbleToAddRealty, IsRealtyOwnerOrReadOnly
 from .serializers import RealtySerializer, RealtyUpdateSerializer
 
 
 class RealtyListApiView(generics.ListCreateAPIView):
-    """
+    """API view for listing realty objects.
+
     get:
     Return a list of all available Realty objects.
 
     post:
     Create a new Realty object.
     """
+
     queryset = get_all_available_realty()
     serializer_class = RealtySerializer
     filterset_class = RealtyFilter
@@ -38,7 +40,8 @@ class RealtyListApiView(generics.ListCreateAPIView):
 
 
 class RealtyDetailApiView(generics.RetrieveUpdateDestroyAPIView):
-    """
+    """API view for a single Realty object.
+
     retrieve:
     Return a Realty object by the given id.
 
@@ -48,6 +51,7 @@ class RealtyDetailApiView(generics.RetrieveUpdateDestroyAPIView):
     delete:
     Delete a Realty object by the given id.
     """
+
     queryset = get_all_available_realty()
     serializer_class = RealtyUpdateSerializer
     permission_classes = (

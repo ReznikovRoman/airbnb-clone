@@ -1,7 +1,7 @@
 from django import forms
 
-from .models import Realty, RealtyImage, RealtyTypeChoices, Amenity
-from .constants import (MAX_REALTY_IMAGES_COUNT, MAX_BEDS_COUNT, MAX_GUESTS_COUNT)
+from .constants import MAX_BEDS_COUNT, MAX_GUESTS_COUNT, MAX_REALTY_IMAGES_COUNT
+from .models import Amenity, Realty, RealtyImage, RealtyTypeChoices
 
 
 REALTY_FORM_WIDGETS = {
@@ -29,14 +29,16 @@ REALTY_FORM_WIDGETS = {
 
 class RealtyTypeForm(forms.Form):
     """Form for selecting realty types."""
+
     realty_type = forms.MultipleChoiceField(
         choices=RealtyTypeChoices.choices,
-        widget=forms.CheckboxSelectMultiple()
+        widget=forms.CheckboxSelectMultiple(),
     )
 
 
 class RealtyFiltersForm(forms.Form):
     """Form for filtering realty objects."""
+
     beds_count = forms.DecimalField(
         widget=forms.NumberInput(attrs={
             'id': 'input--beds-count',
@@ -72,16 +74,18 @@ class RealtyFiltersForm(forms.Form):
 
 class RealtyForm(forms.ModelForm):
     """Form for editing (creating or updating) a Realty object."""
+
     class Meta:
         model = Realty
-        fields = ('name', 'realty_type',
-                  'beds_count', 'max_guests_count', 'price_per_night', 'amenities',
-                  'description',)
+        fields = (
+            'name', 'realty_type', 'beds_count', 'max_guests_count', 'price_per_night', 'amenities', 'description',
+        )
         widgets = REALTY_FORM_WIDGETS
 
 
 class RealtyImageForm(forms.ModelForm):
     """Form for creating RealtyImages."""
+
     class Meta:
         model = RealtyImage
         fields = ('image',)
@@ -100,10 +104,12 @@ class RealtyGeneralInfoForm(forms.ModelForm):
 
     Step-1
     """
+
     class Meta:
         model = Realty
-        fields = ('name', 'realty_type', 'beds_count', 'max_guests_count',
-                  'price_per_night', 'amenities')
+        fields = (
+            'name', 'realty_type', 'beds_count', 'max_guests_count', 'price_per_night', 'amenities',
+        )
         widgets = REALTY_FORM_WIDGETS
 
 
@@ -112,6 +118,7 @@ class RealtyDescriptionForm(forms.Form):
 
     Step-3
     """
+
     description = forms.CharField(widget=forms.Textarea, label='Describe your realty')
 
 

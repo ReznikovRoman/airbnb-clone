@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db.models import QuerySet
 
 from accounts.models import CustomUser
+
 from .models import Subscriber
 
 

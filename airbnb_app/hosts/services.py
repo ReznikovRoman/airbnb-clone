@@ -1,6 +1,7 @@
 from typing import Optional
 
 from accounts.models import CustomUser
+
 from .models import RealtyHost
 
 

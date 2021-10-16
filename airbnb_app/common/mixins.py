@@ -1,10 +1,11 @@
-from typing import Union, Tuple, List
+from typing import List, Tuple, Union
 
 from django.http import HttpRequest, HttpResponseRedirect
 
 
 class SessionDataRequiredMixin:
     """Verify that there is all 'required_data' in the session, otherwise redirect to the 'redirect_url'."""
+
     required_session_data: Union[List[str], Tuple[str, ...]] = None
     redirect_url: str = None
 

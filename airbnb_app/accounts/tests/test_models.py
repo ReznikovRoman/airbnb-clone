@@ -1,9 +1,9 @@
-from django.test import TestCase
+from django.contrib.auth.models import ContentType, Permission
 from django.core.validators import MinLengthValidator
-from django.contrib.auth.models import Permission, ContentType
+from django.test import TestCase
 
-from ..models import (CustomUser, Profile, ProfileGenderChoices, SMSLog,
-                      get_default_profile_image, get_profile_image_upload_path)
+from ..models import (CustomUser, Profile, ProfileGenderChoices, SMSLog, get_default_profile_image,
+                      get_profile_image_upload_path)
 
 
 class CustomUserModelTests(TestCase):
@@ -130,7 +130,7 @@ class CustomUserModelTests(TestCase):
         perm1 = Permission.objects.create(
             codename="perm1",
             name="Perm 1",
-            content_type=ContentType.objects.get(app_label='accounts', model='customuser')
+            content_type=ContentType.objects.get(app_label='accounts', model='customuser'),
         )
         superuser = CustomUser.objects.get(email='user3@gmail.com')
 
@@ -142,7 +142,7 @@ class CustomUserModelTests(TestCase):
         perm1 = Permission.objects.create(
             codename="perm1",
             name="Perm 1",
-            content_type=ContentType.objects.get(app_label='accounts', model='customuser')
+            content_type=ContentType.objects.get(app_label='accounts', model='customuser'),
         )
         user = CustomUser.objects.get(email='user1@gmail.com')
 

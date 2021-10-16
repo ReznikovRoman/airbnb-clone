@@ -1,4 +1,4 @@
-from typing import List, Tuple, NamedTuple, Union
+from typing import List, NamedTuple, Tuple, Union
 
 
 class ImageOrder(NamedTuple):

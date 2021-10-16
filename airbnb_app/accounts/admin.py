@@ -1,10 +1,10 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
 from django.shortcuts import reverse
 from django.utils.safestring import mark_safe
-from django.contrib.auth.admin import UserAdmin
 
-from .models import CustomUser, Profile, SMSLog
 from .forms import AdminCustomUserChangeForm, SignUpForm
+from .models import CustomUser, Profile, SMSLog
 
 
 @admin.register(CustomUser)
@@ -21,7 +21,7 @@ class CustomUserAdmin(UserAdmin):
         (None, {'fields': ('email',)}),
         ('Personal info', {'fields': ('first_name', 'last_name')}),
         ('Permissions', {
-            'fields': ('is_active', 'is_email_confirmed', 'is_staff', 'is_admin', 'groups', 'user_permissions')}
+            'fields': ('is_active', 'is_email_confirmed', 'is_staff', 'is_admin', 'groups', 'user_permissions')},
          ),
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )
@@ -30,14 +30,14 @@ class CustomUserAdmin(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'first_name', 'last_name', 'password1', 'password2')}
+            'fields': ('email', 'first_name', 'last_name', 'password1', 'password2')},
          ),
     )
 
     def get_profile_link(self, obj: CustomUser):
         return mark_safe(
             f"""<a href="{reverse('admin:accounts_profile_change', args=(obj.profile.id,))}">{obj.first_name}'s
-            profile</a>"""
+           profile</a>""",
         )
     get_profile_link.short_description = 'profile link'
 
@@ -55,6 +55,6 @@ class SMSLogAdmin(admin.ModelAdmin):
     def get_profile_link(self, obj: CustomUser):
         return mark_safe(
             f"""<a href="{reverse('admin:accounts_profile_change', args=(obj.profile.id,))}">
-            {obj.profile.user.first_name}'s profile</a>"""
+            {obj.profile.user.first_name}'s profile</a>""",
         )
     get_profile_link.short_description = 'profile link'

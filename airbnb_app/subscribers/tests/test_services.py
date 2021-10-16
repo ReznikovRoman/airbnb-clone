@@ -1,9 +1,10 @@
 from django.test import TestCase
 
 from accounts.models import CustomUser
+
 from ..models import Subscriber
 from ..services import (get_subscriber_by_email, get_subscriber_by_user, set_user_for_subscriber,
-                        update_email_for_subscriber_by_user, )
+                        update_email_for_subscriber_by_user)
 
 
 class SubscribersServicesTests(TestCase):

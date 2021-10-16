@@ -1,6 +1,6 @@
-import redis
-
 from django.conf import settings
+
+import redis
 
 
 r = redis.Redis(

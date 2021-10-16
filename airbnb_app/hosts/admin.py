@@ -1,5 +1,5 @@
-from django.urls import reverse
 from django.contrib import admin
+from django.urls import reverse
 from django.utils.safestring import mark_safe
 
 from .models import RealtyHost
@@ -12,6 +12,6 @@ class RealtyHostAdmin(admin.ModelAdmin):
     def get_account_link(self, obj: RealtyHost):
         return mark_safe(
             f"""<a href="{reverse('admin:accounts_customuser_change', args=(obj.user.id,))}">
-            {obj.user.first_name}'s account page</a>"""
+            {obj.user.first_name}'s account page</a>""",
         )
     get_account_link.short_description = 'account link'

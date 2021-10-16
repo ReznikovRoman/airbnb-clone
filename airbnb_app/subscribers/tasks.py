@@ -3,11 +3,12 @@ from typing import Optional
 from celery import shared_task
 
 from django.conf import settings
-from django.template.loader import render_to_string, get_template
 from django.contrib.sites.models import Site
+from django.template.loader import get_template, render_to_string
 
 from mailings.tasks import send_email_with_attachments
 from realty.services.realty import get_n_latest_available_realty
+
 from .models import Subscriber
 
 

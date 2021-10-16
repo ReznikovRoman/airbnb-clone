@@ -1,12 +1,12 @@
 import os
-from typing import List
 from pathlib import Path
+from typing import List
 
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
-from django.urls import reverse_lazy
 from django.contrib.messages import constants as messages_constants
+from django.urls import reverse_lazy
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -349,8 +349,8 @@ CKEDITOR_CONFIGS = {
             '/',  # next toolbar on new line
             {'name': 'yourcustomtools', 'items': [
                 'Preview',
-                'Maximize',
-            ]},
+                'Maximize']
+             },
         ],
         'toolbar': '',  # selected toolbar config
         'tabSpaces': 4,

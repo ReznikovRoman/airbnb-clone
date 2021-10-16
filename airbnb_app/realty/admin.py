@@ -1,6 +1,6 @@
-from django.http import HttpRequest
 from django.contrib import admin
 from django.db.models.query import QuerySet
+from django.http import HttpRequest
 
 from .models import Amenity, Realty, RealtyImage
 
@@ -32,14 +32,14 @@ class AmenityInline(admin.TabularInline):
 class RealtyAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'name', 'realty_type', 'is_available', 'created', 'host')
     search_fields = ('name',)
-    list_filter = ('location__city', 'is_available',)
+    list_filter = ('location__city', 'is_available')
     fieldsets = (
         ('General', {
             'fields': ('name', 'slug', 'location', 'host'),
         }),
         ('Realty info', {
             'fields': ('description', 'is_available',
-                       'realty_type', 'beds_count', 'max_guests_count', 'price_per_night', 'visits_count')
+                       'realty_type', 'beds_count', 'max_guests_count', 'price_per_night', 'visits_count'),
         }),
     )
 
@@ -48,7 +48,7 @@ class RealtyAdmin(admin.ModelAdmin):
     ]
 
     prepopulated_fields = {
-        'slug': ('name',)
+        'slug': ('name',),
     }
     actions = [make_realty_available, make_realty_unavailable]
 

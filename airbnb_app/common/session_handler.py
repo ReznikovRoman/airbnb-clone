@@ -1,5 +1,5 @@
-from typing import List, Optional, Union, Tuple, Set
 from contextlib import suppress
+from typing import List, Optional, Set, Tuple, Union
 
 from django.contrib.sessions.backends.base import SessionBase
 
@@ -26,8 +26,10 @@ class SessionHandler:
         self._keys_collector: List[str] = self._session.get(keys_collector_name)
 
     def get_items_by_keys(self, keys: Union[List[str], Tuple[str]]) -> dict:
-        return {key: self._session.get(create_name_with_prefix(key, self._prefix), None)
-                for key in keys}
+        return {
+            key: self._session.get(create_name_with_prefix(key, self._prefix), None)
+            for key in keys
+        }
 
     def add_new_key_to_collector(self, new_session_key: str) -> None:
         if new_session_key not in self._keys_collector:

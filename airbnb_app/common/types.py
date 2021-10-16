@@ -1,8 +1,8 @@
 from typing import Type, TypeVar
 
-from django.http import HttpRequest
-from django.forms import BaseForm
 from django.db.models import Model
+from django.forms import BaseForm
+from django.http import HttpRequest
 
 from accounts.models import CustomUser
 

@@ -1,7 +1,7 @@
 from django.core import mail
 from django.test import TestCase
 
-from ..services import _send_email_with_attachments, _send_email_to_user
+from ..services import _send_email_to_user, _send_email_with_attachments
 
 
 class MailingsServicesTests(TestCase):

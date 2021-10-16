@@ -8,18 +8,19 @@ import fakeredis
 from django.test import TestCase, override_settings
 from django.urls import reverse
 
-from common.collections import FormWithModel
-from common.services import get_keys_with_prefixes, get_required_fields_from_form_with_model
-from hosts.models import RealtyHost
 from accounts.models import CustomUser
 from addresses.forms import AddressForm
 from addresses.models import Address
-from common.testing_utils import create_valid_image
+from common.collections import FormWithModel
+from common.services import get_keys_with_prefixes, get_required_fields_from_form_with_model
 from common.session_handler import SessionHandler
+from common.testing_utils import create_valid_image
+from hosts.models import RealtyHost
+
 from .. import views
-from ..forms import (RealtyTypeForm, RealtyForm, RealtyImageFormSet, RealtyGeneralInfoForm)
-from ..models import (Realty, RealtyTypeChoices, RealtyImage, Amenity)
-from ..constants import (MAX_REALTY_IMAGES_COUNT, REALTY_FORM_KEYS_COLLECTOR_NAME, REALTY_FORM_SESSION_PREFIX)
+from ..constants import MAX_REALTY_IMAGES_COUNT, REALTY_FORM_KEYS_COLLECTOR_NAME, REALTY_FORM_SESSION_PREFIX
+from ..forms import RealtyForm, RealtyGeneralInfoForm, RealtyImageFormSet, RealtyTypeForm
+from ..models import Amenity, Realty, RealtyImage, RealtyTypeChoices
 
 
 MEDIA_ROOT = tempfile.mkdtemp()
@@ -113,7 +114,7 @@ class RealtySearchResultsViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_view_uses_correct_template(self):
-        """TEst that view uses a correct HTML template."""
+        """Test that view uses a correct HTML template."""
         response = self.client.get(reverse('realty:search'))
         self.assertTemplateUsed(response, 'realty/realty/search_results.html')
 
@@ -303,7 +304,7 @@ class RealtyListViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_view_uses_correct_template_with_city_arg(self):
-        """TEst that view (with additional args) uses a correct HTML template."""
+        """Test that view (with additional args) uses a correct HTML template."""
         response = self.client.get(reverse('realty:all_by_city', kwargs={'city_slug': 'moscow'}))
         self.assertTemplateUsed(response, 'realty/realty/list.html')
 
@@ -991,7 +992,7 @@ class RealtyEditViewTests(TestCase):
         # have to save session manually to be able to use it in other modules (only while testing)
         session_handler.get_session().save()
 
-        test_user = CustomUser.objects.get(email='user2@gmail.com')
+        CustomUser.objects.get(email='user2@gmail.com')
         self.client.login(email='user2@gmail.com', password='test')
         response_get = self.client.get(reverse('realty:new_realty'))
 
@@ -1038,7 +1039,7 @@ class RealtyEditViewTests(TestCase):
         # have to save session manually to be able to use it in other modules (only while testing)
         session_handler.get_session().save()
 
-        test_user = CustomUser.objects.get(email='user2@gmail.com')
+        CustomUser.objects.get(email='user2@gmail.com')
         self.client.login(email='user2@gmail.com', password='test')
         response_get = self.client.get(reverse('realty:new_realty'))
 

@@ -2,10 +2,11 @@ from rest_framework import serializers
 
 from django.shortcuts import get_object_or_404
 
-from hosts.models import RealtyHost
 from accounts.models import CustomUser, Profile
 from addresses.models import Address
-from ..models import Realty, Amenity
+from hosts.models import RealtyHost
+
+from ..models import Amenity, Realty
 
 
 class AddressSerializer(serializers.ModelSerializer):
@@ -17,10 +18,14 @@ class AddressSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ['id', 'profile_image', 'date_of_birth', 'gender',
-                  'phone_number', 'is_phone_number_confirmed', 'description']
-        read_only_fields = ['id', 'profile_image', 'date_of_birth', 'gender',
-                            'phone_number', 'is_phone_number_confirmed', 'description']
+        fields = [
+            'id', 'profile_image', 'date_of_birth', 'gender',
+            'phone_number', 'is_phone_number_confirmed', 'description',
+        ]
+        read_only_fields = [
+            'id', 'profile_image', 'date_of_birth', 'gender',
+            'phone_number', 'is_phone_number_confirmed', 'description',
+        ]
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -54,9 +59,11 @@ class RealtySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Realty
-        fields = ['id', 'name', 'description', 'is_available', 'created',
-                  'realty_type', 'beds_count', 'max_guests_count', 'price_per_night',
-                  'location', 'host', 'amenities']
+        fields = [
+            'id', 'name', 'description', 'is_available', 'created',
+            'realty_type', 'beds_count', 'max_guests_count', 'price_per_night',
+            'location', 'host', 'amenities',
+        ]
 
     def create(self, validated_data: dict):
         location_data = validated_data.pop('location')
@@ -81,5 +88,6 @@ class RealtySerializer(serializers.ModelSerializer):
 class RealtyUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Realty
-        fields = ['name', 'description', 'is_available',
-                  'realty_type', 'beds_count', 'max_guests_count', 'price_per_night']
+        fields = [
+            'name', 'description', 'is_available', 'realty_type', 'beds_count', 'max_guests_count', 'price_per_night',
+        ]

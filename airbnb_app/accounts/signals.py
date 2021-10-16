@@ -1,9 +1,10 @@
 from django.conf import settings
-from django.dispatch import receiver
 from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from common.decorators import disable_for_loaddata
 from subscribers.services import set_user_for_subscriber, update_email_for_subscriber_by_user
+
 from .models import Profile
 from .services import add_user_to_group
 

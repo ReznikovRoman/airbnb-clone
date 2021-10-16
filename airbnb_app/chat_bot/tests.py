@@ -1,16 +1,16 @@
 import datetime
 
-from model_bakery import baker
-
+from asgiref.sync import sync_to_async
 from channels.routing import URLRouter
 from channels.testing import WebsocketCommunicator
+from model_bakery import baker
 
 from django.test import TransactionTestCase
 from django.urls import re_path
-from asgiref.sync import sync_to_async
 
 from hosts.models import RealtyHost
 from realty.models import Realty
+
 from .consumers import ChatBotConsumer
 
 
@@ -58,7 +58,7 @@ class ChatBotConsumerTests(TransactionTestCase):
         response = await communicator.receive_json_from()
         self.assertEqual(
             response['message'],
-            "Hi! I'm an Airbnb Helper. Type `city` to see how many available places are there."
+            "Hi! I'm an Airbnb Helper. Type `city` to see how many available places are there.",
         )
 
         await communicator.disconnect()
@@ -76,8 +76,8 @@ class ChatBotConsumerTests(TransactionTestCase):
             'datetime': datetime.datetime.now().isoformat(),
         })
 
-        welcome_message = await communicator.receive_json_from()
-        user_message = await communicator.receive_json_from()
+        await communicator.receive_json_from()  # welcome message
+        await communicator.receive_json_from()  # user message
         chat_bot_response = await communicator.receive_json_from()
 
         assert chat_bot_response['message'] == 'There are no available places in Moscow.'
@@ -86,7 +86,7 @@ class ChatBotConsumerTests(TransactionTestCase):
 
     async def test_correct_response_realty_exists(self):
         """Test that response is correct if there are some places in the city specified by the user."""
-        realty = await sync_to_async(self.create_test_realty, thread_sensitive=True)()
+        await sync_to_async(self.create_test_realty, thread_sensitive=True)()  # realty city input message
 
         communicator = WebsocketCommunicator(self.application, '/ws/chat-bot/')
         connected, subprotocol = await communicator.connect()
@@ -99,8 +99,8 @@ class ChatBotConsumerTests(TransactionTestCase):
             'datetime': datetime.datetime.now().isoformat(),
         })
 
-        welcome_message = await communicator.receive_json_from()
-        user_message = await communicator.receive_json_from()
+        await communicator.receive_json_from()  # welcome message
+        await communicator.receive_json_from()  # user message
         chat_bot_response = await communicator.receive_json_from()
 
         assert chat_bot_response['message'] == 'There is 1 available place in Moscow.'

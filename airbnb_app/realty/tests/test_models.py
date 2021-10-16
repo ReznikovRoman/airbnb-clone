@@ -1,17 +1,18 @@
 import shutil
 import tempfile
 
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.test import TestCase, override_settings
 from django.urls import reverse
-from django.core.validators import MinValueValidator, MaxValueValidator
 
-from hosts.models import RealtyHost
 from accounts.models import CustomUser
 from addresses.models import Address
 from common.testing_utils import create_valid_image
+from hosts.models import RealtyHost
+
 from ..fields import OrderField
-from ..models import (Amenity, Realty, RealtyTypeChoices, RealtyManager, AvailableRealtyManager, RealtyImage,
-                      get_realty_image_upload_path, RealtyImageModelManager)
+from ..models import (Amenity, AvailableRealtyManager, Realty, RealtyImage, RealtyImageModelManager, RealtyManager,
+                      RealtyTypeChoices, get_realty_image_upload_path)
 
 
 MEDIA_ROOT = tempfile.mkdtemp()
@@ -379,6 +380,7 @@ class RealtyImageModelTests(TestCase):
 
     def test_delete_object_updates_ordering_middle_image(self):
         """Test that if RealtyImage object is deleted, ordering of images is updated.
+
         If image was not the first, order of previous images remains the same.
         """
         test_realty = Realty.objects.get(slug='image-test')
@@ -409,6 +411,7 @@ class RealtyImageModelTests(TestCase):
 
     def test_delete_object_updates_ordering_last_image(self):
         """Test that if RealtyImage object is deleted, ordering of images is updated.
+
         If image was the last, order of previous images remains the same.
         """
         test_realty = Realty.objects.get(slug='image-test')
@@ -439,6 +442,7 @@ class RealtyImageModelTests(TestCase):
 
     def test_delete_qs_updates_ordering_middle_image(self):
         """Test that if RealtyImage QuerySet is deleted, ordering of images is updated.
+
         If image was not the first, order of previous images remains the same.
         """
         test_realty = Realty.objects.get(slug='image-test')

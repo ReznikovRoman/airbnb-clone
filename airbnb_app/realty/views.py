@@ -1,33 +1,31 @@
-from typing import Optional, List
+from typing import List, Optional
 
 from braces.views import JsonRequestResponseMixin
 
-from django.views import generic
-from django.http import HttpRequest
-from django.shortcuts import get_object_or_404, reverse, redirect
-from django.core.cache import cache
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpRequest
+from django.shortcuts import get_object_or_404, redirect, reverse
+from django.views import generic
 
-from hosts.models import RealtyHost
 from addresses.forms import AddressForm
 from addresses.models import Address
-from common.services import (get_field_names_from_form,
-                             get_required_fields_from_form_with_model, get_keys_with_prefixes)
 from common.collections import FormWithModel
+from common.services import get_field_names_from_form, get_keys_with_prefixes, get_required_fields_from_form_with_model
 from common.session_handler import SessionHandler
-from .forms import (RealtyForm, RealtyTypeForm, RealtyImageFormSet,
-                    RealtyGeneralInfoForm, RealtyDescriptionForm, RealtyFiltersForm)
-from .models import Realty, RealtyImage, CustomDeleteQueryset
-from .mixins import RealtySessionDataRequiredMixin
+from hosts.models import RealtyHost
+
+from .constants import MAX_REALTY_IMAGES_COUNT, REALTY_FORM_KEYS_COLLECTOR_NAME, REALTY_FORM_SESSION_PREFIX
 from .filters import RealtyShortFilter
-from .constants import (MAX_REALTY_IMAGES_COUNT,
-                        REALTY_FORM_SESSION_PREFIX, REALTY_FORM_KEYS_COLLECTOR_NAME)
+from .forms import (RealtyDescriptionForm, RealtyFiltersForm, RealtyForm, RealtyGeneralInfoForm, RealtyImageFormSet,
+                    RealtyTypeForm)
+from .mixins import RealtySessionDataRequiredMixin
+from .models import CustomDeleteQueryset, Realty, RealtyImage
 from .services.images import get_images_by_realty_id, update_images_order
 from .services.order import convert_response_to_orders
-from .services.realty import (get_amenity_ids_from_session, get_or_create_realty_host_by_user,
-                              get_available_realty_by_city_slug, get_all_available_realty,
+from .services.realty import (get_all_available_realty, get_amenity_ids_from_session, get_available_realty_by_city_slug,
                               get_available_realty_filtered_by_type, get_available_realty_search_results,
-                              update_realty_visits_count, get_cached_realty_visits_count_by_realty_id)
+                              get_cached_realty_visits_count_by_realty_id, get_or_create_realty_host_by_user,
+                              update_realty_visits_count)
 
 
 class RealtySearchResultsView(generic.ListView):
@@ -70,6 +68,7 @@ class RealtySearchResultsView(generic.ListView):
 
 class RealtyListView(generic.ListView):
     """Display all available realty objects."""
+
     model = Realty
     template_name = 'realty/realty/list.html'
     paginate_by = 3
@@ -92,7 +91,7 @@ class RealtyListView(generic.ListView):
         if realty_types:
             available_realty = get_available_realty_filtered_by_type(
                 realty_types=realty_types,
-                realty_qs=available_realty
+                realty_qs=available_realty,
             )
 
         available_realty = RealtyShortFilter(self.request.GET, available_realty).qs
@@ -115,6 +114,7 @@ class RealtyListView(generic.ListView):
 
 class RealtyDetailView(generic.DetailView):
     """Display a single available Realty."""
+
     model = Realty
     template_name = 'realty/realty/detail.html'
     queryset = get_all_available_realty()
@@ -136,6 +136,7 @@ class RealtyEditView(LoginRequiredMixin,
                      generic.base.TemplateResponseMixin,
                      generic.View):
     """View for creating or updating a single Realty."""
+
     template_name = 'realty/realty/form.html'
 
     realty: Realty = None
@@ -181,13 +182,13 @@ class RealtyEditView(LoginRequiredMixin,
             )
 
             self.realty_info_initial = self.session_handler.get_items_by_keys(
-                keys=get_field_names_from_form(RealtyForm)
+                keys=get_field_names_from_form(RealtyForm),
             )
             # handle m2m field
             self.realty_info_initial['amenities'] = get_amenity_ids_from_session(self.session_handler)
 
             self.realty_address_initial = self.session_handler.get_items_by_keys(
-                keys=get_field_names_from_form(AddressForm)
+                keys=get_field_names_from_form(AddressForm),
             )
 
         self.realty_form = RealtyForm(
@@ -213,7 +214,7 @@ class RealtyEditView(LoginRequiredMixin,
                 'is_creating_new_realty': self.is_creating_new_realty,
                 'realty_images': self.realty_images,
                 'max_realty_images_count': MAX_REALTY_IMAGES_COUNT,
-            }
+            },
         )
 
     def post(self, request: HttpRequest, realty_id: Optional[int] = None, *args, **kwargs):
@@ -239,8 +240,11 @@ class RealtyEditView(LoginRequiredMixin,
                 self.realty_form.save_m2m()
 
                 if realty_image_formset.is_valid():
-                    valid_image_formsets = [image_formset for image_formset in realty_image_formset
-                                            if image_formset.cleaned_data]
+                    valid_image_formsets = [
+                        image_formset
+                        for image_formset in realty_image_formset
+                        if image_formset.cleaned_data
+                    ]
                     for image_form in valid_image_formsets:
                         new_image: RealtyImage = image_form.save(commit=False)
                         new_image.realty = new_realty
@@ -257,7 +261,7 @@ class RealtyEditView(LoginRequiredMixin,
                 'is_creating_new_realty': self.is_creating_new_realty,
                 'realty_images': self.realty_images,
                 'max_realty_images_count': MAX_REALTY_IMAGES_COUNT,
-            }
+            },
         )
 
 
@@ -268,6 +272,7 @@ class RealtyGeneralInfoEditView(LoginRequiredMixin,
 
     Step-1
     """
+
     template_name = 'realty/realty/creation_steps/step_1_general_info.html'
 
     realty_form: Optional[RealtyGeneralInfoForm] = None
@@ -280,7 +285,7 @@ class RealtyGeneralInfoEditView(LoginRequiredMixin,
             session_prefix=REALTY_FORM_SESSION_PREFIX,
         )
         initial = self.session_handler.get_items_by_keys(
-            keys=get_field_names_from_form(RealtyGeneralInfoForm)
+            keys=get_field_names_from_form(RealtyGeneralInfoForm),
         )
         # handle m2m field
         initial['amenities'] = get_amenity_ids_from_session(self.session_handler)
@@ -292,7 +297,7 @@ class RealtyGeneralInfoEditView(LoginRequiredMixin,
         return self.render_to_response(
             context={
                 'realty_form': self.realty_form,
-            }
+            },
         )
 
     def post(self, request: HttpRequest, *args, **kwargs):
@@ -309,7 +314,7 @@ class RealtyGeneralInfoEditView(LoginRequiredMixin,
         return self.render_to_response(
             context={
                 'realty_form': self.realty_form,
-            }
+            },
         )
 
 
@@ -321,6 +326,7 @@ class RealtyLocationEditView(LoginRequiredMixin,
 
     Step-2
     """
+
     template_name = 'realty/realty/creation_steps/step_2_location.html'
 
     required_session_data = get_keys_with_prefixes(
@@ -347,8 +353,8 @@ class RealtyLocationEditView(LoginRequiredMixin,
     def get(self, request: HttpRequest, *args, **kwargs):
         return self.render_to_response(
             context={
-                'location_form': self.location_form
-            }
+                'location_form': self.location_form,
+            },
         )
 
     def post(self, request: HttpRequest, *args, **kwargs):
@@ -359,7 +365,7 @@ class RealtyLocationEditView(LoginRequiredMixin,
         return self.render_to_response(
             context={
                 'location_form': self.location_form,
-            }
+            },
         )
 
 
@@ -371,6 +377,7 @@ class RealtyDescriptionEditView(LoginRequiredMixin,
 
     Step-3
     """
+
     template_name = 'realty/realty/creation_steps/step_3_description.html'
 
     required_session_data = get_keys_with_prefixes(
@@ -392,7 +399,7 @@ class RealtyDescriptionEditView(LoginRequiredMixin,
             session_prefix=REALTY_FORM_SESSION_PREFIX,
         )
         initial = self.session_handler.get_items_by_keys(
-            keys=get_field_names_from_form(RealtyDescriptionForm)
+            keys=get_field_names_from_form(RealtyDescriptionForm),
         )
         self.description_form = RealtyDescriptionForm(request.POST or None, initial=initial)
         return super(RealtyDescriptionEditView, self).dispatch(request, *args, **kwargs)
@@ -401,7 +408,7 @@ class RealtyDescriptionEditView(LoginRequiredMixin,
         return self.render_to_response(
             context={
                 'description_form': self.description_form,
-            }
+            },
         )
 
     def post(self, request: HttpRequest, *args, **kwargs):
@@ -411,7 +418,7 @@ class RealtyDescriptionEditView(LoginRequiredMixin,
         return self.render_to_response(
             context={
                 'description_form': self.description_form,
-            }
+            },
         )
 
 
@@ -426,5 +433,5 @@ class RealtyImageOrderView(LoginRequiredMixin,
         return self.render_json_response(
             context_dict={
                 'saved': 'OK',
-            }
+            },
         )

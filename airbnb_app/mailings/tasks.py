@@ -1,8 +1,8 @@
-from typing import List, Optional, Any
+from typing import Any, List, Optional
 
 from celery import shared_task
 
-from .services import _send_email_with_attachments, _send_email_to_user
+from .services import _send_email_to_user, _send_email_with_attachments
 
 
 @shared_task
