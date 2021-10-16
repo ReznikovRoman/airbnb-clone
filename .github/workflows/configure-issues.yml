@@ -1,0 +1,20 @@
+name: Auto Assign issues to a Project
+
+on:
+  issues:
+    types: [opened]
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  assign_one_project:
+    runs-on: ubuntu-latest
+    name: Assign to a Project
+    steps:
+    - name: Assign new issues to a project
+      uses: srggrs/assign-one-project-github-action@1.2.1
+      if: github.event.action == 'opened'
+      with:
+        project: ${{ secrets.AIRBNB_GITHUB_PROJECT_URL }}
+        column_name: ${{ secrets.AIRBNB_PROJECT_DEFAULT_COLUMN_NAME }}
