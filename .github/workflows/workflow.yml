@@ -61,4 +61,4 @@ jobs:
 
         - name: Start the server
           if: ${{ always() }}
-          run: ssh prod 'cd /home/projects/airbnb-clone && docker-compose -f docker-compose-master.yml up --build'
+          run: ssh prod 'cd /home/projects/airbnb-clone && docker-compose -f docker-compose-master.yml up -d --build'
