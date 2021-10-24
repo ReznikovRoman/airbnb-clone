@@ -3,35 +3,22 @@ version: "3.8"
 services:
   nginx:
     image: nginx:alpine
-    restart: unless-stopped
-    # Restart container and load new ssl certificates (every 6 hours)
-    command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
+    restart: on-failure
     ports:
       - "80:80"
       - "443:443"
     volumes:
       - .:/app
       - ./config/nginx/default.conf:/etc/nginx/conf.d/default.conf
-      - ./config/nginx/certbot/conf:/etc/letsencrypt
-      - ./config/nginx/certbot/www:/var/www/certbot
+      - ./config/nginx/certs/ca.crt:/etc/ssl/airbnb-clone.xyz/ca.crt
+      - ./config/nginx/certs/airbnb-clone.crt:/etc/ssl/airbnb-clone.xyz/airbnb-clone.crt
+      - ./config/nginx/certs/airbnb-clone.key:/etc/ssl/airbnb-clone.xyz/airbnb-clone.key
     depends_on:
       - server
     networks:
       app-network:
         aliases:
           - nginx
-
-  certbot:
-    container_name: certbot
-    image: certbot/certbot
-    restart: unless-stopped
-    # Check every 12 hours if we need new ssl certificates
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-    volumes:
-      - ./config/nginx/certbot/conf:/etc/letsencrypt
-      - ./config/nginx/certbot/www:/var/www/certbot
-    networks:
-      - app-network
 
   db:
     image: postgres:11
