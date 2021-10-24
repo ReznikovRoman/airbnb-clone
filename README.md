@@ -1,4 +1,5 @@
 # Airbnb Clone
+Website: https://airbnb-clone.xyz
 
 ### Technologies:
 - Django 3
@@ -22,6 +23,7 @@ Docker containers:
 
 docker-compose files:
  1. `docker-compose-local.yml` - for local development
+ 2. `docker-compose-master.yml` - for production
 
 To run docker containers you have to create a `.env` file in the root directory.
 
@@ -94,6 +96,19 @@ Local:
 ```shell
 docker-compose -f docker-compose-local.yml build
 docker-compose -f docker-compose-local.yml up
+```
+
+Production:
+1. Create ./config/nginx/certs/ folder (in the repository root)
+2. Add ssl files:
+   - airbnb-clone.crt: ssl certificate
+   - airbnb-clone.key: private key
+   - ca.crt: root certificate
+3. Run docker containers
+
+```shell
+docker-compose -f docker-compose-master.yml build
+docker-compose -f docker-compose-master.yml up
 ```
 
 Migrations will be applied automatically.
