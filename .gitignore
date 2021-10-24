@@ -39,13 +39,13 @@ celerybeat-schedule
 *.pid
 
 # media
-airbnb/media/*
-!airbnb/media/default/
+airbnb_app/airbnb/media/*
+!airbnb_app/airbnb/media/default/
 
 # static
-airbnb/static/*
-!airbnb/static/accounts/
-!airbnb/static/subscribers/
+airbnb_app/airbnb/static/*
+!airbnb_app/airbnb/static/accounts/
+!airbnb_app/airbnb/static/subscribers/
 
 # whoosh index
 *.toc
