@@ -9,7 +9,6 @@ local_settings.py
 *dist/
 *.egg-info/
 *~
-media*
 .idea/
 __pycache__/
 *.pytest_cache
