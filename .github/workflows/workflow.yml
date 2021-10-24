@@ -54,11 +54,11 @@ jobs:
             SSH_HOST: ${{ secrets.PROD_SSH_HOST }}
 
         - name: Stop the server
-          run: ssh prod 'docker-compose -f docker-compose-master.yml stop'
+          run: ssh prod 'cd /home/projects/airbnb-clone && docker-compose -f docker-compose-master.yml stop'
 
         - name: Check out the source
           run: ssh prod 'cd /home/projects/airbnb-clone && git fetch && git reset --hard origin/master'
 
         - name: Start the server
           if: ${{ always() }}
-          run: ssh prod 'docker-compose -f docker-compose-master.yml up'
+          run: ssh prod 'cd /home/projects/airbnb-clone && docker-compose -f docker-compose-master.yml up --build'
