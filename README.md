@@ -37,8 +37,8 @@ PYTHONUNBUFFERED=
 
 
 # Project
-ENVIRONMENT=<local,test,prod>
-DJANGO_SETTINGS_MODULE=<airbnb.settings.local,airbnb.settings.pro>
+ENVIRONMENT=<local|test|prod>
+DJANGO_SETTINGS_MODULE=<airbnb.settings.local|airbnb.settings.pro>
 PROJECT_ALLOWED_HOSTS=<host1,host2>
 PROJECT_ADMIN_EMAIL=<admin-email>
 
