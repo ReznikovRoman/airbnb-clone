@@ -1,5 +1,5 @@
 # Airbnb Clone
-Website: https://airbnb-clone.xyz
+Website: https://air-project.xyz
 
 ### Technologies:
 - Django 3
@@ -101,8 +101,8 @@ docker-compose -f docker-compose-local.yml up
 Production:
 1. Create ./config/nginx/certs/ folder (in the repository root)
 2. Add ssl files:
-   - airbnb-clone.crt: ssl certificate
-   - airbnb-clone.key: private key
+   - air-project.crt: ssl certificate
+   - air-project.key: private key
    - ca.crt: root certificate
 3. Run docker containers
 
