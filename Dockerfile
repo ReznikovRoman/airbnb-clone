@@ -35,6 +35,9 @@ RUN pip install -r requirements.txt
 # Copy entrypoint.sh
 COPY entrypoint.sh .
 
+# Copy project files
+COPY . .
+
 # Create folder for gunicorn logs
 RUN mkdir -p /var/log/gunicorn
 
