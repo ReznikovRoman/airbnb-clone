@@ -156,7 +156,7 @@ chatSocket.onmessage = function (e) {
             `<div class="chat-message message-bot">
                 <div class="chat-message-content">
                     <span class="chat-time">${datetime}</span>
-                    <h5>Airbnb Helper</h5>
+                    <h5>Air Helper</h5>
                     <p>${message}</p>
                 </div>
              </div>`

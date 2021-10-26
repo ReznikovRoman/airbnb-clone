@@ -58,7 +58,7 @@ class ChatBotConsumerTests(TransactionTestCase):
         response = await communicator.receive_json_from()
         self.assertEqual(
             response['message'],
-            "Hi! I'm an Airbnb Helper. Type `city` to see how many available places are there.",
+            "Hi! I'm an Air Helper. Type `city` to see how many available places are there.",
         )
 
         await communicator.disconnect()

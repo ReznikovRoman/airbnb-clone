@@ -17,7 +17,7 @@ class ChatBotConsumer(AsyncJsonWebsocketConsumer):
             self.channel_name,
             {
                 'type': 'chat_bot_message',
-                'message': "Hi! I'm an Airbnb Helper. Type `city` to see how many available places are there.",
+                'message': "Hi! I'm an Air Helper. Type `city` to see how many available places are there.",
                 'is_message_from_user': False,
                 'datetime': timezone.now().isoformat(),
             },
