@@ -18,7 +18,7 @@ class HomePageView(generic.TemplateView):
         context['popular_cities']: QuerySet = get_all_realty_cities()[:DISPLAYED_CITIES_COUNT]
         context['meta_description'] = "Find vacation rentals, cabins, beach houses, " \
                                       "unique homes and experiences around the world - " \
-                                      "all made possible by hosts on Airbnb."
+                                      "all made possible by hosts on Air."
 
         return context
 
