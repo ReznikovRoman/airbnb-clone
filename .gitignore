@@ -24,6 +24,8 @@ __pycache__/
 prod_config/
 drafts/
 req.old.txt
+requirements.local.in
+requirements.local.txt
 
 # ENV data
 env*
