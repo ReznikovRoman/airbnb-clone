@@ -53,7 +53,9 @@ services:
     restart: always
     env_file:
       - ${ENV}
-    build: .
+    build:
+      context: .
+      dockerfile: prod.Dockerfile
     volumes:
       - .:/app
     image: daphne:airbnb-app
@@ -64,6 +66,7 @@ services:
       - 8001
     depends_on:
       - db
+      - redis
     networks:
       app-network:
         aliases:
@@ -77,7 +80,9 @@ services:
       - DEBUG=0
       - ENVIRONMENT=prod
       - DJANGO_SETTINGS_MODULE=airbnb.settings.pro
-    build: .
+    build:
+      context: .
+      dockerfile: prod.Dockerfile
     volumes:
       - .:/app
     image: server:airbnb-app
@@ -90,6 +95,7 @@ services:
       - 8000
     depends_on:
       - db
+      - redis
     networks:
         app-network:
             aliases:
@@ -99,7 +105,9 @@ services:
     restart: always
     env_file:
       - ${ENV}
-    build: .
+    build:
+      context: .
+      dockerfile: prod.Dockerfile
     command: >
       bash -c "cd /app/airbnb_app/
       && celery -A airbnb worker -l info"
@@ -141,7 +149,9 @@ services:
     restart: on-failure
     env_file:
       - ${ENV}
-    build: .
+    build:
+      context: .
+      dockerfile: prod.Dockerfile
     volumes:
       - .:/app
     command: >
