@@ -32,7 +32,6 @@ services:
     volumes:
       - .:/app
       - postgres_data:/var/lib/postgresql/data/
-    container_name: airbnb_db
     networks:
       - app-network
 
@@ -42,7 +41,6 @@ services:
       - ${ENV}
     ports:
       - "6380:6379"
-    container_name: ${AIRBNB_REDIS_HOST}
     volumes:
       - redis_data:/data
       - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
