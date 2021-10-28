@@ -69,7 +69,7 @@ services:
         constraints: [ node.role == manager ]
     healthcheck:
       start_period: 60s
-      test: pg_isready -U ${POSTGRES_DEFAULT_USER} -d ${POSTGRES_DB}
+      test: pg_isready -U ${POSTGRES_PROD_USER} -d ${POSTGRES_PROD_DB}
 
   redis:
     image: redis:6.2.6-alpine
