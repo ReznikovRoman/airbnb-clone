@@ -26,9 +26,9 @@ services:
     env_file:
       - ${ENV}
     environment:
-      - POSTGRES_USER=${POSTGRES_DEFAULT_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_DEFAULT_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_PROD_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PROD_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_PROD_DB}
     volumes:
       - .:/app
       - postgres_data:/var/lib/postgresql/data/
