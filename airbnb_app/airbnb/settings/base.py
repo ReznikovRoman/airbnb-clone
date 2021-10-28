@@ -253,16 +253,17 @@ REST_FRAMEWORK = {
 
 # REDIS
 REDIS_HOST = os.environ.get('AIRBNB_REDIS_HOST', 'localhost')
-REDIS_PORT = 6379
-REDIS_DB = 2
-REDIS_DECODE_RESPONSES = True
+REDIS_PORT = os.environ.get('REDIS_PORT', '6379')
+REDIS_DB = os.environ.get('REDIS_MAIN_DB', 1)
+REDIS_DECODE_RESPONSES = os.environ.get('REDIS_DECODE_RESPONSES', True)
 
 
 # CACHES
+REDIS_CACHE_DB = os.environ.get('REDIS_CACHE_DB', 2)
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}",
+        'LOCATION': f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_CACHE_DB}",
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         },
@@ -271,12 +272,13 @@ CACHES = {
 
 
 # SESSIONS
+REDIS_SESSION_DB = os.environ.get('REDIS_SESSION_DB', 3)
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 SESSION_ENGINE = 'redis_sessions.session'
 SESSION_REDIS = {
     'host': REDIS_HOST,
     'port': REDIS_PORT,
-    'db': REDIS_DB,
+    'db': REDIS_SESSION_DB,
     'prefix': 'session',
     'socket_timeout': 1,
     'retry_on_timeout': False,
@@ -285,15 +287,15 @@ SESSION_REDIS = {
 
 # CELERY
 CELERY_TIMEZONE = 'Europe/Moscow'
-CELERY_BROKER_TRANSPORT = "redis"
-CELERY_BROKER_HOST = REDIS_HOST
-CELERY_BROKER_PORT = 6379
-CELERY_BROKER_VHOST = "2"
-CELERY_RESULT_BACKEND = "redis"
+CELERY_BROKER_TRANSPORT = os.environ.get('CELERY_BROKER_HOST', "redis")
+CELERY_BROKER_HOST = os.environ.get('CELERY_BROKER_HOST', "redis")
+CELERY_BROKER_PORT = os.environ.get('CELERY_BROKER_PORT', '6379')
+CELERY_BROKER_VHOST = os.environ.get("CELERY_REDIS_DB", 4)
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", "redis")
 
 CELERY_REDIS_HOST = REDIS_HOST
 CELERY_REDIS_PORT = REDIS_PORT
-CELERY_REDIS_DB = REDIS_DB
+CELERY_REDIS_DB = CELERY_BROKER_VHOST
 
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
@@ -301,12 +303,14 @@ CELERY_TASK_SERIALIZER = 'json'
 
 
 # CHANNELS
+REDIS_CHANNELS_DB = os.environ.get("REDIS_CHANNELS_DB", 5)
+REDIS_CHANNELS_URL = os.environ.get("REDIS_CHANNELS_URL", "redis://localhost:6379/2")
 ASGI_APPLICATION = 'airbnb.routing.application'
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [os.environ.get('REDIS_URL', 'redis://localhost:6379/2')],
+            'hosts': [REDIS_CHANNELS_URL],
         },
     },
 }
