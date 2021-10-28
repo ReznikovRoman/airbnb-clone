@@ -88,4 +88,4 @@ jobs:
           run: ssh prod 'cd /home/projects/airbnb-clone && git fetch && git reset --hard origin/master'
         - name: Deploy Docker Swarm stack
           if: ${{ always() }}
-          run: ssh prod 'cd /home/projects/airbnb-clone && env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy -c stack-master.yml airbnb_app'
+          run: ssh prod 'cd /home/projects/airbnb-clone && env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy -c stack-master.yml airbnb_app --with-registry-auth'
