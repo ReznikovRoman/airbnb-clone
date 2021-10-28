@@ -33,8 +33,11 @@ jobs:
   push_to_registry:
     name: "Push new Docker image to Docker Hub"
     runs-on: ubuntu-latest
-    env:
-      CI_COMMIT_SHORT_SHA: ${GITHUB_SHA::8}
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    needs: lint
+    concurrency:
+      group: Prod
+      cancel-in-progress: true
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
@@ -51,6 +54,9 @@ jobs:
         with:
           images: romanreznikov/backend
 
+      - name: Add CI_COMMIT_SHORT_SHA env property with commit short sha
+        run: echo "CI_COMMIT_SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
@@ -63,13 +69,13 @@ jobs:
       name: "Deploy Swarm Stack to production"
       runs-on: ubuntu-latest
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      needs: lint
-      env:
-        CI_COMMIT_SHORT_SHA: ${GITHUB_SHA::8}
+      needs: push_to_registry
       concurrency:
-        group: ProdDeployment
+        group: Prod
         cancel-in-progress: true
       steps:
+        - name: Add CI_COMMIT_SHORT_SHA env property with commit short sha
+          run: echo "CI_COMMIT_SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
         - name: Configure SSH
           run: |
             mkdir -p ~/.ssh/
