@@ -8,6 +8,7 @@ services:
       - "443:443"
     depends_on:
       - server
+      - daphne
     networks:
       app_network:
         aliases:
@@ -35,7 +36,7 @@ services:
         window: 60s
     healthcheck:
       start_period: 180s
-      test: curl --fail -s ${PROJECT_FULL_DOMAIN}/ || exit 1
+      test: curl --fail -s http://localhost:80/ || exit 1
 
   db:
     image: postgres:11.13-alpine
@@ -133,11 +134,6 @@ services:
         delay: 10s
         max_attempts: 5
         window: 60s
-    healthcheck:
-      start_period: 60s
-      interval: 10s
-      retries: 10
-      test: curl --fail -s ${PROJECT_FULL_DOMAIN}/realty/ || exit 1
 
   server:
     image: romanreznikov/backend:${CI_COMMIT_SHORT_SHA}
@@ -180,7 +176,7 @@ services:
       start_period: 60s
       interval: 10s
       retries: 10
-      test: curl --fail -s ${PROJECT_FULL_DOMAIN}/api/v1/realty/ || exit 1
+      test: curl --fail -s http://localhost:8000/api/v1/realty/ || exit 1
 
   celery:
     image: romanreznikov/backend:${CI_COMMIT_SHORT_SHA}

@@ -16,10 +16,3 @@ DATABASES = {
         'PORT': os.environ.get('POSTGRES_PORT', 5432),  # noqa: F405
     },
 }
-
-# HTTPS
-SECURE_SSL_REDIRECT = True
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_NAME = 'session_airbnb'
-SESSION_COOKIE_AGE = 7776000
-SESSION_COOKIE_SECURE = True
