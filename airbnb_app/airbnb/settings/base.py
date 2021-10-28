@@ -134,47 +134,6 @@ USE_L10N = True
 USE_TZ = True
 
 
-# LOGGING
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '{levelname} {asctime} {module} | {message}',
-            'style': '{',
-        },
-        'simple': {
-            'format': '{levelname} | {message}',
-            'style': '{',
-        },
-    },
-    'handlers': {
-        'file_info': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'logs/info.log',
-            'formatter': 'simple',
-        },
-        'file_error': {
-            'level': 'ERROR',
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'logs/error.log',
-            'formatter': 'verbose',
-        },
-    },
-    'loggers': {
-        'common': {
-            'handlers': [
-                'file_info',
-                'file_error',
-            ],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-    },
-}
-
-
 # SENTRY
 SENTRY_CONF = sentry_sdk.init(
     dsn=os.environ.get("AIRBNB_SENTRY_DSN"),

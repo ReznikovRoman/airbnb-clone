@@ -28,3 +28,44 @@ INTERNAL_IPS = [
     'localhost',
 ]
 mimetypes.add_type('application/javascript', '.js', True)
+
+
+# LOGGING
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} | {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} | {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file_info': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs/info.log',  # noqa: F405
+            'formatter': 'simple',
+        },
+        'file_error': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs/error.log',  # noqa: F405
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'common': {
+            'handlers': [
+                'file_info',
+                'file_error',
+            ],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
