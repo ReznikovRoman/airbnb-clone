@@ -34,9 +34,6 @@ services:
         delay: 10s
         max_attempts: 3
         window: 60s
-    healthcheck:
-      start_period: 180s
-      test: curl --fail -s http://localhost:80/ || exit 1
 
   db:
     image: postgres:11.13-alpine
