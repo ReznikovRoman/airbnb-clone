@@ -1,6 +1,6 @@
 # Builder
 # Base image
-FROM python:3.8.0 as builder
+FROM python:3.8.0-slim as builder
 
 # Set working directory
 WORKDIR /app
