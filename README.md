@@ -25,6 +25,9 @@ docker-compose files:
  1. `docker-compose-local.yml` - for local development
  2. `docker-compose-master.yml` - for production
 
+Swarm stack files:
+1. `stack-master.yml` - for production
+
 To run docker containers you have to create a `.env` file in the root directory.
 
 **Example of `.env` file:**
@@ -41,8 +44,16 @@ PYTHONUNBUFFERED=
 ENVIRONMENT=<local|test|prod>
 DJANGO_SETTINGS_MODULE=<airbnb.settings.local|airbnb.settings.pro>
 PROJECT_ALLOWED_HOSTS=<host1,host2>
-PROJECT_ADMIN_EMAIL=<admin-email>
+PROJECT_ADMIN_EMAIL=<admin@email.com>
 PROJECT_FULL_DOMAIN=<http://127.0.0.1>
+SITE_DEFAULT_PROTOCOL=<http>
+
+
+# Yandex Object Storage
+USE_S3_BUCKET=<0|1>
+YANDEX_STORAGE_BUCKET_NAME=
+YANDEX_STORAGE_ACCESS_KEY_ID=
+YANDEX_STORAGE_SECRET_ACCESS_KEY=
 
 
 # Media & staticfiles
@@ -51,8 +62,8 @@ STATIC_URL=
 
 
 # Emails
-EMAIL_HOST_USER_ESL=<email-username>
-EMAIL_HOST_PASSWORD_ESL=<email-password>
+EMAIL_HOST_USER_ESL=<email@username>
+EMAIL_HOST_PASSWORD_ESL=<email.password>
 
 
 # Postgres
@@ -68,13 +79,13 @@ CELERY_BROKER_TRANSPORT=
 CELERY_BROKER_HOST=<redis>
 CELERY_BROKER_PORT=
 CELERY_BROKER_VHOST=
-CELERY_RESULT_BACKEND=redis
+CELERY_RESULT_BACKEND=<redis>
 
 
 # Redis
 REDIS_DECODE_RESPONSES=1
 REDIS_PORT=6379
-REDIS_URL=${CELERY_BROKER_HOST}://${CELERY_BROKER_TRANSPORT}:${CELERY_BROKER_PORT}/${CELERY_REDIS_DB}
+REDIS_URL=
 AIRBNB_REDIS_HOST=<redis>
 
 # Redis DBs
@@ -85,7 +96,7 @@ CELERY_REDIS_DB=
 REDIS_CHANNELS_DB=
 
 # Channels
-REDIS_CHANNELS_URL=<redis://redis:6379/${REDIS_CHANNELS_DB}>
+REDIS_CHANNELS_URL=
 
 
 # Twilio
@@ -99,14 +110,14 @@ AIRBNB_SENTRY_DSN=
 
 
 # Flower
-CELERY_BROKER_URL=${CELERY_BROKER_HOST}://${CELERY_BROKER_TRANSPORT}:${CELERY_BROKER_PORT}/${CELERY_REDIS_DB}
+CELERY_BROKER_URL=
 FLOWER_PORT=
 
 
 # DOCKER HUB / CI - optional
 DOCKER_HUB_USERNAME=<dockerhub-username>
 DOCKER_HUB_PASSWORD=<dockerhub-password>
-CI_COMMIT_SHORT_SHA=<image:tag>
+CI_COMMIT_SHORT_SHA=<latest>
 
 ```
 
@@ -118,7 +129,7 @@ docker-compose -f docker-compose-local.yml build
 docker-compose -f docker-compose-local.yml up
 ```
 
-Production:
+Production docker-compose:
 1. Create ./config/nginx/certs/ folder (in the repository root)
 2. Add ssl files:
    - air-project.crt: ssl certificate
@@ -131,21 +142,34 @@ docker-compose -f docker-compose-master.yml build
 docker-compose -f docker-compose-master.yml up
 ```
 
+Production Swarm:
+1. Create ./config/nginx/certs/ folder (in the repository root)
+2. Add ssl files:
+   - air-project.crt: ssl certificate
+   - air-project.key: private key
+   - ca.crt: root certificate
+3. Build and push your image to the Docker Hub
+4. Deploy Swarm stack
+
+```shell
+env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy -c stack-master.yml airbnb_app --with-registry-auth
+```
+
 Migrations will be applied automatically.
 
 
 **Code style:**
 
-Before pushing a commit make sure that your code passes all linters:
+Before pushing a commit run all linters:
 
 ```shell
 docker-compose -f docker-compose-local.yml run --rm server sh -c "make check"
 ```
 
-You can also add a `makefile.env` file:
+You also have to add a `makefile.env` file (for pre-commit):
 ```dotenv
 # Your docker-compose file name
-DOCKER_COMPOSE_FILENAME=docker-compose-local.yml
+DOCKER_COMPOSE_FILENAME=<docker-compose-local.yml>
 ```
 
 And then run linters:
@@ -159,5 +183,5 @@ make check-docker
 To configure pre-commit on your local machine:
 ```shell
 docker-compose -f docker-compose-local.yml build
-docker-compose -f docker-compose-local.yml run --rm server "pre-commit install"
+docker-compose -f docker-compose-local.yml run --rm server sh -c "pre-commit install"
 ```
