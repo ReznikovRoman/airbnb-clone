@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.utils.text import slugify
 
 from addresses.models import Address
+from common.utils import select_file_storage
 from hosts.models import RealtyHost
 
 from .fields import OrderField
@@ -176,7 +177,11 @@ def get_realty_image_upload_path(instance: "RealtyImage", filename: str) -> str:
 class RealtyImage(models.Model):
     """Image of a realty."""
 
-    image = models.ImageField(upload_to=get_realty_image_upload_path, verbose_name='image')
+    image = models.ImageField(
+        verbose_name='image',
+        storage=select_file_storage,
+        upload_to=get_realty_image_upload_path,
+    )
     realty = models.ForeignKey(
         Realty,
         on_delete=models.CASCADE,

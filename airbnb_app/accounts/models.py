@@ -6,6 +6,8 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager, Permission
 from django.core.validators import MinLengthValidator
 from django.db import models
 
+from common.utils import select_file_storage
+
 
 class CustomUserManager(BaseUserManager):
     """Manager for CustomUser model."""
@@ -162,6 +164,7 @@ class Profile(models.Model):
         verbose_name='profile image',
         blank=True,
         null=True,
+        storage=select_file_storage,
         upload_to=get_profile_image_upload_path,
         default=get_default_profile_image,
     )
