@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'channels',
     'phonenumber_field',
     'sorl.thumbnail',
+    'storages',
 
     # local
     'main.apps.MainConfig',
@@ -143,7 +144,7 @@ SENTRY_CONF = sentry_sdk.init(
 
 # SITES
 SITE_ID = 1
-DEFAULT_PROTOCOL = 'http'
+DEFAULT_PROTOCOL = os.environ.get("SITE_DEFAULT_PROTOCOL", "http")
 
 
 # Static files (CSS, JavaScript, Images)
@@ -151,9 +152,9 @@ STATIC_URL = os.environ.get('STATIC_URL', '/static/')
 STATIC_ROOT = BASE_DIR / 'airbnb/static/'
 
 
-# MEDIA
-MEDIA_URL = os.environ.get('MEDIA_URL', '/media/')
-MEDIA_ROOT = BASE_DIR / 'airbnb/media/'
+# S3 Bucket
+USE_S3_BUCKET = bool(os.environ.get("USE_S3_BUCKET", False))
+YANDEX_STORAGE_BUCKET_NAME = os.environ.get("YANDEX_STORAGE_BUCKET_NAME")
 
 
 # EMAIL
