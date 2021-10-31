@@ -14,18 +14,18 @@ services:
         aliases:
           - nginx
     volumes:
-      - .:/app
+      - static_volume:/home/app/web/airbnb_app/airbnb/static
       - ./config/nginx/stack.conf:/etc/nginx/conf.d/default.conf
       - ./config/nginx/certs/ca.crt:/etc/ssl/air-project.xyz/ca.crt
       - ./config/nginx/certs/air-project.crt:/etc/ssl/air-project.xyz/air-project.crt
       - ./config/nginx/certs/air-project.key:/etc/ssl/air-project.xyz/air-project.key
     deploy:
-      replicas: 2
+      replicas: 1
       update_config:
         parallelism: 2
         order: start-first
         failure_action: rollback
-        delay: 10s
+        delay: 15s
       rollback_config:
         parallelism: 0
         order: stop-first
@@ -34,6 +34,11 @@ services:
         delay: 10s
         max_attempts: 3
         window: 60s
+    healthcheck:
+      start_period: 60s
+      interval: 10s
+      retries: 10
+      test: curl --fail -s http://localhost:80/realty/ || exit 1
 
   db:
     image: postgres:11.13-alpine
@@ -46,7 +51,6 @@ services:
     networks:
       - app_network
     volumes:
-      - .:/app
       - postgres_data:/var/lib/postgresql/data/
     deploy:
       replicas: 1
@@ -105,13 +109,13 @@ services:
     env_file:
       - ${ENV}
     command: >
-      bash -c "cd /app/airbnb_app/
+      bash -c "cd /home/app/web/airbnb_app/
       && daphne -b 0.0.0.0 -p 8001 airbnb.asgi:application"
     depends_on:
       - db
       - redis
     volumes:
-      - .:/app
+      - static_volume:/home/app/web/airbnb_app/airbnb/static
     networks:
       app_network:
         aliases:
@@ -141,10 +145,10 @@ services:
       - ENVIRONMENT=prod
       - DJANGO_SETTINGS_MODULE=airbnb.settings.pro
     command: >
-      bash -c "cd /app/airbnb_app/
+      bash -c "cd /home/app/web/airbnb_app/
       && python manage.py migrate --noinput
       && python manage.py collectstatic --no-input
-      && gunicorn -c /app/config/gunicorn_config.py airbnb.wsgi"
+      && gunicorn -c /home/app/web/config/gunicorn_config.py airbnb.wsgi"
     depends_on:
       - db
       - redis
@@ -153,7 +157,7 @@ services:
           aliases:
             - server
     volumes:
-      - .:/app
+      - static_volume:/home/app/web/airbnb_app/airbnb/static
     deploy:
       replicas: 2
       update_config:
@@ -180,7 +184,7 @@ services:
     env_file:
       - ${ENV}
     command: >
-      bash -c "cd /app/airbnb_app/
+      bash -c "cd /home/app/web/airbnb_app/
       && celery -A airbnb worker -l info"
     depends_on:
       - redis
@@ -188,8 +192,6 @@ services:
       - server
     networks:
       - app_network
-    volumes:
-      - .:/app
     deploy:
       replicas: 1
       update_config:
@@ -247,7 +249,7 @@ services:
     env_file:
       - ${ENV}
     command: >
-      bash -c "cd /app/airbnb_app/
+      bash -c "cd /home/app/web/airbnb_app/
       && celery -A airbnb beat -l info --pidfile= --scheduler django_celery_beat.schedulers:DatabaseScheduler"
     depends_on:
       - redis
@@ -256,8 +258,6 @@ services:
       - celery
     networks:
       - app_network
-    volumes:
-      - .:/app
     deploy:
       replicas: 1
       update_config:
@@ -284,5 +284,6 @@ networks:
   app_network:
 
 volumes:
+  static_volume:
   postgres_data:
   redis_data:
