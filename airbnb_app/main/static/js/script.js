@@ -9,10 +9,6 @@ const overlayEl = $('.overlay');
 const popupEl = $('.filter-popup');
 const closePopupEl = $('.close-popup');
 
-const realtyFilterButtonsSubtract = $('.input-number--subtract');
-const realtyFilterButtonsAdd = $('.input-number--add');
-const realtyFilterInputs = $('.input-number--custom-wrapper input');
-
 
 realtyTypeForm.click(function (e) {
     e.stopPropagation();
@@ -70,6 +66,9 @@ customNumberInputs.each(function () {
     $(this).after('<button class="input-number--add" type="button">+</button>');
 });
 
+const realtyFilterButtonsSubtract = $('.input-number--subtract');
+const realtyFilterButtonsAdd = $('.input-number--add');
+const realtyFilterInputs = $('.input-number--custom-wrapper input');
 
 function getInputDataFromContext(context) {
     const inputEl = $(context).siblings('input');
@@ -83,18 +82,24 @@ function getInputDataFromContext(context) {
 
 realtyFilterButtonsSubtract.each(function () {
     $(this).click(function () {
+        console.log("clicked");
         const inputData = getInputDataFromContext($(this));
         const inputValue = inputData["value"];
 
-        if (inputValue - 1 > inputData["minValue"] - 1) inputData["element"].val(inputValue - 1);
+        if (inputValue - 1 > inputData["minValue"] - 1) {
+            inputData["element"].val(inputValue - 1);
+        }
     });
 });
 realtyFilterButtonsAdd.each(function () {
     $(this).click(function () {
+        console.log("clicked");
         const inputData = getInputDataFromContext($(this));
         const inputValue = inputData["value"];
 
-        if (inputValue + 1 <= inputData["maxValue"]) inputData["element"].val(inputValue + 1);
+        if (inputValue + 1 <= inputData["maxValue"]) {
+            inputData["element"].val(inputValue + 1);
+        }
     });
 });
 realtyFilterInputs.each(function () {
