@@ -82,7 +82,6 @@ function getInputDataFromContext(context) {
 
 realtyFilterButtonsSubtract.each(function () {
     $(this).click(function () {
-        console.log("clicked");
         const inputData = getInputDataFromContext($(this));
         const inputValue = inputData["value"];
 
@@ -93,7 +92,6 @@ realtyFilterButtonsSubtract.each(function () {
 });
 realtyFilterButtonsAdd.each(function () {
     $(this).click(function () {
-        console.log("clicked");
         const inputData = getInputDataFromContext($(this));
         const inputValue = inputData["value"];
 
