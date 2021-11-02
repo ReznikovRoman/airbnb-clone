@@ -49,7 +49,7 @@ services:
     networks:
       - app_network
     volumes:
-      - posgres_ssl_cert:${POSTGRES_SSL_CERT_DOCKER_PATH:-/home/app/web/config/postgres/certs/root.crt}
+      - posgres_ssl_certs:/home/app/web/config/postgres/certs
       - redis_data:/data
       - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
     deploy:
@@ -82,7 +82,7 @@ services:
     depends_on:
       - redis
     volumes:
-      - posgres_ssl_cert:${POSTGRES_SSL_CERT_DOCKER_PATH:-/home/app/web/config/postgres/certs/root.crt}
+      - posgres_ssl_certs:/home/app/web/config/postgres/certs
       - static_volume:/home/app/web/airbnb_app/airbnb/static
     networks:
       app_network:
@@ -124,7 +124,7 @@ services:
           aliases:
             - server
     volumes:
-      - posgres_ssl_cert:${POSTGRES_SSL_CERT_DOCKER_PATH:-/home/app/web/config/postgres/certs/root.crt}
+      - posgres_ssl_certs:/home/app/web/config/postgres/certs
       - static_volume:/home/app/web/airbnb_app/airbnb/static
     deploy:
       replicas: 2
@@ -160,7 +160,7 @@ services:
     networks:
       - app_network
     volumes:
-      - posgres_ssl_cert:${POSTGRES_SSL_CERT_DOCKER_PATH:-/home/app/web/config/postgres/certs/root.crt}
+      - posgres_ssl_certs:/home/app/web/config/postgres/certs
     deploy:
       replicas: 1
       update_config:
@@ -198,7 +198,7 @@ services:
     networks:
         app_network:
     volumes:
-      - posgres_ssl_cert:${POSTGRES_SSL_CERT_DOCKER_PATH:-/home/app/web/config/postgres/certs/root.crt}
+      - posgres_ssl_certs:/home/app/web/config/postgres/certs
     deploy:
       replicas: 1
       update_config:
@@ -229,7 +229,7 @@ services:
     networks:
       - app_network
     volumes:
-      - posgres_ssl_cert:${POSTGRES_SSL_CERT_DOCKER_PATH:-/home/app/web/config/postgres/certs/root.crt}
+      - posgres_ssl_certs:/home/app/web/config/postgres/certs
     deploy:
       replicas: 1
       update_config:
@@ -256,6 +256,6 @@ networks:
   app_network:
 
 volumes:
-  posgres_ssl_cert:
+  posgres_ssl_certs:
   static_volume:
   redis_data:
