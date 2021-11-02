@@ -16,9 +16,9 @@ services:
     volumes:
       - static_volume:/home/app/web/airbnb_app/airbnb/static
       - ./config/nginx/stack.conf:/etc/nginx/conf.d/default.conf
-      - ./config/nginx/certs/ca.crt:/etc/ssl/air-project.xyz/ca.crt
-      - ./config/nginx/certs/air-project.crt:/etc/ssl/air-project.xyz/air-project.crt
-      - ./config/nginx/certs/air-project.key:/etc/ssl/air-project.xyz/air-project.key
+      - ./config/nginx/certs/ca.crt:/etc/ssl/airproject.xyz/ca.crt
+      - ./config/nginx/certs/airproject.crt:/etc/ssl/airproject.xyz/airproject.crt
+      - ./config/nginx/certs/airproject.key:/etc/ssl/airproject.xyz/airproject.key
     deploy:
       replicas: 1
       update_config:
