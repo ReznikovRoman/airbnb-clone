@@ -7,7 +7,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-
 # DATABASE
 DATABASES = {
     'default': {
@@ -24,7 +23,6 @@ DATABASES = {
 MEDIA_URL = os.environ.get('MEDIA_URL', '/media/')
 MEDIA_ROOT = BASE_DIR / 'airbnb/media/'
 
-
 # DEBUG TOOLBAR
 DEBUG_TOOLBAR_CONFIG = {
     "SHOW_TOOLBAR_CALLBACK": lambda show_toolbar: True,
@@ -35,7 +33,6 @@ INTERNAL_IPS = [
     'server',
 ]
 mimetypes.add_type('application/javascript', '.js', True)
-
 
 # LOGGING
 LOGGING = {
