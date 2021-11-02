@@ -258,5 +258,4 @@ networks:
 volumes:
   posgres_ssl_cert:
   static_volume:
-  postgres_data:
   redis_data:
