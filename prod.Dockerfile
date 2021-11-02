@@ -54,6 +54,3 @@ RUN pip install --no-cache /wheels/*
 
 # Copy project
 COPY . $APP_HOME
-
-# Run entrypoint.sh
-ENTRYPOINT ["./entrypoint.sh"]

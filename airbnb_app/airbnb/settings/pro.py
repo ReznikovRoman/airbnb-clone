@@ -9,14 +9,18 @@ ALLOWED_HOSTS = os.environ.get('PROJECT_ALLOWED_HOSTS', '').split(',')
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('POSTGRES_PROD_DB', 'airbnb_thinknetica'),
-        'USER': os.environ.get('POSTGRES_PROD_USER', 'postgres'),
-        'PASSWORD': os.environ.get('POSTGRES_PROD_PASSWORD', 'postgres'),
-        'HOST': os.environ.get('POSTGRES_HOST', 'localhost'),
-        'PORT': os.environ.get('POSTGRES_PORT', 5432),
+        'NAME': os.environ.get('POSTGRES_YANDEX_DB'),
+        'USER': os.environ.get('POSTGRES_YANDEX_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_YANDEX_PASSWORD'),
+        'HOST': os.environ.get('POSTGRES_YANDEX_HOST'),
+        'PORT': os.environ.get('POSTGRES_YANDEX_PORT'),
+        'OPTIONS': {
+            'target_session_attrs': 'read-write',
+            'sslmode': 'verify-full',
+            'sslrootcert': os.environ.get('POSTGRES_SSL_CERT_DOCKER_PATH'),
+        },
     },
 }
-
 
 # MEDIA
 if USE_S3_BUCKET:
