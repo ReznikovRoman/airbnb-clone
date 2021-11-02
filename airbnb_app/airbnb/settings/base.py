@@ -109,6 +109,10 @@ TEMPLATES = [
 WSGI_APPLICATION = 'airbnb.wsgi.application'
 
 
+# DATABASE
+USE_MANAGED_POSTGRES = bool(os.environ.get("USE_MANAGED_POSTGRES", False))
+
+
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
