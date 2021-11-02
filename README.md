@@ -1,5 +1,5 @@
 # Airbnb Clone
-Website: https://air-project.xyz
+Website: https://airproject.xyz
 
 ### Technologies:
 - Django 3
@@ -147,8 +147,8 @@ docker-compose -f docker-compose-local.yml up
 Production docker-compose:
 1. Create ./config/nginx/certs/ folder (in the repository root)
 2. Add ssl files:
-   - air-project.crt: ssl certificate
-   - air-project.key: private key
+   - airproject.crt: ssl certificate
+   - airproject.key: private key
    - ca.crt: root certificate
 3. Run docker containers
 
@@ -160,8 +160,8 @@ docker-compose -f docker-compose-master.yml up
 Production Swarm:
 1. Create ./config/nginx/certs/ folder (in the repository root)
 2. Add ssl files:
-   - air-project.crt: ssl certificate
-   - air-project.key: private key
+   - airproject.crt: ssl certificate
+   - airproject.key: private key
    - ca.crt: root certificate
 3. Build and push your image to the Docker Hub
 4. Deploy Swarm stack
