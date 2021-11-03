@@ -73,14 +73,16 @@ def get_available_realty_search_results(query: Optional[str] = None) -> 'QuerySe
         CustomDeleteQueryset[Realty]: filtered realty
     """
     if query:
-        search_vector = SearchVector('location__city', weight='A') + \
-                        SearchVector('name', weight='B') + \
-                        SearchVector('description', weight='C')
-        search_query = SearchQuery(query)
+        search_vector = (
+            SearchVector('name', weight='A') +
+            SearchVector('location__city', weight='B') +
+            SearchVector('description', weight='B')
+        )
+        search_query = SearchQuery(query.lower())
 
         return Realty.available.annotate(
             rank=SearchRank(search_vector, search_query),
-        ).filter(rank__gte=0.3).order_by('-rank')
+        ).filter(rank__gte=0.2).order_by('-rank')
     return Realty.available.all()
 
 
