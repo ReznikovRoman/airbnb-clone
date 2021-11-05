@@ -46,6 +46,7 @@ services:
       - ${ENV}
     ports:
       - "6380:6379"
+    user: root
     networks:
       - app_network
     volumes:
