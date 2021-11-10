@@ -44,14 +44,13 @@ services:
     image: redis:6.2.6-alpine
     env_file:
       - ${ENV}
-    ports:
-      - "6380:6379"
     user: root
     networks:
       - app_network
     volumes:
       - ./config/postgres/certs/root.crt:${POSTGRES_SSL_CERT_DOCKER_PATH:-/usr/local/etc/.postgresql/root.crt}
       - redis_data:/data
+      - crontabs:/etc/crontabs
       - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
     deploy:
       replicas: 1
@@ -258,4 +257,5 @@ networks:
 
 volumes:
   static_volume:
+  crontabs:
   redis_data:
