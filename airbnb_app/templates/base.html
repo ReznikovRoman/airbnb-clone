@@ -61,10 +61,11 @@
         <div class="overlay hidden"></div>
     </div>
 
-    {% include 'components/chat_bot.html' %}
+    {% if not request.is_mobile_agent %}
+        {% include 'components/chat_bot.html' %}
+    {% endif %}
     {% include 'components/footer.html' %}
 </div>
-
 
 
 <!-- Bootstrap 4 - JavaScript -->
@@ -80,6 +81,10 @@
 
 {# Reconnecting websocket #}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.min.js" integrity="sha512-B4skI5FiLurS86aioJx9VfozI1wjqrn6aTdJH+YQUmCZum/ZibPBTX55k5d9XM6EsKePDInkLVrN7vPmJxc1qA==" crossorigin="anonymous"></script>
+
+<script>
+    const isMobileAgent = JSON.parse("{{ request.is_mobile_agent }}".toLowerCase());
+</script>
 
 <!--  Custom JS  -->
 <script src="{% static 'js/script.js' %}"></script>
