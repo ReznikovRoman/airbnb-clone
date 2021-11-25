@@ -87,11 +87,7 @@ jobs:
             SSH_KEY: ${{ secrets.PROD_SSH_KEY }}
             SSH_HOST: ${{ secrets.PROD_SSH_HOST }}
         - name: Check out the source
-          env:
-            PROJECT_PATH: ${{ secrets.PROD_PROJECT_PATH }}
-          run: ssh prod 'cd $PROJECT_PATH && git fetch && git reset --hard origin/master'
+          run: ssh prod 'cd /home/roman/projects/airbnb-clone && git fetch && git reset --hard origin/master'
         - name: Deploy Docker Swarm stack
-          env:
-            PROJECT_PATH: ${{ secrets.PROD_PROJECT_PATH }}
           if: ${{ always() }}
-          run: ssh prod 'cd $PROJECT_PATH && env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy -c stack-master.yml airbnb_app --with-registry-auth'
+          run: ssh prod 'cd /home/roman/projects/airbnb-clone && env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy -c stack-master.yml airbnb_app --with-registry-auth'
