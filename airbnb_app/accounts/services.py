@@ -17,6 +17,7 @@ from common.tasks import send_sms_by_twilio
 from configs.redis_conf import r
 from mailings.tasks import send_email_with_attachments
 
+from .jwt import UserEmailRefreshToken
 from .models import (CustomUser, CustomUserManager, Profile, SMSLog, get_default_profile_image,
                      get_default_profile_image_full_url)
 from .tokens import account_activation_token
@@ -126,9 +127,10 @@ def update_phone_number_confirmation_status(user_profile: Profile, is_phone_numb
     user_profile.save(update_fields=["is_phone_number_confirmed"])
 
 
-def update_user_email_confirmation_status(user: CustomUser, is_email_confirmed: bool) -> None:
+def update_user_email_confirmation_status(user: CustomUser, is_email_confirmed: bool) -> CustomUser:
     user.is_email_confirmed = is_email_confirmed
     user.save(update_fields=["is_email_confirmed"])
+    return user
 
 
 def handle_phone_number_change(user_profile: Profile, site_domain: str, new_phone_number: str) -> TwilioShortPayload:
@@ -192,3 +194,8 @@ def get_phone_code_status_by_user_id(
 ) -> Union[VERIFICATION_CODE_STATUS_FAILED, VERIFICATION_CODE_STATUS_DELIVERED, None]:
     key = f"user:{user_id}:phone_code_status"
     return r.get(key)
+
+
+def create_jwt_token_for_user_with_additional_fields(*, user: CustomUser) -> dict[str, str]:
+    refresh = UserEmailRefreshToken.for_user(user=user)
+    return refresh

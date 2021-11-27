@@ -1,3 +1,6 @@
+from rest_framework_simplejwt.token_blacklist.admin import OutstandingTokenAdmin
+from rest_framework_simplejwt.token_blacklist.models import OutstandingToken
+
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.shortcuts import reverse
@@ -58,3 +61,13 @@ class SMSLogAdmin(admin.ModelAdmin):
             {obj.profile.user.first_name}'s profile</a>""",
         )
     get_profile_link.short_description = 'profile link'
+
+
+class CustomOutstandingTokenAdmin(OutstandingTokenAdmin):
+
+    def has_delete_permission(self, *args, **kwargs):
+        return True
+
+
+admin.site.unregister(OutstandingToken)
+admin.site.register(OutstandingToken, CustomOutstandingTokenAdmin)
