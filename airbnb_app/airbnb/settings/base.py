@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 from pathlib import Path
 from typing import List
 
@@ -34,8 +35,13 @@ INSTALLED_APPS = [
     'django.contrib.flatpages',
     'django.contrib.postgres',
 
-    # django
+    # drf
     'rest_framework',
+    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
+
+    # django 3rd party
     'bootstrap4',
     'debug_toolbar',
     'django_extensions',
@@ -139,16 +145,14 @@ USE_L10N = True
 USE_TZ = True
 
 
-# SENTRY
-SENTRY_CONF = sentry_sdk.init(
-    dsn=os.environ.get("AIRBNB_SENTRY_DSN"),
-    integrations=[DjangoIntegration()]
-)
-
-
 # SITES
 SITE_ID = 1
 DEFAULT_PROTOCOL = os.environ.get("SITE_DEFAULT_PROTOCOL", "http")
+PROJECT_FULL_DOMAIN = os.environ.get("PROJECT_FULL_DOMAIN", "http://localhost:8000")
+
+
+# AUTO FIELD
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 
 # Static files (CSS, JavaScript, Images)
@@ -193,12 +197,45 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
     ],
+}
+
+
+# SIMPLE JWT
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=90),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'UPDATE_LAST_LOGIN': False,
+
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'VERIFYING_KEY': None,
+    'AUDIENCE': None,
+    'ISSUER': None,
+    'JWK_URL': None,
+    'LEEWAY': 0,
+
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+    'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
+
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+
+    'JTI_CLAIM': 'jti',
+
+    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
 
@@ -265,6 +302,13 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+
+# SENTRY
+SENTRY_CONF = sentry_sdk.init(
+    dsn=os.environ.get("AIRBNB_SENTRY_DSN"),
+    integrations=[DjangoIntegration()],
+)
 
 
 # CKEDITOR

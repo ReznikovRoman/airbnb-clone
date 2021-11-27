@@ -1,10 +1,13 @@
 import debug_toolbar
+from rest_framework_simplejwt.views import TokenRefreshView
 
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.flatpages import views as flatpage_views
 from django.urls import include, path
+
+from accounts.api.views import CustomTokenObtainPairView
 
 
 urlpatterns = [
@@ -19,6 +22,8 @@ urlpatterns = [
     path('hosts/', include('hosts.urls', namespace='hosts')),
     path('subscribers/', include('subscribers.urls', namespace='subscribers')),
 
+    path('api/v1/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/v1/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/v1/', include('realty.api.urls', namespace='api')),
 
     path('', include('main.urls')),

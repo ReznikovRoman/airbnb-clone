@@ -222,9 +222,9 @@ distlib==0.3.3 \
     --hash=sha256:c8b54e8454e5bf6237cc84c20e8264c3e991e824ef27e8f1e81049867d861e31 \
     --hash=sha256:d982d0751ff6eaaab5e2ec8e691d949ee80eddf01a62eaa96ddb11531fe16b05
     # via virtualenv
-django==3.1.13 \
-    --hash=sha256:9f8be75646f62204320b195062b1d696ba28aa3d45ee72fb7c888ffaebc5bdb2 \
-    --hash=sha256:a6e0d1ff11095b7394c079ade7094c73b2dc3df4a7a373c9b58ed73b77a97feb
+django==3.2.9 \
+    --hash=sha256:51284300f1522ffcdb07ccbdf676a307c6678659e1284f0618e5a774127a6a08 \
+    --hash=sha256:e22c9266da3eec7827737cde57694d7db801fedac938d252bf27377cec06ed1b
     # via
     #   -r requirements.in
     #   channels
@@ -244,6 +244,7 @@ django==3.1.13 \
     #   django-timezone-field
     #   django-twilio
     #   djangorestframework
+    #   djangorestframework-simplejwt
     #   drf-spectacular
     #   model-bakery
 django-bootstrap4==3.0.1 \
@@ -323,9 +324,8 @@ django-tinymce==3.3.0 \
     --hash=sha256:3684d6611162cd3566b068cfeaf9309d415f1d415191a1f8a8c9140246774679 \
     --hash=sha256:77cca137e97e92e43e42c98a232df3e66b80c987ad0f03709a4b73435f8e4060
     # via -r requirements.in
-django-twilio==0.13.1.post0 \
-    --hash=sha256:7239ccb20a2d15330a3a424060124724a7c90e6b60881b35ce4885d778047fe9 \
-    --hash=sha256:f1afa58a747deeb84dbc524d9334d11613ad09100a039057fb5de466a0fb1f01
+django-twilio @ https://github.com/ReznikovRoman/django-twilio/archive/1ff04209bf4f77c974b3f4bcad9270a775797f51.zip \
+    --hash=sha256:aff45e6088c6f3fd3ecbfe94400f5ad07586a6e99e9f5c12cda4e0f75b620dea
     # via -r requirements.in
 djangorestframework==3.12.4 \
     --hash=sha256:6d1d59f623a5ad0509fe0d6bfe93cbdfe17b8116ebc8eda86d45f6e16e819aaf \
@@ -333,7 +333,12 @@ djangorestframework==3.12.4 \
     # via
     #   -r requirements.in
     #   django-rest-auth
+    #   djangorestframework-simplejwt
     #   drf-spectacular
+djangorestframework-simplejwt==5.0.0 \
+    --hash=sha256:30b10e7732395c44d21980f773214d2b9bdeadf2a6c6809cd1a7c9abe272873c \
+    --hash=sha256:ddcbeef51155d1e71410dde44b581c7e04cfb74776f5337661ac3ef4c0c367e6
+    # via -r requirements.in
 docutils==0.17.1 \
     --hash=sha256:686577d2e4c32380bb50cbb22f575ed742d58168cee37e99117a854bcd88f125 \
     --hash=sha256:cf316c8370a737a022b72b56874f6602acf974a37a9fba42ec2876387549fc61
@@ -829,10 +834,12 @@ pygments==2.10.0 \
     # via
     #   ipython
     #   sphinx
-pyjwt==1.7.1 \
-    --hash=sha256:5c6eca3c2940464d106b99ba83b00c6add741c9becaec087fb7ccdefea71350e \
-    --hash=sha256:8d59a976fb773f3e6a39c85636357c4f0e242707394cadadd9814f5cbaa20e96
-    # via twilio
+pyjwt==2.3.0 \
+    --hash=sha256:b888b4d56f06f6dcd777210c334e69c737be74755d3e5e9ee3fe67dc18a0ee41 \
+    --hash=sha256:e0c4bb8d9f0af0c7f5b1ec4c5036309617d03d56932877f2f7a0beeb5318322f
+    # via
+    #   djangorestframework-simplejwt
+    #   twilio
 pynliner==0.8.0 \
     --hash=sha256:32da16ed8ba1fec775909e39f0ffa8e6e02a674b889286c9a2370c3c03f617a5 \
     --hash=sha256:83e7dd4d48001bebbe0a648d7089e94e21ffb74c5af2f582c47d8793ffe8628e
@@ -991,7 +998,6 @@ six==1.16.0 \
     #   pyopenssl
     #   python-dateutil
     #   service-identity
-    #   twilio
     #   virtualenv
 snowballstemmer==2.1.0 \
     --hash=sha256:b51b447bea85f9968c13b650126a888aabd4cb4463fca868ec596826325dedc2 \
@@ -1104,9 +1110,11 @@ traitlets==5.1.0 \
     # via
     #   ipython
     #   matplotlib-inline
-twilio==6.63.2 \
-    --hash=sha256:cd1456b5deb82166d5f41d5e5eecd7938e656a626571332b9d9ae8062303fabd
-    # via django-twilio
+twilio==7.0.0 \
+    --hash=sha256:6cff34d61c3fad9d41e21b4b59527996fb7f0c6eeb5f001b90040b630fbf8446
+    # via
+    #   -r requirements.in
+    #   django-twilio
 twisted[tls]==21.7.0 \
     --hash=sha256:13c1d1d2421ae556d91e81e66cf0d4f4e4e1e4a36a0486933bee4305c6a4fb9b \
     --hash=sha256:2cd652542463277378b0d349f47c62f20d9306e57d1247baabd6d1d38a109006
