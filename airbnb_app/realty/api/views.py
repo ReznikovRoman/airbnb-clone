@@ -23,7 +23,6 @@ class RealtyListApiView(generics.ListCreateAPIView):
     serializer_class = RealtySerializer
     filterset_class = RealtyFilter
     permission_classes = (
-        IsAuthenticatedOrReadOnly,
         IsAbleToAddRealty,
     )
 

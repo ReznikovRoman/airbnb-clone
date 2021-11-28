@@ -22,10 +22,11 @@ from .forms import (CustomPasswordResetForm, ProfileDescriptionForm, ProfileForm
                     UserInfoForm, VerificationCodeForm)
 from .mixins import AnonymousUserRequiredMixin, UnconfirmedEmailRequiredMixin, UnconfirmedPhoneNumberRequiredMixin
 from .models import CustomUser, Profile
-from .services import (get_phone_code_status_by_user_id, get_user_by_pk, get_user_from_uid,
-                       get_verification_code_from_digits_dict, handle_phone_number_change,
-                       is_verification_code_for_profile_valid, send_verification_link, set_phone_code_status_by_user_id,
-                       update_phone_number_confirmation_status, update_user_email_confirmation_status)
+from .services import (create_jwt_token_for_user_with_additional_fields, get_phone_code_status_by_user_id,
+                       get_user_by_pk, get_user_from_uid, get_verification_code_from_digits_dict,
+                       handle_phone_number_change, is_verification_code_for_profile_valid, send_verification_link,
+                       set_phone_code_status_by_user_id, update_phone_number_confirmation_status,
+                       update_user_email_confirmation_status)
 from .tokens import account_activation_token
 
 
@@ -49,6 +50,7 @@ class SignUpView(AnonymousUserRequiredMixin,
 
         if form.is_valid():
             user = form.save()
+            create_jwt_token_for_user_with_additional_fields(user=user)
             send_verification_link(get_current_site(request).domain, request.scheme, user)
             return redirect('accounts:login')
 
@@ -86,7 +88,8 @@ class AccountActivationView(generic.View):
             user = None
 
         if user is not None and account_activation_token.check_token(user, token):
-            update_user_email_confirmation_status(user, is_email_confirmed=True)
+            user = update_user_email_confirmation_status(user=user, is_email_confirmed=True)
+            create_jwt_token_for_user_with_additional_fields(user=user)
             login(request, user)
             messages.add_message(request, messages.SUCCESS, EMAIL_CONFIRMATION_SUCCESS_RESPONSE_MESSAGE)
             return redirect(reverse('home_page'))
