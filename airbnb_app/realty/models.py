@@ -13,7 +13,11 @@ from .fields import OrderField
 class Amenity(models.Model):
     """Realty amenity."""
 
-    name = models.CharField(verbose_name='name', max_length=100)
+    name = models.CharField(
+        verbose_name='name',
+        max_length=100,
+        unique=True,
+    )
 
     class Meta:
         verbose_name = 'amenity'
