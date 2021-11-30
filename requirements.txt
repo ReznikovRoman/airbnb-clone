@@ -350,6 +350,14 @@ drf-spectacular==0.19.0 \
 editorconfig-checker==2.3.54 \
     --hash=sha256:3aba76cd66cabe01538282acb3f855adb8d08bb87dd732117b2b41b5f30282cc
     # via -r requirements.in
+factory-boy==3.2.1 \
+    --hash=sha256:a98d277b0c047c75eb6e4ab8508a7f81fb03d2cb21986f627913546ef7a2a55e \
+    --hash=sha256:eb02a7dd1b577ef606b75a253b9818e6f9eaf996d94449c9d5ebb124f90dc795
+    # via -r requirements.in
+faker==9.8.3 \
+    --hash=sha256:3c997b505627e63eb54e7ec268d0669bc5b6b98c1822f632d2784d91664d5f11 \
+    --hash=sha256:76ad74cebe727affa1c108e17fc1d2c0be8f498ff71b25f464fb8241301fe6f2
+    # via factory-boy
 fakeredis==1.6.1 \
     --hash=sha256:0d06a9384fb79da9f2164ce96e34eb9d4e2ea46215070805ea6fd3c174590b47 \
     --hash=sha256:5eb1516f1fe1813e9da8f6c482178fc067af09f53de587ae03887ef5d9d13024
@@ -898,6 +906,7 @@ python-dateutil==2.8.2 \
     --hash=sha256:961d03dc3453ebbc59dbdea9e4e11c5651520a876d0f4db161e8674aae935da9
     # via
     #   botocore
+    #   faker
     #   python-crontab
 python-slugify==5.0.2 \
     --hash=sha256:6d8c5df75cd4a7c3a2d21e257633de53f52ab0265cd2d1dc62a730e8194a7380 \
@@ -1054,7 +1063,9 @@ sqlparse==0.4.2 \
 text-unidecode==1.3 \
     --hash=sha256:1311f10e8b895935241623731c2ba64f4c455287888b18189350b67134a822e8 \
     --hash=sha256:bad6603bb14d279193107714b288be206cac565dfa49aa5b105294dd5c4aab93
-    # via python-slugify
+    # via
+    #   faker
+    #   python-slugify
 toml==0.10.2 \
     --hash=sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b \
     --hash=sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f

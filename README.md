@@ -1,7 +1,7 @@
 # Airbnb Clone
 Website: https://airproject.xyz
 
-### Technologies:
+## Technologies:
 - Django 3
 - Django Channels
 - DRF
@@ -136,11 +136,12 @@ CI_COMMIT_SHORT_SHA=<latest>
 
 ```
 
-**Start project:**
+### Start project:
 
 Local:
 ```shell
 docker-compose -f docker-compose-local.yml build
+docker-compose -f docker-compose-local.yml run --rm server sh -c "cd airbnb_app && ./manage.py populate_db"
 docker-compose -f docker-compose-local.yml up
 ```
 
@@ -173,7 +174,7 @@ env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy -c stack-master.yml ai
 Migrations will be applied automatically.
 
 
-**Code style:**
+## Code style:
 
 Before pushing a commit run all linters:
 
@@ -193,10 +194,15 @@ make check-docker
 ```
 
 
-**pre-commit:**
+### pre-commit:
 
 To configure pre-commit on your local machine:
 ```shell
 docker-compose -f docker-compose-local.yml build
 docker-compose -f docker-compose-local.yml run --rm server sh -c "pre-commit install"
 ```
+
+## Project guides
+
+- [Python styleguide](./docs/guides/python_guide.md)
+- [Django styleguide](./docs/guides/django_guide.md)

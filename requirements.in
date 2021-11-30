@@ -6,6 +6,7 @@ python-slugify==5.0.2
 pydantic==1.8.2
 fakeredis==1.6.1
 ipython==7.28.0
+factory-boy==3.2.1
 
 # Django
 django==3.2.*
