@@ -26,7 +26,7 @@ docker-compose files:
  2. `docker-compose-master.yml` - for production
 
 Swarm stack files:
-1. `stack-master.yml` - for production
+1. `stack-prod.yml` - for production
 
 To run docker containers you have to create a `.env` file in the root directory.
 
@@ -168,7 +168,7 @@ Production Swarm:
 4. Deploy Swarm stack
 
 ```shell
-env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy -c stack-master.yml airbnb_app --with-registry-auth
+env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy -c stack-prod.yml airbnb_app --with-registry-auth
 ```
 
 Migrations will be applied automatically.
