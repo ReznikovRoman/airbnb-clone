@@ -24,16 +24,21 @@ services:
       update_config:
         parallelism: 2
         order: start-first
-        failure_action: continue
+        failure_action: rollback
         delay: 15s
       rollback_config:
         parallelism: 0
         order: stop-first
       restart_policy:
-        condition: any
+        condition: on-failure
         delay: 10s
-        max_attempts: 10
-        window: 30s
+        max_attempts: 3
+        window: 60s
+    healthcheck:
+      start_period: 60s
+      interval: 10s
+      retries: 10
+      test: curl --fail -s http://localhost:80/realty/ || exit 1
 
   redis:
     image: redis:6.2.6-alpine
