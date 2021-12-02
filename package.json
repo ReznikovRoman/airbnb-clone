@@ -1,15 +1,26 @@
 {
   "name": "airbnb",
   "version": "1.0.0",
-  "description": "",
+  "description": "Website: https://airproject.xyz",
   "main": "index.js",
   "scripts": {
-    "sass": "node_modules/.bin/node-sass -w scss/ -o airbnb/main/static/css --recursive"
+    "sass": "node-sass -w airbnb_app/scss/ -o airbnb_app/main/static/css --recursive"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "node-sass": "^5.0.0"
-  }
+  },
+  "directories": {
+    "doc": "docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ReznikovRoman/airbnb-clone.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ReznikovRoman/airbnb-clone/issues"
+  },
+  "homepage": "https://github.com/ReznikovRoman/airbnb-clone#readme"
 }
