@@ -1,26 +1,45 @@
 version: "3.8"
 
 services:
-  nginx:
-    image: nginx:1.21.3-alpine
+  traefik:
+    image: traefik:v2.5
+    env_file:
+      - ${ENV}
     ports:
       - "80:80"
       - "443:443"
     depends_on:
       - server
       - daphne
+    command:
+      # Docker swarm configuration
+      - "--providers.docker.endpoint=unix:///var/run/docker.sock"
+      - "--providers.docker.swarmMode=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=app_network"
+      # Entrypoints configuration
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      # SSL configuration
+      - "--certificatesresolvers.letsencryptresolver.acme.httpchallenge=true"
+      - "--certificatesresolvers.letsencryptresolver.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.letsencryptresolver.acme.email=romanreznikov2002@yandex.ru"
+      - "--certificatesresolvers.letsencryptresolver.acme.storage=/letsencrypt/acme.json"
+      # Enable dashboard
+      - "--api.dashboard=true"
+      - "--api"
+    volumes:
+      - traefik-certificates:/letsencrypt
+      - /var/run/docker.sock:/var/run/docker.sock
     networks:
       app_network:
         aliases:
-          - nginx
-    volumes:
-      - static_volume:/home/app/web/airbnb_app/airbnb/static
-      - ./config/nginx/stack.conf:/etc/nginx/conf.d/default.conf
-      - ./config/nginx/certs/ca.crt:/etc/ssl/airproject.xyz/ca.crt
-      - ./config/nginx/certs/airproject.crt:/etc/ssl/airproject.xyz/airproject.crt
-      - ./config/nginx/certs/airproject.key:/etc/ssl/airproject.xyz/airproject.key
+          - traefik
     deploy:
       replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
       update_config:
         parallelism: 2
         order: start-first
@@ -34,12 +53,26 @@ services:
         delay: 10s
         max_attempts: 3
         window: 60s
-    healthcheck:
-      start_period: 60s
-      interval: 10s
-      retries: 10
-      test: curl --fail -s http://localhost:80/realty/ || exit 1
+      labels:
+        - "traefik.enable=true"
+        # global redirect to https
+        - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)"
+        - "traefik.http.routers.http-catchall.entrypoints=web"
+        - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
 
+        # middleware redirect
+        - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+
+        # required by swarm but not used
+        - "traefik.http.services.traefik.loadbalancer.server.port=888"
+
+        # Traefik dashboard
+        - "traefik.http.routers.traefik.rule=Host(`traefik.airproject.xyz`)"
+        - "traefik.http.routers.traefik.service=api@internal"
+        - "traefik.http.routers.traefik.tls.certresolver=letsencryptresolver"
+        - "traefik.http.routers.traefik.entrypoints=websecure"
+        - "traefik.http.routers.traefik.middlewares=authtraefik"
+        - "traefik.http.middlewares.authtraefik.basicauth.users=admin:$$apr1$$o6eYRTgC$$xXcKmm/pqAp5767ez4yuP0"
   redis:
     image: redis:6.2.6-alpine
     env_file:
@@ -103,6 +136,12 @@ services:
         delay: 10s
         max_attempts: 5
         window: 60s
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.daphne.rule=Host(`airproject.xyz`) && PathPrefix(`/ws`)"
+        - "traefik.http.routers.daphne.entrypoints=websecure"
+        - "traefik.http.routers.daphne.tls.certresolver=letsencryptresolver"
+        - "traefik.http.services.daphne.loadbalancer.server.port=8001"
 
   server:
     image: romanreznikov/backend:${CI_COMMIT_SHORT_SHA}
@@ -141,6 +180,12 @@ services:
         delay: 10s
         max_attempts: 5
         window: 60s
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.server.rule=Host(`airproject.xyz`)"
+        - "traefik.http.routers.server.entrypoints=websecure"
+        - "traefik.http.routers.server.tls.certresolver=letsencryptresolver"
+        - "traefik.http.services.server.loadbalancer.server.port=8000"
     healthcheck:
       start_period: 60s
       interval: 10s
@@ -257,5 +302,6 @@ networks:
 
 volumes:
   static_volume:
+  traefik-certificates:
   crontabs:
   redis_data:
