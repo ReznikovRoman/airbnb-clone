@@ -1,0 +1,284 @@
+version: "3.8"
+
+services:
+  traefik:
+    image: traefik:v2.5
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - server
+      - daphne
+    command:
+      - "--providers.docker.endpoint=unix:///var/run/docker.sock"
+      - "--providers.docker.swarmMode=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=app_network"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.letsencryptresolver.acme.httpchallenge=true"
+      - "--certificatesresolvers.letsencryptresolver.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.letsencryptresolver.acme.email=romanreznikov2002@yandex.ru"
+      - "--certificatesresolvers.letsencryptresolver.acme.storage=/letsencrypt/acme.json"
+    volumes:
+      - traefik-certificates:/letsencrypt
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      app_network:
+        aliases:
+          - traefik
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      update_config:
+        parallelism: 2
+        order: start-first
+        failure_action: rollback
+        delay: 15s
+      rollback_config:
+        parallelism: 0
+        order: stop-first
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+        window: 60s
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.http-catchall.middlewares=redirect-to-https@docker"
+        - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+
+  redis:
+    image: redis:6.2.6-alpine
+    env_file:
+      - ${ENV}
+    user: root
+    networks:
+      - app_network
+    volumes:
+      - ./config/postgres/certs/root.crt:${POSTGRES_SSL_CERT_DOCKER_PATH:-/usr/local/etc/.postgresql/root.crt}
+      - redis_data:/data
+      - crontabs:/etc/crontabs
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 2
+        order: start-first
+        failure_action: rollback
+        delay: 10s
+      rollback_config:
+        parallelism: 0
+        order: stop-first
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 60s
+      placement:
+        constraints: [ node.role == manager ]
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+
+  daphne:
+    image: romanreznikov/backend:${CI_COMMIT_SHORT_SHA}
+    env_file:
+      - ${ENV}
+    command: >
+      bash -c "cd /home/app/web/airbnb_app/
+      && daphne -b 0.0.0.0 -p 8001 airbnb.asgi:application"
+    depends_on:
+      - redis
+    volumes:
+      - ./config/postgres/certs/root.crt:${POSTGRES_SSL_CERT_DOCKER_PATH:-/usr/local/etc/.postgresql/root.crt}
+      - static_volume:/home/app/web/airbnb_app/airbnb/static
+    networks:
+      app_network:
+        aliases:
+          - daphne
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 2
+        order: start-first
+        failure_action: rollback
+        delay: 10s
+      rollback_config:
+        parallelism: 0
+        order: stop-first
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 5
+        window: 60s
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.daphne.rule=Host(`airproject.xyz`) && PathPrefix(`/ws`)"
+        - "traefik.http.routers.daphne.entrypoints=websecure"
+        - "traefik.http.routers.daphne.tls.certresolver=letsencryptresolver"
+        - "traefik.http.services.daphne.loadbalancer.server.port=8001"
+
+  server:
+    image: romanreznikov/backend:${CI_COMMIT_SHORT_SHA}
+    env_file:
+      - ${ENV}
+    environment:
+      - DEBUG=0
+      - ENVIRONMENT=prod
+      - DJANGO_SETTINGS_MODULE=airbnb.settings.pro
+    command: >
+      bash -c "cd /home/app/web/airbnb_app/
+      && python manage.py migrate --noinput
+      && python manage.py collectstatic --no-input
+      && gunicorn -c /home/app/web/config/gunicorn_config.py airbnb.wsgi"
+    depends_on:
+      - redis
+    networks:
+        app_network:
+          aliases:
+            - server
+    volumes:
+      - ./config/postgres/certs/root.crt:${POSTGRES_SSL_CERT_DOCKER_PATH:-/usr/local/etc/.postgresql/root.crt}
+      - static_volume:/home/app/web/airbnb_app/airbnb/static
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 2
+        order: start-first
+        failure_action: rollback
+        delay: 15s
+      rollback_config:
+        parallelism: 0
+        order: stop-first
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 5
+        window: 60s
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.server.rule=Host(`airproject.xyz`)"
+        - "traefik.http.routers.server.entrypoints=websecure"
+        - "traefik.http.routers.server.tls.certresolver=letsencryptresolver"
+        - "traefik.http.services.server.loadbalancer.server.port=8000"
+    healthcheck:
+      start_period: 60s
+      interval: 10s
+      retries: 10
+      test: curl --fail -s http://localhost:8000/api/v1/realty/ || exit 1
+
+  celery:
+    image: romanreznikov/backend:${CI_COMMIT_SHORT_SHA}
+    env_file:
+      - ${ENV}
+    command: >
+      bash -c "cd /home/app/web/airbnb_app/
+      && celery -A airbnb worker -l info"
+    depends_on:
+      - redis
+      - server
+    networks:
+      - app_network
+    volumes:
+      - ./config/postgres/certs/root.crt:${POSTGRES_SSL_CERT_DOCKER_PATH:-/usr/local/etc/.postgresql/root.crt}
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        order: start-first
+        failure_action: pause
+        delay: 10s
+      rollback_config:
+        parallelism: 0
+        order: stop-first
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    healthcheck:
+      start_period: 60s
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      test: cd airbnb_app/ && celery -A airbnb inspect ping || exit 1
+
+  flower:
+    image: mher/flower:0.9.5
+    env_file:
+      - ${ENV}
+    environment:
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - FLOWER_PORT=${FLOWER_PORT}
+    ports:
+      - "8888:8888"
+    depends_on:
+      - redis
+      - celery
+    networks:
+        app_network:
+    volumes:
+      - ./config/postgres/certs/root.crt:${POSTGRES_SSL_CERT_DOCKER_PATH:-/usr/local/etc/.postgresql/root.crt}
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        order: start-first
+        failure_action: rollback
+        delay: 10s
+      rollback_config:
+        parallelism: 0
+        order: stop-first
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+
+  celery_beat:
+    image: romanreznikov/backend:${CI_COMMIT_SHORT_SHA}
+    env_file:
+      - ${ENV}
+    command: >
+      bash -c "cd /home/app/web/airbnb_app/
+      && celery -A airbnb beat -l info --pidfile= --scheduler django_celery_beat.schedulers:DatabaseScheduler"
+    depends_on:
+      - redis
+      - server
+      - celery
+    networks:
+      - app_network
+    volumes:
+      - ./config/postgres/certs/root.crt:${POSTGRES_SSL_CERT_DOCKER_PATH:-/usr/local/etc/.postgresql/root.crt}
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        order: start-first
+        failure_action: rollback
+        delay: 10s
+      rollback_config:
+        parallelism: 0
+        order: stop-first
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    healthcheck:
+      start_period: 60s
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      test: cd airbnb_app/ && celery -A airbnb inspect ping || exit 1
+
+networks:
+  app_network:
+
+volumes:
+  static_volume:
+  traefik-certificates:
+  crontabs:
+  redis_data:
