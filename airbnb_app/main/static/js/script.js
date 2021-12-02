@@ -108,12 +108,12 @@ realtyFilterInputs.each(function () {
 
 
 // Live chat
-function webSocketChatBot() {
-    $('#live-chat header').on('click', function() {
-        $('.chat').slideToggle(300, 'swing');
-        $input.focus();
-    });
+function changeAirHelperStatusColor(color='#1a8a34') {
+    const styleElem = document.head.appendChild(document.createElement("style"));
+    styleElem.innerHTML = `#live-chat header span.chat-bot-header:before {background: ${color};}`;
+}
 
+function webSocketChatBot() {
     const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
     const url = `${ws_scheme}://${window.location.host}/ws/chat-bot/`;
 
@@ -136,6 +136,14 @@ function webSocketChatBot() {
             $input.val('');
         }
     });
+
+    chatSocket.onopen = function (e) {
+        changeAirHelperStatusColor('#1a8a34');
+        $('#live-chat header').on('click', function() {
+            $('.chat').slideToggle(300, 'swing');
+            $input.focus();
+        });
+    }
 
     chatSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);
@@ -171,13 +179,14 @@ function webSocketChatBot() {
 
     chatSocket.onclose = function (e) {
         console.error('Chat socket closed unexpectedly');
+        changeAirHelperStatusColor('#c51111');
     };
 
     $input.keyup(function (e) {
-    if (e.which === 13) {
-        // submit with enter/return key
-        $submit.click();
-    }
+        if (e.which === 13) {
+            // submit with enter/return key
+            $submit.click();
+        }
     });
 }
 
