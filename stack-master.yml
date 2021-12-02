@@ -30,10 +30,10 @@ services:
         parallelism: 0
         order: stop-first
       restart_policy:
-        condition: on-failure
+        condition: any
         delay: 10s
-        max_attempts: 3
-        window: 60s
+        max_attempts: 10
+        window: 30s
     healthcheck:
       start_period: 60s
       interval: 10s
