@@ -26,7 +26,7 @@ def _send_email_with_attachments(
         email_from: Optional[str] = None,
         alternatives: Optional[List[Any]] = None,
 ) -> None:
-    """Send email with optional alternatives (html files, pdf, etc.)."""
+    """Sends an email with optional alternatives (html files, pdf, etc.)."""
     email = EmailMultiAlternatives(
         subject=subject,
         body=body,
