@@ -131,10 +131,12 @@ class RealtyDetailView(generic.DetailView):
         return context
 
 
-class RealtyEditView(LoginRequiredMixin,
-                     RealtySessionDataRequiredMixin,
-                     generic.base.TemplateResponseMixin,
-                     generic.View):
+class RealtyEditView(
+    LoginRequiredMixin,
+    RealtySessionDataRequiredMixin,
+    generic.base.TemplateResponseMixin,
+    generic.View,
+):
     """View for creating or updating a single Realty."""
 
     template_name = 'realty/realty/form.html'
@@ -265,9 +267,11 @@ class RealtyEditView(LoginRequiredMixin,
         )
 
 
-class RealtyGeneralInfoEditView(LoginRequiredMixin,
-                                generic.base.TemplateResponseMixin,
-                                generic.View):
+class RealtyGeneralInfoEditView(
+    LoginRequiredMixin,
+    generic.base.TemplateResponseMixin,
+    generic.View,
+):
     """View for editing Realty general info (part of the multi-step form).
 
     Step-1
@@ -318,10 +322,12 @@ class RealtyGeneralInfoEditView(LoginRequiredMixin,
         )
 
 
-class RealtyLocationEditView(LoginRequiredMixin,
-                             RealtySessionDataRequiredMixin,
-                             generic.base.TemplateResponseMixin,
-                             generic.View):
+class RealtyLocationEditView(
+    LoginRequiredMixin,
+    RealtySessionDataRequiredMixin,
+    generic.base.TemplateResponseMixin,
+    generic.View,
+):
     """View for editing Realty location (part of the multi-step form).
 
     Step-2
@@ -369,10 +375,12 @@ class RealtyLocationEditView(LoginRequiredMixin,
         )
 
 
-class RealtyDescriptionEditView(LoginRequiredMixin,
-                                RealtySessionDataRequiredMixin,
-                                generic.base.TemplateResponseMixin,
-                                generic.View):
+class RealtyDescriptionEditView(
+    LoginRequiredMixin,
+    RealtySessionDataRequiredMixin,
+    generic.base.TemplateResponseMixin,
+    generic.View,
+):
     """View for editing realty description (part of multi-step form).
 
     Step-3
@@ -422,9 +430,11 @@ class RealtyDescriptionEditView(LoginRequiredMixin,
         )
 
 
-class RealtyImageOrderView(LoginRequiredMixin,
-                           JsonRequestResponseMixin,
-                           generic.View):
+class RealtyImageOrderView(
+    LoginRequiredMixin,
+    JsonRequestResponseMixin,
+    generic.View,
+):
     """View for changing RealtyImages' order."""
 
     def post(self, request, *args, **kwargs):
