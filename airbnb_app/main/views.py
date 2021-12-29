@@ -16,9 +16,11 @@ class HomePageView(generic.TemplateView):
 
         # TODO: get most popular cities (by views + booking count, - Redis, sorted set (another milestone)
         context['popular_cities']: QuerySet = get_all_realty_cities()[:DISPLAYED_CITIES_COUNT]
-        context['meta_description'] = "Find vacation rentals, cabins, beach houses, " \
-                                      "unique homes and experiences around the world - " \
-                                      "all made possible by hosts on Air."
+        context['meta_description'] = (
+            "Find vacation rentals, cabins, beach houses, "
+            "unique homes and experiences around the world - "
+            "all made possible by hosts on Air."
+        )
 
         return context
 
