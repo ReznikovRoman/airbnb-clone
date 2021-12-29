@@ -16,4 +16,5 @@ class SubscriberAdmin(admin.ModelAdmin):
                 account</a>""",
             )
         return 'No account with this email'
+
     get_user_link.short_description = 'user link'
