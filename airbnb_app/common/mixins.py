@@ -10,7 +10,9 @@ class SessionDataRequiredMixin:
     redirect_url: str = None
 
     def dispatch(self, request: HttpRequest, *args, **kwargs):
-        if self.required_session_data and \
-                not all(required_data in request.session for required_data in self.required_session_data):
+        if (
+                self.required_session_data and
+                not all(required_data in request.session for required_data in self.required_session_data)
+        ):
             return HttpResponseRedirect(self.redirect_url)
         return super(SessionDataRequiredMixin, self).dispatch(request, *args, **kwargs)
