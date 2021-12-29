@@ -1,4 +1,3 @@
-
 # Indicates that confirmation email has been sent successfully
 EMAIL_SENT_SUCCESSFULLY_RESPONSE_MESSAGE = "We've sent a confirmation email to your email address"
 

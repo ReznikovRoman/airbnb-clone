@@ -30,9 +30,11 @@ from .services import (create_jwt_token_for_user_with_additional_fields, get_pho
 from .tokens import account_activation_token
 
 
-class SignUpView(AnonymousUserRequiredMixin,
-                 generic.base.TemplateResponseMixin,
-                 generic.View):
+class SignUpView(
+    AnonymousUserRequiredMixin,
+    generic.base.TemplateResponseMixin,
+    generic.View,
+):
     """View for creating a new account."""
 
     form_class = SignUpForm
@@ -104,16 +106,20 @@ class ActivationRequiredView(generic.TemplateView):
     template_name = 'accounts/registration/account_activation_required.html'
 
 
-class AccountSettingsDashboardView(LoginRequiredMixin,
-                                   generic.TemplateView):
+class AccountSettingsDashboardView(
+    LoginRequiredMixin,
+    generic.TemplateView,
+):
     """View for showing an account dashboard."""
 
     template_name = 'accounts/settings/settings_dashboard.html'
 
 
-class PersonalInfoEditView(LoginRequiredMixin,
-                           generic.base.TemplateResponseMixin,
-                           generic.View):
+class PersonalInfoEditView(
+    LoginRequiredMixin,
+    generic.base.TemplateResponseMixin,
+    generic.View,
+):
     """View for editing user personal info."""
 
     template_name = 'accounts/settings/user_form.html'
@@ -154,9 +160,10 @@ class PersonalInfoEditView(LoginRequiredMixin,
                 send_verification_link(get_current_site(request).domain, request.scheme, user)
 
             # if phone number has been changed or verification code hasn't been delivered
-            if 'phone_number' in self.profile_form.changed_data or \
-                    get_phone_code_status_by_user_id(user_id) == VERIFICATION_CODE_STATUS_FAILED:
-
+            if (
+                    'phone_number' in self.profile_form.changed_data or
+                    get_phone_code_status_by_user_id(user_id) == VERIFICATION_CODE_STATUS_FAILED
+            ):
                 if profile_cleaned_data.get('phone_number', None):  # if it is not blank
                     twilio_payload = handle_phone_number_change(
                         user_profile=user_profile,
@@ -165,8 +172,8 @@ class PersonalInfoEditView(LoginRequiredMixin,
                     )
 
                     # if SMS code hasn't been sent yet
-                    if twilio_payload.status.lower() in (TWILIO_MESSAGE_STATUS_CODES_FAILED,
-                                                         VERIFICATION_CODE_STATUS_FAILED):
+                    failed_status_codes = (TWILIO_MESSAGE_STATUS_CODES_FAILED, VERIFICATION_CODE_STATUS_FAILED)
+                    if twilio_payload.status.lower() in failed_status_codes:
                         set_phone_code_status_by_user_id(
                             user_id=user_id,
                             phone_code_status=VERIFICATION_CODE_STATUS_FAILED,
@@ -193,8 +200,10 @@ class PersonalInfoEditView(LoginRequiredMixin,
         )
 
 
-class ProfileShowView(generic.base.TemplateResponseMixin,
-                      generic.View):
+class ProfileShowView(
+    generic.base.TemplateResponseMixin,
+    generic.View,
+):
     """View for displaying a user profile."""
 
     template_name = 'accounts/profile/show.html'
@@ -224,9 +233,11 @@ class ProfileShowView(generic.base.TemplateResponseMixin,
         )
 
 
-class ProfileImageEditView(LoginRequiredMixin,
-                           generic.base.TemplateResponseMixin,
-                           generic.View):
+class ProfileImageEditView(
+    LoginRequiredMixin,
+    generic.base.TemplateResponseMixin,
+    generic.View,
+):
     """View for editing a profile image."""
 
     template_name = 'accounts/profile/edit_image.html'
@@ -259,9 +270,11 @@ class ProfileImageEditView(LoginRequiredMixin,
         )
 
 
-class ProfileDescriptionEditView(LoginRequiredMixin,
-                                 generic.base.TemplateResponseMixin,
-                                 generic.View):
+class ProfileDescriptionEditView(
+    LoginRequiredMixin,
+    generic.base.TemplateResponseMixin,
+    generic.View,
+):
     """View for editing profile description."""
 
     template_name = 'accounts/profile/edit_description.html'
@@ -293,8 +306,10 @@ class ProfileDescriptionEditView(LoginRequiredMixin,
         )
 
 
-class SecurityDashboardView(LoginRequiredMixin,
-                            generic.TemplateView):
+class SecurityDashboardView(
+    LoginRequiredMixin,
+    generic.TemplateView,
+):
     """View for showing a `Login & Security` dashboard."""
 
     template_name = 'accounts/settings/security_dashboard.html'
@@ -306,10 +321,12 @@ class SecurityDashboardView(LoginRequiredMixin,
         return context
 
 
-class PhoneNumberConfirmPageView(UnconfirmedPhoneNumberRequiredMixin,
-                                 LoginRequiredMixin,
-                                 generic.base.TemplateResponseMixin,
-                                 generic.View):
+class PhoneNumberConfirmPageView(
+    UnconfirmedPhoneNumberRequiredMixin,
+    LoginRequiredMixin,
+    generic.base.TemplateResponseMixin,
+    generic.View,
+):
     """View for confirming a phone number (by a verification SMS code)."""
 
     template_name = 'accounts/settings/confirm_phone.html'
@@ -355,9 +372,11 @@ class PhoneNumberConfirmPageView(UnconfirmedPhoneNumberRequiredMixin,
         )
 
 
-class SendConfirmationEmailView(UnconfirmedEmailRequiredMixin,
-                                LoginRequiredMixin,
-                                generic.View):
+class SendConfirmationEmailView(
+    UnconfirmedEmailRequiredMixin,
+    LoginRequiredMixin,
+    generic.View,
+):
     """View for sending a confirmation email to a user."""
 
     def get(self, request: AuthenticatedHttpRequest, *args, **kwargs):

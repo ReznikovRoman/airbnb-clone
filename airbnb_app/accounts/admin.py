@@ -42,6 +42,7 @@ class CustomUserAdmin(UserAdmin):
             f"""<a href="{reverse('admin:accounts_profile_change', args=(obj.profile.id,))}">{obj.first_name}'s
            profile</a>""",
         )
+
     get_profile_link.short_description = 'profile link'
 
 
@@ -60,6 +61,7 @@ class SMSLogAdmin(admin.ModelAdmin):
             f"""<a href="{reverse('admin:accounts_profile_change', args=(obj.profile.id,))}">
             {obj.profile.user.first_name}'s profile</a>""",
         )
+
     get_profile_link.short_description = 'profile link'
 
 
