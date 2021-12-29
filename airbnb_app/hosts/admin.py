@@ -14,4 +14,5 @@ class RealtyHostAdmin(admin.ModelAdmin):
             f"""<a href="{reverse('admin:accounts_customuser_change', args=(obj.user.id,))}">
             {obj.user.first_name}'s account page</a>""",
         )
+
     get_account_link.short_description = 'account link'

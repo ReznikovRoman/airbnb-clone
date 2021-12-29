@@ -7,9 +7,11 @@ from accounts.services import has_user_profile_image
 from common.types import AuthenticatedHttpRequest
 
 
-class BecomeHostView(LoginRequiredMixin,
-                     ActivatedAccountRequiredMixin,
-                     generic.View):
+class BecomeHostView(
+    LoginRequiredMixin,
+    ActivatedAccountRequiredMixin,
+    generic.View,
+):
     """View for handling new hosts."""
 
     def get(self, request: AuthenticatedHttpRequest, *args, **kwargs):
@@ -19,9 +21,11 @@ class BecomeHostView(LoginRequiredMixin,
             return redirect(reverse('hosts:missing_image'))
 
 
-class HostMissingImageView(LoginRequiredMixin,
-                           ActivatedAccountRequiredMixin,
-                           generic.TemplateView):
+class HostMissingImageView(
+    LoginRequiredMixin,
+    ActivatedAccountRequiredMixin,
+    generic.TemplateView,
+):
     """View for showing a 'missing profile image' error page."""
 
     template_name = 'hosts/host/missing_image.html'

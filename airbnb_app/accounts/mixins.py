@@ -25,7 +25,6 @@ class ActivatedAccountRequiredMixin:
         if not request.user.is_authenticated:
             return redirect(reverse('accounts:login'))
 
-        # TODO: Add cooldown for sending confirmation emails (Redis, another milestone)
         if not request.user.is_email_confirmed:
             send_verification_link(get_current_site(request).domain, request.scheme, request.user)
             return redirect(reverse('accounts:activation_required'))
@@ -40,8 +39,10 @@ class UnconfirmedPhoneNumberRequiredMixin:
         if not request.user.is_authenticated:
             return redirect(reverse('accounts:login'))
 
-        if request.user.profile.is_phone_number_confirmed or \
-                request.user.profile.phone_number is None:
+        if (
+                request.user.profile.is_phone_number_confirmed or
+                request.user.profile.phone_number is None
+        ):
             return redirect(reverse('accounts:settings_dashboard'))
 
         return super(UnconfirmedPhoneNumberRequiredMixin, self).dispatch(request, *args, **kwargs)

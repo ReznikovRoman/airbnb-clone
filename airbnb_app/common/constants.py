@@ -1,4 +1,3 @@
-
 # Indicates that verification code (sms) hasn't been sent
 VERIFICATION_CODE_STATUS_FAILED = "failed"
 

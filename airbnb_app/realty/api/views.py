@@ -27,6 +27,7 @@ class RealtyListApiView(generics.ListCreateAPIView):
     )
 
     def post(self, request: Request, *args, **kwargs):
+        # TODO: finish API (`hosts`)
         host_pk = request.user.host.id
         request.data['host_pk'] = host_pk
         request.data['host'] = {'user': {'profile': {}}}

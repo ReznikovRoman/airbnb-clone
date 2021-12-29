@@ -12,20 +12,23 @@ services:
       - server
       - daphne
     command:
-      # Docker swarm configuration
+      # docker swarm configuration
       - "--providers.docker.endpoint=unix:///var/run/docker.sock"
       - "--providers.docker.swarmMode=true"
       - "--providers.docker.exposedbydefault=false"
       - "--providers.docker.network=app_network"
-      # Entrypoints configuration
+
+      # entrypoints configuration
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
+
       # SSL configuration
       - "--certificatesresolvers.letsencryptresolver.acme.httpchallenge=true"
       - "--certificatesresolvers.letsencryptresolver.acme.httpchallenge.entrypoint=web"
       - "--certificatesresolvers.letsencryptresolver.acme.email=romanreznikov2002@yandex.ru"
       - "--certificatesresolvers.letsencryptresolver.acme.storage=/letsencrypt/acme.json"
-      # Enable dashboard
+
+      # enable dashboard
       - "--api.dashboard=true"
       - "--api"
     volumes:
@@ -55,6 +58,7 @@ services:
         window: 60s
       labels:
         - "traefik.enable=true"
+
         # global redirect to https
         - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)"
         - "traefik.http.routers.http-catchall.entrypoints=web"
@@ -73,6 +77,7 @@ services:
         - "traefik.http.routers.traefik.entrypoints=websecure"
         - "traefik.http.routers.traefik.middlewares=authtraefik"
         - "traefik.http.middlewares.authtraefik.basicauth.users=admin:$$apr1$$o6eYRTgC$$xXcKmm/pqAp5767ez4yuP0"
+
   redis:
     image: redis:6.2.6-alpine
     env_file:
@@ -81,9 +86,9 @@ services:
     networks:
       - app_network
     volumes:
-      - ./config/postgres/certs/root.crt:${POSTGRES_SSL_CERT_DOCKER_PATH:-/usr/local/etc/.postgresql/root.crt}
       - redis_data:/data
       - crontabs:/etc/crontabs
+      - ./config/postgres/certs/root.crt:${POSTGRES_SSL_CERT_DOCKER_PATH:-/usr/local/etc/.postgresql/root.crt}
       - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
     deploy:
       replicas: 1
@@ -115,8 +120,8 @@ services:
     depends_on:
       - redis
     volumes:
-      - ./config/postgres/certs/root.crt:${POSTGRES_SSL_CERT_DOCKER_PATH:-/usr/local/etc/.postgresql/root.crt}
       - static_volume:/home/app/web/airbnb_app/airbnb/static
+      - ./config/postgres/certs/root.crt:${POSTGRES_SSL_CERT_DOCKER_PATH:-/usr/local/etc/.postgresql/root.crt}
     networks:
       app_network:
         aliases:
@@ -163,8 +168,8 @@ services:
           aliases:
             - server
     volumes:
-      - ./config/postgres/certs/root.crt:${POSTGRES_SSL_CERT_DOCKER_PATH:-/usr/local/etc/.postgresql/root.crt}
       - static_volume:/home/app/web/airbnb_app/airbnb/static
+      - ./config/postgres/certs/root.crt:${POSTGRES_SSL_CERT_DOCKER_PATH:-/usr/local/etc/.postgresql/root.crt}
     deploy:
       replicas: 2
       update_config:
@@ -302,6 +307,6 @@ networks:
 
 volumes:
   static_volume:
-  traefik-certificates:
-  crontabs:
   redis_data:
+  crontabs:
+  traefik-certificates:

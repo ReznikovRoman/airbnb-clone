@@ -22,7 +22,10 @@ class SubscribeView(generic.View):
             user = user_qs.first()
 
             # if there is a user with the given email and he is not subscribed
-            if user_qs.exists() and (not get_subscriber_by_user(user=user).exists()):
+            if (
+                    user_qs.exists() and
+                    not get_subscriber_by_user(user=user).exists()
+            ):
                 new_subscriber.user = user
                 new_subscriber.save(update_fields=["user"])
 
