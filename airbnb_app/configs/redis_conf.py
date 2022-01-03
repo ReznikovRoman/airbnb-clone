@@ -11,7 +11,7 @@ redis_instance = redis.Redis(
     charset=settings.DEFAULT_CHARSET,
     decode_responses=settings.REDIS_DECODE_RESPONSES,
 )
-if settings.PROJECT_ENVIRONMENT == settings.EnvironmentType.PROD.value:
+if not settings.DEBUG:
     hosts = settings.REDIS_SENTINEL_HOSTS
     sentinel = Sentinel(
         sentinels=[(host, 26379) for host in hosts],
