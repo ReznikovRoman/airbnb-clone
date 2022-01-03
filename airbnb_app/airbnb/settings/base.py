@@ -3,9 +3,6 @@ from datetime import timedelta
 from pathlib import Path
 from typing import List
 
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
-
 from django.contrib.messages import constants as messages_constants
 from django.urls import reverse_lazy
 
@@ -306,13 +303,6 @@ CHANNEL_LAYERS = {
         },
     },
 }
-
-
-# SENTRY
-SENTRY_CONF = sentry_sdk.init(
-    dsn=os.environ.get("AIRBNB_SENTRY_DSN"),
-    integrations=[DjangoIntegration()],
-)
 
 
 # CKEDITOR
