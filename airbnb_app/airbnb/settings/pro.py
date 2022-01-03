@@ -76,28 +76,6 @@ REDIS_CLUSTER_PASSWORD = os.environ.get("REDIS_CLUSTER_PASSWORD")
 REDIS_DECODE_RESPONSES = True
 
 
-# CHANNELS
-REDIS_CHANNELS_DB = os.environ.get("REDIS_CHANNELS_DB", 5)
-ASGI_APPLICATION = 'airbnb.routing.application'
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            'hosts': [
-                {
-                    "master_name": REDIS_CLUSTER_NAME,
-                    "sentinels": REDIS_CLUSTER_SENTINELS,
-                    "db": REDIS_CHANNELS_DB,
-                    "password": REDIS_CLUSTER_PASSWORD,
-                    "encoding": DEFAULT_CHARSET,
-                    "ssl": None,
-                },
-            ],
-        },
-    },
-}
-
-
 # SENTRY
 SENTRY_CONF = sentry_sdk.init(
     dsn=os.environ.get("AIRBNB_SENTRY_DSN"),
