@@ -1,3 +1,8 @@
+import sentry_sdk
+from sentry_sdk.integrations.celery import CeleryIntegration
+from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.redis import RedisIntegration
+
 from .base import *  # noqa: F401, F403
 
 
@@ -66,3 +71,14 @@ REDIS_SENTINEL_HOSTS = os.environ.get("REDIS_SENTINEL_HOSTS").split(",")
 REDIS_CLUSTER_NAME = os.environ.get("REDIS_CLUSTER_NAME")
 REDIS_CLUSTER_PASSWORD = os.environ.get("REDIS_CLUSTER_PASSWORD")
 REDIS_DECODE_RESPONSES = True
+
+
+# SENTRY
+SENTRY_CONF = sentry_sdk.init(
+    dsn=os.environ.get("AIRBNB_SENTRY_DSN"),
+    integrations=[
+        DjangoIntegration(),
+        RedisIntegration(),
+        CeleryIntegration(),
+    ],
+)
