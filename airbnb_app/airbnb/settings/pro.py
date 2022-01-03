@@ -86,7 +86,7 @@ CELERY_BROKER_TRANSPORT_OPTIONS = {
     "max_retries": 10,
 }
 CELERY_BROKER_USE_SSL = {
-    "ca_certs": REDIS_SSL_CERT_DOCKER_PATH,
+    "ssl_ca_certs": REDIS_SSL_CERT_DOCKER_PATH,
     "ssl_cert_reqs": ssl.CERT_REQUIRED,
 }
 CELERY_RESULT_BACKEND_TRANSPORT_OPTIONS = {
@@ -97,7 +97,7 @@ CELERY_RESULT_BACKEND_TRANSPORT_OPTIONS = {
     },
 }
 CELERY_REDIS_BACKEND_USE_SSL = {
-    "ca_certs": REDIS_SSL_CERT_DOCKER_PATH,
+    "ssl_ca_certs": REDIS_SSL_CERT_DOCKER_PATH,
     "ssl_cert_reqs": ssl.CERT_REQUIRED,
 }
 
