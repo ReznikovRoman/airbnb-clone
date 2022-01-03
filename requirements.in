@@ -15,6 +15,7 @@ django-braces==1.14.0
 django-model-utils==4.1.1
 sorl-thumbnail==12.7.0
 django-redis==5.0.0
+https://github.com/ReznikovRoman/django-sentinel/archive/680c0a4a5d10717fa7a12d12ec65017885802a4a.zip
 django-tinymce==3.3.0
 django-celery-beat==2.2.1
 django-cleanup==5.2.0

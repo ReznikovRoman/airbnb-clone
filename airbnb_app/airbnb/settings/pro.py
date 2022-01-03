@@ -71,9 +71,25 @@ REDIS_SENTINEL_HOSTS = os.environ.get("REDIS_SENTINEL_HOSTS").split(",")
 REDIS_CLUSTER_SENTINELS = [
     (host, 26379) for host in REDIS_SENTINEL_HOSTS
 ]
+REDIS_CLUSTER_SENTINELS_STRING = ",".join(f"{host}:26379" for host in REDIS_SENTINEL_HOSTS)
 REDIS_CLUSTER_NAME = os.environ.get("REDIS_CLUSTER_NAME")
 REDIS_CLUSTER_PASSWORD = os.environ.get("REDIS_CLUSTER_PASSWORD")
 REDIS_DECODE_RESPONSES = True
+
+
+# CACHES
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': f"{REDIS_CLUSTER_NAME}/{REDIS_CLUSTER_SENTINELS_STRING}/{REDIS_CACHE_DB}",
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_sentinel.sentinel.SentinelClient',
+            'PASSWORD': REDIS_CLUSTER_PASSWORD,
+            'USE_SSL': True,
+            'SSL_CA_CERT': REDIS_SSL_CERT_DOCKER_PATH,
+        },
+    },
+}
 
 
 # SESSIONS
