@@ -309,9 +309,8 @@ django-redis==5.0.0 \
     --hash=sha256:048f665bbe27f8ff2edebae6aa9c534ab137f1e8fa7234147ef470df3f3aa9b8 \
     --hash=sha256:97739ca9de3f964c51412d1d7d8aecdfd86737bb197fce6e1ff12620c63c97ee
     # via -r requirements.in
-django-redis-sessions==0.6.2 \
-    --hash=sha256:13b645a4fad4352c111057e44d0987a3163116b0a2f8b141c7d8abe0cab446c9 \
-    --hash=sha256:ba33ecca198f28ddc32d9f03742dc8dfc34c1857b789c75ea8425d6d7d7376be
+django-redis-sessions @ https://github.com/ReznikovRoman/django-redis-sessions/archive/7850779b340607d4aae964bfbe589901e10398ea.zip \
+    --hash=sha256:a40e04a7c88b15e7499546217ea5f95a47e4e191f8c5210d97e735203eefd56f
     # via -r requirements.in
 django-rest-auth==0.9.5 \
     --hash=sha256:f11e12175dafeed772f50d740d22caeab27e99a3caca24ec65e66a8d6de16571
