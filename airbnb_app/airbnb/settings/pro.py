@@ -1,5 +1,3 @@
-import ssl
-
 import sentry_sdk
 from sentry_sdk.integrations.celery import CeleryIntegration
 from sentry_sdk.integrations.django import DjangoIntegration
@@ -79,26 +77,15 @@ REDIS_DECODE_RESPONSES = True
 
 
 # CELERY
-CELERY_REDIS_PASSWORD = REDIS_CLUSTER_PASSWORD
 CELERY_BROKER_TRANSPORT_OPTIONS = {
     "visibility_timeout": 60 * 60,
-    "master_name": REDIS_CLUSTER_NAME,
     "max_retries": 10,
-}
-CELERY_BROKER_USE_SSL = {
-    "ssl_ca_certs": REDIS_SSL_CERT_DOCKER_PATH,
-    "ssl_cert_reqs": ssl.CERT_REQUIRED,
 }
 CELERY_RESULT_BACKEND_TRANSPORT_OPTIONS = {
     "visibility_timeout": 60 * 60,
-    "master_name": REDIS_CLUSTER_NAME,
     "retry_policy": {
         "timeout": 5.0,
     },
-}
-CELERY_REDIS_BACKEND_USE_SSL = {
-    "ssl_ca_certs": REDIS_SSL_CERT_DOCKER_PATH,
-    "ssl_cert_reqs": ssl.CERT_REQUIRED,
 }
 
 
