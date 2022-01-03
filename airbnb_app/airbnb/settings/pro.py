@@ -87,7 +87,7 @@ CELERY_BROKER_TRANSPORT_OPTIONS = {
 }
 CELERY_BROKER_USE_SSL = {
     "ca_certs": REDIS_SSL_CERT_DOCKER_PATH,
-    "cert_reqs": ssl.CERT_REQUIRED,
+    "ssl_cert_reqs": ssl.CERT_REQUIRED,
 }
 CELERY_RESULT_BACKEND_TRANSPORT_OPTIONS = {
     "visibility_timeout": 60 * 60,
@@ -98,7 +98,7 @@ CELERY_RESULT_BACKEND_TRANSPORT_OPTIONS = {
 }
 CELERY_REDIS_BACKEND_USE_SSL = {
     "ca_certs": REDIS_SSL_CERT_DOCKER_PATH,
-    "cert_reqs": ssl.CERT_REQUIRED,
+    "ssl_cert_reqs": ssl.CERT_REQUIRED,
 }
 
 
