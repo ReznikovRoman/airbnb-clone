@@ -67,7 +67,7 @@ class AccountsServicesTests(TestCase):
         self.assertEqual(test_email.to, [test_user.email])
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
-    @mock.patch('common.services.r',
+    @mock.patch('common.services.redis_instance',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
     def test_send_verification_link_correct_body(self):
         """Test that Verification Email's body is correct (subject, content, recipient)."""
@@ -84,8 +84,8 @@ class AccountsServicesTests(TestCase):
                 'token': account_activation_token.make_token(test_user),
             },
         )
-        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
-        r.flushall()
+        redis_instance = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+        redis_instance.flushall()
 
         send_verification_link(domain=test_domain, scheme=test_scheme, user=test_user)
 
@@ -97,7 +97,7 @@ class AccountsServicesTests(TestCase):
         self.assertEqual(test_email.to, [test_user.email])
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
-    @mock.patch('common.services.r',
+    @mock.patch('common.services.redis_instance',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
     def test_send_verification_link_sends_email_if_no_cooldown_yet(self):
         """Test that email is sent if there is no cooldown yet."""
@@ -115,15 +115,15 @@ class AccountsServicesTests(TestCase):
             },
         )
 
-        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
-        r.flushall()
+        redis_instance = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+        redis_instance.flushall()
 
         send_verification_link(domain=test_domain, scheme=test_scheme, user=test_user)
 
         self.assertEqual(len(mail.outbox), 1)
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
-    @mock.patch('common.services.r',
+    @mock.patch('common.services.redis_instance',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
     def test_send_verification_link_no_email_if_cooldown(self):
         """Test that email is not sent if cooldown hasn't ended."""
@@ -141,18 +141,18 @@ class AccountsServicesTests(TestCase):
             },
         )
 
-        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
-        r.flushall()
+        redis_instance = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+        redis_instance.flushall()
         key = f"accounts:user:{test_user.pk}:email.sent"
         timeout = 5
-        r.setex(key, timeout, 1)
+        redis_instance.setex(key, timeout, 1)
 
         send_verification_link(domain=test_domain, scheme=test_scheme, user=test_user)
 
         self.assertEqual(len(mail.outbox), 0)
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
-    @mock.patch('common.services.r',
+    @mock.patch('common.services.redis_instance',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
     def test_send_verification_link_sends_email_after_cooldown(self):
         """Test that email is sent if cooldown has ended."""
@@ -170,11 +170,11 @@ class AccountsServicesTests(TestCase):
             },
         )
 
-        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
-        r.flushall()
+        redis_instance = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+        redis_instance.flushall()
         key = f"accounts:user:{test_user.pk}:email.sent"
         timeout = 1
-        r.setex(key, timeout, 1)
+        redis_instance.setex(key, timeout, 1)
 
         sleep(timeout)
 
@@ -254,7 +254,7 @@ class AccountsServicesTests(TestCase):
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
     @mock.patch('configs.twilio_conf.twilio_client.messages.create')
-    @mock.patch('common.services.r',
+    @mock.patch('common.services.redis_instance',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
     def test_handle_phone_number_change(self, message_mock):
         """Test that user's phone number is now unconfirmed, and SMS verification code was sent."""
@@ -274,7 +274,7 @@ class AccountsServicesTests(TestCase):
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
     @mock.patch('configs.twilio_conf.twilio_client.messages.create')
-    @mock.patch('common.services.r',
+    @mock.patch('common.services.redis_instance',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
     def test_handle_phone_number_change_send_sms_if_no_cooldown(self, message_mock):
         """handle_phone_number_change() sends SMS if there is no cooldown."""
@@ -284,8 +284,8 @@ class AccountsServicesTests(TestCase):
         expected_sid = 'SM87105da94bff44b999e4e6eb90d8eb6a'
         message_mock.return_value = TwilioShortPayload(status=VERIFICATION_CODE_STATUS_DELIVERED, sid=expected_sid)
 
-        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
-        r.flushall()
+        redis_instance = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+        redis_instance.flushall()
 
         handle_phone_number_change(test_profile, test_domain, test_phone_number)
 
@@ -293,7 +293,7 @@ class AccountsServicesTests(TestCase):
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
     @mock.patch('configs.twilio_conf.twilio_client.messages.create')
-    @mock.patch('common.services.r',
+    @mock.patch('common.services.redis_instance',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
     def test_handle_phone_number_change_send_sms_if_cooldown_ended(self, message_mock):
         """handle_phone_number_change() sends SMS if cooldown has ended."""
@@ -303,10 +303,10 @@ class AccountsServicesTests(TestCase):
         expected_sid = 'SM87105da94bff44b999e4e6eb90d8eb6a'
         message_mock.return_value = TwilioShortPayload(status=VERIFICATION_CODE_STATUS_DELIVERED, sid=expected_sid)
 
-        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
-        r.flushall()
+        redis_instance = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+        redis_instance.flushall()
         key = "phone:79851686043:sms.sent"
-        r.setex(key, 1, 1)
+        redis_instance.setex(key, 1, 1)
 
         sleep(1)
 
@@ -316,7 +316,7 @@ class AccountsServicesTests(TestCase):
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
     @mock.patch('configs.twilio_conf.twilio_client.messages.create')
-    @mock.patch('common.services.r',
+    @mock.patch('common.services.redis_instance',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
     def test_handle_phone_number_change_no_sms_if_cooldown_did_not_end(self, message_mock):
         """handle_phone_number_change() doesn't send SMS if cooldown hasn't ended."""
@@ -326,10 +326,10 @@ class AccountsServicesTests(TestCase):
         expected_sid = 'SM87105da94bff44b999e4e6eb90d8eb6a'
         message_mock.return_value = TwilioShortPayload(status=VERIFICATION_CODE_STATUS_DELIVERED, sid=expected_sid)
 
-        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
-        r.flushall()
+        redis_instance = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+        redis_instance.flushall()
         key = "phone:79851686043:sms.sent"
-        r.setex(key, 5, 1)
+        redis_instance.setex(key, 5, 1)
 
         handle_phone_number_change(test_profile, test_domain, test_phone_number)
 
@@ -356,61 +356,61 @@ class AccountsServicesTests(TestCase):
 
         self.assertFalse(is_verification_code_for_profile_valid(test_profile, test_sms_code + '1'))
 
-    @mock.patch('accounts.services.r',
+    @mock.patch('accounts.services.redis_instance',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
     def test_set_phone_code_status_by_user_id_new_item(self):
         """set_phone_code_status_by_user_id() creates `phone_code_status` with the given `user_id` and code_status."""
-        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+        redis_instance = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
 
         user_id = 1
         test_value = VERIFICATION_CODE_STATUS_FAILED
 
         set_phone_code_status_by_user_id(user_id, test_value)
 
-        self.assertEqual(r.get(f"user:{user_id}:phone_code_status"), test_value)
+        self.assertEqual(redis_instance.get(f"user:{user_id}:phone_code_status"), test_value)
 
-    @mock.patch('accounts.services.r',
+    @mock.patch('accounts.services.redis_instance',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
     def test_set_phone_code_status_by_user_id_overwrite_existing(self):
         """set_phone_code_status_by_user_id() overwrites `phone_code_status` if it already exists."""
-        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+        redis_instance = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
 
         user_id = 1
         test_key = f"user:{user_id}:phone_code_status"
         initial_value = VERIFICATION_CODE_STATUS_FAILED
 
-        r.set(test_key, initial_value)
+        redis_instance.set(test_key, initial_value)
 
         new_value = VERIFICATION_CODE_STATUS_DELIVERED
 
         set_phone_code_status_by_user_id(user_id, new_value)
 
-        self.assertEqual(r.get(f"user:{user_id}:phone_code_status"), new_value)
+        self.assertEqual(redis_instance.get(f"user:{user_id}:phone_code_status"), new_value)
 
-    @mock.patch('accounts.services.r',
+    @mock.patch('accounts.services.redis_instance',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
     def test_get_phone_code_status_by_user_id_existing_key(self):
         """get_phone_code_status_by_user_id() returns `phone_code_status` from Redis by the given `user_id`."""
-        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+        redis_instance = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
 
         user_id = 1
         test_key = f"user:{user_id}:phone_code_status"
         test_value = VERIFICATION_CODE_STATUS_FAILED
 
-        r.set(test_key, test_value)
+        redis_instance.set(test_key, test_value)
 
         self.assertEqual(get_phone_code_status_by_user_id(user_id), test_value)
 
-    @mock.patch('accounts.services.r',
+    @mock.patch('accounts.services.redis_instance',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
     def test_get_phone_code_status_by_user_id_no_key(self):
         """get_phone_code_status_by_user_id() returns None if key with the given `user_id` doesn't exist."""
-        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+        redis_instance = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
 
         user_id = 1
         test_key = f"user:{user_id}:phone_code_status"
         test_value = VERIFICATION_CODE_STATUS_FAILED
 
-        r.set(test_key, test_value)
+        redis_instance.set(test_key, test_value)
 
         self.assertIsNone(get_phone_code_status_by_user_id(2))

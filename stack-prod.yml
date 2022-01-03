@@ -89,6 +89,7 @@ services:
       - redis_data:/data
       - crontabs:/etc/crontabs
       - ./config/postgres/certs/root.crt:${POSTGRES_SSL_CERT_DOCKER_PATH:-/usr/local/etc/.postgresql/root.crt}
+      - ./config/redis/certs/YandexInternalRootCA.crt.crt:${REDIS_SSL_CERT_DOCKER_PATH:-/usr/local/share/ca-certificates/Yandex/YandexInternalRootCA.crt}
       - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
     deploy:
       replicas: 1
@@ -122,6 +123,7 @@ services:
     volumes:
       - static_volume:/home/app/web/airbnb_app/airbnb/static
       - ./config/postgres/certs/root.crt:${POSTGRES_SSL_CERT_DOCKER_PATH:-/usr/local/etc/.postgresql/root.crt}
+      - ./config/redis/certs/YandexInternalRootCA.crt.crt:${REDIS_SSL_CERT_DOCKER_PATH:-/usr/local/share/ca-certificates/Yandex/YandexInternalRootCA.crt}
     networks:
       app_network:
         aliases:
@@ -170,6 +172,7 @@ services:
     volumes:
       - static_volume:/home/app/web/airbnb_app/airbnb/static
       - ./config/postgres/certs/root.crt:${POSTGRES_SSL_CERT_DOCKER_PATH:-/usr/local/etc/.postgresql/root.crt}
+      - ./config/redis/certs/YandexInternalRootCA.crt.crt:${REDIS_SSL_CERT_DOCKER_PATH:-/usr/local/share/ca-certificates/Yandex/YandexInternalRootCA.crt}
     deploy:
       replicas: 2
       update_config:
@@ -211,6 +214,7 @@ services:
       - app_network
     volumes:
       - ./config/postgres/certs/root.crt:${POSTGRES_SSL_CERT_DOCKER_PATH:-/usr/local/etc/.postgresql/root.crt}
+      - ./config/redis/certs/YandexInternalRootCA.crt.crt:${REDIS_SSL_CERT_DOCKER_PATH:-/usr/local/share/ca-certificates/Yandex/YandexInternalRootCA.crt}
     deploy:
       replicas: 1
       update_config:
@@ -249,6 +253,7 @@ services:
         app_network:
     volumes:
       - ./config/postgres/certs/root.crt:${POSTGRES_SSL_CERT_DOCKER_PATH:-/usr/local/etc/.postgresql/root.crt}
+      - ./config/redis/certs/YandexInternalRootCA.crt.crt:${REDIS_SSL_CERT_DOCKER_PATH:-/usr/local/share/ca-certificates/Yandex/YandexInternalRootCA.crt}
     deploy:
       replicas: 1
       update_config:
@@ -280,6 +285,7 @@ services:
       - app_network
     volumes:
       - ./config/postgres/certs/root.crt:${POSTGRES_SSL_CERT_DOCKER_PATH:-/usr/local/etc/.postgresql/root.crt}
+      - ./config/redis/certs/YandexInternalRootCA.crt.crt:${REDIS_SSL_CERT_DOCKER_PATH:-/usr/local/share/ca-certificates/Yandex/YandexInternalRootCA.crt}
     deploy:
       replicas: 1
       update_config:

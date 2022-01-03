@@ -247,44 +247,44 @@ class RealtyServicesRealtyTests(TestCase):
             [Realty.objects.get(slug='realty-1')],
         )
 
-    @mock.patch('realty.services.realty.r',
+    @mock.patch('realty.services.realty.redis_instance',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
     def test_get_cached_realty_visits_count_by_id(self):
         """get_cached_realty_visits_count_by_id() returns realty visits count from Redis DB."""
         realty_id = 5
         realty_visits_count = 5
-        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
-        r.flushall()
+        redis_instance = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+        redis_instance.flushall()
 
-        r.set(f"realty:{str(realty_id)}:views_count", realty_visits_count)
+        redis_instance.set(f"realty:{str(realty_id)}:views_count", realty_visits_count)
 
         self.assertEqual(get_cached_realty_visits_count_by_realty_id(realty_id), realty_visits_count)
 
-    @mock.patch('realty.services.realty.r',
+    @mock.patch('realty.services.realty.redis_instance',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
     def test_update_realty_visits_count(self):
         """update_realty_visits_count() increments counter in the Redis DB."""
         realty_id = 5
-        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
-        r.flushall()
+        redis_instance = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+        redis_instance.flushall()
 
         self.assertEqual(get_cached_realty_visits_count_by_realty_id(realty_id), 0)
 
         update_realty_visits_count(realty_id)
         self.assertEqual(get_cached_realty_visits_count_by_realty_id(realty_id), 1)
 
-    @mock.patch('realty.services.realty.r',
+    @mock.patch('realty.services.realty.redis_instance',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
     def test_update_realty_visits_from_redis(self):
         """update_realty_visits_from_redis() updates `visits_count` field in DB using Redis values."""
         realty = Realty.objects.first()
         visits_count = 10
-        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
-        r.flushall()
+        redis_instance = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+        redis_instance.flushall()
 
         self.assertEqual(realty.visits_count, 0)
 
-        r.set(f"realty:{realty.id}:views_count", visits_count)
+        redis_instance.set(f"realty:{realty.id}:views_count", visits_count)
         update_realty_visits_from_redis()
         realty.refresh_from_db()
 
