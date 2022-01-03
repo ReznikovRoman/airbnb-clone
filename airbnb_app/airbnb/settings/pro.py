@@ -68,9 +68,34 @@ else:
 # REDIS
 REDIS_SSL_CERT_DOCKER_PATH = os.environ.get("REDIS_SSL_CERT_DOCKER_PATH")
 REDIS_SENTINEL_HOSTS = os.environ.get("REDIS_SENTINEL_HOSTS").split(",")
+REDIS_CLUSTER_SENTINELS = [
+    (host, 26379) for host in REDIS_SENTINEL_HOSTS
+]
 REDIS_CLUSTER_NAME = os.environ.get("REDIS_CLUSTER_NAME")
 REDIS_CLUSTER_PASSWORD = os.environ.get("REDIS_CLUSTER_PASSWORD")
 REDIS_DECODE_RESPONSES = True
+
+
+# CHANNELS
+REDIS_CHANNELS_DB = os.environ.get("REDIS_CHANNELS_DB", 5)
+ASGI_APPLICATION = 'airbnb.routing.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [
+                {
+                    "master_name": REDIS_CLUSTER_NAME,
+                    "sentinels": REDIS_CLUSTER_SENTINELS,
+                    "db": REDIS_CHANNELS_DB,
+                    "password": REDIS_CLUSTER_PASSWORD,
+                    "encoding": DEFAULT_CHARSET,
+                    "ssl": None,
+                },
+            ],
+        },
+    },
+}
 
 
 # SENTRY

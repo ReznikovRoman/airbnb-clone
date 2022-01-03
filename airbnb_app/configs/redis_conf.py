@@ -12,9 +12,8 @@ redis_instance = redis.Redis(
     decode_responses=settings.REDIS_DECODE_RESPONSES,
 )
 if not settings.DEBUG:
-    hosts = settings.REDIS_SENTINEL_HOSTS
     sentinel = Sentinel(
-        sentinels=[(host, 26379) for host in hosts],
+        sentinels=settings.REDIS_CLUSTER_SENTINELS,
         socket_timeout=0.1,
         ssl=True,
         ssl_ca_certs=settings.REDIS_SSL_CERT_DOCKER_PATH,
