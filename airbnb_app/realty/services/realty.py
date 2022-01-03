@@ -5,7 +5,7 @@ from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.db.models import QuerySet
 
 from common.session_handler import SessionHandler
-from configs.redis_conf import r
+from configs.redis_conf import redis_instance
 from hosts.models import RealtyHost
 
 from ..constants import REALTY_FORM_SESSION_PREFIX
@@ -87,16 +87,16 @@ def get_available_realty_search_results(query: Optional[str] = None) -> 'QuerySe
 
 
 def update_realty_visits_count(realty_id: Union[int, str]) -> int:
-    return int(r.incr(f"realty:{str(realty_id)}:views_count"))
+    return int(redis_instance.incr(f"realty:{str(realty_id)}:views_count"))
 
 
 def get_cached_realty_visits_count_by_realty_id(realty_id: Union[int, str]) -> int:
-    views_count = r.get(f"realty:{str(realty_id)}:views_count")
+    views_count = redis_instance.get(f"realty:{str(realty_id)}:views_count")
     return int(views_count) if views_count is not None else 0
 
 
 def update_realty_visits_from_redis() -> None:
-    for key in r.scan_iter("realty:*:views_count"):
+    for key in redis_instance.scan_iter("realty:*:views_count"):
         realty_id = int(key.split(":")[1])
-        visits_count = r.get(key)
+        visits_count = redis_instance.get(key)
         Realty.objects.filter(id=realty_id).update(visits_count=visits_count)

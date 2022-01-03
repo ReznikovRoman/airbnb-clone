@@ -1,5 +1,6 @@
 import os
 from datetime import timedelta
+from enum import Enum
 from pathlib import Path
 from typing import List
 
@@ -8,6 +9,12 @@ from sentry_sdk.integrations.django import DjangoIntegration
 
 from django.contrib.messages import constants as messages_constants
 from django.urls import reverse_lazy
+
+
+class EnvironmentType(Enum):
+    LOCAL = 'local'
+    TEST = 'test'
+    PROD = 'prod'
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -187,6 +194,15 @@ MESSAGE_TAGS = {
     messages_constants.WARNING: 'alert-warning',
     messages_constants.ERROR: 'alert-danger',
 }
+
+
+# PROJECT
+try:
+    PROJECT_ENVIRONMENT: str = EnvironmentType(
+        value=os.environ.get(key="ENVIRONMENT", default=EnvironmentType.LOCAL.value),
+    ).value
+except ValueError:
+    PROJECT_ENVIRONMENT: str = EnvironmentType.PROD.value
 
 
 # REST FRAMEWORK

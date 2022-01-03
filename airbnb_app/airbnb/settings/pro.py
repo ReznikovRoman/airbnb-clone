@@ -58,3 +58,11 @@ else:
     # MEDIA
     MEDIA_URL = os.environ.get('MEDIA_URL', '/media/')
     MEDIA_ROOT = BASE_DIR / 'airbnb/media/'
+
+
+# REDIS
+REDIS_SSL_CERT_DOCKER_PATH = os.environ.get("REDIS_SSL_CERT_DOCKER_PATH")
+REDIS_SENTINEL_HOSTS = os.environ.get("REDIS_SENTINEL_HOSTS").split(",")
+REDIS_CLUSTER_NAME = os.environ.get("REDIS_CLUSTER_NAME")
+REDIS_CLUSTER_PASSWORD = os.environ.get("REDIS_CLUSTER_PASSWORD")
+REDIS_DECODE_RESPONSES = True

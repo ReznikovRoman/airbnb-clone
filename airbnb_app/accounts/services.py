@@ -14,7 +14,7 @@ from common.constants import (VERIFICATION_CODE_STATUS_COOLDOWN, VERIFICATION_CO
                               VERIFICATION_CODE_STATUS_FAILED)
 from common.services import is_cooldown_ended, set_key_with_timeout
 from common.tasks import send_sms_by_twilio
-from configs.redis_conf import r
+from configs.redis_conf import redis_instance
 from mailings.tasks import send_email_with_attachments
 
 from .jwt import UserEmailRefreshToken
@@ -186,14 +186,14 @@ def set_phone_code_status_by_user_id(
         phone_code_status: Union[VERIFICATION_CODE_STATUS_FAILED, VERIFICATION_CODE_STATUS_DELIVERED],
 ) -> bool:
     key = f"user:{user_id}:phone_code_status"
-    return r.set(key, phone_code_status)
+    return redis_instance.set(key, phone_code_status)
 
 
 def get_phone_code_status_by_user_id(
         user_id: Union[int, str],
 ) -> Union[VERIFICATION_CODE_STATUS_FAILED, VERIFICATION_CODE_STATUS_DELIVERED, None]:
     key = f"user:{user_id}:phone_code_status"
-    return r.get(key)
+    return redis_instance.get(key)
 
 
 def create_jwt_token_for_user_with_additional_fields(*, user: CustomUser) -> dict[str, str]:

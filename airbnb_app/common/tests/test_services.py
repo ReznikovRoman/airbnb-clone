@@ -88,42 +88,42 @@ class CommonServicesTests(SimpleTestCase):
         result = get_keys_with_prefixes(names, prefix='test')
         self.assertListEqual(result, ['test_name1', 'test_name2'])
 
-    @mock.patch('common.services.r',
+    @mock.patch('common.services.redis_instance',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
     def test_is_cooldown_ended_false(self):
         """is_cooldown_ended() returns False if cooldown hasn't ended."""
-        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+        redis_instance = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
         key = "user:1:email.sent"
-        r.set(key, 1)
+        redis_instance.set(key, 1)
         self.assertFalse(is_cooldown_ended(key))
 
-    @mock.patch('common.services.r',
+    @mock.patch('common.services.redis_instance',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
     def test_is_cooldown_ended_true_no_key(self):
         """is_cooldown_ended() returns True if there is no `key` in the db."""
-        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
-        r.flushall()
+        redis_instance = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+        redis_instance.flushall()
         key = "user:1:email.sent"
         self.assertTrue(is_cooldown_ended(key))
 
-    @mock.patch('common.services.r',
+    @mock.patch('common.services.redis_instance',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
     def test_is_cooldown_ended_true_cooldown_ended(self):
         """is_cooldown_ended() returns True if cooldown has ended."""
-        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
-        r.flushall()
+        redis_instance = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+        redis_instance.flushall()
         key = "user:1:email.sent"
         timeout = 1
         set_key_with_timeout(key, timeout, 1)
         sleep(1)
         self.assertTrue(is_cooldown_ended(key))
 
-    @mock.patch('common.services.r',
+    @mock.patch('common.services.redis_instance',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
     def test_is_cooldown_ended_false_cooldown_did_not_end(self):
         """is_cooldown_ended() returns False if cooldown hasn't ended yet."""
-        r = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
-        r.flushall()
+        redis_instance = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
+        redis_instance.flushall()
         key = "user:1:email.sent"
         timeout = 1
         set_key_with_timeout(key, timeout, 1)
