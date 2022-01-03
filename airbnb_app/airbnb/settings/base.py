@@ -293,7 +293,7 @@ CELERY_TASK_SERIALIZER = 'json'
 
 # CHANNELS
 REDIS_CHANNELS_DB = os.environ.get("REDIS_CHANNELS_DB", 5)
-REDIS_CHANNELS_URL = os.environ.get("REDIS_CHANNELS_URL", "redis://localhost:6379/2")
+REDIS_CHANNELS_URL = os.environ.get("REDIS_CHANNELS_URL", f"redis://localhost:6379/{REDIS_CHANNELS_DB}")
 ASGI_APPLICATION = 'airbnb.routing.application'
 CHANNEL_LAYERS = {
     'default': {
