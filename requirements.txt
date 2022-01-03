@@ -308,12 +308,17 @@ django-phonenumber-field==5.2.0 \
 django-redis==5.0.0 \
     --hash=sha256:048f665bbe27f8ff2edebae6aa9c534ab137f1e8fa7234147ef470df3f3aa9b8 \
     --hash=sha256:97739ca9de3f964c51412d1d7d8aecdfd86737bb197fce6e1ff12620c63c97ee
-    # via -r requirements.in
+    # via
+    #   -r requirements.in
+    #   django-sentinel
 django-redis-sessions @ https://github.com/ReznikovRoman/django-redis-sessions/archive/7850779b340607d4aae964bfbe589901e10398ea.zip \
     --hash=sha256:a40e04a7c88b15e7499546217ea5f95a47e4e191f8c5210d97e735203eefd56f
     # via -r requirements.in
 django-rest-auth==0.9.5 \
     --hash=sha256:f11e12175dafeed772f50d740d22caeab27e99a3caca24ec65e66a8d6de16571
+    # via -r requirements.in
+django-sentinel @ https://github.com/ReznikovRoman/django-sentinel/archive/680c0a4a5d10717fa7a12d12ec65017885802a4a.zip \
+    --hash=sha256:a4a2567b3a263df08e848e1749f10a58aeb3fe6ea4a7ec1d48ba6b6d695786c1
     # via -r requirements.in
 django-storages==1.12.3 \
     --hash=sha256:204a99f218b747c46edbfeeb1310d357f83f90fa6a6024d8d0a3f422570cee84 \
