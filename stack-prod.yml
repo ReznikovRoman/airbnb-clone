@@ -78,39 +78,6 @@ services:
         - "traefik.http.routers.traefik.middlewares=authtraefik"
         - "traefik.http.middlewares.authtraefik.basicauth.users=admin:$$apr1$$o6eYRTgC$$xXcKmm/pqAp5767ez4yuP0"
 
-  redis:
-    image: redis:6.2.6-alpine
-    env_file:
-      - ${ENV}
-    user: root
-    networks:
-      - app_network
-    volumes:
-      - redis_data:/data
-      - crontabs:/etc/crontabs
-      - ./config/postgres/certs/root.crt:${POSTGRES_SSL_CERT_DOCKER_PATH:-/usr/local/etc/.postgresql/root.crt}
-      - ./config/redis/certs/YandexInternalRootCA.crt:${REDIS_SSL_CERT_DOCKER_PATH:-/usr/local/share/ca-certificates/Yandex/YandexInternalRootCA.crt}
-      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
-    deploy:
-      replicas: 1
-      update_config:
-        parallelism: 2
-        order: start-first
-        failure_action: rollback
-        delay: 10s
-      rollback_config:
-        parallelism: 0
-        order: stop-first
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 60s
-      placement:
-        constraints: [ node.role == manager ]
-    healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
-
   daphne:
     image: romanreznikov/backend:${CI_COMMIT_SHORT_SHA}
     env_file:
@@ -118,8 +85,6 @@ services:
     command: >
       bash -c "cd /home/app/web/airbnb_app/
       && daphne -b 0.0.0.0 -p 8001 airbnb.asgi:application"
-    depends_on:
-      - redis
     volumes:
       - static_volume:/home/app/web/airbnb_app/airbnb/static
       - ./config/postgres/certs/root.crt:${POSTGRES_SSL_CERT_DOCKER_PATH:-/usr/local/etc/.postgresql/root.crt}
@@ -163,8 +128,6 @@ services:
       && python manage.py migrate --noinput
       && python manage.py collectstatic --no-input
       && gunicorn -c /home/app/web/config/gunicorn_config.py airbnb.wsgi"
-    depends_on:
-      - redis
     networks:
         app_network:
           aliases:
@@ -208,7 +171,6 @@ services:
       bash -c "cd /home/app/web/airbnb_app/
       && celery -A airbnb worker -l info"
     depends_on:
-      - redis
       - server
     networks:
       - app_network
@@ -247,7 +209,6 @@ services:
     ports:
       - "8888:8888"
     depends_on:
-      - redis
       - celery
     networks:
         app_network:
@@ -278,7 +239,6 @@ services:
       bash -c "cd /home/app/web/airbnb_app/
       && celery -A airbnb beat -l info --pidfile= --scheduler django_celery_beat.schedulers:DatabaseScheduler"
     depends_on:
-      - redis
       - server
       - celery
     networks:
@@ -313,6 +273,5 @@ networks:
 
 volumes:
   static_volume:
-  redis_data:
   crontabs:
   traefik-certificates:
