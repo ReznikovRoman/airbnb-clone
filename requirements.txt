@@ -311,8 +311,8 @@ django-redis==5.0.0 \
     # via
     #   -r requirements.in
     #   django-sentinel
-django-redis-sessions @ https://github.com/ReznikovRoman/django-redis-sessions/archive/7850779b340607d4aae964bfbe589901e10398ea.zip \
-    --hash=sha256:a40e04a7c88b15e7499546217ea5f95a47e4e191f8c5210d97e735203eefd56f
+django-redis-sessions @ https://github.com/ReznikovRoman/django-redis-sessions/archive/c52e37fed3174deddca6cf59c33551ead3d513d3.zip \
+    --hash=sha256:970da8fc081a6208b7584e79f5310dec43195071cb02a7009924495e9cac6041
     # via -r requirements.in
 django-rest-auth==0.9.5 \
     --hash=sha256:f11e12175dafeed772f50d740d22caeab27e99a3caca24ec65e66a8d6de16571
