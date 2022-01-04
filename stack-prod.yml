@@ -137,7 +137,7 @@ services:
       - ./config/postgres/certs/root.crt:${POSTGRES_SSL_CERT_DOCKER_PATH:-/usr/local/etc/.postgresql/root.crt}
       - ./config/redis/certs/YandexInternalRootCA.crt:${REDIS_SSL_CERT_DOCKER_PATH:-/usr/local/share/ca-certificates/Yandex/YandexInternalRootCA.crt}
     deploy:
-      replicas: 2
+      replicas: 1
       update_config:
         parallelism: 2
         order: start-first
