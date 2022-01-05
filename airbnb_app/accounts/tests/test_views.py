@@ -12,7 +12,7 @@ from django.urls import reverse, reverse_lazy
 from accounts.models import CustomUser, SMSLog
 from addresses.models import Address
 from common.collections import TwilioShortPayload
-from common.constants import VERIFICATION_CODE_STATUS_DELIVERED, VERIFICATION_CODE_STATUS_FAILED
+from common.constants import VERIFICATION_CODE_STATUS_DELIVERED
 from common.testing_utils import create_invalid_image, create_valid_image
 from hosts.models import RealtyHost
 from hosts.services import get_host_or_none_by_user
@@ -527,45 +527,6 @@ class PersonalInfoEditViewTests(TestCase):
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
     @mock.patch('common.services.redis_instance',
                 fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True))
-    def test_phone_number_resend(self, message_mock):
-        """Test that if verification code hasn't been sent, new code will be sent."""
-        test_user = CustomUser.objects.get(email='user2@gmail.com')
-        redis_key = f"user:{test_user.id}:phone_code_status"
-        form_data = {
-            'first_name': test_user.first_name,
-            'last_name': test_user.last_name,
-            'email': test_user.email,
-            'phone_number': '8 (301) 123-45-67',  # update phone number
-        }
-
-        expected_sid = 'SM87105da94bff44b999e4e6eb90d8eb6a'
-        message_mock.return_value = TwilioShortPayload(status=VERIFICATION_CODE_STATUS_FAILED, sid=expected_sid)
-
-        redis_instance = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
-        r_common = fakeredis.FakeStrictRedis(server=self.common_redis_server, charset="utf-8", decode_responses=True)
-        r_common.flushall()
-
-        self.client.login(email='user2@gmail.com', password='test')
-        self.client.post(reverse('accounts:user_info_edit'), data=form_data)
-
-        # Twilio SMS
-        self.assertTrue(message_mock.called)
-
-        # Message has been delivered --> `phone_code_status` has appropriate value
-        self.assertEqual(redis_instance.get(redis_key), VERIFICATION_CODE_STATUS_FAILED)
-
-        # Try to post form data again
-        self.client.post(reverse('accounts:user_info_edit'), data=form_data)
-
-        # Twilio tries to send a verification code again (because it wasn't delivered earlier)
-        self.assertTrue(message_mock.called)
-
-    @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
-    @mock.patch('configs.twilio_conf.twilio_client.messages.create')
-    @mock.patch('accounts.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
-    @mock.patch('common.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True))
     def test_phone_number_remove(self, message_mock):
         """Test that if phone number has been removed, phone number is `unconfirmed`."""
         test_user = CustomUser.objects.get(email='user2@gmail.com')
@@ -937,44 +898,6 @@ class PhoneNumberConfirmPageViewTests(TestCase):
 
         self.assertIsInstance(response.context['verification_code_form'], VerificationCodeForm)
         self.assertTrue(response.context['is_verification_code_sent'])
-
-    @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
-    @mock.patch('configs.twilio_conf.twilio_client.messages.create')
-    @mock.patch('accounts.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
-    @mock.patch('common.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True))
-    def test_correct_context_data_if_verification_code_not_sent(self, message_mock):
-        """Test that request.context is correct if verification code hasn't been sent."""
-        test_user = CustomUser.objects.get(email='user2@gmail.com')
-        test_phone_number = '89851234567'
-        user_form_data = {
-            'email': test_user.email,
-            'first_name': test_user.first_name,
-            'last_name': test_user.last_name,
-            'phone_number': test_phone_number,
-        }
-
-        redis_instance = fakeredis.FakeStrictRedis(
-            server=self.common_redis_server,
-            charset="utf-8",
-            decode_responses=True,
-        )
-        redis_instance.flushall()
-
-        expected_sid = 'SM87105da94bff44b999e4e6eb90d8eb6a'
-        message_mock.return_value = TwilioShortPayload(status=VERIFICATION_CODE_STATUS_FAILED, sid=expected_sid)
-
-        # user without a phone_number
-        self.client.login(email='user2@gmail.com', password='test')
-
-        # add new phone number
-        self.client.post(reverse('accounts:user_info_edit'), data=user_form_data)
-
-        response = self.client.get(reverse('accounts:confirm_phone'))
-
-        self.assertIsInstance(response.context['verification_code_form'], VerificationCodeForm)
-        self.assertFalse(response.context['is_verification_code_sent'])
 
     @mock.patch('accounts.services.redis_instance',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))

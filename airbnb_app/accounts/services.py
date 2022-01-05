@@ -169,12 +169,12 @@ def handle_phone_number_change(user_profile: Profile, site_domain: str, new_phon
 
     update_phone_number_confirmation_status(user_profile, is_phone_number_confirmed=False)
 
-    # FIXME: do not use AsyncResult here
-    return TwilioShortPayload.parse_raw(send_sms_by_twilio.delay(
+    send_sms_by_twilio.delay(
         body=f"Your {site_domain} verification code is: {sms_verification_code}",
         sms_from=settings.TWILIO_PHONE_NUMBER,
         sms_to=new_phone_number,
-    ).get())
+    )
+    return TwilioShortPayload(status=VERIFICATION_CODE_STATUS_DELIVERED, sid=None)
 
 
 def get_verification_code_from_digits_dict(digits_dict: Dict[str, str]) -> str:
