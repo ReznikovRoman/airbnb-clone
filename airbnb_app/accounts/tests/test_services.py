@@ -17,9 +17,9 @@ from common.constants import VERIFICATION_CODE_STATUS_DELIVERED, VERIFICATION_CO
 
 from ..services import (add_user_to_group, get_phone_code_status_by_user_id, get_user_by_email, get_user_by_pk,
                         get_user_from_uid, get_verification_code_from_digits_dict, handle_phone_number_change,
-                        has_user_profile_image, is_verification_code_for_profile_valid, send_greeting_email,
-                        send_verification_link, set_phone_code_status_by_user_id,
-                        update_phone_number_confirmation_status, update_user_email_confirmation_status)
+                        has_user_profile_image, is_verification_code_for_profile_valid, send_verification_link,
+                        set_phone_code_status_by_user_id, update_phone_number_confirmation_status,
+                        update_user_email_confirmation_status)
 from ..tokens import account_activation_token
 
 
@@ -42,29 +42,6 @@ class AccountsServicesTests(TestCase):
             last_name='Brown',
             password='test',
         )
-
-    @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
-    def test_send_greeting_email_correct_body(self):
-        """Test that Greeting Email's body is correct (subject, content, recipient)."""
-        test_user: CustomUser = CustomUser.objects.first()
-        test_domain = 'airbnb'
-        test_scheme = 'https'
-        test_content = render_to_string(
-            template_name='accounts/emails/greeting_email.html',
-            context={
-                'protocol': test_scheme,
-                'domain': test_domain,
-            },
-        )
-
-        send_greeting_email(domain=test_domain, scheme=test_scheme, user=test_user)
-
-        test_email = mail.outbox[0]
-
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertEqual(test_email.subject, 'Thanks for signing up')
-        self.assertEqual(test_email.body, test_content)
-        self.assertEqual(test_email.to, [test_user.email])
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
     @mock.patch('common.services.redis_instance',

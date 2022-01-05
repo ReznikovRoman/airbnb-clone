@@ -15,49 +15,43 @@ from common.constants import (VERIFICATION_CODE_STATUS_COOLDOWN, VERIFICATION_CO
 from common.services import is_cooldown_ended, set_key_with_timeout
 from common.tasks import send_sms_by_twilio
 from configs.redis_conf import redis_instance
-from mailings.tasks import send_email_with_attachments
+from mailings.services import send_email_with_attachments
 
 from .jwt import UserEmailRefreshToken
 from .models import (CustomUser, CustomUserManager, Profile, SMSLog, get_default_profile_image,
                      get_default_profile_image_full_url)
+from .tasks import send_email_verification_code
 from .tokens import account_activation_token
 
 
-def send_greeting_email(domain: str, scheme: str, user: CustomUser) -> None:
-    """Send greeting email to the given user."""
-    subject = 'Thanks for signing up'
+def _send_password_reset_email(
+        *,
+        subject_template_name: str,
+        email_template_name: str,
+        context: dict,
+        from_email: str,
+        to_email: str,
+        html_email_template_name: Optional[str] = None,
+) -> None:
+    subject = render_to_string(subject_template_name, context)
+    # Email subject *must not* contain newlines
+    subject = ''.join(subject.splitlines())
+    body = render_to_string(email_template_name, context)
 
-    text_content = render_to_string(
-        template_name='accounts/emails/greeting_email.html',
-        context={
-            'protocol': scheme,
-            'domain': domain,
-        },
-    )
+    html = get_template(html_email_template_name)
+    html_content = html.render(context)
 
-    html = get_template(template_name='accounts/emails/greeting_email.html')
-    html_content = html.render(
-        context={
-            'protocol': scheme,
-            'domain': domain,
-        },
-    )
-    send_email_with_attachments.delay(
-        subject,
-        text_content,
-        email_to=[user.email],
+    send_email_with_attachments(
+        subject=subject,
+        body=body,
+        email_to=[to_email],
+        email_from=from_email,
         alternatives=[(html_content, 'text/html')],
     )
 
 
-def send_verification_link(domain: str, scheme: str, user: CustomUser) -> None:
-    """Send email verification link."""
-    user_id = user.pk
-    email_sent_key = f"accounts:user:{user_id}:email.sent"
-    if not is_cooldown_ended(email_sent_key):
-        return
-    set_key_with_timeout(email_sent_key, 60, 1)
-
+def send_verification_email(*, domain: str, scheme: str, user_id: Union[int, str]) -> None:
+    user = CustomUser.objects.get(pk=user_id)
     subject = 'Activate your account'
     text_content = render_to_string(
         template_name='accounts/registration/account_activation_email.html',
@@ -79,12 +73,23 @@ def send_verification_link(domain: str, scheme: str, user: CustomUser) -> None:
             'token': account_activation_token.make_token(user),
         },
     )
-    send_email_with_attachments.delay(
-        subject,
-        text_content,
+    send_email_with_attachments(
+        subject=subject,
+        body=text_content,
         email_to=[user.email],
         alternatives=[(html_content, 'text/html')],
     )
+
+
+def send_verification_link(domain: str, scheme: str, user: CustomUser) -> None:
+    """Send email verification link."""
+    user_id = user.pk
+    email_sent_key = f"accounts:user:{user_id}:email.sent"
+    if not is_cooldown_ended(email_sent_key):
+        return
+    set_key_with_timeout(email_sent_key, 60, 1)
+
+    send_email_verification_code.delay(domain=domain, scheme=scheme, user_id=user_id)
 
 
 def get_user_by_pk(pk: Union[int, str]) -> Optional[CustomUser]:
@@ -162,6 +167,7 @@ def handle_phone_number_change(user_profile: Profile, site_domain: str, new_phon
 
     update_phone_number_confirmation_status(user_profile, is_phone_number_confirmed=False)
 
+    # FIXME: do not use AsyncResult here
     return TwilioShortPayload.parse_raw(send_sms_by_twilio.delay(
         body=f"Your {site_domain} verification code is: {sms_verification_code}",
         sms_from=settings.TWILIO_PHONE_NUMBER,
