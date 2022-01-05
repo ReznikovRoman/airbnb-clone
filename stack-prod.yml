@@ -271,45 +271,13 @@ services:
       retries: 3
       test: cd airbnb_app/ && celery -A airbnb inspect ping || exit 1
 
-  flower:
-    image: mher/flower:0.9.5
-    env_file:
-      - ${ENV}
-    environment:
-      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
-      - FLOWER_PORT=${FLOWER_PORT}
-    ports:
-      - "8888:8888"
-    depends_on:
-      - celery
-    networks:
-        app_network:
-    volumes:
-      - ./config/postgres/certs/root.crt:${POSTGRES_SSL_CERT_DOCKER_PATH:-/usr/local/etc/.postgresql/root.crt}
-      - ./config/redis/certs/YandexInternalRootCA.crt:${REDIS_SSL_CERT_DOCKER_PATH:-/usr/local/share/ca-certificates/Yandex/YandexInternalRootCA.crt}
-    deploy:
-      replicas: 1
-      update_config:
-        parallelism: 1
-        order: start-first
-        failure_action: rollback
-        delay: 10s
-      rollback_config:
-        parallelism: 0
-        order: stop-first
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120s
-
   celery_beat:
     image: romanreznikov/backend:${CI_COMMIT_SHORT_SHA}
     env_file:
       - ${ENV}
     command: >
       bash -c "cd /home/app/web/airbnb_app/
-      && celery -A airbnb beat -l info --pidfile= --scheduler django_celery_beat.schedulers:DatabaseScheduler"
+      && celery -A airbnb beat -l debug --pidfile= --scheduler django_celery_beat.schedulers:DatabaseScheduler"
     depends_on:
       - server
       - celery
