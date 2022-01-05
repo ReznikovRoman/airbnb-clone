@@ -192,12 +192,6 @@ services:
         delay: 5s
         max_attempts: 3
         window: 120s
-    healthcheck:
-      start_period: 60s
-      interval: 10s
-      timeout: 10s
-      retries: 3
-      test: cd airbnb_app/ && celery -A airbnb inspect ping || exit 1
 
   celery_high_priority:
     image: romanreznikov/backend:${CI_COMMIT_SHORT_SHA}
@@ -228,12 +222,6 @@ services:
         delay: 5s
         max_attempts: 3
         window: 120s
-    healthcheck:
-      start_period: 60s
-      interval: 10s
-      timeout: 10s
-      retries: 3
-      test: cd airbnb_app/ && celery -A airbnb inspect ping || exit 1
 
   celery_low_priority:
     image: romanreznikov/backend:${CI_COMMIT_SHORT_SHA}
@@ -264,12 +252,6 @@ services:
         delay: 5s
         max_attempts: 3
         window: 120s
-    healthcheck:
-      start_period: 60s
-      interval: 10s
-      timeout: 10s
-      retries: 3
-      test: cd airbnb_app/ && celery -A airbnb inspect ping || exit 1
 
   celery_beat:
     image: romanreznikov/backend:${CI_COMMIT_SHORT_SHA}
@@ -301,12 +283,6 @@ services:
         delay: 5s
         max_attempts: 3
         window: 120s
-    healthcheck:
-      start_period: 60s
-      interval: 10s
-      timeout: 10s
-      retries: 5
-      test: cd airbnb_app/ && celery -A airbnb inspect ping || exit 1
 
 networks:
   app_network:
