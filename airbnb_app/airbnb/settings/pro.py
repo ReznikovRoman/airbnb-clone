@@ -46,13 +46,18 @@ MIDDLEWARE = [
 # STATIC
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
+
+# Message Queue [AWS SQS Api compatible]
+AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+AWS_DEFAULT_REGION = os.environ.get("AWS_DEFAULT_REGION")
+
+
 # MEDIA
 if USE_S3_BUCKET:
     # Yandex Object Storage settings
     YANDEX_STORAGE_CUSTOM_DOMAIN = f'{YANDEX_STORAGE_BUCKET_NAME}.storage.yandexcloud.net'
     DEFAULT_FILE_STORAGE = 'storage_backends.YandexObjectMediaStorage'
-    AWS_ACCESS_KEY_ID = os.environ.get('YANDEX_STORAGE_ACCESS_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = os.environ.get('YANDEX_STORAGE_SECRET_ACCESS_KEY')
     AWS_S3_ENDPOINT_URL = 'https://storage.yandexcloud.net'
     AWS_S3_REGION_NAME = 'ru-central1'
 
@@ -112,10 +117,16 @@ SESSION_REDIS_SSL_CA_CERT_PATH = REDIS_SSL_CERT_DOCKER_PATH
 
 
 # CELERY
+YMQ_ENDPOINT = os.environ.get("YMQ_ENDPOINT")
 CELERY_BROKER_TRANSPORT_OPTIONS = {
-    "visibility_timeout": 60 * 60,
+    "visibility_timeout": 12 * 60 * 60,
     "max_retries": 10,
+    "is_secure": True,
+    "region": os.environ.get("AWS_DEFAULT_REGION"),
 }
+CELERY_BROKER_URL = (
+    f"sqs://{AWS_ACCESS_KEY_ID}:{AWS_SECRET_ACCESS_KEY}@{YMQ_ENDPOINT}"
+)
 CELERY_RESULT_BACKEND_TRANSPORT_OPTIONS = {
     "visibility_timeout": 60 * 60,
     "retry_policy": {

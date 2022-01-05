@@ -24,6 +24,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         postgresql-client \
         postgresql-contrib \
         netcat \
+        libcurl4-gnutls-dev \
+        librtmp-dev \
         && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*

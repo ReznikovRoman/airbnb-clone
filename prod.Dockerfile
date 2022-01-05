@@ -17,6 +17,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         musl-dev \
         libc-dev \
         git \
+        libcurl4-gnutls-dev \
+        librtmp-dev \
         && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
@@ -46,6 +48,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         curl \
         netcat \
         git \
+        libcurl4-gnutls-dev \
+        librtmp-dev \
         && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
