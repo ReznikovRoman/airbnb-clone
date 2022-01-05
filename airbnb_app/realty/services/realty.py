@@ -2,7 +2,7 @@ from typing import List, Optional, Tuple, Union
 
 from django.conf import settings
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
-from django.db.models import QuerySet
+from django.db.models import F, QuerySet
 
 from common.session_handler import SessionHandler
 from configs.redis_conf import redis_instance
@@ -96,7 +96,12 @@ def get_cached_realty_visits_count_by_realty_id(realty_id: Union[int, str]) -> i
 
 
 def update_realty_visits_from_redis() -> None:
-    for key in redis_instance.scan_iter("realty:*:views_count"):
+    for key in redis_instance.scan_iter(match="realty:*:views_count"):
         realty_id = int(key.split(":")[1])
-        visits_count = redis_instance.get(key)
-        Realty.objects.filter(id=realty_id).update(visits_count=visits_count)
+        visits_count = redis_instance.get(name=key)
+        Realty.objects.filter(
+            id=realty_id,
+        ).update(
+            visits_count=F('visits_count') + visits_count,
+        )
+        redis_instance.set(name=key, value=0)

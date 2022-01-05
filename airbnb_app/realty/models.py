@@ -115,12 +115,6 @@ class Realty(models.Model):
         self.location.delete()
         super(Realty, self).delete(using, keep_parents)
 
-    @property
-    def get_cached_visits_count(self):
-        from .services.realty import get_cached_realty_visits_count_by_realty_id
-
-        return get_cached_realty_visits_count_by_realty_id(self.id)
-
 
 class RealtyView(models.Model):  # noqa: DJ10, DJ08, DJ11
     """Postgres View."""
