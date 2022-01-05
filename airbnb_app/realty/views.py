@@ -94,7 +94,7 @@ class RealtyListView(generic.ListView):
                 realty_qs=available_realty,
             )
 
-        available_realty = RealtyShortFilter(self.request.GET, available_realty).qs
+        available_realty = RealtyShortFilter(data=self.request.GET, queryset=available_realty).qs
 
         return available_realty
 
@@ -125,8 +125,12 @@ class RealtyDetailView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(RealtyDetailView, self).get_context_data(**kwargs)
+        realty_object: Realty = self.get_object()
 
-        context['realty_views_count'] = get_cached_realty_visits_count_by_realty_id(self.get_object().id)
+        context['realty_views_count'] = (
+                realty_object.visits_count +
+                get_cached_realty_visits_count_by_realty_id(realty_id=realty_object.id)
+        )
 
         return context
 

@@ -127,7 +127,7 @@
                         <hr class="divider--short">
                         <div class="realty-card--properties">
                             <ul class="rooms color-secondary">
-                                {% with realty_views=realty.get_cached_visits_count  %}
+                                {% with realty_views=realty.visits_count  %}
                                     <li>{{ realty_views }} view{{ realty_views|pluralize }}</li>
                                 {% endwith %}
                             </ul>
