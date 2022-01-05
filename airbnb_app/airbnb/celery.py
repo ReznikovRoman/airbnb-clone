@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from common.types import seconds  # isort: skip
 
 
-settings_module = os.environ.get('DJANGO_SETTINGS_MODULE', 'airbnb.settings.local')
+settings_module = os.environ.get('DJANGO_SETTINGS_MODULE', 'airbnb.settings.pro')
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', settings_module)
 

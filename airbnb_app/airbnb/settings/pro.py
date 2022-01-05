@@ -124,9 +124,7 @@ CELERY_BROKER_TRANSPORT_OPTIONS = {
     "is_secure": True,
     "region": os.environ.get("AWS_DEFAULT_REGION"),
 }
-CELERY_BROKER_URL = (
-    f"sqs://{AWS_ACCESS_KEY_ID}:{AWS_SECRET_ACCESS_KEY}@{YMQ_ENDPOINT}"
-)
+CELERY_BROKER_URL = f"sqs://{AWS_ACCESS_KEY_ID}:{AWS_SECRET_ACCESS_KEY}@{YMQ_ENDPOINT}"
 CELERY_RESULT_BACKEND_TRANSPORT_OPTIONS = {
     "visibility_timeout": 60 * 60,
     "retry_policy": {
