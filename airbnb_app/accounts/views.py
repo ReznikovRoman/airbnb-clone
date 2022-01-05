@@ -8,25 +8,31 @@ from django.shortcuts import redirect, reverse
 from django.urls import reverse_lazy
 from django.views import generic
 
-from common.constants import (TWILIO_MESSAGE_STATUS_CODES_FAILED, VERIFICATION_CODE_STATUS_DELIVERED,
-                              VERIFICATION_CODE_STATUS_FAILED)
+from common.constants import (
+    TWILIO_MESSAGE_STATUS_CODES_FAILED, VERIFICATION_CODE_STATUS_DELIVERED, VERIFICATION_CODE_STATUS_FAILED,
+)
 from common.types import AuthenticatedHttpRequest
 from hosts.services import get_host_or_none_by_user
 from realty.services.realty import get_available_realty_by_host
 
-from .constants import (EMAIL_CONFIRMATION_FAILURE_RESPONSE_MESSAGE, EMAIL_CONFIRMATION_SUCCESS_RESPONSE_MESSAGE,
-                        EMAIL_SENT_SUCCESSFULLY_RESPONSE_MESSAGE, PHONE_NUMBER_CONFIRMATION_SUCCESS_RESPONSE_MESSAGE,
-                        PROFILE_INFO_EDIT_SUCCESS_RESPONSE_MESSAGE, SMS_CODE_INVALID_RESPONSE_MESSAGE,
-                        SMS_NOT_DELIVERED_RESPONSE_MESSAGE, SMS_SENT_SUCCESSFULLY_RESPONSE_MESSAGE)
-from .forms import (CustomPasswordResetForm, ProfileDescriptionForm, ProfileForm, ProfileImageForm, SignUpForm,
-                    UserInfoForm, VerificationCodeForm)
+from .constants import (
+    EMAIL_CONFIRMATION_FAILURE_RESPONSE_MESSAGE, EMAIL_CONFIRMATION_SUCCESS_RESPONSE_MESSAGE,
+    EMAIL_SENT_SUCCESSFULLY_RESPONSE_MESSAGE, PHONE_NUMBER_CONFIRMATION_SUCCESS_RESPONSE_MESSAGE,
+    PROFILE_INFO_EDIT_SUCCESS_RESPONSE_MESSAGE, SMS_CODE_INVALID_RESPONSE_MESSAGE, SMS_NOT_DELIVERED_RESPONSE_MESSAGE,
+    SMS_SENT_SUCCESSFULLY_RESPONSE_MESSAGE,
+)
+from .forms import (
+    CustomPasswordResetForm, ProfileDescriptionForm, ProfileForm, ProfileImageForm, SignUpForm, UserInfoForm,
+    VerificationCodeForm,
+)
 from .mixins import AnonymousUserRequiredMixin, UnconfirmedEmailRequiredMixin, UnconfirmedPhoneNumberRequiredMixin
 from .models import CustomUser, Profile
-from .services import (create_jwt_token_for_user_with_additional_fields, get_phone_code_status_by_user_id,
-                       get_user_by_pk, get_user_from_uid, get_verification_code_from_digits_dict,
-                       handle_phone_number_change, is_verification_code_for_profile_valid, send_verification_link,
-                       set_phone_code_status_by_user_id, update_phone_number_confirmation_status,
-                       update_user_email_confirmation_status)
+from .services import (
+    create_jwt_token_for_user_with_additional_fields, get_phone_code_status_by_user_id, get_user_by_pk,
+    get_user_from_uid, get_verification_code_from_digits_dict, handle_phone_number_change,
+    is_verification_code_for_profile_valid, send_verification_link, set_phone_code_status_by_user_id,
+    update_phone_number_confirmation_status, update_user_email_confirmation_status,
+)
 from .tokens import account_activation_token
 
 

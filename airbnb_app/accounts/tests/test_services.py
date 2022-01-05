@@ -15,11 +15,12 @@ from accounts.models import CustomUser, Profile, SMSLog
 from common.collections import TwilioShortPayload
 from common.constants import VERIFICATION_CODE_STATUS_DELIVERED, VERIFICATION_CODE_STATUS_FAILED
 
-from ..services import (add_user_to_group, get_phone_code_status_by_user_id, get_user_by_email, get_user_by_pk,
-                        get_user_from_uid, get_verification_code_from_digits_dict, handle_phone_number_change,
-                        has_user_profile_image, is_verification_code_for_profile_valid, send_verification_link,
-                        set_phone_code_status_by_user_id, update_phone_number_confirmation_status,
-                        update_user_email_confirmation_status)
+from ..services import (
+    add_user_to_group, get_phone_code_status_by_user_id, get_user_by_email, get_user_by_pk, get_user_from_uid,
+    get_verification_code_from_digits_dict, handle_phone_number_change, has_user_profile_image,
+    is_verification_code_for_profile_valid, send_verification_link, set_phone_code_status_by_user_id,
+    update_phone_number_confirmation_status, update_user_email_confirmation_status,
+)
 from ..tokens import account_activation_token
 
 

@@ -10,16 +10,18 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
 from common.collections import TwilioShortPayload
-from common.constants import (VERIFICATION_CODE_STATUS_COOLDOWN, VERIFICATION_CODE_STATUS_DELIVERED,
-                              VERIFICATION_CODE_STATUS_FAILED)
+from common.constants import (
+    VERIFICATION_CODE_STATUS_COOLDOWN, VERIFICATION_CODE_STATUS_DELIVERED, VERIFICATION_CODE_STATUS_FAILED,
+)
 from common.services import is_cooldown_ended, set_key_with_timeout
 from common.tasks import send_sms_by_twilio
 from configs.redis_conf import redis_instance
 from mailings.services import send_email_with_attachments
 
 from .jwt import UserEmailRefreshToken
-from .models import (CustomUser, CustomUserManager, Profile, SMSLog, get_default_profile_image,
-                     get_default_profile_image_full_url)
+from .models import (
+    CustomUser, CustomUserManager, Profile, SMSLog, get_default_profile_image, get_default_profile_image_full_url,
+)
 from .tasks import send_email_verification_code
 from .tokens import account_activation_token
 

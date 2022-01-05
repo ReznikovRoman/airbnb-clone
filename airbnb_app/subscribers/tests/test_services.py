@@ -10,8 +10,10 @@ from hosts.models import RealtyHost
 from realty.models import Realty, RealtyTypeChoices
 
 from ..models import Subscriber
-from ..services import (get_subscriber_by_email, get_subscriber_by_user, send_recommendation_email_to_subscriber,
-                        set_user_for_subscriber, update_email_for_subscriber_by_user)
+from ..services import (
+    get_subscriber_by_email, get_subscriber_by_user, send_recommendation_email_to_subscriber, set_user_for_subscriber,
+    update_email_for_subscriber_by_user,
+)
 
 
 class SubscribersServicesTests(TestCase):

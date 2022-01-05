@@ -20,8 +20,10 @@ from realty.models import Realty
 from realty.services.realty import get_available_realty_by_host
 
 from .. import views
-from ..forms import (CustomPasswordResetForm, ProfileDescriptionForm, ProfileForm, ProfileImageForm, SignUpForm,
-                     UserInfoForm, VerificationCodeForm)
+from ..forms import (
+    CustomPasswordResetForm, ProfileDescriptionForm, ProfileForm, ProfileImageForm, SignUpForm, UserInfoForm,
+    VerificationCodeForm,
+)
 
 
 MEDIA_ROOT = tempfile.mkdtemp()
