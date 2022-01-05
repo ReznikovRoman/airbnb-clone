@@ -6,8 +6,10 @@ from django.test import SimpleTestCase
 
 from accounts.models import CustomUser, Profile
 
-from ..forms import (AdminCustomUserChangeForm, ProfileDescriptionForm, ProfileForm, ProfileImageForm, SignUpForm,
-                     UserInfoForm, VerificationCodeForm)
+from ..forms import (
+    AdminCustomUserChangeForm, ProfileDescriptionForm, ProfileForm, ProfileImageForm, SignUpForm, UserInfoForm,
+    VerificationCodeForm,
+)
 
 
 class SignUpFormTests(SimpleTestCase):

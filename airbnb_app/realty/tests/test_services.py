@@ -16,12 +16,13 @@ from ..constants import REALTY_FORM_KEYS_COLLECTOR_NAME, REALTY_FORM_SESSION_PRE
 from ..models import Amenity, Realty, RealtyImage, RealtyTypeChoices
 from ..services.images import get_image_by_id, get_images_by_realty_id, update_images_order
 from ..services.order import ImageOrder, convert_response_to_orders
-from ..services.realty import (get_all_available_realty, get_amenity_ids_from_session,
-                               get_available_realty_by_city_slug, get_available_realty_by_host,
-                               get_available_realty_count_by_city, get_available_realty_filtered_by_type,
-                               get_available_realty_search_results, get_cached_realty_visits_count_by_realty_id,
-                               get_last_realty, get_n_latest_available_realty, get_or_create_realty_host_by_user,
-                               update_realty_visits_count, update_realty_visits_from_redis)
+from ..services.realty import (
+    get_all_available_realty, get_amenity_ids_from_session, get_available_realty_by_city_slug,
+    get_available_realty_by_host, get_available_realty_count_by_city, get_available_realty_filtered_by_type,
+    get_available_realty_search_results, get_cached_realty_visits_count_by_realty_id, get_last_realty,
+    get_n_latest_available_realty, get_or_create_realty_host_by_user, update_realty_visits_count,
+    update_realty_visits_from_redis,
+)
 
 
 MEDIA_ROOT = tempfile.mkdtemp()

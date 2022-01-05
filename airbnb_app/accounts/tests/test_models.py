@@ -2,8 +2,9 @@ from django.contrib.auth.models import ContentType, Permission
 from django.core.validators import MinLengthValidator
 from django.test import TestCase
 
-from ..models import (CustomUser, Profile, ProfileGenderChoices, SMSLog, get_default_profile_image,
-                      get_profile_image_upload_path)
+from ..models import (
+    CustomUser, Profile, ProfileGenderChoices, SMSLog, get_default_profile_image, get_profile_image_upload_path,
+)
 
 
 class CustomUserModelTests(TestCase):

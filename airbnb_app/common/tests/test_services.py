@@ -13,8 +13,10 @@ from accounts.models import CustomUser, Profile
 
 from ..collections import FormWithModel, TwilioShortPayload
 from ..constants import VERIFICATION_CODE_STATUS_DELIVERED, VERIFICATION_CODE_STATUS_FAILED
-from ..services import (_send_sms_by_twilio, create_name_with_prefix, get_field_names_from_form, get_keys_with_prefixes,
-                        get_required_fields_from_form_with_model, is_cooldown_ended, set_key_with_timeout)
+from ..services import (
+    _send_sms_by_twilio, create_name_with_prefix, get_field_names_from_form, get_keys_with_prefixes,
+    get_required_fields_from_form_with_model, is_cooldown_ended, set_key_with_timeout,
+)
 
 
 class CommonServicesTests(SimpleTestCase):

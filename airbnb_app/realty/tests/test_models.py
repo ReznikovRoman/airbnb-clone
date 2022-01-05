@@ -11,8 +11,10 @@ from common.testing_utils import create_valid_image
 from hosts.models import RealtyHost
 
 from ..fields import OrderField
-from ..models import (Amenity, AvailableRealtyManager, Realty, RealtyImage, RealtyImageModelManager, RealtyManager,
-                      RealtyTypeChoices, get_realty_image_upload_path)
+from ..models import (
+    Amenity, AvailableRealtyManager, Realty, RealtyImage, RealtyImageModelManager, RealtyManager, RealtyTypeChoices,
+    get_realty_image_upload_path,
+)
 
 
 MEDIA_ROOT = tempfile.mkdtemp()

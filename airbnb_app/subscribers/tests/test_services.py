@@ -1,10 +1,19 @@
+from django.conf import settings
+from django.core import mail
+from django.template.loader import render_to_string
 from django.test import TestCase
+from django.test.utils import override_settings
 
 from accounts.models import CustomUser
+from addresses.models import Address
+from hosts.models import RealtyHost
+from realty.models import Realty, RealtyTypeChoices
 
 from ..models import Subscriber
-from ..services import (get_subscriber_by_email, get_subscriber_by_user, set_user_for_subscriber,
-                        update_email_for_subscriber_by_user)
+from ..services import (
+    get_subscriber_by_email, get_subscriber_by_user, send_recommendation_email_to_subscriber, set_user_for_subscriber,
+    update_email_for_subscriber_by_user,
+)
 
 
 class SubscribersServicesTests(TestCase):
@@ -53,6 +62,32 @@ class SubscribersServicesTests(TestCase):
             password='test',
         )
         Subscriber.objects.create(user=test_user3, email=test_user3.email)
+
+    @classmethod
+    def setUpTestData(cls):
+        test_user1 = CustomUser.objects.create_user(
+            email='host1@gmail.com',
+            first_name='John',
+            last_name='Doe',
+            password='test',
+        )
+        test_host1 = RealtyHost.objects.create(user=test_user1)
+        test_location1 = Address.objects.create(
+            country='Russia',
+            city='Moscow',
+            street='Arbat, 20',
+        )
+        Realty.objects.create(
+            name='Realty 1',
+            description='Desc 1',
+            is_available=True,
+            realty_type=RealtyTypeChoices.APARTMENTS,
+            beds_count=1,
+            max_guests_count=2,
+            price_per_night=40,
+            location=test_location1,
+            host=test_host1,
+        )
 
     def test_get_subscriber_by_email_correct_qs(self):
         """get_subscriber_by_email() returns a QuerySet[Subscriber] if subscriber with the given `email` exists."""
@@ -120,3 +155,33 @@ class SubscribersServicesTests(TestCase):
         update_email_for_subscriber_by_user(test_user)
 
         self.assertEqual(test_sub.email, 'user5@gmail.com')
+
+    @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+    def test_send_recommendation_email_to_subscriber_correct_body(self):
+        """Test that Verification Email's body is correct (subject, content, recipient)."""
+        test_subscriber: Subscriber = Subscriber.objects.get(email='user4@gmail.com')
+        realty_recommendations = Realty.objects.all()
+        test_domain = 'airbnb'
+        test_protocol = settings.DEFAULT_PROTOCOL
+        test_content = render_to_string(
+            template_name='subscribers/promo/new_realty.html',
+            context={
+                'subscriber': test_subscriber,
+                'realty_list': realty_recommendations,
+                'protocol': test_protocol,
+                'domain': test_domain,
+            },
+        )
+
+        send_recommendation_email_to_subscriber(
+            site_domain=test_domain,
+            subscriber_id=test_subscriber.pk,
+            realty_recommendations=realty_recommendations,
+        )
+
+        test_email = mail.outbox[0]
+
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(test_email.subject, 'Check out new realty')
+        self.assertEqual(str(test_email.body), str(test_content))
+        self.assertEqual(test_email.to, [test_subscriber.email])

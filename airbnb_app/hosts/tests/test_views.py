@@ -1,3 +1,4 @@
+from django.contrib import auth
 from django.http import HttpResponse
 from django.test import TestCase, override_settings
 from django.urls import reverse
@@ -54,12 +55,13 @@ class BecomeHostViewTests(TestCase):
         self.assertRedirects(response, '/accounts/login/?next=/hosts/become-a-host/')
 
     def test_redirect_if_not_email_confirmed(self):
-        """Request with a User that hasn't confirmed an email address which yields a redirect to a activation page."""
+        """Request with a User that hasn't confirmed an email address which yields a redirect to an activation page."""
         self.client.login(username='test3@gmail.com', password='123')
         response = self.client.get('/hosts/become-a-host/')
 
         # check that user is logged in
-        self.assertEqual(str(response.context['user']), 'test3@gmail.com')
+        user = auth.get_user(self.client)
+        self.assertTrue(user.is_authenticated)
 
         # check if there was a redirect
         self.assertRedirects(response, '/accounts/activation-required/')

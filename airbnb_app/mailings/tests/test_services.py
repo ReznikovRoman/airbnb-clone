@@ -1,13 +1,13 @@
 from django.core import mail
 from django.test import TestCase
 
-from ..services import _send_email_to_user, _send_email_with_attachments
+from ..services import send_email_to_user, send_email_with_attachments
 
 
 class MailingsServicesTests(TestCase):
     def test_send_email_to_user_valid_content(self):
-        """_send_email_to_user() should create and send an email with the given parameters (subject, body, etc.)."""
-        _send_email_to_user(
+        """send_email_to_user() should create and send an email with the given parameters (subject, body, etc.)."""
+        send_email_to_user(
             subject='Test',
             message='Test message',
             email_to=['test@gmail.com'],
@@ -22,9 +22,9 @@ class MailingsServicesTests(TestCase):
         self.assertEqual(test_email.from_email, 'admin@gmail.com')
 
     def test_send_email_with_attachments_valid_content(self):
-        """_send_email_with_attachments() should create and send email with optional alternatives (html, plain text)."""
+        """send_email_with_attachments() should create and send email with optional alternatives (html, plain text)."""
         test_html_content = """<p>Test html</p>"""
-        _send_email_with_attachments(
+        send_email_with_attachments(
             subject='Test',
             body='Test body',
             email_to=['test@gmail.com'],

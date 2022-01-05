@@ -16,16 +16,18 @@ from hosts.models import RealtyHost
 
 from .constants import MAX_REALTY_IMAGES_COUNT, REALTY_FORM_KEYS_COLLECTOR_NAME, REALTY_FORM_SESSION_PREFIX
 from .filters import RealtyShortFilter
-from .forms import (RealtyDescriptionForm, RealtyFiltersForm, RealtyForm, RealtyGeneralInfoForm, RealtyImageFormSet,
-                    RealtyTypeForm)
+from .forms import (
+    RealtyDescriptionForm, RealtyFiltersForm, RealtyForm, RealtyGeneralInfoForm, RealtyImageFormSet, RealtyTypeForm,
+)
 from .mixins import RealtySessionDataRequiredMixin
 from .models import CustomDeleteQueryset, Realty, RealtyImage
 from .services.images import get_images_by_realty_id, update_images_order
 from .services.order import convert_response_to_orders
-from .services.realty import (get_all_available_realty, get_amenity_ids_from_session, get_available_realty_by_city_slug,
-                              get_available_realty_filtered_by_type, get_available_realty_search_results,
-                              get_cached_realty_visits_count_by_realty_id, get_or_create_realty_host_by_user,
-                              update_realty_visits_count)
+from .services.realty import (
+    get_all_available_realty, get_amenity_ids_from_session, get_available_realty_by_city_slug,
+    get_available_realty_filtered_by_type, get_available_realty_search_results,
+    get_cached_realty_visits_count_by_realty_id, get_or_create_realty_host_by_user, update_realty_visits_count,
+)
 
 
 class RealtySearchResultsView(generic.ListView):
