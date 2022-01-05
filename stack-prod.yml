@@ -169,7 +169,7 @@ services:
       - ${ENV}
     command: >
       bash -c "cd /home/app/web/airbnb_app/
-      && celery -A airbnb worker -Q default,emails,urgent_notifications -l debug -c 2 -n default_worker"
+      && celery -A airbnb worker -Q default,emails,urgent_notifications -l debug -c 2 -n default_worker --autoscale=4,2"
     depends_on:
       - server
     networks:

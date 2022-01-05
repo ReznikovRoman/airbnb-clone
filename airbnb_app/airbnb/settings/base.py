@@ -284,6 +284,8 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_TASK_RESULT_EXPIRES = 10 * 60
+CELERY_TASK_TIME_LIMIT = 8 * 60 * 60  # 8 hours
+CELERY_TASK_SOFT_TIME_LIMIT = 10 * 60 * 60  # 10 hours
 CELERY_QUEUES = (
     Queue(name='default', exchange=Exchange('default'), routing_key='default'),
     Queue(name='emails'),

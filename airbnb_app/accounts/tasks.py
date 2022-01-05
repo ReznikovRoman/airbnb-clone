@@ -1,9 +1,20 @@
 from typing import Optional, Union
 
+from billiard.exceptions import SoftTimeLimitExceeded
+
+from django.utils import timezone
+
 from airbnb.celery import app
 
 
-@app.task(queue='urgent_notifications')
+@app.task(
+    queue='urgent_notifications',
+    time_limit=5,
+    soft_time_limit=3,
+    default_retry_delay=5,
+    autoretry_for=(SoftTimeLimitExceeded,),
+    expires=timezone.now() + timezone.timedelta(hours=12),
+)
 def send_email_verification_code(
         domain: str,
         scheme: str,
@@ -12,7 +23,6 @@ def send_email_verification_code(
         **kwargs,
 ) -> None:
     from .services import send_verification_email
-
     send_verification_email(
         domain=domain,
         scheme=scheme,
@@ -20,7 +30,14 @@ def send_email_verification_code(
     )
 
 
-@app.task(queue='urgent_notifications')
+@app.task(
+    queue='urgent_notifications',
+    time_limit=5,
+    soft_time_limit=3,
+    default_retry_delay=5,
+    autoretry_for=(SoftTimeLimitExceeded,),
+    expires=timezone.now() + timezone.timedelta(hours=12),
+)
 def send_password_reset_code(
         subject_template_name: str,
         email_template_name: str,

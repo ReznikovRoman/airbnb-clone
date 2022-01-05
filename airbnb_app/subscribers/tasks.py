@@ -4,6 +4,7 @@ from celery_chunkificator.chunkify import Chunk, chunkify_task
 
 from django.contrib.sites.models import Site
 from django.db.models import Max, Min
+from django.utils import timezone
 
 from airbnb.celery import app
 from realty.services.realty import get_n_latest_available_realty
@@ -23,7 +24,12 @@ def get_subscribers_initial_chunk(*args, **kwargs):
     return chunk
 
 
-@app.task(queue='emails')
+@app.task(
+    queue='emails',
+    time_limit=2 * 60 * 60,
+    soft_time_limit=60 * 60,
+    expires=timezone.now() + timezone.timedelta(days=3),
+)
 @chunkify_task(
     sleep_timeout=10,
     initial_chunk=get_subscribers_initial_chunk,
