@@ -159,6 +159,12 @@ STATIC_URL = os.environ.get('STATIC_URL', '/static/')
 STATIC_ROOT = BASE_DIR / 'airbnb/static/'
 
 
+# Message Queue [AWS SQS Api compatible]
+AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+AWS_DEFAULT_REGION = os.environ.get("AWS_DEFAULT_REGION")
+
+
 # S3 Bucket
 USE_S3_BUCKET = bool(os.environ.get("USE_S3_BUCKET", False))
 YANDEX_STORAGE_BUCKET_NAME = os.environ.get("YANDEX_STORAGE_BUCKET_NAME")
@@ -278,7 +284,6 @@ SESSION_REDIS = {
 
 # CELERY
 CELERY_TIMEZONE = 'Europe/Moscow'
-CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL")
 CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND")
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
@@ -295,6 +300,25 @@ CELERY_CREATE_MISSING_QUEUES = True
 CELERY_DEFAULT_QUEUE = 'default'
 CELERY_DEFAULT_EXCHANGE = 'default'
 CELERY_DEFAULT_ROUTING_KEY = 'default'
+
+# Message Queue
+YMQ_ENDPOINT = os.environ.get("YMQ_ENDPOINT", None)
+if YMQ_ENDPOINT is not None:
+    CELERY_BROKER_TRANSPORT_OPTIONS = {
+        "visibility_timeout": 12 * 60 * 60,
+        "max_retries": 10,
+        "is_secure": True,
+        "region": AWS_DEFAULT_REGION,
+    }
+    CELERY_BROKER_URL = f"sqs://{AWS_ACCESS_KEY_ID}:{AWS_SECRET_ACCESS_KEY}@{YMQ_ENDPOINT}"
+    CELERY_RESULT_BACKEND_TRANSPORT_OPTIONS = {
+        "visibility_timeout": 60 * 60,
+        "retry_policy": {
+            "timeout": 5.0,
+        },
+    }
+else:
+    CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL")
 
 
 # CHANNELS
