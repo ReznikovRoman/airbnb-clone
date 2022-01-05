@@ -1,9 +1,9 @@
 from typing import Optional, Union
 
-from celery import shared_task
+from airbnb.celery import app
 
 
-@shared_task
+@app.task(queue='urgent_notifications')
 def send_email_verification_code(
         domain: str,
         scheme: str,
@@ -20,7 +20,7 @@ def send_email_verification_code(
     )
 
 
-@shared_task
+@app.task(queue='urgent_notifications')
 def send_password_reset_code(
         subject_template_name: str,
         email_template_name: str,

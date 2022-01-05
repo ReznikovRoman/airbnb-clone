@@ -1,11 +1,11 @@
 from typing import Optional
 
-from celery import shared_task
 from celery_chunkificator.chunkify import Chunk, chunkify_task
 
 from django.contrib.sites.models import Site
 from django.db.models import Max, Min
 
+from airbnb.celery import app
 from realty.services.realty import get_n_latest_available_realty
 
 from .models import Subscriber
@@ -23,7 +23,7 @@ def get_subscribers_initial_chunk(*args, **kwargs):
     return chunk
 
 
-@shared_task
+@app.task(queue='emails')
 @chunkify_task(
     sleep_timeout=10,
     initial_chunk=get_subscribers_initial_chunk,

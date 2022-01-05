@@ -169,7 +169,79 @@ services:
       - ${ENV}
     command: >
       bash -c "cd /home/app/web/airbnb_app/
-      && celery -A airbnb worker -l info"
+      && celery -A airbnb worker -Q default,emails,urgent_notifications -l debug -c 2 -n default_worker"
+    depends_on:
+      - server
+    networks:
+      - app_network
+    volumes:
+      - ./config/postgres/certs/root.crt:${POSTGRES_SSL_CERT_DOCKER_PATH:-/usr/local/etc/.postgresql/root.crt}
+      - ./config/redis/certs/YandexInternalRootCA.crt:${REDIS_SSL_CERT_DOCKER_PATH:-/usr/local/share/ca-certificates/Yandex/YandexInternalRootCA.crt}
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        order: start-first
+        failure_action: pause
+        delay: 10s
+      rollback_config:
+        parallelism: 0
+        order: stop-first
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    healthcheck:
+      start_period: 60s
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      test: cd airbnb_app/ && celery -A airbnb inspect ping || exit 1
+
+  celery_high_priority:
+    image: romanreznikov/backend:${CI_COMMIT_SHORT_SHA}
+    env_file:
+      - ${ENV}
+    command: >
+      bash -c "cd /home/app/web/airbnb_app/
+      && celery -A airbnb worker -Q urgent_notifications -l debug -c 1 -n high_priority"
+    depends_on:
+      - server
+    networks:
+      - app_network
+    volumes:
+      - ./config/postgres/certs/root.crt:${POSTGRES_SSL_CERT_DOCKER_PATH:-/usr/local/etc/.postgresql/root.crt}
+      - ./config/redis/certs/YandexInternalRootCA.crt:${REDIS_SSL_CERT_DOCKER_PATH:-/usr/local/share/ca-certificates/Yandex/YandexInternalRootCA.crt}
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        order: start-first
+        failure_action: pause
+        delay: 10s
+      rollback_config:
+        parallelism: 0
+        order: stop-first
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    healthcheck:
+      start_period: 60s
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      test: cd airbnb_app/ && celery -A airbnb inspect ping || exit 1
+
+  celery_low_priority:
+    image: romanreznikov/backend:${CI_COMMIT_SHORT_SHA}
+    env_file:
+      - ${ENV}
+    command: >
+      bash -c "cd /home/app/web/airbnb_app/
+      && celery -A airbnb worker -Q emails,urgent_notifications -l debug -c 1 -n low_priority"
     depends_on:
       - server
     networks:

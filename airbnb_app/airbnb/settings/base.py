@@ -3,6 +3,8 @@ from datetime import timedelta
 from pathlib import Path
 from typing import List
 
+from kombu import Exchange, Queue
+
 from django.contrib.messages import constants as messages_constants
 from django.urls import reverse_lazy
 
@@ -281,6 +283,16 @@ CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND")
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
+CELERY_TASK_RESULT_EXPIRES = 10 * 60
+CELERY_QUEUES = (
+    Queue(name='default', exchange=Exchange('default'), routing_key='default'),
+    Queue(name='emails'),
+    Queue(name='urgent_notifications'),
+)
+CELERY_CREATE_MISSING_QUEUES = True
+CELERY_DEFAULT_QUEUE = 'default'
+CELERY_DEFAULT_EXCHANGE = 'default'
+CELERY_DEFAULT_ROUTING_KEY = 'default'
 
 
 # CHANNELS

@@ -58,7 +58,53 @@ services:
     build: .
     command: >
       bash -c "cd /app/airbnb_app/
-      && celery -A airbnb worker -l info"
+      && celery -A airbnb worker -Q default,emails,urgent_notifications -l info -c 2 -n default_worker"
+    healthcheck:
+      test: celery -A airbnb inspect ping
+      interval: 10s
+      timeout: 10s
+      retries: 3
+    volumes:
+      - .:/app
+    links:
+      - redis
+    depends_on:
+      - redis
+      - server
+    networks:
+      - app-network
+
+  celery_high_priority:
+    restart: always
+    env_file:
+      - ${ENV}
+    build: .
+    command: >
+      bash -c "cd /app/airbnb_app/
+      && celery -A airbnb worker -Q urgent_notifications -l info -c 1 -n high_priority"
+    healthcheck:
+      test: celery -A airbnb inspect ping
+      interval: 10s
+      timeout: 10s
+      retries: 3
+    volumes:
+      - .:/app
+    links:
+      - redis
+    depends_on:
+      - redis
+      - server
+    networks:
+      - app-network
+
+  celery_low_priority:
+    restart: always
+    env_file:
+      - ${ENV}
+    build: .
+    command: >
+      bash -c "cd /app/airbnb_app/
+      && celery -A airbnb worker -Q emails,urgent_notifications -l info -c 1 -n low_priority"
     healthcheck:
       test: celery -A airbnb inspect ping
       interval: 10s

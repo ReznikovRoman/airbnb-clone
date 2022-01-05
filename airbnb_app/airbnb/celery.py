@@ -21,5 +21,8 @@ app.conf.beat_schedule = {
     'update_realty_visits_count_from_redis': {
         'task': 'realty.tasks.update_realty_visits_count_from_redis',
         'schedule': crontab(minute='*/5'),  # every 5 minutes
+        'options': {
+            'queue': 'default',
+        },
     },
 }
