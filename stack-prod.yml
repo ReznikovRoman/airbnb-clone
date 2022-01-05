@@ -169,7 +169,7 @@ services:
       - ${ENV}
     command: >
       bash -c "cd /home/app/web/airbnb_app/
-      && celery -A airbnb worker -Q default,emails,urgent_notifications -l debug -c 2 -n default_worker --autoscale=4,2"
+      && celery -A airbnb worker -Q default,emails,urgent_notifications -l info -c 2 -n default_worker --autoscale=4,2"
     depends_on:
       - server
     networks:
@@ -205,7 +205,7 @@ services:
       - ${ENV}
     command: >
       bash -c "cd /home/app/web/airbnb_app/
-      && celery -A airbnb worker -Q urgent_notifications -l debug -c 1 -n high_priority"
+      && celery -A airbnb worker -Q urgent_notifications -l info -c 1 -n high_priority"
     depends_on:
       - server
     networks:
@@ -241,7 +241,7 @@ services:
       - ${ENV}
     command: >
       bash -c "cd /home/app/web/airbnb_app/
-      && celery -A airbnb worker -Q emails,urgent_notifications -l debug -c 1 -n low_priority"
+      && celery -A airbnb worker -Q emails,urgent_notifications -l info -c 1 -n low_priority"
     depends_on:
       - server
     networks:
@@ -277,7 +277,7 @@ services:
       - ${ENV}
     command: >
       bash -c "cd /home/app/web/airbnb_app/
-      && celery -A airbnb beat -l debug --pidfile= --scheduler django_celery_beat.schedulers:DatabaseScheduler"
+      && celery -A airbnb beat -l info --pidfile= --scheduler django_celery_beat.schedulers:DatabaseScheduler"
     depends_on:
       - server
       - celery
