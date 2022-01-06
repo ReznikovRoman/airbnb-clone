@@ -70,4 +70,4 @@ english_daily_yt/english_daily/whoosh_index/
 node_modules/
 
 # yandex
-yandex/cloud_functions/*static*
+yandex/cloud_functions/*/static
