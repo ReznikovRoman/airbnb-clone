@@ -9,6 +9,7 @@ from common.services import _send_sms_by_twilio
 
 @app.task(
     name='common.send_sms_by_twilio',
+    ignore_result=True,
     queue='urgent_notifications',
     time_limit=5,
     soft_time_limit=3,

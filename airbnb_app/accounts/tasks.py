@@ -9,6 +9,7 @@ from airbnb.celery import app
 
 @app.task(
     queue='urgent_notifications',
+    ignore_result=True,
     time_limit=5,
     soft_time_limit=3,
     default_retry_delay=5,
@@ -32,6 +33,7 @@ def send_email_verification_code(
 
 @app.task(
     queue='urgent_notifications',
+    ignore_result=True,
     time_limit=5,
     soft_time_limit=3,
     default_retry_delay=5,

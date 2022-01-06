@@ -26,6 +26,7 @@ def get_subscribers_initial_chunk(*args, **kwargs):
 
 @app.task(
     queue='emails',
+    ignore_result=True,
     time_limit=2 * 60 * 60,
     soft_time_limit=60 * 60,
     expires=timezone.now() + timezone.timedelta(days=3),
