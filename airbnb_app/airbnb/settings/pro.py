@@ -50,7 +50,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 # MEDIA
 if USE_S3_BUCKET:
     # Yandex Object Storage settings
-    YANDEX_STORAGE_CUSTOM_DOMAIN = f'{YANDEX_STORAGE_BUCKET_NAME}.storage.yandexcloud.net'
+    YANDEX_STORAGE_CUSTOM_DOMAIN = os.environ.get("YANDEX_STORAGE_CUSTOM_DOMAIN")
     DEFAULT_FILE_STORAGE = 'storage_backends.YandexObjectMediaStorage'
     AWS_S3_ENDPOINT_URL = 'https://storage.yandexcloud.net'
     AWS_S3_REGION_NAME = 'ru-central1'
