@@ -82,8 +82,6 @@ PILLOW_IMAGE_CONVERSATION_REQUIRED_MODS: Final[tuple[str, ...]] = (
     "P",
 )
 PILLOW_IMAGE_DEFAULT_FORMAT: Final[str] = "jpeg"
-PILLOW_RESIZE_IMAGE_WIDTH: Final[int] = 500
-PILLOW_RESIZE_IMAGE_HEIGHT: Final[int] = 500
 
 
 class FileInfo(NamedTuple):
