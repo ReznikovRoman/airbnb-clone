@@ -34,6 +34,7 @@ venv/
 *.env
 .env.local
 .env.*.local
+!*example.env
 
 # celery, celery beat
 celerybeat-schedule
@@ -67,3 +68,6 @@ english_daily_yt/english_daily/whoosh_index/
 
 # node modules
 node_modules/
+
+# yandex
+yandex/cloud_functions/*/static
