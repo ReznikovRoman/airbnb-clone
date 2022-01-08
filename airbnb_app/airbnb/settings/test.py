@@ -18,5 +18,6 @@ DATABASES = {
 }
 
 # MEDIA
+YANDEX_STORAGE_CUSTOM_DOMAIN = None
 MEDIA_URL = os.environ.get('MEDIA_URL', '/media/')
 MEDIA_ROOT = BASE_DIR / 'airbnb/media/'
