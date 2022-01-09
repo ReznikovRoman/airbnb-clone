@@ -45,7 +45,7 @@
                         <ul class="splide__list image-carousel">
                             {% for realty_image in realty.images.all %}
                                 <li class="carousel-content splide__slide">
-                                    <a href="{{ realty_image.image.url|image_size:'250x200' }}" data-lightbox="realty_images">
+                                    <a href="{{ realty_image.image.url }}" data-lightbox="realty_images">
                                         <img class="realty-image"
                                              src="{{ realty_image.image.url|image_size:'250x200' }}"
                                              alt="Realty image">
