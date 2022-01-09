@@ -166,7 +166,7 @@ AWS_DEFAULT_REGION = os.environ.get("AWS_DEFAULT_REGION")
 
 
 # S3 Bucket
-USE_S3_BUCKET = bool(os.environ.get("USE_S3_BUCKET", False))
+USE_S3_BUCKET = bool(int(os.environ.get("USE_S3_BUCKET", 0)))
 YANDEX_STORAGE_BUCKET_NAME = os.environ.get("YANDEX_STORAGE_BUCKET_NAME")
 
 
