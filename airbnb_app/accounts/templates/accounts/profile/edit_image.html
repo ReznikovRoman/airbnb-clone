@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load bootstrap4 %}
+{% load main_extras %}
 
 
 {% block title %}
@@ -27,7 +28,7 @@
                 <div class="image-group">
                     <div class="image-preview">
                         <div id="profile-image"
-                             style='background: url("{% if request.user.profile.profile_image %}{{ request.user.profile.profile_image.url }}{% else %}{% static 'images/default/profile/default_profile_image.png' %}{% endif %}") no-repeat; background-size: 100% 100%'>
+                             style='background: url("{% if request.user.profile.profile_image %}{{ request.user.profile.profile_image.url|image_size:'145x145' }}{% else %}{% static 'images/default/profile/default_profile_image.png' %}{% endif %}") no-repeat; background-size: 100% 100%'>
                         </div>
                     </div>
                     {% bootstrap_form profile_image_form %}

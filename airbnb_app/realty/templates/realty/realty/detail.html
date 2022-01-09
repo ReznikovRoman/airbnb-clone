@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load main_extras %}
 
 
 {% block title %}
@@ -44,9 +45,9 @@
                         <ul class="splide__list image-carousel">
                             {% for realty_image in realty.images.all %}
                                 <li class="carousel-content splide__slide">
-                                    <a href="{{ realty_image.image.url }}" data-lightbox="realty_images">
+                                    <a href="{{ realty_image.image.url|image_size:'250x200' }}" data-lightbox="realty_images">
                                         <img class="realty-image"
-                                             src="{{ realty_image.image.url }}"
+                                             src="{{ realty_image.image.url|image_size:'250x200' }}"
                                              alt="Realty image">
                                     </a>
                                 </li>
@@ -77,7 +78,7 @@
                 </div>
                 <div class="host-link">
                     <a href="{% url 'accounts:profile_show' user_pk=realty.host.user.id %}">
-                        <img src="{{ realty.host.user.profile.profile_image.url }}"
+                        <img src="{{ realty.host.user.profile.profile_image.url|image_size:'56x56' }}"
                              width="56" height="56"
                              alt="Host profile image" class="rounded-circle">
                     </a>
@@ -131,7 +132,7 @@
                 <div class="realty-host">
                     <div class="host-profile">
                         <a href="{% url 'accounts:profile_show' user_pk=realty.host.user.id %}">
-                            <img src="{{ realty.host.user.profile.profile_image.url }}"
+                            <img src="{{ realty.host.user.profile.profile_image.url|image_size:'56x56' }}"
                                  width="56" height="56"
                                  alt="Host profile image" class="rounded-circle">
                         </a>

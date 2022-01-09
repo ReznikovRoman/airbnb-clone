@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load bootstrap4 %}
+{% load main_extras %}
 
 
 {% block title %}
@@ -42,7 +43,7 @@
                                 {% if forloop.counter0 == forloop.parentloop.counter0 %}
                                     <div id="image-{{ forloop.parentloop.counter0 }}"
                                          data-id="{{ realty_image.id }}"
-                                         style='background: url("{{ realty_image.image.url }}") no-repeat; background-size: 100% 100%'>
+                                         style='background: url("{{ realty_image.image.url|image_size:'145x145' }}") no-repeat; background-size: 100% 100%'>
                                     </div>
                                 {% endif %}
                             {% endfor %}

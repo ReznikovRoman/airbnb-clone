@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load main_extras %}
 
 
 {% block title %}
@@ -10,7 +11,7 @@
     <div class="profile-show">
         <div class="profile-card">
             <div class="profile-photo">
-                <img src="{{ profile_owner.profile.profile_image.url }}"
+                <img src="{{ profile_owner.profile.profile_image.url|image_size:'128x128' }}"
                      width="128" height="128"
                      alt="Profile image" class="rounded-circle">
                 {% if is_profile_of_current_user %}
@@ -72,7 +73,7 @@
                                             <div class="listing">
                                                 <a href="{% url 'realty:detail' pk=host_listing.pk slug=host_listing.slug %}">
                                                     {% if host_listing.images.exists %}
-                                                        <img src="{{ host_listing.images.first.image.url }}"
+                                                        <img src="{{ host_listing.images.first.image.url|image_size:'306x204' }}"
                                                              width="306" height="204" alt="Realty image">
                                                     {% else %}
                                                         <img src="{% static 'realty/images/default/realty_image_placeholder.png' %}"
