@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load main_extras %}
 
 
 {% block title %}
@@ -107,7 +108,7 @@
                     <div class="realty-card--image">
                         <a href="{% url 'realty:detail' pk=realty.id slug=realty.slug %}">
                             {% if realty.images.exists %}
-                                <img src="{{ realty.images.first.image.url }}"
+                                <img src="{{ realty.images.first.image.url|image_size:'300x200' }}"
                                      width="300" height="200" alt="Realty image">
                             {% else %}
                                 <img src="{% static 'realty/images/default/realty_image_placeholder.png' %}"

@@ -34,7 +34,7 @@
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {% if request.user.is_authenticated %}
                             {% if request.user.profile.profile_image %}
-                                <img src="{{ request.user.profile.profile_image.url }}"
+                                <img src="{{ request.user.profile.profile_image.url|image_size:'32x33' }}"
                                      width="32" height="33"
                                      alt="Profile image" class="rounded-circle">
                             {% else %}
