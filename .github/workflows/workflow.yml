@@ -99,4 +99,4 @@ jobs:
           if: ${{ always() }}
           env:
             CI_COMMIT_SHORT_SHA: ${{ env.CI_COMMIT_SHORT_SHA }}
-          run: ssh prod 'cd /home/roman/projects/airbnb-clone && env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy -c stack-prod.yml airbnb_app --with-registry-auth'
+          run: ssh prod 'export CI_COMMIT_SHORT_SHA=${{ env.CI_COMMIT_SHORT_SHA }} && cd /home/roman/projects/airbnb-clone && env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy -c stack-prod.yml airbnb_app --with-registry-auth'
