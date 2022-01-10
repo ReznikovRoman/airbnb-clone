@@ -100,12 +100,10 @@ jobs:
             SSH_HOST: ${{ secrets.PROD_SSH_HOST }}
 
         - name: Check out the source
-          env:
-            CI_COMMIT_SHORT_SHA: ${{ github.sha }}
           run: ssh prod 'cd /home/roman/projects/airbnb-clone && git fetch && git reset --hard origin/master'
 
         - name: Deploy Docker Swarm stack
           if: ${{ always() }}
           env:
-            CI_COMMIT_SHORT_SHA: ${{ github.sha }}
-          run: ssh prod 'cd /home/roman/projects/airbnb-clone && env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy -c stack-prod.yml airbnb_app --with-registry-auth'
+            IMAGE_TAG: ${{ steps.meta.outputs.tags[0] }}
+          run: ssh prod 'cd /home/roman/projects/airbnb-clone && IMAGE_TAG=${{ steps.meta.outputs.tags[0] }}; env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy -c stack-prod.yml airbnb_app --with-registry-auth'
