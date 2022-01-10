@@ -71,3 +71,4 @@ node_modules/
 
 # yandex
 yandex/cloud_functions/*/static
+yandex/cloud_functions/*/build.zip
