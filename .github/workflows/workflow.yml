@@ -43,9 +43,6 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
-      - name: Set environment variables
-        run: |
-          echo "CI_COMMIT_SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_ENV
       - name: Log in to Docker Hub
         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
         with:
@@ -58,13 +55,11 @@ jobs:
           images: romanreznikov/backend
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
-        env:
-          CI_COMMIT_SHORT_SHA: ${{ env.CI_COMMIT_SHORT_SHA }}
         with:
           context: .
           file: prod.Dockerfile
           push: true
-          tags: romanreznikov/backend:${{ env.CI_COMMIT_SHORT_SHA }}
+          tags: romanreznikov/backend:latest
 
   deploy:
       name: "Deploy Swarm Stack to production"
@@ -92,11 +87,7 @@ jobs:
             SSH_KEY: ${{ secrets.PROD_SSH_KEY }}
             SSH_HOST: ${{ secrets.PROD_SSH_HOST }}
         - name: Check out the source
-          env:
-            CI_COMMIT_SHORT_SHA: ${{ env.CI_COMMIT_SHORT_SHA }}
           run: ssh prod 'cd /home/roman/projects/airbnb-clone && git fetch && git reset --hard origin/master'
         - name: Deploy Docker Swarm stack
           if: ${{ always() }}
-          env:
-            CI_COMMIT_SHORT_SHA: ${{ env.CI_COMMIT_SHORT_SHA }}
-          run: ssh prod 'export CI_COMMIT_SHORT_SHA=${{ env.CI_COMMIT_SHORT_SHA }} && cd /home/roman/projects/airbnb-clone && env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy -c stack-prod.yml airbnb_app --with-registry-auth'
+          run: ssh prod 'cd /home/roman/projects/airbnb-clone && env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy -c stack-prod.yml airbnb_app --with-registry-auth'
