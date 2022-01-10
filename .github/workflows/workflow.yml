@@ -55,13 +55,11 @@ jobs:
           images: romanreznikov/backend
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
-        env:
-          CI_COMMIT_SHORT_SHA: ${{ github.sha }}
         with:
           context: .
           file: prod.Dockerfile
           push: true
-          tags: romanreznikov/backend:$CI_COMMIT_SHORT_SHA
+          tags: romanreznikov/backend:latest
 
   deploy:
       name: "Deploy Swarm Stack to production"
@@ -89,11 +87,7 @@ jobs:
             SSH_KEY: ${{ secrets.PROD_SSH_KEY }}
             SSH_HOST: ${{ secrets.PROD_SSH_HOST }}
         - name: Check out the source
-          env:
-            CI_COMMIT_SHORT_SHA: ${{ github.sha }}
           run: ssh prod 'cd /home/roman/projects/airbnb-clone && git fetch && git reset --hard origin/master'
         - name: Deploy Docker Swarm stack
           if: ${{ always() }}
-          env:
-            CI_COMMIT_SHORT_SHA: ${{ github.sha }}
           run: ssh prod 'cd /home/roman/projects/airbnb-clone && env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy -c stack-prod.yml airbnb_app --with-registry-auth'
