@@ -74,7 +74,7 @@ jobs:
       - name: Print tags
         env:
           TAGS: ${{ steps.meta.outputs.tags }}
-          TAG: ${{ steps.meta.outputs.tags[0] }}
+          TAG: ${{ steps.meta.outputs.tags.sha }}
         run:
           echo $TAGS && echo $TAG
 
@@ -110,5 +110,5 @@ jobs:
         - name: Deploy Docker Swarm stack
           if: ${{ always() }}
           env:
-            IMAGE_TAG: ${{ steps.meta.outputs.tags[0] }}
+            IMAGE_TAG: ${{ steps.meta.outputs.tags.sha }}
           run: ssh prod 'cd /home/roman/projects/airbnb-clone && IMAGE_TAG=$IMAGE_TAG; env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy -c stack-prod.yml airbnb_app --with-registry-auth'
