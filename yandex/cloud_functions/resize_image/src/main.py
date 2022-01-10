@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import base64
+import json
 import os
 import re
 from dataclasses import dataclass
@@ -77,6 +78,15 @@ VALID_EXTENSIONS: Final[tuple[str, ...]] = (
     "jpg",
     "png",
 )
+DEFAULT_VALID_RESIZE_FORMATS: Final[tuple[str, ...]] = (
+    "32x33",
+    "56x56",
+    "128x128",
+    "145x145",
+    "250x200",
+    "300x200",
+    "306x204",
+)
 PILLOW_IMAGE_CONVERSATION_REQUIRED_MODS: Final[tuple[str, ...]] = (
     "RGBA",
     "P",
@@ -84,22 +94,25 @@ PILLOW_IMAGE_CONVERSATION_REQUIRED_MODS: Final[tuple[str, ...]] = (
 PILLOW_IMAGE_DEFAULT_FORMAT: Final[str] = "jpeg"
 
 
-class FileInfo(NamedTuple):
-    target_object_key: str
-    initial_object_key: str
-    target_width: int
-    target_height: int
-    filename: str
-
-
 YANDEX_OBJECT_STORAGE_MEDIA_PREFIX: Final[str] = os.environ.get("YANDEX_OBJECT_STORAGE_MEDIA_PREFIX")
 YANDEX_OBJECT_STORAGE_BUCKET: Final[str] = os.environ.get("YANDEX_OBJECT_STORAGE_BUCKET")
 YANDEX_AWS_ACCESS_KEY_ID: Final[str] = os.environ.get("YANDEX_AWS_ACCESS_KEY_ID")
 YANDEX_AWS_SECRET_ACCESS_KEY: Final[str] = os.environ.get("YANDEX_AWS_SECRET_ACCESS_KEY")
 YANDEX_AWS_DEFAULT_REGION: Final[str] = os.environ.get("YANDEX_AWS_DEFAULT_REGION")
+RESIZE_IMAGE_VALID_SIZES: tuple[str, ...] | list[str] = os.environ.get("RESIZE_IMAGE_VALID_SIZES", "").split(".")
+if not RESIZE_IMAGE_VALID_SIZES:
+    RESIZE_IMAGE_VALID_SIZES = DEFAULT_VALID_RESIZE_FORMATS
 
 
-def parse_object_key(*, object_key: str = "images/realty/1/300x300/flat_1.jpg") -> FileInfo:
+class FileInfo(NamedTuple):
+    initial_object_key: str
+    target_object_key: str
+    target_width: int
+    target_height: int
+    filename: str
+
+
+def parse_object_key(*, object_key: str) -> FileInfo:
     groups = re.search(r'((\d+)x(\d+))/(.*)', object_key).groups()
     file_info = FileInfo(
         target_object_key=object_key,
@@ -111,7 +124,7 @@ def parse_object_key(*, object_key: str = "images/realty/1/300x300/flat_1.jpg") 
     return file_info
 
 
-def resize_image(*, file_info: FileInfo) -> dict[str, Any] | None:
+def resize_image(*, file_info: FileInfo) -> dict[str, Any]:
     bucket_name = YANDEX_OBJECT_STORAGE_BUCKET
     s3_config = Config(
         region_name=YANDEX_AWS_DEFAULT_REGION,
@@ -128,7 +141,27 @@ def resize_image(*, file_info: FileInfo) -> dict[str, Any] | None:
 
     file_extension = file_info.filename.rsplit(".")[-1].lower()
     if file_extension not in VALID_EXTENSIONS:
-        return
+        return {
+            "statusCode": 400,
+            "body": json.dumps({
+                "error": "File extension must be a valid image extension.",
+                "context": {
+                    "message": f"Valid extensions: `{VALID_EXTENSIONS}`",
+                },
+            }),
+        }
+
+    target_size_str = f"{file_info.target_width}x{file_info.target_height}"
+    if target_size_str not in RESIZE_IMAGE_VALID_SIZES:
+        return {
+            "statusCode": 400,
+            "body": json.dumps({
+                "error": "Image size must be a valid and acceptable size.",
+                "context": {
+                    "message": f"Valid sizes: `{RESIZE_IMAGE_VALID_SIZES}`",
+                },
+            }),
+        }
 
     object_response = s3.get_object(
         Bucket=bucket_name,
@@ -157,7 +190,7 @@ def resize_image(*, file_info: FileInfo) -> dict[str, Any] | None:
         }
 
 
-def handler(event: HttpEvent, context: Context):
+def handler(event: HttpEvent, context: Context) -> dict[str, Any] | None:
     """Handles image resizing requests.
 
     Handler arguments:
