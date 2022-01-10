@@ -10,79 +10,79 @@ on:
 
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.9]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.linter.txt
-
-      - name: Check editorconfig settings
-        run: ec
-
-      - name: Lint with flake8
-        run: flake8 .
-
-      - name: Lint with isort
-        run: isort -qc .
-
-  push_to_registry:
-    name: "Push new Docker image to Docker Hub"
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-    needs: lint
-    concurrency:
-      group: Prod
-      cancel-in-progress: true
-    steps:
-      - name: Check out the repo
-        uses: actions/checkout@v2
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v3
-        with:
-          images: |
-            romanreznikov/backend
-          tags: |
-            type=sha
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: prod.Dockerfile
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-
-      - name: Print tags
-        env:
-          TAGS: ${{ steps.meta.outputs.tags }}
-          TAG: ${{ steps.meta.outputs.tags.sha }}
-        run:
-          echo $TAGS && echo $TAG
+#  lint:
+#    runs-on: ubuntu-latest
+#    strategy:
+#      matrix:
+#        python-version: [3.9]
+#    steps:
+#      - uses: actions/checkout@v2
+#      - name: Set up Python ${{ matrix.python-version }}
+#        uses: actions/setup-python@v2
+#        with:
+#          python-version: ${{ matrix.python-version }}
+#
+#      - name: Install dependencies
+#        run: |
+#          python -m pip install --upgrade pip
+#          pip install -r requirements.linter.txt
+#
+#      - name: Check editorconfig settings
+#        run: ec
+#
+#      - name: Lint with flake8
+#        run: flake8 .
+#
+#      - name: Lint with isort
+#        run: isort -qc .
+#
+#  push_to_registry:
+#    name: "Push new Docker image to Docker Hub"
+#    runs-on: ubuntu-latest
+#    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+#    needs: lint
+#    concurrency:
+#      group: Prod
+#      cancel-in-progress: true
+#    steps:
+#      - name: Check out the repo
+#        uses: actions/checkout@v2
+#
+#      - name: Log in to Docker Hub
+#        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+#        with:
+#          username: ${{ secrets.DOCKER_USERNAME }}
+#          password: ${{ secrets.DOCKER_PASSWORD }}
+#
+#      - name: Extract metadata (tags, labels) for Docker
+#        id: meta
+#        uses: docker/metadata-action@v3
+#        with:
+#          images: |
+#            romanreznikov/backend
+#          tags: |
+#            type=sha
+#
+#      - name: Build and push Docker image
+#        uses: docker/build-push-action@v2
+#        with:
+#          context: .
+#          file: prod.Dockerfile
+#          push: true
+#          tags: ${{ steps.meta.outputs.tags }}
+#
+#      - name: Print tags
+#        env:
+#          TAGS: ${{ steps.meta.outputs.tags }}
+#          TAG: ${{ steps.meta.outputs.tags.sha }}
+#        run:
+#          echo $TAGS && echo $TAG
 
   deploy:
       name: "Deploy Swarm Stack to production"
       runs-on: ubuntu-latest
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      needs: push_to_registry
+      # needs: push_to_registry
       concurrency:
         group: Prod
         cancel-in-progress: true
@@ -110,5 +110,5 @@ jobs:
         - name: Deploy Docker Swarm stack
           if: ${{ always() }}
           env:
-            IMAGE_TAG: ${{ steps.meta.outputs.tags }}
-          run: ssh prod 'cd /home/roman/projects/airbnb-clone && export IMAGE_TAG=${{ steps.meta.outputs.tags }} && env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy -c stack-prod.yml airbnb_app --with-registry-auth'
+            IMAGE_TAG: romanreznikov/backend:latest
+          run: ssh prod 'cd /home/roman/projects/airbnb-clone && env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy -c stack-prod.yml airbnb_app --with-registry-auth'
