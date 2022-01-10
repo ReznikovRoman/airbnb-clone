@@ -65,13 +65,18 @@ jobs:
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
-        env:
-          CI_COMMIT_SHORT_SHA: ${{ github.sha }}
         with:
           context: .
           file: prod.Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
+
+      - name: Print tags
+        env:
+          TAGS: ${{ steps.meta.outputs.tags }}
+          TAG: ${{ steps.meta.outputs.tags[0] }}
+        run:
+          echo $TAGS && echo $TAG
 
   deploy:
       name: "Deploy Swarm Stack to production"
@@ -106,4 +111,4 @@ jobs:
           if: ${{ always() }}
           env:
             IMAGE_TAG: ${{ steps.meta.outputs.tags[0] }}
-          run: ssh prod 'cd /home/roman/projects/airbnb-clone && IMAGE_TAG=${{ steps.meta.outputs.tags[0] }}; env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy -c stack-prod.yml airbnb_app --with-registry-auth'
+          run: ssh prod 'cd /home/roman/projects/airbnb-clone && IMAGE_TAG=$IMAGE_TAG; env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy -c stack-prod.yml airbnb_app --with-registry-auth'
