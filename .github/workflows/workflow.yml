@@ -110,5 +110,5 @@ jobs:
         - name: Deploy Docker Swarm stack
           if: ${{ always() }}
           env:
-            IMAGE_TAG: romanreznikov/backend:latest
+            IMAGE_TAG: ${{ secrets.TEMP_AIRBNB_IMAGE_NAME }}
           run: ssh prod 'cd /home/roman/projects/airbnb-clone && env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy -c stack-prod.yml airbnb_app --with-registry-auth'
