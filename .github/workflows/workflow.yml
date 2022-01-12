@@ -61,6 +61,7 @@ jobs:
 #          exec -l $SHELL
       - name: Temp Run CLI
         run: |
+          source ~/.bashcrc
           yc init
 #      - name: Login to Yandex Cloud Container Registry
 #        id: login-cr
