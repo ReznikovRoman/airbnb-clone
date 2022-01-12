@@ -76,7 +76,6 @@ jobs:
           cd ./yandex/cloud_functions/
           chmod +x ./export_github_secrets.sh
           ./export_github_secrets.sh
-          cd ./yandex/cloud_functions/
           chmod +x ./deploy_cloud_functions.sh
           ./deploy_cloud_functions.sh
         shell: bash
