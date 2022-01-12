@@ -58,6 +58,9 @@ jobs:
           curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -a
           exec -l $SHELL
           yc init
+      - name: Temp Run CLI
+        run: |
+          yc init
 #      - name: Login to Yandex Cloud Container Registry
 #        id: login-cr
 #        uses: yc-actions/yc-cr-login@v0.1-alpha
