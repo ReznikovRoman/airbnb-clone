@@ -58,5 +58,8 @@ COPY --from=builder /app/requirements.txt .
 RUN pip install --upgrade pip
 RUN pip install --no-cache /wheels/*
 
+RUN curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | \
+    bash -s -- -a
+
 # Copy project
 COPY . $APP_HOME

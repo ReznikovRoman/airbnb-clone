@@ -88,6 +88,8 @@ jobs:
             SSH_HOST: ${{ secrets.PROD_SSH_HOST }}
         - name: Check out the source
           run: ssh prod 'cd /home/roman/projects/airbnb-clone && git fetch && git reset --hard origin/master'
+#        - name: Deploy Cloud Functions
+#          run: ssh prod 'cd /home/roman/projects/airbnb-clone/yandex/cloud_functions/ && chmod +x ./deploy_cloud_functions.sh && ./deploy_cloud_functions.sh'
         - name: Deploy Docker Swarm stack
           if: ${{ always() }}
           run: ssh prod 'cd /home/roman/projects/airbnb-clone && env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy -c stack-prod.yml airbnb_app --with-registry-auth'
