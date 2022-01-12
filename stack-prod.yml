@@ -79,7 +79,7 @@ services:
         - "traefik.http.middlewares.authtraefik.basicauth.users=admin:$$apr1$$o6eYRTgC$$xXcKmm/pqAp5767ez4yuP0"
 
   daphne:
-    image: ${IMAGE_TAG}
+    image: romanreznikov/backend:${CI_COMMIT_SHORT_SHA}
     env_file:
       - ${ENV}
     command: >
@@ -116,7 +116,7 @@ services:
         - "traefik.http.services.daphne.loadbalancer.server.port=8001"
 
   server:
-    image: ${IMAGE_TAG}
+    image: romanreznikov/backend:${CI_COMMIT_SHORT_SHA}
     env_file:
       - ${ENV}
     environment:
@@ -164,7 +164,7 @@ services:
       test: curl --fail -s http://localhost:8000/api/v1/realty/ || exit 1
 
   celery:
-    image: ${IMAGE_TAG}
+    image: romanreznikov/backend:${CI_COMMIT_SHORT_SHA}
     env_file:
       - ${ENV}
     command: >
@@ -194,7 +194,7 @@ services:
         window: 120s
 
   celery_high_priority:
-    image: ${IMAGE_TAG}
+    image: romanreznikov/backend:${CI_COMMIT_SHORT_SHA}
     env_file:
       - ${ENV}
     command: >
@@ -224,7 +224,7 @@ services:
         window: 120s
 
   celery_low_priority:
-    image: ${IMAGE_TAG}
+    image: romanreznikov/backend:${CI_COMMIT_SHORT_SHA}
     env_file:
       - ${ENV}
     command: >
@@ -254,7 +254,7 @@ services:
         window: 120s
 
   celery_beat:
-    image: ${IMAGE_TAG}
+    image: romanreznikov/backend:${CI_COMMIT_SHORT_SHA}
     env_file:
       - ${ENV}
     command: >
