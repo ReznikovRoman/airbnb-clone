@@ -54,7 +54,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.linter.txt
       - name: Install Yandex Cloud CLI
-        run: curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
+        run: |
+          curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
+          source "/home/runner/.bashrc"
       - name: Login to Yandex Cloud Container Registry
         id: login-cr
         uses: yc-actions/yc-cr-login@v0.1-alpha
