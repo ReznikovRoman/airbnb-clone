@@ -10,27 +10,27 @@ on:
 
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.9]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.linter.txt
-      - name: Check editorconfig settings
-        run: ec
-      - name: Lint with flake8
-        run: flake8 .
-      - name: Lint with isort
-        run: isort -qc .
+#  lint:
+#    runs-on: ubuntu-latest
+#    strategy:
+#      matrix:
+#        python-version: [3.9]
+#    steps:
+#      - uses: actions/checkout@v2
+#      - name: Set up Python ${{ matrix.python-version }}
+#        uses: actions/setup-python@v2
+#        with:
+#          python-version: ${{ matrix.python-version }}
+#      - name: Install dependencies
+#        run: |
+#          python -m pip install --upgrade pip
+#          pip install -r requirements.linter.txt
+#      - name: Check editorconfig settings
+#        run: ec
+#      - name: Lint with flake8
+#        run: flake8 .
+#      - name: Lint with isort
+#        run: isort -qc .
 
   deploy_cloud_functions:
     name: "Deploy all Yandex Cloud Functions"
@@ -39,7 +39,7 @@ jobs:
       matrix:
         python-version: [ 3.9 ]
 #    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-    needs: lint
+    # needs: lint
 #    concurrency:
 #      group: Prod
 #      cancel-in-progress: true
@@ -53,9 +53,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.linter.txt
-      - name: Install Yandex Cloud CLI
-        run: |
-          curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -a
+#      - name: Install Yandex Cloud CLI
+#        run: |
+#          curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -a
       - name: Login to Yandex Cloud Container Registry
         id: login-cr
         uses: yc-actions/yc-cr-login@v0.1-alpha
@@ -63,6 +63,8 @@ jobs:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
       - name: Export repository secrets
         run: |
+          curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -a
+          source "/home/runner/.bashrc"
           cd ./yandex/cloud_functions/
           chmod +x ./export_github_secrets.sh
           ./export_github_secrets.sh
