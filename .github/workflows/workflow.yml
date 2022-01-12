@@ -43,7 +43,7 @@ jobs:
     steps:
       - name: Login to Yandex Cloud Container Registry
         id: login-cr
-        uses: yc-actions/yc-cr-login@v1
+        uses: yc-actions/yc-cr-login@v0.1-alpha
         with:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
       - name: Export repository secrets
