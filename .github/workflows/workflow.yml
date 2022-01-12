@@ -55,9 +55,9 @@ jobs:
           pip install -r requirements.linter.txt
       - name: Install Yandex Cloud CLI
         run: |
-          curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -a
+          curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -a'
+          source /home/runner/.bashrc
           exec -l $SHELL
-          yc init
       - name: Temp Run CLI
         run: |
           yc init
