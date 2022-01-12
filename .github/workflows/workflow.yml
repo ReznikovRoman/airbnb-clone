@@ -61,16 +61,21 @@ jobs:
         uses: yc-actions/yc-cr-login@v0.1-alpha
         with:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
-      - name: Export repository secrets
+#      - name: Export repository secrets
+#        run: |
+#          curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -a
+#          source "/home/runner/.bashrc"
+#          cd ./yandex/cloud_functions/
+#          chmod +x ./export_github_secrets.sh
+#          ./export_github_secrets.sh
+#        shell: bash
+      - name: Deploy cloud functions
         run: |
           curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -a
           source "/home/runner/.bashrc"
           cd ./yandex/cloud_functions/
           chmod +x ./export_github_secrets.sh
           ./export_github_secrets.sh
-        shell: bash
-      - name: Deploy cloud functions
-        run: |
           cd ./yandex/cloud_functions/
           chmod +x ./deploy_cloud_functions.sh
           ./deploy_cloud_functions.sh
