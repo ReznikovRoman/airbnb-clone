@@ -32,6 +32,33 @@ jobs:
       - name: Lint with isort
         run: isort -qc .
 
+  deploy_cloud_functions:
+    name: "Deploy all Yandex Cloud Functions"
+    runs-on: ubuntu-latest
+#    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+#    needs: lint
+#    concurrency:
+#      group: Prod
+#      cancel-in-progress: true
+    steps:
+      - name: Login to Yandex Cloud Container Registry
+        id: login-cr
+        uses: yc-actions/yc-cr-login@v1
+        with:
+          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+      - name: Export repository secrets
+        run: |
+          cd ./yandex/cloud_functions/
+          chmod +x ./export_github_secrets.sh
+          ./export_github_secrets.sh
+        shell: bash
+      - name: Deploy cloud functions
+        run: |
+          cd ./yandex/cloud_functions/
+          chmod +x ./deploy_cloud_functions.sh
+          ./deploy_cloud_functions.sh
+        shell: bash
+
   push_to_registry:
     name: "Push new Docker image to Docker Hub"
     runs-on: ubuntu-latest
