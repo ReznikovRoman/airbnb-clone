@@ -56,7 +56,7 @@ jobs:
       - name: Install Yandex Cloud CLI
         run: |
           curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -a
-          source "/home/runner/.bashrc"
+          exec -l $SHELL
           yc init
 #      - name: Login to Yandex Cloud Container Registry
 #        id: login-cr
