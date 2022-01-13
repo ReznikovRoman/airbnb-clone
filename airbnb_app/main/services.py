@@ -28,4 +28,5 @@ def get_target_image_url_with_size(*, image_url: str, target_size: str) -> str:
         _, _ = list(map(int, target_size.split(TARGET_IMAGE_SIZE_SEPARATOR)))
     except ValueError:
         return image_url
+    image_prefix = image_prefix.replace(settings.MEDIA_URL, settings.RESIZED_MEDIA_URL)
     return f"{image_prefix}/{target_size}/{image_filename}"

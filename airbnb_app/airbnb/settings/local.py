@@ -23,6 +23,7 @@ DATABASES = {
 YANDEX_STORAGE_CUSTOM_DOMAIN = None
 MEDIA_URL = os.environ.get('MEDIA_URL', '/media/')
 MEDIA_ROOT = BASE_DIR / 'airbnb/media/'
+RESIZED_MEDIA_URL = '/resized/'
 
 # DEBUG TOOLBAR
 DEBUG_TOOLBAR_CONFIG = {

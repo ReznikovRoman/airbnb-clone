@@ -95,7 +95,7 @@ def configure_routes() -> None:
                 {
                     'Condition': {
                         'HttpErrorCodeReturnedEquals': '404',
-                        'KeyPrefixEquals': 'media/upload/',
+                        'KeyPrefixEquals': 'resized/',
                     },
                     'Redirect': {
                         'HostName': 'functions.yandexcloud.net',

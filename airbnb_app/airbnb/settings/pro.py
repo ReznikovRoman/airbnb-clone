@@ -57,7 +57,9 @@ if USE_S3_BUCKET:
 
     # Media settings
     PUBLIC_MEDIA_LOCATION = 'media'
+    PUBLIC_MEDIA_RESIZED_LOCATION = 'resized'
     MEDIA_URL = f'https://{YANDEX_STORAGE_CUSTOM_DOMAIN}/{PUBLIC_MEDIA_LOCATION}/'
+    RESIZED_MEDIA_URL = f'https://{YANDEX_STORAGE_CUSTOM_DOMAIN}/{PUBLIC_MEDIA_RESIZED_LOCATION}/'
 else:
     # MEDIA
     MEDIA_URL = os.environ.get('MEDIA_URL', '/media/')
