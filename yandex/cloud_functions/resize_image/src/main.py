@@ -94,8 +94,13 @@ PILLOW_IMAGE_CONVERSATION_REQUIRED_MODS: Final[tuple[str, ...]] = (
 PILLOW_IMAGE_DEFAULT_FORMAT: Final[str] = "jpeg"
 
 
+YANDEX_OBJECT_STORAGE_MEDIA_RESIZED_PREFIX: Final[str] = os.environ.get(
+    key="YANDEX_FUNCTION_RESIZE_IMAGE_OBJECT_STORAGE_MEDIA_RESIZED_PREFIX",
+    default="resized/",
+)
 YANDEX_OBJECT_STORAGE_MEDIA_PREFIX: Final[str] = os.environ.get(
     key="YANDEX_FUNCTION_RESIZE_IMAGE_OBJECT_STORAGE_MEDIA_PREFIX",
+    default="media/",
 )
 YANDEX_OBJECT_STORAGE_BUCKET: Final[str] = os.environ.get("YANDEX_FUNCTION_RESIZE_IMAGE_BUCKET_NAME")
 YANDEX_AWS_ACCESS_KEY_ID: Final[str] = os.environ.get("YANDEX_CLOUD_FUNCTIONS_AWS_ACCESS_KEY_ID")
@@ -116,9 +121,14 @@ class FileInfo(NamedTuple):
 
 def parse_object_key(*, object_key: str) -> FileInfo:
     groups = re.search(r'((\d+)x(\d+))/(.*)', object_key).groups()
+    initial_object_key = (
+        object_key
+        .replace(f"{groups[0]}/", "")
+        .replace(YANDEX_OBJECT_STORAGE_MEDIA_RESIZED_PREFIX, YANDEX_OBJECT_STORAGE_MEDIA_PREFIX, 1)
+    )
     file_info = FileInfo(
         target_object_key=object_key,
-        initial_object_key=object_key.replace(f"{groups[0]}/", ""),
+        initial_object_key=initial_object_key,
         target_width=int(groups[1]),
         target_height=int(groups[2]),
         filename=groups[3],
@@ -204,7 +214,7 @@ def handler(event: HttpEvent, context: Context) -> dict[str, Any] | None:
     except KeyError:
         return
 
-    object_key = f"{YANDEX_OBJECT_STORAGE_MEDIA_PREFIX}{path}"
+    object_key = f"{YANDEX_OBJECT_STORAGE_MEDIA_RESIZED_PREFIX}{path}"
     response = resize_image(
         file_info=parse_object_key(object_key=object_key),
     )
