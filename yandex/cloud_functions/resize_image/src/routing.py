@@ -1,4 +1,5 @@
 import os
+import pathlib
 from enum import Enum
 from typing import Final, TypedDict
 
@@ -8,7 +9,9 @@ from botocore.config import Config
 from dotenv import load_dotenv
 
 
-load_dotenv()
+base_dir = pathlib.Path(__file__).resolve().parent
+home_dir = base_dir.parent
+load_dotenv(home_dir / ".env")
 
 
 YANDEX_AWS_ACCESS_KEY_ID: Final[str] = os.getenv("YANDEX_CLOUD_FUNCTIONS_AWS_ACCESS_KEY_ID")

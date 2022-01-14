@@ -3,21 +3,21 @@
 ## Overview
 Docs: https://cloud.yandex.com/en-ru/docs/functions/quickstart/
 
-Folder structure:
+Structure:
 ```
 function_name
+|   .env
+│   build.py
 |   build.zip
 |   deploy.sh
+│   example.env
 |   Makefile
 |   requirements.in
 |   requirements.txt
 |   setup.cfg
 │
 └───src
-│   │   .env
 │   │   __init__.py
-│   │   build.py
-│   │   example.env
 │   │   main.py
 ```
 
