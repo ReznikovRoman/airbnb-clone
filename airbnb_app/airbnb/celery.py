@@ -39,6 +39,13 @@ app.conf.beat_schedule = {
             'queue': 'default',
         },
     },
+    'email_subscribers_about_latest_realty': {
+        'task': 'subscribers.tasks.email_subscribers_about_latest_realty',
+        'schedule': crontab(day_of_week=5, hour=18, minute=0),  # every Friday at 6:00 p.m.
+        'options': {
+            'queue': 'emails',
+        },
+    },
 }
 
 
