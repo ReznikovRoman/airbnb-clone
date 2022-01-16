@@ -120,23 +120,6 @@ services:
     networks:
       - app-network
 
-  flower:
-    image: mher/flower:0.9.5
-    env_file:
-      - ${ENV}
-    command: celery flower --broker=${CELERY_BROKER_URL} --port=${FLOWER_PORT}
-    ports:
-      - "8888:${FLOWER_PORT}"
-    restart: unless-stopped
-    depends_on:
-      - celery
-      - redis
-    container_name: airbnb_flower
-    networks:
-        app-network:
-            aliases:
-                - flower
-
   celery_beat:
     restart: on-failure
     env_file:
@@ -154,6 +137,23 @@ services:
     container_name: airbnb_celery_beat
     networks:
       - app-network
+
+  flower:
+    image: mher/flower:0.9.5
+    env_file:
+      - ${ENV}
+    command: celery flower --broker=${CELERY_BROKER_URL} --port=${FLOWER_PORT}
+    ports:
+      - "8888:${FLOWER_PORT}"
+    restart: unless-stopped
+    depends_on:
+      - celery
+      - redis
+    container_name: airbnb_flower
+    networks:
+      app-network:
+        aliases:
+          - flower
 
 volumes:
   postgres_data:

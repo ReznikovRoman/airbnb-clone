@@ -161,7 +161,7 @@ services:
       start_period: 60s
       interval: 10s
       retries: 10
-      test: exit 0
+      test: curl --fail -s http://localhost:8000/healthcheck/ || exit 1
 
   celery:
     image: romanreznikov/backend:${CI_COMMIT_SHORT_SHA}

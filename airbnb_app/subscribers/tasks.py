@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Optional
 
 from celery_chunkificator.chunkify import Chunk, chunkify_task
@@ -27,6 +29,27 @@ def get_subscribers_initial_chunk(*args, **kwargs):
 @app.task(
     queue='emails',
     ignore_result=True,
+    time_limit=5,
+    soft_time_limit=3,
+)
+def send_recommendation_email(
+        domain: str,
+        subscriber_id: int | str,
+        latest_realty_count: int,
+        *args,
+        **kwargs,
+) -> None:
+    latest_realty = get_n_latest_available_realty(realty_count=latest_realty_count)
+    send_recommendation_email_to_subscriber(
+        site_domain=domain,
+        subscriber_id=subscriber_id,
+        realty_recommendations=latest_realty,
+    )
+
+
+@app.task(
+    queue='emails',
+    ignore_result=True,
     time_limit=2 * 60 * 60,
     soft_time_limit=60 * 60,
     expires=timezone.now() + timezone.timedelta(days=3),
@@ -43,7 +66,6 @@ def email_subscribers_about_latest_realty(
         **kwargs,
 ) -> None:
     """Send promo email about new Realty to all Subscribers."""
-    latest_realty = get_n_latest_available_realty(realty_count=latest_realty_count)
     domain = Site.objects.get_current().domain
     chunked_qs = (
         Subscriber.objects
@@ -52,8 +74,8 @@ def email_subscribers_about_latest_realty(
         .order_by("pk")
     )
     for subscriber_id in chunked_qs:
-        send_recommendation_email_to_subscriber(
-            site_domain=domain,
+        send_recommendation_email.delay(
+            domain=domain,
             subscriber_id=subscriber_id,
-            realty_recommendations=latest_realty,
+            latest_realty_count=latest_realty_count,
         )
