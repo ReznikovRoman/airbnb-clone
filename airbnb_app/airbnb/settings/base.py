@@ -309,6 +309,23 @@ if YMQ_ENDPOINT is not None:
         "max_retries": 10,
         "is_secure": True,
         "region": AWS_DEFAULT_REGION,
+        'predefined_queues': {
+            'default': {
+                'url': os.environ.get('YMQ_DEFAULT_QUEUE_URL'),
+                'access_key_id': AWS_ACCESS_KEY_ID,
+                'secret_access_key': AWS_SECRET_ACCESS_KEY,
+            },
+            'emails': {
+                'url': os.environ.get('YMQ_EMAILS_QUEUE_URL'),
+                'access_key_id': AWS_ACCESS_KEY_ID,
+                'secret_access_key': AWS_SECRET_ACCESS_KEY,
+            },
+            'urgent_notifications': {
+                'url': os.environ.get('YMQ_URGENT_NOTIFICATIONS_QUEUE_URL'),
+                'access_key_id': AWS_ACCESS_KEY_ID,
+                'secret_access_key': AWS_SECRET_ACCESS_KEY,
+            },
+        },
     }
     CELERY_BROKER_URL = f"sqs://{AWS_ACCESS_KEY_ID}:{AWS_SECRET_ACCESS_KEY}@{YMQ_ENDPOINT}"
     CELERY_RESULT_BACKEND_TRANSPORT_OPTIONS = {
@@ -317,6 +334,7 @@ if YMQ_ENDPOINT is not None:
             "timeout": 5.0,
         },
     }
+    CELERY_WORKER_ENABLE_REMOTE_CONTROL = False
 else:
     CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL")
 
@@ -333,6 +351,15 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+
+# TWILIO
+TWILIO_PHONE_NUMBER = os.environ.get('TWILIO_PHONE_NUMBER')
+
+
+# PHONENUMBER
+PHONENUMBER_DB_FORMAT = 'NATIONAL'
+PHONENUMBER_DEFAULT_REGION = 'RU'
 
 
 # CKEDITOR
@@ -394,12 +421,3 @@ CKEDITOR_CONFIGS = {
         ]),
     },
 }
-
-
-# TWILIO
-TWILIO_PHONE_NUMBER = os.environ.get('TWILIO_PHONE_NUMBER')
-
-
-# PHONENUMBER
-PHONENUMBER_DB_FORMAT = 'NATIONAL'
-PHONENUMBER_DEFAULT_REGION = 'RU'
