@@ -56,24 +56,36 @@ jobs:
       - name: Install Yandex Cloud CLI
         run: |
           curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -a
-      - name: Env variables
+      - name: Deploy cloud functions
         env:
+          YANDEX_CLOUD_FUNCTIONS_DEBUG: ${{ secrets.YANDEX_CLOUD_FUNCTIONS_DEBUG }}
+          YANDEX_CLOUD_FUNCTIONS_OAUTH_TOKEN: ${{ secrets.YANDEX_CLOUD_FUNCTIONS_OAUTH_TOKEN }}
+          YANDEX_CLOUD_FUNCTIONS_AWS_ACCESS_KEY_ID: ${{ secrets.YANDEX_CLOUD_FUNCTIONS_AWS_ACCESS_KEY_ID }}
+          YANDEX_CLOUD_FUNCTIONS_AWS_ACCESS_KEY_SECRET: ${{ secrets.YANDEX_CLOUD_FUNCTIONS_AWS_ACCESS_KEY_SECRET }}
+          YANDEX_CLOUD_FUNCTIONS_AWS_DEFAULT_REGION: ${{ secrets.YANDEX_CLOUD_FUNCTIONS_AWS_DEFAULT_REGION }}
+          YANDEX_FUNCTION_DELETE_IMAGE_SERVICE_ACCOUNT_ID: ${{ secrets.YANDEX_FUNCTION_DELETE_IMAGE_SERVICE_ACCOUNT_ID }}
+          YANDEX_FUNCTION_DELETE_IMAGE_CLOUD_ID: ${{ secrets.YANDEX_FUNCTION_DELETE_IMAGE_CLOUD_ID }}
+          YANDEX_FUNCTION_DELETE_IMAGE_FOLDER_ID: ${{ secrets.YANDEX_FUNCTION_DELETE_IMAGE_FOLDER_ID }}
+          YANDEX_FUNCTION_DELETE_IMAGE_IAM_TOKEN: ${{ secrets.YANDEX_FUNCTION_DELETE_IMAGE_IAM_TOKEN }}
+          YANDEX_FUNCTION_DELETE_IMAGE_NAME: ${{ secrets.YANDEX_FUNCTION_DELETE_IMAGE_NAME }}
+          YANDEX_FUNCTION_DELETE_IMAGE_BUCKET_NAME: ${{ secrets.YANDEX_FUNCTION_DELETE_IMAGE_BUCKET_NAME }}
+          YANDEX_FUNCTION_DELETE_IMAGE_OBJECT_STORAGE_MEDIA_RESIZED_PREFIX: ${{ secrets.YANDEX_FUNCTION_DELETE_IMAGE_OBJECT_STORAGE_MEDIA_RESIZED_PREFIX }}
+          YANDEX_FUNCTION_DELETE_IMAGE_OBJECT_STORAGE_MEDIA_PREFIX: ${{ secrets.YANDEX_FUNCTION_DELETE_IMAGE_OBJECT_STORAGE_MEDIA_PREFIX }}
+          YANDEX_FUNCTION_RESIZE_IMAGE_SERVICE_ACCOUNT_ID: ${{ secrets.YANDEX_FUNCTION_RESIZE_IMAGE_SERVICE_ACCOUNT_ID }}
+          YANDEX_FUNCTION_RESIZE_IMAGE_CLOUD_ID: ${{ secrets.YANDEX_FUNCTION_RESIZE_IMAGE_CLOUD_ID }}
+          YANDEX_FUNCTION_RESIZE_IMAGE_FOLDER_ID: ${{ secrets.YANDEX_FUNCTION_RESIZE_IMAGE_FOLDER_ID }}
+          YANDEX_FUNCTION_RESIZE_IMAGE_IAM_TOKEN: ${{ secrets.YANDEX_FUNCTION_RESIZE_IMAGE_IAM_TOKEN }}
+          YANDEX_FUNCTION_RESIZE_IMAGE_NAME: ${{ secrets.YANDEX_FUNCTION_RESIZE_IMAGE_NAME }}
+          YANDEX_FUNCTION_RESIZE_IMAGE_BUCKET_NAME: ${{ secrets.YANDEX_FUNCTION_RESIZE_IMAGE_BUCKET_NAME }}
+          YANDEX_FUNCTION_RESIZE_IMAGE_OBJECT_STORAGE_MEDIA_RESIZED_PREFIX: ${{ secrets.YANDEX_FUNCTION_RESIZE_IMAGE_OBJECT_STORAGE_MEDIA_RESIZED_PREFIX }}
+          YANDEX_FUNCTION_RESIZE_IMAGE_OBJECT_STORAGE_MEDIA_PREFIX: ${{ secrets.YANDEX_FUNCTION_RESIZE_IMAGE_OBJECT_STORAGE_MEDIA_PREFIX }}
           RESIZE_IMAGE_VALID_SIZES: ${{ secrets.RESIZE_IMAGE_VALID_SIZES }}
-        run: echo "$RESIZE_IMAGE_VALID_SIZES"
-#      - name: Export repository secrets
-#        run: |
-#          cd ./yandex/cloud_functions/
-#          chmod +x ./export_github_secrets.sh
-#          ./export_github_secrets.sh
-#          cat .env
-#        shell: bash
-#      - name: Deploy cloud functions
-#        run: |
-#          source /home/runner/yandex-cloud/path.bash.inc
-#          cd ./yandex/cloud_functions/
-#          chmod +x ./deploy_cloud_functions.sh
-#          ./deploy_cloud_functions.sh
-#        shell: bash
+        run: |
+          source /home/runner/yandex-cloud/path.bash.inc
+          cd ./yandex/cloud_functions/
+          chmod +x ./deploy_cloud_functions.sh
+          ./deploy_cloud_functions.sh
+        shell: bash
 
 #  push_to_registry:
 #    name: "Push new Docker image to Docker Hub"
