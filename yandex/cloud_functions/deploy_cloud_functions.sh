@@ -12,7 +12,7 @@ export_envs
 
 echo "Deploy Cloud Functions"
 
-yc config set token "$YANDEX_CLOUD_FUNCTIONS_OAUTH_TOKEN"
+yc config set token "$YANDEX_CLOUD_FUNCTIONS_OAUTH_TOKEN" || echo "Already authenticated with OAuth token"
 
 for dir in */; do
   cd "${dir}" || exit

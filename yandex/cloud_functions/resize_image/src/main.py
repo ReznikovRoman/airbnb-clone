@@ -202,7 +202,7 @@ def resize_image(*, file_info: FileInfo) -> dict[str, Any]:
         }
 
 
-def handler(event: HttpEvent, context: Context) -> dict[str, Any] | None:
+def handler(event: HttpEvent, context: Context) -> dict[str, Any]:
     """Handles image resizing requests.
 
     Handler arguments:
@@ -212,7 +212,12 @@ def handler(event: HttpEvent, context: Context) -> dict[str, Any] | None:
     try:
         path: str = event['queryStringParameters']['path']
     except KeyError:
-        return
+        return {
+            "statusCode": 400,
+            "body": json.dumps({
+                "error": "Only `HttpEvent`s are supported.",
+            }),
+        }
 
     object_key = f"{YANDEX_OBJECT_STORAGE_MEDIA_RESIZED_PREFIX}{path}"
     response = resize_image(
