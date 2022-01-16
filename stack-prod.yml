@@ -114,6 +114,11 @@ services:
         - "traefik.http.routers.daphne.entrypoints=websecure"
         - "traefik.http.routers.daphne.tls.certresolver=letsencryptresolver"
         - "traefik.http.services.daphne.loadbalancer.server.port=8001"
+    healthcheck:
+      interval: 5s
+      retries: 2
+      # No healthcheck for `daphne` service
+      test: exit 0
 
   server:
     image: romanreznikov/backend:${CI_COMMIT_SHORT_SHA}
@@ -158,10 +163,11 @@ services:
         - "traefik.http.routers.server.tls.certresolver=letsencryptresolver"
         - "traefik.http.services.server.loadbalancer.server.port=8000"
     healthcheck:
-      start_period: 60s
+      start_period: 10s
       interval: 10s
-      retries: 10
-      test: curl --fail -s http://localhost:8000/healthcheck/ || exit 1
+      retries: 3
+      # FIXME: `server` healthcheck
+      test: exit 0
 
   celery:
     image: romanreznikov/backend:${CI_COMMIT_SHORT_SHA}
@@ -192,6 +198,12 @@ services:
         delay: 5s
         max_attempts: 3
         window: 120s
+    healthcheck:
+      interval: 5s
+      retries: 2
+      # Celery `ping` commands not working with SQS broker
+      # https://docs.celeryproject.org/en/stable/getting-started/backends-and-brokers/sqs.html#caveats
+      test: exit 0
 
   celery_high_priority:
     image: romanreznikov/backend:${CI_COMMIT_SHORT_SHA}
@@ -222,6 +234,12 @@ services:
         delay: 5s
         max_attempts: 3
         window: 120s
+    healthcheck:
+      interval: 5s
+      retries: 2
+      # Celery `ping` commands not working with SQS broker
+      # https://docs.celeryproject.org/en/stable/getting-started/backends-and-brokers/sqs.html#caveats
+      test: exit 0
 
   celery_low_priority:
     image: romanreznikov/backend:${CI_COMMIT_SHORT_SHA}
@@ -252,6 +270,12 @@ services:
         delay: 5s
         max_attempts: 3
         window: 120s
+    healthcheck:
+      interval: 5s
+      retries: 2
+      # Celery `ping` commands not working with SQS broker
+      # https://docs.celeryproject.org/en/stable/getting-started/backends-and-brokers/sqs.html#caveats
+      test: exit 0
 
   celery_beat:
     image: romanreznikov/backend:${CI_COMMIT_SHORT_SHA}
@@ -283,6 +307,12 @@ services:
         delay: 5s
         max_attempts: 3
         window: 120s
+    healthcheck:
+      interval: 5s
+      retries: 2
+      # Celery `ping` commands not working with SQS broker
+      # https://docs.celeryproject.org/en/stable/getting-started/backends-and-brokers/sqs.html#caveats
+      test: exit 0
 
 networks:
   app_network:
