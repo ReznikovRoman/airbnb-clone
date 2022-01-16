@@ -56,10 +56,10 @@ jobs:
       - name: Install Yandex Cloud CLI
         run: |
           curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -a
-      - name: Dump GitHub context
+      - name: Env variables
         env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
-        run: echo "$GITHUB_CONTEXT"
+          RESIZE_IMAGE_VALID_SIZES: ${{ secrets.RESIZE_IMAGE_VALID_SIZES }}
+        run: echo "$RESIZE_IMAGE_VALID_SIZES"
 #      - name: Export repository secrets
 #        run: |
 #          cd ./yandex/cloud_functions/
