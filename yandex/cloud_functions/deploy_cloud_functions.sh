@@ -11,6 +11,9 @@ function export_envs {
 export_envs
 
 echo "Deploy Cloud Functions"
+
+yc config set token "$YANDEX_CLOUD_FUNCTIONS_OAUTH_TOKEN"
+
 for dir in */; do
   cd "${dir}" || exit
   chmod +x ./deploy.sh

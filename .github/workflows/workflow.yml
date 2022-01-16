@@ -56,20 +56,21 @@ jobs:
       - name: Install Yandex Cloud CLI
         run: |
           curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -a
-      - name: Export repository secrets
-        run: |
-          cd ./yandex/cloud_functions/
-          chmod +x ./export_github_secrets.sh
-          ./export_github_secrets.sh
-          cat .env
-        shell: bash
-      - name: Deploy cloud functions
-        run: |
-          source /home/runner/yandex-cloud/path.bash.inc
-          cd ./yandex/cloud_functions/
-          chmod +x ./deploy_cloud_functions.sh
-          ./deploy_cloud_functions.sh
-        shell: bash
+          echo $GITHUB_CONTEXT
+#      - name: Export repository secrets
+#        run: |
+#          cd ./yandex/cloud_functions/
+#          chmod +x ./export_github_secrets.sh
+#          ./export_github_secrets.sh
+#          cat .env
+#        shell: bash
+#      - name: Deploy cloud functions
+#        run: |
+#          source /home/runner/yandex-cloud/path.bash.inc
+#          cd ./yandex/cloud_functions/
+#          chmod +x ./deploy_cloud_functions.sh
+#          ./deploy_cloud_functions.sh
+#        shell: bash
 
 #  push_to_registry:
 #    name: "Push new Docker image to Docker Hub"
