@@ -201,7 +201,7 @@ services:
     healthcheck:
       interval: 5s
       retries: 2
-      # Celery `ping` commands not working with SQS broker
+      # Celery `ping` commands do not work with SQS broker
       # https://docs.celeryproject.org/en/stable/getting-started/backends-and-brokers/sqs.html#caveats
       test: exit 0
 
@@ -237,7 +237,7 @@ services:
     healthcheck:
       interval: 5s
       retries: 2
-      # Celery `ping` commands not working with SQS broker
+      # Celery `ping` commands do not work with SQS broker
       # https://docs.celeryproject.org/en/stable/getting-started/backends-and-brokers/sqs.html#caveats
       test: exit 0
 
@@ -273,7 +273,7 @@ services:
     healthcheck:
       interval: 5s
       retries: 2
-      # Celery `ping` commands not working with SQS broker
+      # Celery `ping` commands do not work with SQS broker
       # https://docs.celeryproject.org/en/stable/getting-started/backends-and-brokers/sqs.html#caveats
       test: exit 0
 
@@ -310,7 +310,7 @@ services:
     healthcheck:
       interval: 5s
       retries: 2
-      # Celery `ping` commands not working with SQS broker
+      # Celery `ping` commands do not work with SQS broker
       # https://docs.celeryproject.org/en/stable/getting-started/backends-and-brokers/sqs.html#caveats
       test: exit 0
 
