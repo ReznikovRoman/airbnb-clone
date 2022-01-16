@@ -56,7 +56,8 @@ jobs:
       - name: Install Yandex Cloud CLI
         run: |
           curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -a
-          echo $GITHUB_CONTEXT
+      - name: Env vars
+        run: echo $GITHUB_CONTEXT
 #      - name: Export repository secrets
 #        run: |
 #          cd ./yandex/cloud_functions/
