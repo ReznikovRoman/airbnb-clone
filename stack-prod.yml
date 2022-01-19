@@ -141,32 +141,27 @@ services:
       - ./config/postgres/certs/root.crt:${POSTGRES_SSL_CERT_DOCKER_PATH:-/usr/local/etc/.postgresql/root.crt}
       - ./config/redis/certs/YandexInternalRootCA.crt:${REDIS_SSL_CERT_DOCKER_PATH:-/usr/local/share/ca-certificates/Yandex/YandexInternalRootCA.crt}
     deploy:
-      replicas: 1
+      replicas: 2
       update_config:
-        parallelism: 2
+        parallelism: 1
         order: start-first
         failure_action: rollback
         delay: 15s
       rollback_config:
-        parallelism: 0
+        parallelism: 1
         order: stop-first
       restart_policy:
         condition: on-failure
         delay: 10s
         max_attempts: 5
         window: 60s
+      # FIXME: add `server` healthcheck
       labels:
         - "traefik.enable=true"
         - "traefik.http.routers.server.rule=Host(`airproject.xyz`)"
         - "traefik.http.routers.server.entrypoints=websecure"
         - "traefik.http.routers.server.tls.certresolver=letsencryptresolver"
         - "traefik.http.services.server.loadbalancer.server.port=8000"
-    healthcheck:
-      start_period: 10s
-      interval: 10s
-      retries: 3
-      # FIXME: `server` healthcheck
-      test: exit 0
 
   celery:
     image: romanreznikov/backend:${CI_COMMIT_SHORT_SHA}
