@@ -90,17 +90,18 @@ jobs:
   apply_migrations:
     name: "Apply database migrations"
     runs-on: ubuntu-latest
-#    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-#    needs: lint
-#    concurrency:
-#      group: Prod
-#      cancel-in-progress: true
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    needs: lint
+    concurrency:
+      group: Prod
+      cancel-in-progress: true
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: '3.9'
+          cache: 'pip'
       - name: Install system dependencies
         run: |
           sudo apt-get install libcurl4-gnutls-dev librtmp-dev
@@ -168,7 +169,7 @@ jobs:
 #    name: "Push new Docker image to Docker Hub"
 #    runs-on: ubuntu-latest
 #    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-#    needs: lint
+#    needs: [lint, apply_migrations]
 #    concurrency:
 #      group: Prod
 #      cancel-in-progress: true
@@ -197,7 +198,7 @@ jobs:
 #      name: "Deploy Swarm Stack to production"
 #      runs-on: ubuntu-latest
 #      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-#      needs: push_to_registry
+#      needs: [push_to_registry, apply_migrations]
 #      concurrency:
 #        group: Prod
 #        cancel-in-progress: true
