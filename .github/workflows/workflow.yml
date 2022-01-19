@@ -90,11 +90,11 @@ jobs:
   apply_migrations:
     name: "Apply database migrations"
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-    needs: lint
-    concurrency:
-      group: Prod
-      cancel-in-progress: true
+#    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+#    needs: lint
+#    concurrency:
+#      group: Prod
+#      cancel-in-progress: true
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python
