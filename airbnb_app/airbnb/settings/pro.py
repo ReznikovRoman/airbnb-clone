@@ -11,6 +11,15 @@ DEBUG = False
 ALLOWED_HOSTS = os.environ.get('PROJECT_ALLOWED_HOSTS', '').split(',')
 
 # DATABASE
+DATABASE_OPTIONS = {
+    'target_session_attrs': 'read-write',
+    'sslmode': 'verify-full',
+    'sslrootcert': os.environ.get('POSTGRES_SSL_CERT_DOCKER_PATH'),
+}
+if PROJECT_ENVIRONMENT == "ci":
+    DATABASE_OPTIONS = {
+        'target_session_attrs': 'read-write',
+    }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -19,11 +28,7 @@ DATABASES = {
         'PASSWORD': os.environ.get('POSTGRES_YANDEX_PASSWORD'),
         'HOST': os.environ.get('POSTGRES_YANDEX_HOST'),
         'PORT': os.environ.get('POSTGRES_YANDEX_PORT'),
-        'OPTIONS': {
-            'target_session_attrs': 'read-write',
-            'sslmode': 'verify-full',
-            'sslrootcert': os.environ.get('POSTGRES_SSL_CERT_DOCKER_PATH'),
-        },
+        'OPTIONS': DATABASE_OPTIONS,
     },
 }
 
