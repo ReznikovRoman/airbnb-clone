@@ -90,11 +90,11 @@ jobs:
   apply_migrations:
     name: "Apply database migrations"
     runs-on: ubuntu-latest
-#    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-#    needs: lint
-#    concurrency:
-#      group: Prod
-#      cancel-in-progress: true
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    needs: lint
+    concurrency:
+      group: Prod
+      cancel-in-progress: true
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python
@@ -163,7 +163,7 @@ jobs:
           AIRBNB_SENTRY_DSN: ${{ secrets.P_AIRBNB_SENTRY_DSN }}
         run: |
           cd ./airbnb_app/
-          python manage.py migrate --noinput --check
+          python manage.py migrate --noinput
 
   push_to_registry:
     name: "Push new Docker image to Docker Hub"

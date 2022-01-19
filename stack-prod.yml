@@ -130,7 +130,6 @@ services:
       - DJANGO_SETTINGS_MODULE=airbnb.settings.pro
     command: >
       bash -c "cd /home/app/web/airbnb_app/
-      && python manage.py migrate --noinput
       && python manage.py collectstatic --no-input
       && gunicorn -c /home/app/web/config/gunicorn_config.py airbnb.wsgi"
     networks:
