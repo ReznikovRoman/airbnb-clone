@@ -15,7 +15,7 @@ class RealtyHost(models.Model):
     host_rating = models.PositiveSmallIntegerField(
         null=True,
         blank=True,
-        verbose_name='rating',
+        verbose_name='host rating',
         validators=[
             MinValueValidator(0),
             MaxValueValidator(5),

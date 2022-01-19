@@ -87,11 +87,89 @@ jobs:
           ./deploy_cloud_functions.sh
         shell: bash
 
+  apply_migrations:
+    name: "Apply database migrations"
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    needs: lint
+    concurrency:
+      group: Prod
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+          cache: 'pip'
+      - name: Install system dependencies
+        run: |
+          sudo apt-get install libcurl4-gnutls-dev librtmp-dev
+      - name: Install project dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Apply migrations
+        env:
+          ENV: ${{ secrets.P_ENV }}
+          PYTHONUNBUFFERED: ${{ secrets.P_PYTHONUNBUFFERED }}
+          ENVIRONMENT: ${{ secrets.P_ENVIRONMENT }}
+          DJANGO_SETTINGS_MODULE: ${{ secrets.P_DJANGO_SETTINGS_MODULE }}
+          PROJECT_ALLOWED_HOSTS: ${{ secrets.P_PROJECT_ALLOWED_HOSTS }}
+          PROJECT_ADMIN_EMAIL: ${{ secrets.P_PROJECT_ADMIN_EMAIL }}
+          PROJECT_FULL_DOMAIN: ${{ secrets.P_PROJECT_FULL_DOMAIN }}
+          SITE_DEFAULT_PROTOCOL: ${{ secrets.P_SITE_DEFAULT_PROTOCOL }}
+          USE_S3_BUCKET: ${{ secrets.P_USE_S3_BUCKET }}
+          YANDEX_STORAGE_BUCKET_NAME: ${{ secrets.P_YANDEX_STORAGE_BUCKET_NAME }}
+          YANDEX_STORAGE_ACCESS_KEY_ID: ${{ secrets.P_YANDEX_STORAGE_ACCESS_KEY_ID }}
+          YANDEX_STORAGE_SECRET_ACCESS_KEY: ${{ secrets.P_YANDEX_STORAGE_SECRET_ACCESS_KEY }}
+          YANDEX_STORAGE_CUSTOM_DOMAIN: ${{ secrets.P_YANDEX_STORAGE_CUSTOM_DOMAIN }}
+          MEDIA_URL: ${{ secrets.P_MEDIA_URL }}
+          STATIC_URL: ${{ secrets.P_STATIC_URL }}
+          EMAIL_HOST_USER_ESL: ${{ secrets.P_EMAIL_HOST_USER_ESL }}
+          EMAIL_HOST_PASSWORD_ESL: ${{ secrets.P_EMAIL_HOST_PASSWORD_ESL }}
+          USE_MANAGED_POSTGRES: ${{ secrets.P_USE_MANAGED_POSTGRES }}
+          POSTGRES_YANDEX_CLUSTER_NAME: ${{ secrets.P_POSTGRES_YANDEX_CLUSTER_NAME }}
+          POSTGRES_YANDEX_USER: ${{ secrets.P_POSTGRES_YANDEX_USER }}
+          POSTGRES_YANDEX_PASSWORD: ${{ secrets.P_POSTGRES_YANDEX_PASSWORD }}
+          POSTGRES_YANDEX_DB: ${{ secrets.P_POSTGRES_YANDEX_DB }}
+          POSTGRES_YANDEX_HOST: ${{ secrets.P_POSTGRES_YANDEX_HOST }}
+          POSTGRES_YANDEX_PORT: ${{ secrets.P_POSTGRES_YANDEX_PORT }}
+          POSTGRES_SSL_CERT_DOCKER_PATH: ${{ secrets.P_POSTGRES_SSL_CERT_DOCKER_PATH }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.P_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.P_AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.P_AWS_DEFAULT_REGION }}
+          YMQ_ENDPOINT: ${{ secrets.P_YMQ_ENDPOINT }}
+          YMQ_DEFAULT_QUEUE_URL: ${{ secrets.P_YMQ_DEFAULT_QUEUE_URL }}
+          YMQ_EMAILS_QUEUE_URL: ${{ secrets.P_YMQ_EMAILS_QUEUE_URL }}
+          YMQ_URGENT_NOTIFICATIONS_QUEUE_URL: ${{ secrets.P_YMQ_URGENT_NOTIFICATIONS_QUEUE_URL }}
+          CELERY_BROKER_URL: ${{ secrets.P_CELERY_BROKER_URL }}
+          CELERY_RESULT_BACKEND: ${{ secrets.P_CELERY_RESULT_BACKEND }}
+          REDIS_DECODE_RESPONSES: ${{ secrets.P_REDIS_DECODE_RESPONSES }}
+          REDIS_PORT: ${{ secrets.P_REDIS_PORT }}
+          REDIS_SSL_CERT_DOCKER_PATH: ${{ secrets.P_REDIS_SSL_CERT_DOCKER_PATH }}
+          REDIS_SENTINEL_HOSTS: ${{ secrets.P_REDIS_SENTINEL_HOSTS }}
+          REDIS_CLUSTER_NAME: ${{ secrets.P_REDIS_CLUSTER_NAME }}
+          REDIS_CLUSTER_PASSWORD: ${{ secrets.P_REDIS_CLUSTER_PASSWORD }}
+          REDIS_CACHE_DB: ${{ secrets.P_REDIS_CACHE_DB }}
+          REDIS_MAIN_DB: ${{ secrets.P_REDIS_MAIN_DB }}
+          REDIS_SESSION_DB: ${{ secrets.P_REDIS_SESSION_DB }}
+          CELERY_REDIS_DB: ${{ secrets.P_CELERY_REDIS_DB }}
+          REDIS_CHANNELS_DB: ${{ secrets.P_REDIS_CHANNELS_DB }}
+          REDIS_CHANNELS_URL: ${{ secrets.P_REDIS_CHANNELS_URL }}
+          TWILIO_ACCOUNT_SID: ${{ secrets.P_TWILIO_ACCOUNT_SID }}
+          TWILIO_AUTH_TOKEN: ${{ secrets.P_TWILIO_AUTH_TOKEN }}
+          TWILIO_PHONE_NUMBER: ${{ secrets.P_TWILIO_PHONE_NUMBER }}
+          AIRBNB_SENTRY_DSN: ${{ secrets.P_AIRBNB_SENTRY_DSN }}
+        run: |
+          cd ./airbnb_app/
+          python manage.py migrate --noinput
+
   push_to_registry:
     name: "Push new Docker image to Docker Hub"
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-    needs: lint
+    needs: [lint, apply_migrations]
     concurrency:
       group: Prod
       cancel-in-progress: true
@@ -120,7 +198,7 @@ jobs:
       name: "Deploy Swarm Stack to production"
       runs-on: ubuntu-latest
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      needs: push_to_registry
+      needs: [push_to_registry, apply_migrations]
       concurrency:
         group: Prod
         cancel-in-progress: true
