@@ -9,6 +9,9 @@ from .permissions import IsAbleToAddRealty, IsRealtyOwnerOrReadOnly
 from .serializers import RealtySerializer, RealtyUpdateSerializer
 
 
+# TODO: refactor API
+
+
 class RealtyListApiView(generics.ListCreateAPIView):
     """API view for listing realty objects.
 
