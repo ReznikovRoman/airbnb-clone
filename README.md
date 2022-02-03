@@ -148,7 +148,7 @@ CI_COMMIT_SHORT_SHA=<latest>
 Local:
 ```shell
 docker-compose -f docker-compose-local.yml build
-docker-compose -f docker-compose-local.yml run --rm server sh -c "cd airbnb_app && ./manage.py populate_db"
+docker-compose -f docker-compose-local.yml run --rm server sh -c "cd airbnb_app && ./manage.py migrate && ./manage.py populate_db"
 docker-compose -f docker-compose-local.yml up
 ```
 

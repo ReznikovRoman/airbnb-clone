@@ -70,7 +70,7 @@ class Command(BaseCommand):
                 )
 
     def _create_users(self, quantity: int) -> None:
-        self.stdout.write(self.style.WARNING(f"Creating {quantity}> new fake users..."))
+        self.stdout.write(self.style.WARNING(f"Creating <{quantity}> new fake users..."))
         baker.make_recipe("accounts.confirmed_email_user", _quantity=quantity)
         baker.make_recipe("accounts.unconfirmed_email_user", _quantity=quantity)
 
