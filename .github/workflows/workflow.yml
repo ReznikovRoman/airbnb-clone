@@ -197,7 +197,7 @@ jobs:
           context: .
           file: prod.Dockerfile
           push: true
-          tags: romanreznikov/backend:latest,romanreznikov/backend:{SHORT_SHA}
+          tags: romanreznikov/backend:latest,romanreznikov/backend:123
 
   deploy:
       name: "Deploy Swarm Stack to production"
