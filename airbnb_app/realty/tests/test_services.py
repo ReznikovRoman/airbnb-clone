@@ -18,9 +18,10 @@ from ..services.images import get_image_by_id, get_images_by_realty_id, update_i
 from ..services.order import ImageOrder, convert_response_to_orders
 from ..services.realty import (
     get_all_available_realty, get_amenity_ids_from_session, get_available_realty_by_city_slug,
-    get_available_realty_by_host, get_available_realty_count_by_city, get_available_realty_filtered_by_type,
-    get_available_realty_search_results, get_cached_realty_visits_count_by_realty_id, get_last_realty,
-    get_n_latest_available_realty, get_or_create_realty_host_by_user, update_realty_visits_count,
+    get_available_realty_by_host, get_available_realty_by_ids, get_available_realty_count_by_city,
+    get_available_realty_filtered_by_type, get_available_realty_search_results,
+    get_cached_realty_visits_count_by_realty_id, get_last_realty, get_n_latest_available_realty,
+    get_n_latest_available_realty_ids, get_or_create_realty_host_by_user, update_realty_visits_count,
     update_realty_visits_from_redis,
 )
 
@@ -177,6 +178,15 @@ class RealtyServicesRealtyTests(TestCase):
             [Realty.objects.get(slug='realty-3')],
         )
 
+    def test_get_available_realty_by_ids(self):
+        """get_available_realty_by_ids() returns all available Realty objects by given `ids`."""
+        realty_1 = Realty.objects.first()
+        realty_2 = Realty.objects.last()
+        self.assertListEqual(
+            list(get_available_realty_by_ids(ids=[realty_1.id, realty_2.id])),
+            [realty_1, realty_2],
+        )
+
     def test_get_available_realty_by_city_slug_all_realty(self):
         """get_available_realty_by_city_slug() returns all available realty filtered by a `city_slug`."""
         city_slug = 'moscow'
@@ -225,6 +235,14 @@ class RealtyServicesRealtyTests(TestCase):
         self.assertListEqual(
             list(get_n_latest_available_realty(test_count)),
             [Realty.objects.get(slug='realty-3'), Realty.objects.get(slug='realty-2')],
+        )
+
+    def test_get_n_latest_available_realty_ids(self):
+        """get_n_latest_available_realty_ids() returns `realty_count` Realty ids."""
+        test_count = 2
+        self.assertListEqual(
+            list(get_n_latest_available_realty_ids(test_count)),
+            [Realty.objects.get(slug='realty-3').id, Realty.objects.get(slug='realty-2').id],
         )
 
     def test_get_available_realty_count_by_city(self):
