@@ -235,4 +235,8 @@ jobs:
             CI_COMMIT_SHORT_SHA: ${SHORT_SHA}
           if: ${{ always() }}
           # run: ssh prod 'cd /home/roman/projects/airbnb-clone && env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy -c stack-prod.yml airbnb_app --with-registry-auth'
-          run: LANG=LANG_RUS ssh prod 'echo $PATH && $LANG'
+          run: |
+            ssh prod "env CI_COMMIT_SHORT_SHA=${CI_COMMIT_SHORT_SHA}" sh -s <<'EOF'
+            pwd
+            echo "${CI_COMMIT_SHORT_SHA}"
+            EOF
