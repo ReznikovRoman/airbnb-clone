@@ -14,7 +14,7 @@ redis_instance = redis.Redis(
 if not settings.DEBUG:
     sentinel = Sentinel(
         sentinels=settings.REDIS_CLUSTER_SENTINELS,
-        socket_timeout=0.1,
+        socket_timeout=1,
         ssl=True,
         ssl_ca_certs=settings.REDIS_SSL_CERT_DOCKER_PATH,
     )
