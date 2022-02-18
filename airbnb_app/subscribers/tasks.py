@@ -9,7 +9,7 @@ from django.db.models import Max, Min
 from django.utils import timezone
 
 from airbnb.celery import app
-from realty.services.realty import get_n_latest_available_realty
+from realty.services.realty import get_available_realty_by_ids, get_n_latest_available_realty_ids
 
 from .models import Subscriber
 from .services import send_recommendation_email_to_subscriber
@@ -35,11 +35,11 @@ def get_subscribers_initial_chunk(*args, **kwargs):
 def send_recommendation_email(
         domain: str,
         subscriber_id: int | str,
-        latest_realty_count: int,
+        latest_realty_ids: list[int | str],
         *args,
         **kwargs,
 ) -> None:
-    latest_realty = get_n_latest_available_realty(realty_count=latest_realty_count)
+    latest_realty = get_available_realty_by_ids(ids=latest_realty_ids)
     send_recommendation_email_to_subscriber(
         site_domain=domain,
         subscriber_id=subscriber_id,
@@ -67,6 +67,7 @@ def email_subscribers_about_latest_realty(
 ) -> None:
     """Send promo email about new Realty to all Subscribers."""
     domain = Site.objects.get_current().domain
+    latest_realty_ids = get_n_latest_available_realty_ids(realty_count=latest_realty_count)
     chunked_qs = (
         Subscriber.objects
         .filter(pk__range=chunk.range)
@@ -77,5 +78,5 @@ def email_subscribers_about_latest_realty(
         send_recommendation_email.delay(
             domain=domain,
             subscriber_id=subscriber_id,
-            latest_realty_count=latest_realty_count,
+            latest_realty_ids=latest_realty_ids,
         )

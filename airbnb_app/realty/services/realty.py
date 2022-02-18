@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import List, Optional, Tuple, Union
 
 from django.conf import settings
@@ -31,6 +33,10 @@ def get_available_realty_by_host(realty_host: RealtyHost) -> 'QuerySet[Realty]':
     return Realty.available.filter(host=realty_host)
 
 
+def get_available_realty_by_ids(ids: list[int | str]) -> 'QuerySet[Realty]':
+    return Realty.available.filter(id__in=ids)
+
+
 def get_available_realty_by_city_slug(
         city_slug: str,
         realty_qs: Optional['QuerySet[Realty]'] = None,
@@ -55,6 +61,10 @@ def get_last_realty() -> Realty:
 
 def get_n_latest_available_realty(realty_count: int) -> 'QuerySet[Realty]':
     return Realty.available.all()[:realty_count]
+
+
+def get_n_latest_available_realty_ids(realty_count: int) -> 'QuerySet[Realty]':
+    return Realty.available.values_list('id', flat=True)[:realty_count]
 
 
 def get_available_realty_count_by_city(city: str) -> int:

@@ -69,8 +69,10 @@ class SignUpView(
         )
 
 
-class LoginView(AnonymousUserRequiredMixin,
-                auth_views.LoginView):
+class LoginView(
+    AnonymousUserRequiredMixin,
+    auth_views.LoginView,
+):
     """View for signing in."""
 
     template_name = 'accounts/registration/login.html'
