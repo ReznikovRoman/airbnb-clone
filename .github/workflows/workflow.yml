@@ -210,6 +210,11 @@ jobs:
         cancel-in-progress: true
       steps:
         - name: Configure SSH
+          env:
+            SSH_USER: ${{ secrets.PROD_SSH_USER }}
+            SSH_KEY: ${{ secrets.PROD_SSH_KEY }}
+            SSH_HOST: ${{ secrets.PROD_SSH_HOST }}
+            CI_COMMIT_SHORT_SHA: ${SHORT_SHA}
           run: |
             mkdir -p ~/.ssh/
             echo "$SSH_KEY" > ~/.ssh/prod.key
@@ -220,17 +225,13 @@ jobs:
               User $SSH_USER
               IdentityFile ~/.ssh/prod.key
               StrictHostKeyChecking no
+              SetEnv CI_COMMIT_SHORT_SHA=${CI_COMMIT_SHORT_SHA}
             END
-          env:
-            SSH_USER: ${{ secrets.PROD_SSH_USER }}
-            SSH_KEY: ${{ secrets.PROD_SSH_KEY }}
-            SSH_HOST: ${{ secrets.PROD_SSH_HOST }}
         - name: Check out the source
           run: ssh prod 'cd /home/roman/projects/airbnb-clone && git fetch && git reset --hard origin/master'
         - name: Deploy Docker Swarm stack
           env:
             CI_COMMIT_SHORT_SHA: ${SHORT_SHA}
-            ENV_VAR: "test_variable"
           if: ${{ always() }}
           # run: ssh prod 'cd /home/roman/projects/airbnb-clone && env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy -c stack-prod.yml airbnb_app --with-registry-auth'
-          run: ssh prod ENV_VAR=${ENV_VAR} 'echo $ENV_VAR'
+          run: ssh prod env CI_COMMIT_SHORT_SHA=${CI_COMMIT_SHORT_SHA} 'echo $CI_COMMIT_SHORT_SHA'
