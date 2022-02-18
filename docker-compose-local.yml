@@ -58,7 +58,7 @@ services:
     build: .
     command: >
       bash -c "cd /app/airbnb_app/
-      && celery -A airbnb worker -Q default,emails,urgent_notifications -l info -c 2 -n default_worker"
+      && celery -A airbnb worker -Q default,celery,emails,urgent_notifications -l info -c 2 -n default_worker"
     healthcheck:
       test: celery -A airbnb inspect ping
       interval: 10s

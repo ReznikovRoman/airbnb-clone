@@ -200,7 +200,7 @@ services:
       - ${ENV}
     command: >
       bash -c "cd /home/app/web/airbnb_app/
-      && celery -A airbnb worker -Q default,emails,urgent_notifications -l info -c 2 -n default_worker --autoscale=4,2"
+      && celery -A airbnb worker -Q default,celery,emails,urgent_notifications -l info -c 2 -n default_worker --autoscale=4,2"
     depends_on:
       - server
     networks:

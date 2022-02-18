@@ -293,6 +293,7 @@ CELERY_TASK_TIME_LIMIT = 8 * 60 * 60  # 8 hours
 CELERY_TASK_SOFT_TIME_LIMIT = 10 * 60 * 60  # 10 hours
 CELERY_QUEUES = (
     Queue(name='default', exchange=Exchange('default'), routing_key='default'),
+    Queue(name='celery'),
     Queue(name='emails'),
     Queue(name='urgent_notifications'),
 )
@@ -312,6 +313,11 @@ if YMQ_ENDPOINT is not None:
         'predefined_queues': {
             'default': {
                 'url': os.environ.get('YMQ_DEFAULT_QUEUE_URL'),
+                'access_key_id': AWS_ACCESS_KEY_ID,
+                'secret_access_key': AWS_SECRET_ACCESS_KEY,
+            },
+            'celery': {
+                'url': os.environ.get('YMQ_CELERY_QUEUE_URL'),
                 'access_key_id': AWS_ACCESS_KEY_ID,
                 'secret_access_key': AWS_SECRET_ACCESS_KEY,
             },
