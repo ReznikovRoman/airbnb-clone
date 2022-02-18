@@ -233,4 +233,4 @@ jobs:
             ENV_VAR: "test_variable"
           if: ${{ always() }}
           # run: ssh prod 'cd /home/roman/projects/airbnb-clone && env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy -c stack-prod.yml airbnb_app --with-registry-auth'
-          run: ssh prod 'export ENV_VAR=${ENV_VAR} && export TMP_VAR="SERVER" && echo $ENV_VAR $TMP_VAR'
+          run: ssh prod 'echo $ENV_VAR' ENV_VAR=${EVN_VAR}
