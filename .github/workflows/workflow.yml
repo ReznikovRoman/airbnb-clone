@@ -193,7 +193,7 @@ jobs:
           context: .
           file: prod.Dockerfile
           push: true
-          tags: romanreznikov/backend:latest
+          tags: romanreznikov/backend:latest,romanreznikov/backend:{GITHUB_SHA::7}
 
   deploy:
       name: "Deploy Swarm Stack to production"
@@ -223,5 +223,7 @@ jobs:
         - name: Check out the source
           run: ssh prod 'cd /home/roman/projects/airbnb-clone && git fetch && git reset --hard origin/master'
         - name: Deploy Docker Swarm stack
+          env:
+            CI_COMMIT_SHORT_SHA: ${GITHUB_SHA::7}
           if: ${{ always() }}
-          run: ssh prod 'cd /home/roman/projects/airbnb-clone && env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy -c stack-prod.yml airbnb_app --with-registry-auth'
+          run: ssh prod 'echo $CI_COMMIT_SHORT_SHA && cd /home/roman/projects/airbnb-clone && env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy -c stack-prod.yml airbnb_app --with-registry-auth'
