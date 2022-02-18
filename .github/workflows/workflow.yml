@@ -230,6 +230,7 @@ jobs:
         - name: Deploy Docker Swarm stack
           env:
             CI_COMMIT_SHORT_SHA: ${SHORT_SHA}
+            ENV_VAR: "test_variable"
           if: ${{ always() }}
           # run: ssh prod 'cd /home/roman/projects/airbnb-clone && env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy -c stack-prod.yml airbnb_app --with-registry-auth'
-          run: ssh prod 'export CI_COMMIT_SHORT_SHA=${SHORT_SHA} && echo $CI_COMMIT_SHORT_SHA'
+          run: ssh prod 'echo $ENV_VAR ${ENV_VAR} $SHORT_SHA ${SHORT_SHA}'
