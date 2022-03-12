@@ -67,7 +67,7 @@ def email_subscribers_about_latest_realty(
 ) -> None:
     """Send promo email about new Realty to all Subscribers."""
     domain = Site.objects.get_current().domain
-    latest_realty_ids = get_n_latest_available_realty_ids(realty_count=latest_realty_count)
+    latest_realty_ids = list(get_n_latest_available_realty_ids(realty_count=latest_realty_count))
     chunked_qs = (
         Subscriber.objects
         .filter(pk__range=chunk.range)
