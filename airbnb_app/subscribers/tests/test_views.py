@@ -16,7 +16,7 @@ class SubscribeViewTests(TestCase):
         )
 
     def test_subscribe_success_if_not_logged_in(self):
-        """Test that `AnonymousUser` can subscribe to the newsletter."""
+        """`AnonymousUser` can subscribe to the newsletter."""
         form_data = {
             'email': 'sub1@gmail.com',
         }
@@ -26,7 +26,7 @@ class SubscribeViewTests(TestCase):
         self.assertTrue(Subscriber.objects.filter(email=form_data['email']).exists())
 
     def test_subscribe_success_if_logged_in(self):
-        """Test that authenticated user can subscribe to the newsletter."""
+        """Authenticated user can subscribe to the newsletter."""
         test_user = CustomUser.objects.get(email='user1@gmail.com')
         form_data = {
             'email': 'user1@gmail.com',
@@ -39,7 +39,7 @@ class SubscribeViewTests(TestCase):
         self.assertEqual(Subscriber.objects.get(email=form_data['email']).user, test_user)
 
     def test_can_subscribe_multiple_times_if_not_logged_in(self):
-        """Test that `AnonymousUser` can subscribe multiple times (for different emails)."""
+        """`AnonymousUser` can subscribe multiple times (for different emails)."""
         test_user = CustomUser.objects.get(email='user1@gmail.com')
         form_data1 = {
             'email': 'user1@gmail.com',
@@ -59,7 +59,7 @@ class SubscribeViewTests(TestCase):
         self.assertNotEqual(Subscriber.objects.get(email=form_data2['email']).user, test_user)
 
     def test_can_subscribe_multiple_times_if_logged_in(self):
-        """Test that authenticated user can subscribe multiple times (for different emails)."""
+        """Authenticated user can subscribe multiple times (for different emails)."""
         form_data1 = {
             'email': 'sub1@gmail.com',
         }

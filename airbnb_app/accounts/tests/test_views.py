@@ -39,34 +39,34 @@ class SignUpViewTests(TestCase):
         )
 
     def test_view_correct_attrs(self):
-        """Test that view has correct attributes."""
+        """`SignUpView` has correct attributes."""
         self.assertEqual(views.SignUpView.form_class, SignUpForm)
         self.assertEqual(views.SignUpView.template_name, 'accounts/registration/signup.html')
 
     def test_view_url_accessible_by_name(self):
-        """Test that url is accessible by its name."""
+        """Url is accessible by its name."""
         response = self.client.get(reverse('accounts:signup'))
         self.assertEqual(response.status_code, 200)
 
     def test_view_uses_correct_template(self):
-        """Test that view uses a correct HTML template."""
+        """`SignUpView` uses a correct HTML template."""
         response = self.client.get(reverse('accounts:signup'))
         self.assertTemplateUsed(response, 'accounts/registration/signup.html')
 
     def test_context_correct_data(self):
-        """Test that request.context has correct data."""
+        """`request.context` has correct data."""
         response = self.client.get(reverse('accounts:signup'))
         self.assertIsInstance(response.context['form'], SignUpForm)
 
     def test_redirect_if_logged_in(self):
-        """Test that an authenticated user is redirected to the home page."""
+        """An authenticated user is redirected to the home page."""
         self.client.login(username='user1@gmail.com', password='test')
         response = self.client.get(reverse('accounts:signup'))
 
         self.assertRedirects(response, reverse('home_page'))
 
     def test_redirects_to_login_page_on_success(self):
-        """Test that user is redirected to the login page on the successful form submission."""
+        """User is redirected to the login page on the successful form submission."""
         form_data = {
             'email': 'new1@gmail.com',
             'first_name': 'New 1',
@@ -78,7 +78,7 @@ class SignUpViewTests(TestCase):
         self.assertRedirects(response, reverse('accounts:login'))
 
     def test_renders_form_errors_on_failure(self):
-        """Test that form errors are rendered if there are some errors in the form."""
+        """Form errors are rendered if there are some errors in the form."""
         form_data = {
             'email': 'new1@gmail.com',
             'first_name': 'New 1',
@@ -92,7 +92,7 @@ class SignUpViewTests(TestCase):
         self.assertFalse(response.context['form'].is_valid())
 
     def test_creates_new_user_on_success(self):
-        """Test that new user is created on the successful form submission."""
+        """New user is created on the successful form submission."""
         form_data = {
             'email': 'new1@gmail.com',
             'first_name': 'New 1',
@@ -106,7 +106,7 @@ class SignUpViewTests(TestCase):
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
     def test_sends_email_verification_link_on_success(self):
-        """Test that verification link is sent on the successful form submission."""
+        """Verification link is sent on the successful form submission."""
         form_data = {
             'email': 'new1@gmail.com',
             'first_name': 'New 1',
@@ -132,23 +132,23 @@ class LoginViewTests(TestCase):
         )
 
     def test_view_correct_attrs(self):
-        """Test that view has correct attributes."""
+        """`LoginView` has correct attributes."""
         self.assertEqual(views.LoginView.template_name, 'accounts/registration/login.html')
 
     def test_view_url_accessible_by_name(self):
-        """Test that url is accessible by its name."""
+        """Url is accessible by its name."""
         response = self.client.get(reverse('accounts:login'))
         self.assertEqual(response.status_code, 200)
 
     def test_redirect_if_logged_in(self):
-        """Test that an authenticated user is redirected to the home page."""
+        """An authenticated user is redirected to the home page."""
         self.client.login(email='user1@gmail.com', password='test')
         response = self.client.get(reverse('accounts:login'))
 
         self.assertRedirects(response, reverse('home_page'))
 
     def test_uses_correct_template(self):
-        """Test that view uses a correct HTML template."""
+        """`LoginView` uses a correct HTML template."""
         response = self.client.get(reverse('accounts:login'))
         self.assertTemplateUsed(response, 'accounts/registration/login.html')
 
@@ -163,24 +163,28 @@ class CustomPasswordResetViewTests(TestCase):
         )
 
     def test_view_correct_attrs(self):
-        """Test that view has correct attributes."""
+        """`CustomPasswordResetView` has correct attributes."""
         self.assertEqual(views.CustomPasswordResetView.template_name, 'accounts/registration/password_reset.html')
         self.assertEqual(views.CustomPasswordResetView.success_url, reverse_lazy('accounts:password_reset_done'))
-        self.assertEqual(views.CustomPasswordResetView.html_email_template_name,
-                         'accounts/registration/password_reset_email.html')
-        self.assertEqual(views.CustomPasswordResetView.email_template_name,
-                         'accounts/registration/password_reset_email.html')
+        self.assertEqual(
+            views.CustomPasswordResetView.html_email_template_name,
+            'accounts/registration/password_reset_email.html',
+        )
+        self.assertEqual(
+            views.CustomPasswordResetView.email_template_name,
+            'accounts/registration/password_reset_email.html',
+        )
         self.assertEqual(views.CustomPasswordResetView.form_class, CustomPasswordResetForm)
 
     def test_view_url_accessible_by_name(self):
-        """Test that url is accessible by its name."""
+        """Url is accessible by its name."""
         self.client.login(email='user1@gmail.com', password='test')
         response = self.client.get(reverse('accounts:password_reset'))
 
         self.assertEqual(response.status_code, 200)
 
     def test_uses_correct_template(self):
-        """Test that view uses a correct HTML template."""
+        """`CustomPasswordResetView` uses a correct HTML template."""
         self.client.login(email='user1@gmail.com', password='test')
         response = self.client.get(reverse('accounts:password_reset'))
 
@@ -188,7 +192,7 @@ class CustomPasswordResetViewTests(TestCase):
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
     def test_sends_email_using_celery_on_success(self):
-        """Test that view sends a custom email using Celery on the successful form submission."""
+        """`CustomPasswordResetView` sends a custom email using Celery on the successful form submission."""
         form_data = {
             'email': 'user1@gmail.com',
         }
@@ -212,7 +216,7 @@ class AccountActivationViewTests(TestCase):
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
     def test_email_confirmed_on_success(self):
-        """Test that user's email is confirmed on successful activation."""
+        """User's email is confirmed on successful activation."""
         form_data = {
             'email': 'new1@gmail.com',
             'first_name': 'New 1',
@@ -232,7 +236,7 @@ class AccountActivationViewTests(TestCase):
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
     def test_email_unconfirmed_on_failure(self):
-        """Test that user's email is unconfirmed if activation fails."""
+        """User's email is unconfirmed if activation fails."""
         form_data = {
             'email': 'new1@gmail.com',
             'first_name': 'New 1',
@@ -252,7 +256,7 @@ class AccountActivationViewTests(TestCase):
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
     def test_logged_in_on_success(self):
-        """Test that user is logged in on successful activation."""
+        """User is logged in on successful activation."""
         form_data = {
             'email': 'new1@gmail.com',
             'first_name': 'New 1',
@@ -270,7 +274,7 @@ class AccountActivationViewTests(TestCase):
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
     def test_redirect_on_success(self):
-        """Test that user is redirected on successful activation."""
+        """User is redirected on successful activation."""
         form_data = {
             'email': 'new1@gmail.com',
             'first_name': 'New 1',
@@ -289,17 +293,19 @@ class AccountActivationViewTests(TestCase):
 
 class ActivationRequiredViewTests(SimpleTestCase):
     def test_view_correct_attrs(self):
-        """Test that view has correct attributes."""
-        self.assertEqual(views.ActivationRequiredView.template_name,
-                         'accounts/registration/account_activation_required.html')
+        """`ActivationRequiredView` has correct attributes."""
+        self.assertEqual(
+            views.ActivationRequiredView.template_name,
+            'accounts/registration/account_activation_required.html',
+        )
 
     def test_view_url_accessible_by_name(self):
-        """Test that url is accessible by its name."""
+        """Url is accessible by its name."""
         response = self.client.get(reverse('accounts:activation_required'))
         self.assertEqual(response.status_code, 200)
 
     def test_uses_correct_template(self):
-        """Test that view uses a correct HTML template."""
+        """`ActivationRequiredView` uses a correct HTML template."""
         response = self.client.get(reverse('accounts:activation_required'))
         self.assertTemplateUsed(response, 'accounts/registration/account_activation_required.html')
 
@@ -314,19 +320,21 @@ class AccountSettingsDashboardViewTests(TestCase):
         )
 
     def test_view_correct_attrs(self):
-        """Test that view has correct attributes."""
-        self.assertEqual(views.AccountSettingsDashboardView.template_name,
-                         'accounts/settings/settings_dashboard.html')
+        """`AccountSettingsDashboardView` has correct attributes."""
+        self.assertEqual(
+            views.AccountSettingsDashboardView.template_name,
+            'accounts/settings/settings_dashboard.html',
+        )
 
     def test_view_url_accessible_by_name(self):
-        """Test that url is accessible by its name."""
+        """Url is accessible by its name."""
         self.client.login(email='user1@gmail.com', password='test')
         response = self.client.get(reverse('accounts:settings_dashboard'))
 
         self.assertEqual(response.status_code, 200)
 
     def test_uses_correct_template(self):
-        """Test that view uses a correct HTML template."""
+        """`AccountSettingsDashboardView` uses a correct HTML template."""
         self.client.login(email='user1@gmail.com', password='test')
         response = self.client.get(reverse('accounts:settings_dashboard'))
         self.assertTemplateUsed(response, 'accounts/settings/settings_dashboard.html')
@@ -355,20 +363,20 @@ class PersonalInfoEditViewTests(TestCase):
         test_user2.profile.save()
 
     def test_view_correct_attrs(self):
-        """Test that view has correct attributes."""
+        """`PersonalInfoEditView` has correct attributes."""
         self.assertEqual(views.PersonalInfoEditView.template_name, 'accounts/settings/user_form.html')
         self.assertTrue(hasattr(views.PersonalInfoEditView, 'profile_form'))
         self.assertTrue(hasattr(views.PersonalInfoEditView, 'user_info_form'))
 
     def test_view_url_accessible_by_name(self):
-        """Test that url is accessible by its name."""
+        """Url is accessible by its name."""
         self.client.login(email='user1@gmail.com', password='test')
         response = self.client.get(reverse('accounts:user_info_edit'))
 
         self.assertEqual(response.status_code, 200)
 
     def test_correct_context_data(self):
-        """Test that request.context is correct."""
+        """`request.context` is correct."""
         self.client.login(email='user1@gmail.com', password='test')
         response = self.client.get(reverse('accounts:user_info_edit'))
 
@@ -376,7 +384,7 @@ class PersonalInfoEditViewTests(TestCase):
         self.assertIsInstance(response.context['profile_form'], ProfileForm)
 
     def test_correct_user_instance(self):
-        """Test that we are editing the logged in user."""
+        """We are editing the logged-in user."""
         self.client.login(email='user1@gmail.com', password='test')
         response = self.client.get(reverse('accounts:user_info_edit'))
 
@@ -387,12 +395,16 @@ class PersonalInfoEditViewTests(TestCase):
         self.assertEqual(profile_form.instance, CustomUser.objects.get(email='user1@gmail.com').profile)
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
-    @mock.patch('accounts.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
-    @mock.patch('common.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch(
+        'accounts.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True),
+    )
+    @mock.patch(
+        'common.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True),
+    )
     def test_email_update_successful(self):
-        """Test that if email has been changed, new email should be `unconfirmed` and verification should be sent."""
+        """If email has been changed, new email should be `unconfirmed` and verification should be sent."""
         test_user = CustomUser.objects.get(email='user1@gmail.com')
         form_data = {
             'first_name': test_user.first_name,
@@ -420,12 +432,16 @@ class PersonalInfoEditViewTests(TestCase):
         self.assertFalse(test_user.is_email_confirmed)
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
-    @mock.patch('accounts.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
-    @mock.patch('common.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch(
+        'accounts.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True),
+    )
+    @mock.patch(
+        'common.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True),
+    )
     def test_renders_form_errors_on_failure(self):
-        """Test that form errors are rendered correctly if there are any errors in the form."""
+        """Form errors are rendered correctly if there are any errors in the form."""
         test_user = CustomUser.objects.get(email='user1@gmail.com')
         form_data = {
             'first_name': test_user.first_name,
@@ -447,13 +463,18 @@ class PersonalInfoEditViewTests(TestCase):
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
     @mock.patch('configs.twilio_conf.twilio_client.messages.create')
-    @mock.patch('accounts.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
-    @mock.patch('common.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch(
+        'accounts.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True),
+    )
+    @mock.patch(
+        'common.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True),
+    )
     def test_phone_number_new(self, message_mock):
-        """Test that if phone number has been added,
-        SMS code should be sent, `phone_number` is `unconfirmed` and `phone_code_status` should be updated.
+        """If phone number has been added, SMS code should be sent.
+
+        `phone_number` is `unconfirmed` and `phone_code_status` should be updated.
         """
         test_user = CustomUser.objects.get(email='user1@gmail.com')
         redis_key = f"user:{test_user.id}:phone_code_status"
@@ -485,13 +506,18 @@ class PersonalInfoEditViewTests(TestCase):
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
     @mock.patch('configs.twilio_conf.twilio_client.messages.create')
-    @mock.patch('accounts.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
-    @mock.patch('common.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch(
+        'accounts.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True),
+    )
+    @mock.patch(
+        'common.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True),
+    )
     def test_phone_number_update(self, message_mock):
-        """Test that if phone number has been updated,
-        SMS code should be sent, `phone_number` is `unconfirmed` and `phone_code_status` should be updated.
+        """If phone number has been updated, SMS code should be sent.
+
+        `phone_number` is `unconfirmed` and `phone_code_status` should be updated.
         """
         test_user = CustomUser.objects.get(email='user2@gmail.com')
         redis_key = f"user:{test_user.id}:phone_code_status"
@@ -523,12 +549,16 @@ class PersonalInfoEditViewTests(TestCase):
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
     @mock.patch('configs.twilio_conf.twilio_client.messages.create')
-    @mock.patch('accounts.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
-    @mock.patch('common.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch(
+        'accounts.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True),
+    )
+    @mock.patch(
+        'common.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True),
+    )
     def test_phone_number_remove(self, message_mock):
-        """Test that if phone number has been removed, phone number is `unconfirmed`."""
+        """If phone number has been removed, phone number is `unconfirmed`."""
         test_user = CustomUser.objects.get(email='user2@gmail.com')
         form_data = {
             'first_name': test_user.first_name,
@@ -585,18 +615,18 @@ class ProfileShowViewTests(TestCase):
         )
 
     def test_view_correct_attrs(self):
-        """Test that view has correct attributes."""
+        """`ProfileShowView` has correct attributes."""
         self.assertEqual(views.ProfileShowView.template_name, 'accounts/profile/show.html')
         self.assertTrue(hasattr(views.ProfileShowView, 'profile_owner'))
         self.assertTrue(hasattr(views.ProfileShowView, 'is_profile_of_current_user'))
 
     def test_view_url_accessible_by_name(self):
-        """Test that url is accessible by its name."""
+        """Url is accessible by its name."""
         response = self.client.get(reverse('accounts:profile_show', kwargs={'user_pk': CustomUser.objects.first().id}))
         self.assertEqual(response.status_code, 200)
 
     def test_correct_context_data_if_profile_owner(self):
-        """Test that request.context is correct if current user is a profile owner."""
+        """`request.context` is correct if current user is a profile owner."""
         self.client.login(email='user1@gmail.com', password='test')
         current_user = CustomUser.objects.get(email='user1@gmail.com')
         response = self.client.get(reverse('accounts:profile_show', kwargs={'user_pk': current_user.pk}))
@@ -610,7 +640,7 @@ class ProfileShowViewTests(TestCase):
         )
 
     def test_correct_context_data_if_not_a_profile_owner(self):
-        """Test that request.context is correct if current user is not a profile owner."""
+        """`request.context` is correct if current user is not a profile owner."""
         self.client.login(email='user2@gmail.com', password='test')
         response = self.client.get(reverse('accounts:profile_show', kwargs={'user_pk': CustomUser.objects.first().id}))
 
@@ -623,7 +653,7 @@ class ProfileShowViewTests(TestCase):
         )
 
     def test_correct_context_data_if_not_logged_in(self):
-        """Test that request.context is correct if current user is a `AnonymousUser`."""
+        """`request.context` is correct if current user is a `AnonymousUser`."""
         response = self.client.get(reverse('accounts:profile_show', kwargs={'user_pk': CustomUser.objects.first().id}))
 
         self.assertEqual(response.context['profile_owner'], CustomUser.objects.first())
@@ -651,19 +681,19 @@ class ProfileImageEditViewTests(TestCase):
         super().tearDownClass()
 
     def test_view_correct_attrs(self):
-        """Test that view has correct attributes."""
+        """`ProfileImageEditView` has correct attributes."""
         self.assertEqual(views.ProfileImageEditView.template_name, 'accounts/profile/edit_image.html')
         self.assertTrue(hasattr(views.ProfileImageEditView, 'profile_image_form'))
 
     def test_view_url_accessible_by_name(self):
-        """Test that url is accessible by its name."""
+        """Url is accessible by its name."""
         self.client.login(email='user1@gmail.com', password='test')
         response = self.client.get(reverse('accounts:edit_image'))
 
         self.assertEqual(response.status_code, 200)
 
     def test_correct_context_data_if_logged_in(self):
-        """Test that request.context is correct if user is logged in."""
+        """`request.context` is correct if user is logged in."""
         test_user = CustomUser.objects.get(email='user1@gmail.com')
         self.client.login(email='user1@gmail.com', password='test')
         response = self.client.get(reverse('accounts:edit_image'))
@@ -672,14 +702,14 @@ class ProfileImageEditViewTests(TestCase):
         self.assertEqual(response.context['profile_image_form'].instance, test_user.profile)
 
     def test_view_uses_correct_template(self):
-        """Test that view uses a correct HTML template."""
+        """`ProfileImageEditView` uses a correct HTML template."""
         self.client.login(email='user1@gmail.com', password='test')
         response = self.client.get(reverse('accounts:edit_image'))
 
         self.assertTemplateUsed(response, 'accounts/profile/edit_image.html')
 
     def test_post_image_success(self):
-        """Test that user can upload a profile image."""
+        """User can upload a profile image."""
         test_user = CustomUser.objects.get(email='user1@gmail.com')
         test_image_name = 'image.png'
         test_image = create_valid_image(test_image_name)
@@ -693,11 +723,13 @@ class ProfileImageEditViewTests(TestCase):
 
         self.assertRedirects(response, reverse('accounts:profile_show', kwargs={'user_pk': test_user.pk}))
         self.assertIsNotNone(test_user.profile.profile_image)
-        self.assertEqual(test_user.profile.profile_image.name,
-                         f"upload/users/{test_user.email}/profile/{test_image_name}")
+        self.assertEqual(
+            test_user.profile.profile_image.name,
+            f"upload/users/{test_user.email}/profile/{test_image_name}",
+        )
 
     def test_post_image_fail(self):
-        """Test that form errors are rendered correctly if uploaded image is not valid."""
+        """Form errors are rendered correctly if uploaded image is not valid."""
         test_image_name = 'image.png'
         test_image = create_invalid_image(test_image_name)
 
@@ -731,26 +763,26 @@ class ProfileDescriptionEditViewTests(TestCase):
         test_user2.profile.save()
 
     def test_view_correct_attrs(self):
-        """Test that view has correct attributes."""
+        """`ProfileDescriptionEditView` has correct attributes."""
         self.assertEqual(views.ProfileDescriptionEditView.template_name, 'accounts/profile/edit_description.html')
         self.assertTrue(hasattr(views.ProfileDescriptionEditView, 'profile_description_form'))
 
     def test_view_url_accessible_by_name(self):
-        """Test that url is accessible by its name."""
+        """Url is accessible by its name."""
         self.client.login(email='user1@gmail.com', password='test')
         response = self.client.get(reverse('accounts:edit_description'))
 
         self.assertEqual(response.status_code, 200)
 
     def test_view_uses_correct_template(self):
-        """Test that view uses a correct HTML template."""
+        """`ProfileDescriptionEditView` uses a correct HTML template."""
         self.client.login(email='user1@gmail.com', password='test')
         response = self.client.get(reverse('accounts:edit_description'))
 
         self.assertTemplateUsed(response, 'accounts/profile/edit_description.html')
 
     def test_correct_context_data_if_logged_in(self):
-        """Test that request.context is correct if user is logged in."""
+        """`request.context` is correct if user is logged in."""
         test_user = CustomUser.objects.get(email='user1@gmail.com')
         self.client.login(email='user1@gmail.com', password='test')
         response = self.client.get(reverse('accounts:edit_description'))
@@ -759,7 +791,7 @@ class ProfileDescriptionEditViewTests(TestCase):
         self.assertEqual(response.context['profile_description_form'].instance, test_user.profile)
 
     def test_add_description_success(self):
-        """Test that user can add `description`."""
+        """User can add `description`."""
         test_user = CustomUser.objects.get(email='user1@gmail.com')
         form_data = {
             'description': 'Test desc',
@@ -771,7 +803,7 @@ class ProfileDescriptionEditViewTests(TestCase):
         self.assertEqual(test_user.profile.description, form_data['description'])
 
     def test_update_description_success(self):
-        """Test that user can edit `description`."""
+        """User can edit `description`."""
         test_user = CustomUser.objects.get(email='user2@gmail.com')
         form_data = {
             'description': '',
@@ -793,18 +825,18 @@ class SecurityDashboardViewTests(TestCase):
         )
 
     def test_view_correct_attrs(self):
-        """Test that view has correct attributes."""
+        """`SecurityDashboardView` has correct attributes."""
         self.assertEqual(views.SecurityDashboardView.template_name, 'accounts/settings/security_dashboard.html')
 
     def test_view_url_accessible_by_name(self):
-        """Test that url is accessible by its name."""
+        """Url is accessible by its name."""
         self.client.login(email='user1@gmail.com', password='test')
         response = self.client.get(reverse('accounts:security_dashboard'))
 
         self.assertEqual(response.status_code, 200)
 
     def test_correct_context_data_if_logged_in(self):
-        """Test that request.context is correct if user is logged in."""
+        """`request.context` is correct if user is logged in."""
         test_user = CustomUser.objects.get(email='user1@gmail.com')
         self.client.login(email='user1@gmail.com', password='test')
         response = self.client.get(reverse('accounts:security_dashboard'))
@@ -845,17 +877,21 @@ class PhoneNumberConfirmPageViewTests(TestCase):
         test_user3.profile.save()
 
     def test_view_correct_attrs(self):
-        """Test that view has correct attributes."""
+        """`PhoneNumberConfirmPageView` has correct attributes."""
         self.assertEqual(views.PhoneNumberConfirmPageView.template_name, 'accounts/settings/confirm_phone.html')
         self.assertTrue(hasattr(views.PhoneNumberConfirmPageView, 'verification_code_form'))
         self.assertTrue(hasattr(views.PhoneNumberConfirmPageView, 'is_verification_code_sent'))
 
-    @mock.patch('accounts.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
-    @mock.patch('common.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch(
+        'accounts.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True),
+    )
+    @mock.patch(
+        'common.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True),
+    )
     def test_view_url_accessible_by_name(self):
-        """Test that url is accessible by its name."""
+        """Url is accessible by its name."""
         self.client.login(email='user1@gmail.com', password='test')
         response = self.client.get(reverse('accounts:confirm_phone'))
 
@@ -863,12 +899,16 @@ class PhoneNumberConfirmPageViewTests(TestCase):
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
     @mock.patch('configs.twilio_conf.twilio_client.messages.create')
-    @mock.patch('accounts.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
-    @mock.patch('common.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch(
+        'accounts.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True),
+    )
+    @mock.patch(
+        'common.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True),
+    )
     def test_correct_context_data_if_verification_code_sent(self, message_mock):
-        """Test that request.context is correct if verification code has been sent."""
+        """`request.context` is correct if verification code has been sent."""
         test_user = CustomUser.objects.get(email='user2@gmail.com')
         test_phone_number = '89851234567'
         user_form_data = {
@@ -899,12 +939,16 @@ class PhoneNumberConfirmPageViewTests(TestCase):
         self.assertIsInstance(response.context['verification_code_form'], VerificationCodeForm)
         self.assertTrue(response.context['is_verification_code_sent'])
 
-    @mock.patch('accounts.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
-    @mock.patch('common.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch(
+        'accounts.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True),
+    )
+    @mock.patch(
+        'common.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True),
+    )
     def test_redirect_if_no_phone_number(self):
-        """Test that if user has no `phone_number`, he should be redirected."""
+        """If user has no `phone_number`, he should be redirected."""
         self.client.login(email='user2@gmail.com', password='test')  # user without phone_number
         redis_instance = fakeredis.FakeStrictRedis(
             server=self.common_redis_server,
@@ -916,12 +960,16 @@ class PhoneNumberConfirmPageViewTests(TestCase):
 
         self.assertRedirects(response, reverse('accounts:settings_dashboard'))
 
-    @mock.patch('accounts.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
-    @mock.patch('common.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch(
+        'accounts.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True),
+    )
+    @mock.patch(
+        'common.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True),
+    )
     def test_redirect_if_phone_number_confirmed(self):
-        """Test that if user has a `confirmed` `phone_number`, he should be redirected."""
+        """If user has a `confirmed` `phone_number`, he should be redirected."""
         self.client.login(email='user3@gmail.com', password='test')  # user with a `confirmed` phone_number
         redis_instance = fakeredis.FakeStrictRedis(
             server=self.common_redis_server,
@@ -936,12 +984,16 @@ class PhoneNumberConfirmPageViewTests(TestCase):
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
     @mock.patch('configs.twilio_conf.twilio_client.messages.create')
-    @mock.patch('accounts.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
-    @mock.patch('common.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch(
+        'accounts.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True),
+    )
+    @mock.patch(
+        'common.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True),
+    )
     def test_confirm_phone_number_success(self, message_mock):
-        """Test that user can confirm a phone number."""
+        """User can confirm a phone number."""
         test_user = CustomUser.objects.get(email='user2@gmail.com')
         test_phone_number = '89851234567'
         user_form_data = {
@@ -988,12 +1040,16 @@ class PhoneNumberConfirmPageViewTests(TestCase):
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
     @mock.patch('configs.twilio_conf.twilio_client.messages.create')
-    @mock.patch('accounts.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
-    @mock.patch('common.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch(
+        'accounts.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True),
+    )
+    @mock.patch(
+        'common.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=common_redis_server, charset="utf-8", decode_responses=True),
+    )
     def test_confirm_phone_number_invalid_code(self, message_mock):
-        """Test that user can't confirm phone number with the invalid verification code."""
+        """User can't confirm phone number with the invalid verification code."""
         test_user = CustomUser.objects.get(email='user2@gmail.com')
         test_phone_number = '89851234567'
         user_form_data = {
@@ -1059,24 +1115,26 @@ class SendConfirmationEmailViewTests(TestCase):
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
     def test_view_url_accessible_by_name(self):
-        """Test that view is accessible by its name."""
+        """`SendConfirmationEmailView` is accessible by its name."""
         self.client.login(email='user2@gmail.com', password='test')
         response = self.client.get(reverse('accounts:confirm_email'))
 
         self.assertRedirects(response, reverse('accounts:security_dashboard'))
 
     def test_redirect_if_confirmed_email(self):
-        """Test that if user's email is `confirmed`, he is redirected."""
+        """If user's email is `confirmed`, he is redirected."""
         self.client.login(email='user1@gmail.com', password='test')  # user with a `confirmed` email
         response = self.client.get(reverse('accounts:confirm_email'))
 
         self.assertRedirects(response, reverse('accounts:settings_dashboard'))
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
-    @mock.patch('common.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=fakeredis.FakeServer(), charset="utf-8", decode_responses=True))
+    @mock.patch(
+        'common.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=fakeredis.FakeServer(), charset="utf-8", decode_responses=True),
+    )
     def test_email_sent_if_unconfirmed_email(self):
-        """Test that verification email is sent, if user's email is `unconfirmed` yet."""
+        """Verification email is sent, if user's email is `unconfirmed` yet."""
         self.client.login(email='user2@gmail.com', password='test')  # user with a `unconfirmed` email
         response = self.client.get(reverse('accounts:confirm_email'))
 

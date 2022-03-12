@@ -158,7 +158,7 @@ class SubscribersServicesTests(TestCase):
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
     def test_send_recommendation_email_to_subscriber_correct_body(self):
-        """Test that Verification Email's body is correct (subject, content, recipient)."""
+        """Verification email's body is correct (subject, content, recipient)."""
         test_subscriber: Subscriber = Subscriber.objects.get(email='user4@gmail.com')
         realty_recommendations = Realty.objects.all()
         test_domain = 'airbnb'

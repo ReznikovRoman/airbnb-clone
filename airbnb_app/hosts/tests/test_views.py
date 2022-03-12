@@ -50,12 +50,12 @@ class BecomeHostViewTests(TestCase):
         test_host1.save()
 
     def test_redirect_if_not_logged_in(self):
-        """Request with AnonymousUser which yields a redirect to the login page."""
+        """Request with AnonymousUser yields a redirect to the login page."""
         response: HttpResponse = self.client.get('/hosts/become-a-host/')
         self.assertRedirects(response, '/accounts/login/?next=/hosts/become-a-host/')
 
     def test_redirect_if_not_email_confirmed(self):
-        """Request with a User that hasn't confirmed an email address which yields a redirect to an activation page."""
+        """Request with a User that hasn't confirmed an email address yields a redirect to an activation page."""
         self.client.login(username='test3@gmail.com', password='123')
         response = self.client.get('/hosts/become-a-host/')
 
@@ -67,21 +67,21 @@ class BecomeHostViewTests(TestCase):
         self.assertRedirects(response, '/accounts/activation-required/')
 
     def test_redirect_if_no_profile_image(self):
-        """Request with User that has no profile image which yields a redirect to a `missing image` page."""
+        """Request with User that has no profile image yields a redirect to a `missing image` page."""
         self.client.login(username='test2@gmail.com', password='123')
         response = self.client.get('/hosts/become-a-host/')
 
         self.assertRedirects(response, '/hosts/become-a-host/missing-image/')
 
     def test_desired_redirect_if_required_data_exists(self):
-        """Request with `valid` user which yields redirect to a Realty creation page."""
+        """Request with `valid` user yields redirect to a Realty creation page."""
         self.client.login(username='test1@gmail.com', password='123')
         response = self.client.get('/hosts/become-a-host/', follow=True)
 
         self.assertRedirects(response, '/realty/new/info/')
 
     def test_view_url_accessible_by_name(self):
-        """Test that url is accessible by its name (`reverse url`)."""
+        """Url is accessible by its name (`reverse url`)."""
         self.client.login(username='test1@gmail.com', password='123')
         response = self.client.get(reverse('hosts:become_a_host'), follow=True)
 

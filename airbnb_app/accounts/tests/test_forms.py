@@ -14,12 +14,12 @@ from ..forms import (
 
 class SignUpFormTests(SimpleTestCase):
     def test_form_correct_model(self):
-        """Test that ModelForm uses correct model."""
+        """`SignUpForm` uses correct model - `CustomUser`."""
         form = SignUpForm()
         self.assertEqual(form._meta.model, CustomUser)
 
     def test_form_correct_fields(self):
-        """Test that ModelForm has correct fields."""
+        """`SignUpForm` has correct fields."""
         form = SignUpForm()
         self.assertEqual(
             form._meta.fields,
@@ -27,20 +27,22 @@ class SignUpFormTests(SimpleTestCase):
         )
 
     def test_email_field_params(self):
-        """Test that email field has all required parameters."""
+        """Email field has all required parameters."""
         form = SignUpForm()
-        self.assertTrue(form.fields['email'].label is None or
-                        form.fields['email'].label == 'Email address')
+        self.assertTrue(
+            form.fields['email'].label is None or
+            form.fields['email'].label == 'Email address',
+        )
 
 
 class AdminCustomUserChangeFormTests(SimpleTestCase):
     def test_form_correct_model(self):
-        """Test that ModelForm uses correct model."""
+        """`AdminCustomUserChangeForm` uses correct model - `CustomUser`."""
         form = AdminCustomUserChangeForm()
         self.assertEqual(form._meta.model, CustomUser)
 
     def test_form_correct_fields(self):
-        """Test that ModelForm has correct fields."""
+        """`AdminCustomUserChangeForm` has correct fields."""
         form = AdminCustomUserChangeForm()
         self.assertEqual(
             form._meta.fields,
@@ -50,12 +52,12 @@ class AdminCustomUserChangeFormTests(SimpleTestCase):
 
 class UserInfoFormTests(SimpleTestCase):
     def test_form_correct_model(self):
-        """Test that ModelForm uses correct model."""
+        """`UserInfoForm` uses correct model - `CustomUser`."""
         form = UserInfoForm()
         self.assertEqual(form._meta.model, CustomUser)
 
     def test_form_correct_fields(self):
-        """Test that ModelForm has correct fields."""
+        """`UserInfoForm` has correct fields."""
         form = UserInfoForm()
         self.assertEqual(
             form._meta.fields,
@@ -65,12 +67,12 @@ class UserInfoFormTests(SimpleTestCase):
 
 class ProfileFormTests(SimpleTestCase):
     def test_form_correct_model(self):
-        """Test that ModelForm uses correct model."""
+        """`ProfileForm` uses correct model - `Profile`."""
         form = ProfileForm()
         self.assertEqual(form._meta.model, Profile)
 
     def test_form_correct_fields(self):
-        """Test that ModelForm has correct fields."""
+        """`ProfileForm` has correct fields."""
         form = ProfileForm()
         self.assertEqual(
             form._meta.fields,
@@ -78,12 +80,12 @@ class ProfileFormTests(SimpleTestCase):
         )
 
     def test_form_correct_widgets(self):
-        """Test that ModelForm fields widgets are correct."""
+        """`ProfileForm` fields widgets are correct."""
         form = ProfileForm()
         self.assertIsInstance(form._meta.widgets.get('date_of_birth'), forms.DateInput)
 
     def test_clean_date_of_birth_date_in_the_future(self):
-        """Test that User cannot specify a `date_of_birth` in the future."""
+        """User cannot specify a `date_of_birth` in the future."""
         date = datetime.date.today() + datetime.timedelta(days=1)
         form = ProfileForm(data={'date_of_birth': date})
 
@@ -91,7 +93,7 @@ class ProfileFormTests(SimpleTestCase):
         self.assertRaises(ValidationError)
 
     def test_clean_date_of_birth_underage(self):
-        """Test that User cannot specify a `date_of_birth` if he isn't mature."""
+        """User cannot specify a `date_of_birth` if he isn't mature."""
         date = datetime.date.today() - datetime.timedelta(days=365 * 18)
         form = ProfileForm(data={'date_of_birth': date})
 
@@ -99,7 +101,7 @@ class ProfileFormTests(SimpleTestCase):
         self.assertRaises(ValidationError)
 
     def test_clean_date_of_birth_valid_age(self):
-        """clean_date_of_birth() returns `date_of_birth` if User is mature and date_of_birth is valid."""
+        """clean_date_of_birth() returns `date_of_birth` if a user is mature and `date_of_birth` is valid."""
         date = datetime.date.today() - datetime.timedelta(days=365 * 19)
         form = ProfileForm(data={'date_of_birth': date})
 
@@ -108,12 +110,12 @@ class ProfileFormTests(SimpleTestCase):
 
 class ProfileImageFormTests(SimpleTestCase):
     def test_form_correct_model(self):
-        """Test that ModelForm uses correct model."""
+        """`ProfileImageForm` uses correct model - `Profile`."""
         form = ProfileImageForm()
         self.assertEqual(form._meta.model, Profile)
 
     def test_form_correct_fields(self):
-        """Test that ModelForm has correct fields."""
+        """`ProfileImageForm` has correct fields."""
         form = ProfileImageForm()
         self.assertEqual(
             form._meta.fields,
@@ -121,19 +123,19 @@ class ProfileImageFormTests(SimpleTestCase):
         )
 
     def test_form_correct_widgets(self):
-        """Test that ModelForm fields widgets are correct."""
+        """`ProfileImageForm` fields widgets are correct."""
         form = ProfileImageForm()
         self.assertIsInstance(form._meta.widgets.get('profile_image'), forms.FileInput)
 
 
 class ProfileDescriptionFormTests(SimpleTestCase):
     def test_form_correct_model(self):
-        """Test that ModelForm uses correct model."""
+        """`ProfileDescriptionForm` uses correct model - `Profile`."""
         form = ProfileDescriptionForm()
         self.assertEqual(form._meta.model, Profile)
 
     def test_form_correct_fields(self):
-        """Test that ModelForm has correct fields."""
+        """`ProfileDescriptionForm` has correct fields."""
         form = ProfileDescriptionForm()
         self.assertEqual(
             form._meta.fields,
@@ -143,7 +145,7 @@ class ProfileDescriptionFormTests(SimpleTestCase):
 
 class VerificationCodeFormTests(SimpleTestCase):
     def test_digit_field_params(self):
-        """Test that `digit_*` field has all required parameters."""
+        """`digit_*` field has all required parameters."""
 
         def is_digit_field_params_correct(digit_field: forms.CharField):
             self.assertEqual(digit_field.min_length, 1)
@@ -161,7 +163,7 @@ class VerificationCodeFormTests(SimpleTestCase):
             is_digit_field_params_correct(digit)
 
     def test_clean_digit_less_than_zero(self):
-        """Test that digit cannot be less than 0 (zero)."""
+        """Digit cannot be less than zero."""
         form = VerificationCodeForm(
             data={'digit_1': '-1', 'digit_2': '2', 'digit_3': '3', 'digit_4': '4'},
         )
@@ -170,7 +172,7 @@ class VerificationCodeFormTests(SimpleTestCase):
         self.assertRaises(forms.ValidationError)
 
     def test_clean_digit_greater_than_nine(self):
-        """Test that digit cannot be greater than 9 (nine)."""
+        """Digit cannot be greater than nine."""
         form = VerificationCodeForm(
             data={'digit_1': '10', 'digit_2': '2', 'digit_3': '3', 'digit_4': '4'},
         )

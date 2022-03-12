@@ -36,9 +36,7 @@ class RealtyAdminActionsTests(TestCase):
         )
 
     def test_make_realty_available_with_unavailable_realty(self):
-        """
-        If all selected Realty objects are unavailable, after `make_realty_available` action they become `available`.
-        """
+        """After `make_realty_available` action `unavailable` selected Realty objects become `available`."""
         self.client.login(username='test_action@gmail.com', password='test')
         data = {
             'action': 'make_realty_available',
@@ -49,9 +47,7 @@ class RealtyAdminActionsTests(TestCase):
         self.assertFalse(Realty.objects.filter(is_available=False).exists())
 
     def test_make_realty_available_with_available_realty(self):
-        """
-        If all selected Realty objects are available, after `make_realty_available` action they are still `available`.
-        """
+        """After `make_realty_available` action `available` selected Realty objects become `available`."""
         self.client.login(username='test_action@gmail.com', password='test')
         available_realty_qs: CustomDeleteQueryset[Realty] = Realty.objects.filter(is_available=True)
         data = {
@@ -63,9 +59,7 @@ class RealtyAdminActionsTests(TestCase):
         self.assertFalse(available_realty_qs.filter(is_available=False).exists())
 
     def test_make_realty_available_with_mixed_realty(self):
-        """If some selected Realty objects are available and some of them are not,
-        after `make_realty_available` action they all become `available`.
-        """
+        """After `make_realty_available` action all selected Realty objects become `available`."""
         self.client.login(username='test_action@gmail.com', password='test')
         realty_qs: CustomDeleteQueryset[Realty] = (
                 Realty.objects.filter(is_available=False)[1:] | Realty.objects.filter(is_available=True)[1:]
@@ -79,9 +73,7 @@ class RealtyAdminActionsTests(TestCase):
         self.assertFalse(realty_qs.filter(is_available=False).exists())
 
     def test_make_realty_unavailable_with_available_realty(self):
-        """
-        If all selected Realty objects are available, after `make_realty_unavailable` action they become `unavailable`.
-        """
+        """After `make_realty_unavailable` action `available` selected Realty objects become `unavailable`."""
         self.client.login(username='test_action@gmail.com', password='test')
         data = {
             'action': 'make_realty_unavailable',
@@ -92,9 +84,7 @@ class RealtyAdminActionsTests(TestCase):
         self.assertFalse(Realty.objects.filter(is_available=True).exists())
 
     def test_make_realty_unavailable_with_unavailable_realty(self):
-        """If all selected Realty objects are unavailable,
-        after `make_realty_unavailable` action they are still `unavailable`.
-        """
+        """After `make_realty_unavailable` action `unavailable` selected Realty objects become `unavailable`."""
         self.client.login(username='test_action@gmail.com', password='test')
         unavailable_realty_qs: CustomDeleteQueryset[Realty] = Realty.objects.filter(is_available=False)
         data = {
@@ -106,9 +96,7 @@ class RealtyAdminActionsTests(TestCase):
         self.assertFalse(unavailable_realty_qs.filter(is_available=True).exists())
 
     def test_make_realty_unavailable_with_mixed_realty(self):
-        """If some selected Realty objects are available and some of them are not,
-        after `make_realty_unavailable` action they all become `unavailable`.
-        """
+        """After `make_realty_unavailable` action all selected Realty objects become `unavailable`."""
         self.client.login(username='test_action@gmail.com', password='test')
         realty_qs: CustomDeleteQueryset[Realty] = (
                 Realty.objects.filter(is_available=False)[1:] | Realty.objects.filter(is_available=True)[1:]

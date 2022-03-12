@@ -103,28 +103,28 @@ class RealtySearchResultsViewTests(TestCase):
         )
 
     def test_view_correct_attrs(self):
-        """Test that view has correct attributes."""
+        """`RealtySearchResultsView` has correct attributes."""
         self.assertEqual(views.RealtySearchResultsView.model, Realty)
         self.assertEqual(views.RealtySearchResultsView.template_name, 'realty/realty/search_results.html')
         self.assertTrue(hasattr(views.RealtySearchResultsView, 'realty_type_form'))
 
     def test_view_url_accessible_by_name(self):
-        """Test that url is accessible by its name."""
+        """Url is accessible by its name."""
         response = self.client.get(reverse('realty:search'))
         self.assertEqual(response.status_code, 200)
 
     def test_view_uses_correct_template(self):
-        """Test that view uses a correct HTML template."""
+        """`RealtySearchResultsView` uses a correct HTML template."""
         response = self.client.get(reverse('realty:search'))
         self.assertTemplateUsed(response, 'realty/realty/search_results.html')
 
     def test_correct_context_data_if_no_query_params(self):
-        """Test that request.context has correct data (if there are no query parameters in the URL)."""
+        """`request.context` has correct data (if there are no query parameters in the URL)."""
         response = self.client.get(reverse('realty:search'))
         self.assertIsInstance(response.context['realty_type_form'], RealtyTypeForm)
 
     def test_correct_context_data_if_query_params(self):
-        """Test that request.context has correct data (if there are some query parameters in the URL)."""
+        """`request.context` has correct data (if there are some query parameters in the URL)."""
         realty_type_param = 'Apartments'
         query_param = 'Moscow'
         response = self.client.get(f"{reverse('realty:search')}?realty_type={realty_type_param}&q={query_param}")
@@ -135,12 +135,12 @@ class RealtySearchResultsViewTests(TestCase):
         self.assertEqual(response.context['meta_description'], f"Search results for `{query_param}`")
 
     def test_get_queryset_if_no_query_params(self):
-        """Test that if there are no query parameters in the URL, queryset includes all available realty objects."""
+        """If there are no query parameters in the URL, queryset includes all available realty objects."""
         response = self.client.get(reverse('realty:search'))
         self.assertQuerysetEqual(response.context['realty_list'], Realty.available.all(), transform=lambda x: x)
 
     def test_get_queryset_if_query_params(self):
-        """Test that if there are some query parameters in the URL, queryset includes only valid search results."""
+        """If there are some query parameters in the URL, queryset includes only valid search results."""
         query_param = 'Moscow'
         response = self.client.get(f"{reverse('realty:search')}?q={query_param}")
 
@@ -151,9 +151,7 @@ class RealtySearchResultsViewTests(TestCase):
         )
 
     def test_get_queryset_if_query_params_with_realty_type(self):
-        """Test that if there is not only `q` query parameter, but also other filters/query parameters in the URL,
-        queryset includes only valid search results.
-        """
+        """If there is `q` query parameter with other filters/query params qs includes only valid search results."""
         realty_type_param = 'Apartments'
         query_param = 'Rome'
         response = self.client.get(f"{reverse('realty:search')}?realty_type={realty_type_param}&q={query_param}")
@@ -244,24 +242,24 @@ class RealtyListViewTests(TestCase):
         )
 
     def test_view_correct_attrs(self):
-        """Test that view has correct attributes."""
+        """`RealtyListView` has correct attributes."""
         self.assertEqual(views.RealtyListView.model, Realty)
         self.assertEqual(views.RealtyListView.template_name, 'realty/realty/list.html')
         self.assertEqual(views.RealtyListView.paginate_by, 3)
         self.assertTrue(hasattr(views.RealtyListView, 'realty_type_form'))
 
     def test_view_url_accessible_by_name(self):
-        """Test that url is accessible by its name."""
+        """Url is accessible by its name."""
         response = self.client.get(reverse('realty:all'))
         self.assertEqual(response.status_code, 200)
 
     def test_view_uses_correct_template(self):
-        """Test that view uses a correct HTML template."""
+        """`RealtyListView` uses a correct HTML template."""
         response = self.client.get(reverse('realty:all'))
         self.assertTemplateUsed(response, 'realty/realty/list.html')
 
     def test_correct_context_data(self):
-        """Test that request.context has correct data."""
+        """`request.context` has correct data."""
         response = self.client.get(reverse('realty:all'))
 
         self.assertEqual(response.context['realty_count'], Realty.available.count())
@@ -270,7 +268,7 @@ class RealtyListViewTests(TestCase):
         self.assertIsInstance(response.context['realty_type_form'], RealtyTypeForm)
 
     def test_pagination_is_three(self):
-        """Test that results are paginated by 3 elements per page."""
+        """Results are paginated by 3 elements per page."""
         response = self.client.get(reverse('realty:all'))
 
         self.assertIn('is_paginated', response.context)
@@ -278,7 +276,7 @@ class RealtyListViewTests(TestCase):
         self.assertEqual(len(response.context['realty_list']), 3)
 
     def test_get_queryset_if_no_query_params(self):
-        """Test that if there are no query parameters in the URL, queryset includes all available realty objects."""
+        """If there are no query parameters in the URL, queryset includes all available realty objects."""
         response = self.client.get(reverse('realty:all'))
 
         self.assertQuerysetEqual(
@@ -288,7 +286,7 @@ class RealtyListViewTests(TestCase):
         )
 
     def test_get_queryset_if_query_params(self):
-        """Test that if there are some query parameters in the URL, queryset includes only filtered results."""
+        """If there are some query parameters in the URL, queryset includes only filtered results."""
         realty_type_param = RealtyTypeChoices.HOTEL
         response = self.client.get(f"{reverse('realty:all')}?realty_type={realty_type_param}")
 
@@ -299,17 +297,17 @@ class RealtyListViewTests(TestCase):
         )
 
     def test_view_url_accessible_by_name_with_city_arg(self):
-        """Test that url (with additional args) is accessible by its name."""
+        """Url (with additional args) is accessible by its name."""
         response = self.client.get(reverse('realty:all_by_city', kwargs={'city_slug': 'moscow'}))
         self.assertEqual(response.status_code, 200)
 
     def test_view_uses_correct_template_with_city_arg(self):
-        """Test that view (with additional args) uses a correct HTML template."""
+        """`RealtyListView` (with additional args) uses a correct HTML template."""
         response = self.client.get(reverse('realty:all_by_city', kwargs={'city_slug': 'moscow'}))
         self.assertTemplateUsed(response, 'realty/realty/list.html')
 
     def test_correct_context_data_with_city_arg(self):
-        """Test that request.context (from view with additional args) has correct data."""
+        """`request.context` (from view with additional args) has correct data."""
         response = self.client.get(reverse('realty:all_by_city', kwargs={'city_slug': 'moscow'}))
 
         self.assertEqual(
@@ -321,7 +319,7 @@ class RealtyListViewTests(TestCase):
         self.assertIsInstance(response.context['realty_type_form'], RealtyTypeForm)
 
     def test_pagination_is_three_with_city_arg(self):
-        """Test that results (from view with additional args) are paginated by 3 elements per page."""
+        """Results (from view with additional args) are paginated by 3 elements per page."""
         response = self.client.get(reverse('realty:all_by_city', kwargs={'city_slug': 'moscow'}))
 
         self.assertIn('is_paginated', response.context)
@@ -329,7 +327,7 @@ class RealtyListViewTests(TestCase):
         self.assertEqual(len(response.context['realty_list']), 3)
 
     def test_get_queryset_if_no_query_params_with_city_arg(self):
-        """Test that if there are no query parameters in the URL,
+        """If there are no query parameters in the URL,
         queryset includes all available realty objects from the given `city` arg.
         """
         response = self.client.get(reverse('realty:all_by_city', kwargs={'city_slug': 'moscow'}))
@@ -342,12 +340,13 @@ class RealtyListViewTests(TestCase):
         )
 
     def test_get_queryset_if_query_params_with_city_arg(self):
-        """Test that if there are some query parameters in the URL,
+        """If there are some query parameters in the URL,
         queryset includes only filtered results (from the given `city` arg).
         """
         realty_type_param = RealtyTypeChoices.APARTMENTS
-        response = self.client.get(f"{reverse('realty:all_by_city', kwargs={'city_slug': 'moscow'})}"
-                                   f"?realty_type={realty_type_param}")
+        response = self.client.get(
+            f"{reverse('realty:all_by_city', kwargs={'city_slug': 'moscow'})}?realty_type={realty_type_param}",
+        )
 
         self.assertQuerysetEqual(
             response.context['realty_list'],
@@ -397,25 +396,29 @@ class RealtyDetailViewTests(TestCase):
     @mock.patch('realty.services.realty.redis_instance',
                 fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
     def test_view_url_accessible_by_name(self):
-        """Test that url is accessible by its name."""
+        """Url is accessible by its name."""
         test_realty: Realty = Realty.objects.get(slug='realty-1')
         response = self.client.get(reverse('realty:detail', kwargs={'pk': test_realty.pk, 'slug': test_realty.slug}))
 
         self.assertEqual(response.status_code, 200)
 
-    @mock.patch('realty.services.realty.redis_instance',
-                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch(
+        'realty.services.realty.redis_instance',
+        fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True),
+    )
     def test_view_uses_correct_template(self):
-        """Test that view uses a correct HTML template."""
+        """`RealtyDetailView` uses a correct HTML template."""
         test_realty: Realty = Realty.objects.get(slug='realty-1')
         response = self.client.get(reverse('realty:detail', kwargs={'pk': test_realty.pk, 'slug': test_realty.slug}))
 
         self.assertTemplateUsed(response, 'realty/realty/detail.html')
 
-    @mock.patch('realty.services.realty.redis_instance',
-                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch(
+        'realty.services.realty.redis_instance',
+        fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True),
+    )
     def test_correct_context_data(self):
-        """Test that request.context has correct data (views count)."""
+        """`request.context` has correct data (views count)."""
         test_realty: Realty = Realty.objects.get(slug='realty-1')
 
         # visit page 3 times
@@ -505,7 +508,7 @@ class RealtyEditViewTests(TestCase):
         super().tearDownClass()
 
     def test_view_correct_attrs(self):
-        """Test that view has correct attributes."""
+        """`RealtyEditView` has correct attributes."""
         self.assertEqual(views.RealtyEditView.template_name, 'realty/realty/form.html')
 
         self.assertTrue(hasattr(views.RealtyEditView, 'realty'))
@@ -522,7 +525,7 @@ class RealtyEditViewTests(TestCase):
         self.assertTrue(hasattr(views.RealtyEditView, 'session_handler'))
 
     def test_view_url_accessible_by_name(self):
-        """Test that url is accessible by its name."""
+        """Url is accessible by its name."""
         test_realty_id = Realty.objects.get(slug='realty-1').id
 
         self.client.login(email='user1@gmail.com', password='test')
@@ -531,7 +534,7 @@ class RealtyEditViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_view_uses_correct_template(self):
-        """Test that view uses a correct HTML template."""
+        """`RealtyEditView` uses a correct HTML template."""
         test_realty_id = Realty.objects.get(slug='realty-1').id
 
         self.client.login(email='user1@gmail.com', password='test')
@@ -540,7 +543,7 @@ class RealtyEditViewTests(TestCase):
         self.assertTemplateUsed(response, 'realty/realty/form.html')
 
     def test_redirect_if_user_not_a_host(self):
-        """Test that an existing Realty object can be edited only by the RealtyHost, otherwise view redirects user."""
+        """Existing Realty object can be edited only by the RealtyHost, otherwise view redirects user."""
         test_realty_id = Realty.objects.get(slug='realty-1').id
 
         self.client.login(email='user2@gmail.com', password='test')  # login as a default user (not a host)
@@ -551,7 +554,7 @@ class RealtyEditViewTests(TestCase):
         self.assertRedirects(response, reverse('realty:all'))
 
     def test_redirect_if_user_not_an_owner(self):
-        """Test that an existing Realty object can be edited only by the owner, otherwise view redirects user."""
+        """Existing Realty object can be edited only by the owner, otherwise view redirects user."""
         test_realty_id = Realty.objects.get(slug='realty-1').id
 
         self.client.login(email='user2@gmail.com', password='test')  # login as a host, but not the owner of Realty-1
@@ -562,7 +565,7 @@ class RealtyEditViewTests(TestCase):
         self.assertRedirects(response, reverse('realty:all'))
 
     def test_correct_context_data_if_existing_realty(self):
-        """Test that request.context is correct if we're editing an existing Realty object (`realty_id` in URL args)."""
+        """`request.context` is correct if we're editing an existing Realty object (`realty_id` in URL args)."""
         test_realty: Realty = Realty.objects.get(slug='realty-1')
 
         self.client.login(email='user1@gmail.com', password='test')
@@ -588,7 +591,7 @@ class RealtyEditViewTests(TestCase):
         self.assertEqual(response.context['max_realty_images_count'], MAX_REALTY_IMAGES_COUNT)
 
     def test_update_existing_realty_success(self):
-        """Test that Host can update an existing Realty object."""
+        """Host can update an existing Realty object."""
         test_realty: Realty = Realty.objects.get(slug='realty-1')
         test_image = test_realty.images.first()
 
@@ -627,7 +630,7 @@ class RealtyEditViewTests(TestCase):
         self.assertIn(test_image, test_realty.images.all())
 
     def test_view_renders_errors_on_failure_existing_realty(self):
-        """Test that if there are some errors in the forms, those errors will be successfully rendered."""
+        """If there are some errors in the forms, those errors will be successfully rendered."""
         test_realty: Realty = Realty.objects.get(slug='realty-1')
         test_image = test_realty.images.first()
 
@@ -660,14 +663,14 @@ class RealtyEditViewTests(TestCase):
         self.assertFalse(response.context['realty_form'].is_valid())
 
     def test_redirect_if_no_required_session_data(self):
-        """Test that user is redirected if there is no required data in the session (when creating a new Realty)."""
+        """User is redirected if there is no required data in the session (when creating a new Realty)."""
         self.client.login(email='user2@gmail.com', password='test')
         response = self.client.get(reverse('realty:new_realty'))
 
         self.assertRedirects(response, reverse('realty:new_realty_info'))
 
     def test_redirect_if_only_some_required_session_data(self):
-        """Test that user is redirected if there is not all required data in the session."""
+        """Uer is redirected if there is not all required data in the session."""
         test_session = self.client.session
         keys_collector_name = REALTY_FORM_KEYS_COLLECTOR_NAME
         prefix = REALTY_FORM_SESSION_PREFIX
@@ -689,7 +692,7 @@ class RealtyEditViewTests(TestCase):
         self.assertRedirects(response, reverse('realty:new_realty_info'))
 
     def test_correct_response_if_required_session_data_exists(self):
-        """Test that user can access page if there is all required session data."""
+        """User can access page if there is all required session data."""
         test_session = self.client.session
         keys_collector_name = REALTY_FORM_KEYS_COLLECTOR_NAME
         prefix = REALTY_FORM_SESSION_PREFIX
@@ -734,7 +737,7 @@ class RealtyEditViewTests(TestCase):
         )
 
     def test_correct_context_data_if_creating_new_realty(self):
-        """Test that request.context is correct if we're creating a new Realty object."""
+        """`request.context` is correct if we're creating a new Realty object."""
         test_session = self.client.session
         keys_collector_name = REALTY_FORM_KEYS_COLLECTOR_NAME
         prefix = REALTY_FORM_SESSION_PREFIX
@@ -769,7 +772,7 @@ class RealtyEditViewTests(TestCase):
         self.assertEqual(response.context['max_realty_images_count'], MAX_REALTY_IMAGES_COUNT)
 
     def test_view_renders_errors_on_creation_failure(self):
-        """Test that if there are some errors in the forms (while creating new realty), they are rendered correctly."""
+        """If there are some errors in the forms (while creating new realty), they are rendered correctly."""
         test_session = self.client.session
         keys_collector_name = REALTY_FORM_KEYS_COLLECTOR_NAME
         prefix = REALTY_FORM_SESSION_PREFIX
@@ -814,7 +817,7 @@ class RealtyEditViewTests(TestCase):
         self.assertFalse(response_post.context['realty_form'].is_valid())
 
     def test_can_create_new_realty_success(self):
-        """Test that user can successfully create new realty."""
+        """User can successfully create new realty."""
         test_session = self.client.session
         keys_collector_name = REALTY_FORM_KEYS_COLLECTOR_NAME
         prefix = REALTY_FORM_SESSION_PREFIX
@@ -866,7 +869,7 @@ class RealtyEditViewTests(TestCase):
         self.assertEqual(test_new_realty.amenities.first().name, 'wifi')
 
     def test_creating_new_host_on_realty_creation(self):
-        """Test that new RealtyHost is created on realty creation (if current user is not already a host)."""
+        """New RealtyHost is created on realty creation (if current user is not already a host)."""
         test_session = self.client.session
         keys_collector_name = REALTY_FORM_KEYS_COLLECTOR_NAME
         prefix = REALTY_FORM_SESSION_PREFIX
@@ -915,7 +918,7 @@ class RealtyEditViewTests(TestCase):
         self.assertEqual(new_host_qs.first().realty.count(), 1)
 
     def test_creating_no_new_host_on_realty_creation_if_user_is_a_host(self):
-        """Test that new RealtyHost is not created on realty creation if current user is already a host."""
+        """New RealtyHost is not created on realty creation if current user is already a host."""
         test_session = self.client.session
         keys_collector_name = REALTY_FORM_KEYS_COLLECTOR_NAME
         prefix = REALTY_FORM_SESSION_PREFIX
@@ -968,7 +971,7 @@ class RealtyEditViewTests(TestCase):
         self.assertEqual(current_hosts_count, RealtyHost.objects.count())
 
     def test_flushes_session_after_realty_creation(self):
-        """Test that session is flushed after successful realty creation."""
+        """Session is flushed after successful realty creation."""
         test_session = self.client.session
         keys_collector_name = REALTY_FORM_KEYS_COLLECTOR_NAME
         prefix = REALTY_FORM_SESSION_PREFIX
@@ -1015,7 +1018,7 @@ class RealtyEditViewTests(TestCase):
         self.assertNotIn('description', self.client.session)
 
     def test_session_data_remains_on_failure(self):
-        """Test that if there is an error while creating new Realty, session data is not removed."""
+        """If there is an error while creating new Realty, session data is not removed."""
         test_session = self.client.session
         keys_collector_name = REALTY_FORM_KEYS_COLLECTOR_NAME
         prefix = REALTY_FORM_SESSION_PREFIX
@@ -1084,7 +1087,7 @@ class RealtyGeneralInfoEditViewTests(TestCase):
         RealtyHost.objects.create(user=test_user2)
 
     def test_view_correct_attrs(self):
-        """Test that view has correct attributes."""
+        """`RealtyGeneralInfoEditView` has correct attributes."""
         self.assertEqual(
             views.RealtyGeneralInfoEditView.template_name,
             'realty/realty/creation_steps/step_1_general_info.html',
@@ -1093,14 +1096,14 @@ class RealtyGeneralInfoEditViewTests(TestCase):
         self.assertTrue(hasattr(views.RealtyGeneralInfoEditView, 'session_handler'))
 
     def test_view_url_accessible_by_name(self):
-        """Test that url is accessible by its name."""
+        """Url is accessible by its name."""
         self.client.login(email='user1@gmail.com', password='test')
         response = self.client.get(reverse('realty:new_realty_info'))
 
         self.assertEqual(response.status_code, 200)
 
     def test_correct_context_data_if_logged_in(self):
-        """Test that request.context is correct if user is logged in."""
+        """`request.context` is correct if user is logged in."""
         CustomUser.objects.get(email='user1@gmail.com')
         self.client.login(email='user1@gmail.com', password='test')
         response = self.client.get(reverse('realty:new_realty_info'))
@@ -1108,7 +1111,7 @@ class RealtyGeneralInfoEditViewTests(TestCase):
         self.assertIsInstance(response.context['realty_form'], RealtyGeneralInfoForm)
 
     def test_correct_initial_if_session_data(self):
-        """Test that form has correct initial if there is some session data."""
+        """Form has correct initial if there is some session data."""
         CustomUser.objects.get(email='user1@gmail.com')
         self.client.login(email='user1@gmail.com', password='test')
         test_session = self.client.session
@@ -1145,7 +1148,7 @@ class RealtyGeneralInfoEditViewTests(TestCase):
         )
 
     def test_no_initial_in_form_if_no_session_data(self):
-        """Test that there is no initial data in the form if `session` is empty."""
+        """There is no initial data in the form if `session` is empty."""
         CustomUser.objects.get(email='user1@gmail.com')
         self.client.login(email='user1@gmail.com', password='test')
         response = self.client.get(reverse('realty:new_realty_info'))
@@ -1162,7 +1165,7 @@ class RealtyGeneralInfoEditViewTests(TestCase):
         self.assertDictEqual(response.context['realty_form'].initial, expected_initial)
 
     def test_update_session_data_on_post(self):
-        """Test that POST request updates session data correctly."""
+        """POST request updates session data correctly."""
         CustomUser.objects.get(email='user1@gmail.com')
         self.client.login(email='user1@gmail.com', password='test')
         test_session = self.client.session
@@ -1194,7 +1197,7 @@ class RealtyGeneralInfoEditViewTests(TestCase):
         self.assertListEqual(self.client.session[f'{prefix}_amenities'], [amenity1.name, amenity2.name])
 
     def test_redirect_on_valid_post(self):
-        """Test that user is redirected if POST data is correct."""
+        """User is redirected if POST data is correct."""
         CustomUser.objects.get(email='user1@gmail.com')
         self.client.login(email='user1@gmail.com', password='test')
         amenity1 = Amenity.objects.get(name='Kitchen')
@@ -1217,7 +1220,7 @@ class RealtyGeneralInfoEditViewTests(TestCase):
         self.assertRedirects(response, reverse('realty:new_realty_location'))
 
     def test_view_renders_errors_on_failure(self):
-        """Test that form errors are rendered correctly if there was an error in POST data."""
+        """Form errors are rendered correctly if there was an error in POST data."""
         CustomUser.objects.get(email='user1@gmail.com')
         self.client.login(email='user1@gmail.com', password='test')
         amenity1 = Amenity.objects.get(name='Kitchen')
@@ -1258,7 +1261,7 @@ class RealtyGeneralLocationEditViewTests(TestCase):
         RealtyHost.objects.create(user=test_user2)
 
     def test_view_correct_attrs(self):
-        """Test that view has correct attributes."""
+        """`RealtyLocationEditView` has correct attributes."""
         self.assertEqual(
             views.RealtyLocationEditView.template_name,
             'realty/realty/creation_steps/step_2_location.html',
@@ -1278,7 +1281,7 @@ class RealtyGeneralLocationEditViewTests(TestCase):
         self.assertTrue(hasattr(views.RealtyLocationEditView, 'session_handler'))
 
     def test_view_url_accessible_by_name(self):
-        """Test that url is accessible by its name."""
+        """Url is accessible by its name."""
         self.client.login(email='user1@gmail.com', password='test')
         test_session = self.client.session
         keys_collector_name = REALTY_FORM_KEYS_COLLECTOR_NAME
@@ -1302,7 +1305,7 @@ class RealtyGeneralLocationEditViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_redirect_if_no_session_data(self):
-        """Test that if there is no all required data in the session user is redirected."""
+        """If there is no all required data in the session user is redirected."""
         self.client.login(email='user1@gmail.com', password='test')
         test_session = self.client.session
         keys_collector_name = REALTY_FORM_KEYS_COLLECTOR_NAME
@@ -1324,7 +1327,7 @@ class RealtyGeneralLocationEditViewTests(TestCase):
         self.assertRedirects(response, reverse('realty:new_realty_info'))
 
     def test_correct_initial_if_session_data(self):
-        """Test that form has correct initial if there is some session data."""
+        """Form has correct initial if there is some session data."""
         CustomUser.objects.get(email='user1@gmail.com')
         self.client.login(email='user1@gmail.com', password='test')
         test_session = self.client.session
@@ -1357,7 +1360,7 @@ class RealtyGeneralLocationEditViewTests(TestCase):
         self.assertEqual(response.context['location_form'].initial['country'], expected_initial['country'])
 
     def test_no_initial_in_form_if_no_session_data(self):
-        """Test that there is no initial data in the form if `session` is empty."""
+        """There is no initial data in the form if `session` is empty."""
         CustomUser.objects.get(email='user1@gmail.com')
         self.client.login(email='user1@gmail.com', password='test')
         test_session = self.client.session
@@ -1389,7 +1392,7 @@ class RealtyGeneralLocationEditViewTests(TestCase):
         self.assertDictEqual(response.context['location_form'].initial, expected_initial)
 
     def test_update_session_data_on_post(self):
-        """Test that POST request updates session data correctly."""
+        """POST request updates session data correctly."""
         CustomUser.objects.get(email='user1@gmail.com')
         self.client.login(email='user1@gmail.com', password='test')
         test_session = self.client.session
@@ -1422,7 +1425,7 @@ class RealtyGeneralLocationEditViewTests(TestCase):
         self.assertEqual(self.client.session[f'{prefix}_street'], post_data['street'])
 
     def test_redirect_on_valid_post(self):
-        """Test that user is redirected if POST data is correct."""
+        """User is redirected if POST data is correct."""
         CustomUser.objects.get(email='user1@gmail.com')
         self.client.login(email='user1@gmail.com', password='test')
         test_session = self.client.session
@@ -1454,7 +1457,7 @@ class RealtyGeneralLocationEditViewTests(TestCase):
         self.assertRedirects(response, reverse('realty:new_realty_description'))
 
     def test_view_renders_errors_on_failure(self):
-        """Test that form errors are rendered correctly if there was an error in POST data."""
+        """Form errors are rendered correctly if there was an error in POST data."""
         CustomUser.objects.get(email='user1@gmail.com')
         self.client.login(email='user1@gmail.com', password='test')
         test_session = self.client.session
@@ -1503,7 +1506,7 @@ class RealtyGeneralDescriptionEditViewTests(TestCase):
         RealtyHost.objects.create(user=test_user2)
 
     def test_view_correct_attrs(self):
-        """Test that view has correct attributes."""
+        """`RealtyDescriptionEditView` has correct attributes."""
         self.assertEqual(
             views.RealtyDescriptionEditView.template_name,
             'realty/realty/creation_steps/step_3_description.html',
@@ -1524,7 +1527,7 @@ class RealtyGeneralDescriptionEditViewTests(TestCase):
         self.assertTrue(hasattr(views.RealtyDescriptionEditView, 'session_handler'))
 
     def test_view_url_accessible_by_name(self):
-        """Test that url is accessible by its name."""
+        """Url is accessible by its name."""
         self.client.login(email='user1@gmail.com', password='test')
         test_session = self.client.session
         keys_collector_name = REALTY_FORM_KEYS_COLLECTOR_NAME
@@ -1551,7 +1554,7 @@ class RealtyGeneralDescriptionEditViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_redirect_if_no_session_data(self):
-        """Test that if there is no all required data in the session user is redirected."""
+        """If there is no all required data in the session user is redirected."""
         self.client.login(email='user1@gmail.com', password='test')
         test_session = self.client.session
         keys_collector_name = REALTY_FORM_KEYS_COLLECTOR_NAME
@@ -1573,7 +1576,7 @@ class RealtyGeneralDescriptionEditViewTests(TestCase):
         self.assertRedirects(response, reverse('realty:new_realty_info'))
 
     def test_correct_initial_if_session_data(self):
-        """Test that form has correct initial if there is some session data."""
+        """Form has correct initial if there is some session data."""
         CustomUser.objects.get(email='user1@gmail.com')
         self.client.login(email='user1@gmail.com', password='test')
         test_session = self.client.session
@@ -1606,7 +1609,7 @@ class RealtyGeneralDescriptionEditViewTests(TestCase):
         self.assertEqual(response.context['description_form'].initial['description'], expected_initial['description'])
 
     def test_no_initial_in_form_if_no_session_data(self):
-        """Test that there is no initial data in the form if `session` is empty."""
+        """There is no initial data in the form if `session` is empty."""
         CustomUser.objects.get(email='user1@gmail.com')
         self.client.login(email='user1@gmail.com', password='test')
         test_session = self.client.session
@@ -1639,7 +1642,7 @@ class RealtyGeneralDescriptionEditViewTests(TestCase):
         self.assertDictEqual(response.context['description_form'].initial, expected_initial)
 
     def test_update_session_data_on_post(self):
-        """Test that POST request updates session data correctly."""
+        """POST request updates session data correctly."""
         CustomUser.objects.get(email='user1@gmail.com')
         self.client.login(email='user1@gmail.com', password='test')
         test_session = self.client.session
@@ -1671,7 +1674,7 @@ class RealtyGeneralDescriptionEditViewTests(TestCase):
         self.assertEqual(self.client.session[f'{prefix}_description'], post_data['description'])
 
     def test_redirect_on_valid_post(self):
-        """Test that user is redirected if POST data is correct."""
+        """User is redirected if POST data is correct."""
         CustomUser.objects.get(email='user1@gmail.com')
         self.client.login(email='user1@gmail.com', password='test')
         test_session = self.client.session
@@ -1753,7 +1756,7 @@ class RealtyImageOrderViewTests(TestCase):
         super().tearDownClass()
 
     def test_update_image_order(self):
-        """Test that user can update images' order."""
+        """User can update images' order."""
         CustomUser.objects.get(email='user1@gmail.com')
         self.client.login(email='user1@gmail.com', password='test')
         post_data = {

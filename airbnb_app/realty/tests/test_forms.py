@@ -11,7 +11,7 @@ from ..models import Realty, RealtyImage, RealtyTypeChoices
 
 class RealtyTypeFormTests(SimpleTestCase):
     def test_realty_type_field_params(self):
-        """Test that `realty_type` field has all required parameters."""
+        """`realty_type` field has all required parameters."""
         form = RealtyTypeForm()
         realty_type_field = form.fields['realty_type']
 
@@ -21,12 +21,12 @@ class RealtyTypeFormTests(SimpleTestCase):
 
 class RealtyFormTests(SimpleTestCase):
     def test_form_correct_model(self):
-        """Test that ModelForm uses a correct model."""
+        """`RealtyForm` uses a correct model."""
         form = RealtyForm()
         self.assertEqual(form._meta.model, Realty)
 
     def test_form_correct_fields(self):
-        """Test that ModelForm has correct fields."""
+        """`RealtyForm` has correct fields."""
         form = RealtyForm()
         self.assertTupleEqual(
             form._meta.fields,
@@ -34,7 +34,7 @@ class RealtyFormTests(SimpleTestCase):
         )
 
     def test_form_correct_widgets(self):
-        """Test that ModelForm has correct widgets."""
+        """`RealtyForm` has correct widgets."""
         form = RealtyForm()
         self.assertDictEqual(
             form._meta.widgets,
@@ -44,12 +44,12 @@ class RealtyFormTests(SimpleTestCase):
 
 class RealtyImageFormTests(SimpleTestCase):
     def test_form_correct_model(self):
-        """Test that ModelForm uses a correct model."""
+        """`RealtyImageForm` uses a correct model."""
         form = RealtyImageForm()
         self.assertEqual(form._meta.model, RealtyImage)
 
     def test_form_correct_fields(self):
-        """Test that ModelForm has correct fields."""
+        """`RealtyImageForm` has correct fields."""
         form = RealtyImageForm()
         self.assertTupleEqual(
             form._meta.fields,
@@ -57,12 +57,12 @@ class RealtyImageFormTests(SimpleTestCase):
         )
 
     def test_form_correct_widgets(self):
-        """Test that ModelForm has correct widgets."""
+        """`RealtyImageForm` has correct widgets."""
         form = RealtyImageForm()
         self.assertIsInstance(form._meta.widgets['image'], FileInput)
 
     def test_image_field_params(self):
-        """Test that `image` field has all required parameters."""
+        """`image` field has all required parameters."""
         form = RealtyImageForm()
         image_field = form.fields['image']
         self.assertEqual(image_field.label, 'Image')
@@ -70,12 +70,12 @@ class RealtyImageFormTests(SimpleTestCase):
 
 class RealtyGeneralInfoFormTests(SimpleTestCase):
     def test_form_correct_model(self):
-        """Test that ModelForm uses a correct model."""
+        """`RealtyGeneralInfoForm` uses a correct model."""
         form = RealtyGeneralInfoForm()
         self.assertEqual(form._meta.model, Realty)
 
     def test_form_correct_fields(self):
-        """Test that ModelForm has correct fields."""
+        """`RealtyGeneralInfoForm` has correct fields."""
         form = RealtyGeneralInfoForm()
         self.assertTupleEqual(
             form._meta.fields,
@@ -83,7 +83,7 @@ class RealtyGeneralInfoFormTests(SimpleTestCase):
         )
 
     def test_form_correct_widgets(self):
-        """Test that ModelForm has correct widgets."""
+        """`RealtyGeneralInfoForm` has correct widgets."""
         form = RealtyGeneralInfoForm()
         self.assertDictEqual(
             form._meta.widgets,
@@ -93,7 +93,7 @@ class RealtyGeneralInfoFormTests(SimpleTestCase):
 
 class RealtyDescriptionFormTests(SimpleTestCase):
     def test_description_field_params(self):
-        """Test that `description` field has all required parameters."""
+        """`description` field has all required parameters."""
         form = RealtyDescriptionForm()
         description_field = form.fields['description']
 
@@ -103,12 +103,12 @@ class RealtyDescriptionFormTests(SimpleTestCase):
 
 class RealtyImageFormSetTests(SimpleTestCase):
     def test_formset_correct_model(self):
-        """Test that Model Formset has a correct model."""
+        """`RealtyImageFormSet` has a correct model."""
         form = RealtyImageFormSet()
         self.assertEqual(form.model, RealtyImage)
 
     def test_formset_params(self):
-        """Test that Model Formset has all required parameters."""
+        """`RealtyImageFormSet` has all required parameters."""
         form = RealtyImageFormSet()
 
         self.assertFalse(form.can_delete)

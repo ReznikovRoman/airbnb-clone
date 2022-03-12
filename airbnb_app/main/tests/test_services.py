@@ -10,7 +10,7 @@ class MainServicesSimpleTests(SimpleTestCase):
         USE_S3_BUCKET=False,  # disable S3 bucket
     )
     def test_get_target_image_url_with_size_s3_disabled(self):
-        """Return initial url if S3 bucket is disabled."""
+        """get_target_image_url_with_size() returns initial url if S3 bucket is disabled."""
         image_url = f"{settings.MEDIA_URL}path/to/image.png"
         target_size = "300x300"
 
@@ -22,7 +22,7 @@ class MainServicesSimpleTests(SimpleTestCase):
         USE_S3_BUCKET=True,  # enable S3 bucket
     )
     def test_get_target_image_url_with_size_correct_url(self):
-        """Return url with specified size if S3 bucket is enabled."""
+        """get_target_image_url_with_size() returns url with specified size if S3 bucket is enabled."""
         image_url = f"{settings.MEDIA_URL}path/to/image.png"
         target_size = "300x300"
 
@@ -34,7 +34,7 @@ class MainServicesSimpleTests(SimpleTestCase):
         USE_S3_BUCKET=True,  # enable S3 bucket
     )
     def test_get_target_image_url_with_size_wrong_size_separator(self):
-        """Return initial url if `target_size` has incorrect separator."""
+        """get_target_image_url_with_size() returns initial url if `target_size` has incorrect separator."""
         image_url = f"{settings.MEDIA_URL}path/to/image.png"
         target_size = "300|300"
 
@@ -45,7 +45,7 @@ class MainServicesSimpleTests(SimpleTestCase):
         USE_S3_BUCKET=True,  # enable S3 bucket
     )
     def test_get_target_image_url_with_size_wrong_size_format(self):
-        """Return initial url if `target_size` has incorrect format."""
+        """get_target_image_url_with_size() returns initial url if `target_size` has incorrect format."""
         image_url = f"{settings.MEDIA_URL}path/to/image.png"
         target_size = "300x300dad"
 

@@ -1,8 +1,9 @@
-from time import sleep
+import datetime
 from unittest import mock
 
 import fakeredis
 import sentry_sdk
+from freezegun import freeze_time
 from twilio.base.exceptions import TwilioRestException
 
 from django.conf import settings
@@ -90,8 +91,10 @@ class CommonServicesTests(SimpleTestCase):
         result = get_keys_with_prefixes(names, prefix='test')
         self.assertListEqual(result, ['test_name1', 'test_name2'])
 
-    @mock.patch('common.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch(
+        'common.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True),
+    )
     def test_is_cooldown_ended_false(self):
         """is_cooldown_ended() returns False if cooldown hasn't ended."""
         redis_instance = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
@@ -99,8 +102,10 @@ class CommonServicesTests(SimpleTestCase):
         redis_instance.set(key, 1)
         self.assertFalse(is_cooldown_ended(key))
 
-    @mock.patch('common.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch(
+        'common.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True),
+    )
     def test_is_cooldown_ended_true_no_key(self):
         """is_cooldown_ended() returns True if there is no `key` in the db."""
         redis_instance = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
@@ -108,8 +113,10 @@ class CommonServicesTests(SimpleTestCase):
         key = "user:1:email.sent"
         self.assertTrue(is_cooldown_ended(key))
 
-    @mock.patch('common.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch(
+        'common.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True),
+    )
     def test_is_cooldown_ended_true_cooldown_ended(self):
         """is_cooldown_ended() returns True if cooldown has ended."""
         redis_instance = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
@@ -117,19 +124,24 @@ class CommonServicesTests(SimpleTestCase):
         key = "user:1:email.sent"
         timeout = 1
         set_key_with_timeout(key, timeout, 1)
-        sleep(1)
-        self.assertTrue(is_cooldown_ended(key))
+        time_after_timeout = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
 
-    @mock.patch('common.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+        with freeze_time(time_after_timeout.isoformat()):
+            self.assertTrue(is_cooldown_ended(key))
+
+    @mock.patch(
+        'common.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True),
+    )
     def test_is_cooldown_ended_false_cooldown_did_not_end(self):
         """is_cooldown_ended() returns False if cooldown hasn't ended yet."""
         redis_instance = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
         redis_instance.flushall()
         key = "user:1:email.sent"
         timeout = 1
+
         set_key_with_timeout(key, timeout, 1)
-        sleep(0.5)
+
         self.assertFalse(is_cooldown_ended(key))
 
     @mock.patch('configs.twilio_conf.twilio_client.messages.create')
@@ -146,12 +158,11 @@ class CommonServicesTests(SimpleTestCase):
             twilio_payload = _send_sms_by_twilio(body, sms_from, sms_to)
 
             self.assertEqual(len(cm.output), 2)
-            self.assertIn(f"Sending phone number verification message: "
-                          f"| Body: {body} | To: {sms_to} | From {sms_from}",
-                          cm.output[0])
-            self.assertIn(f"Verification message has been sent successfully "
-                          f"| To: {sms_to} | Twilio SID: {expected_sid}",
-                          cm.output[1])
+            self.assertIn(body, cm.output[0])
+            self.assertIn(sms_to, cm.output[0])
+            self.assertIn(sms_from, cm.output[0])
+            self.assertIn(sms_to, cm.output[1])
+            self.assertIn(expected_sid, cm.output[1])
 
         self.assertTrue(message_mock.called)
         self.assertEqual(twilio_payload.sid, expected_sid)
@@ -174,8 +185,9 @@ class CommonServicesTests(SimpleTestCase):
             twilio_payload = _send_sms_by_twilio(body, sms_from, sms_to)
 
             self.assertEqual(len(cm.output), 2)
-            self.assertIn(f"Sending phone number verification message: | Body: {body} | To: {sms_to} | From {sms_from}",
-                          cm.output[0])
+            self.assertIn(body, cm.output[0])
+            self.assertIn(sms_to, cm.output[0])
+            self.assertIn(sms_from, cm.output[0])
             self.assertIn(sms_to, cm.output[1])
             self.assertIn(error_message, cm.output[1])
 

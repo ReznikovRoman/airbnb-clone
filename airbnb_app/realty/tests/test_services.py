@@ -266,8 +266,10 @@ class RealtyServicesRealtyTests(TestCase):
             [Realty.objects.get(slug='realty-1')],
         )
 
-    @mock.patch('realty.services.realty.redis_instance',
-                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch(
+        'realty.services.realty.redis_instance',
+        fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True),
+    )
     def test_get_cached_realty_visits_count_by_id(self):
         """get_cached_realty_visits_count_by_id() returns realty visits count from Redis DB."""
         realty_id = 5
@@ -279,8 +281,10 @@ class RealtyServicesRealtyTests(TestCase):
 
         self.assertEqual(get_cached_realty_visits_count_by_realty_id(realty_id), realty_visits_count)
 
-    @mock.patch('realty.services.realty.redis_instance',
-                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch(
+        'realty.services.realty.redis_instance',
+        fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True),
+    )
     def test_update_realty_visits_count(self):
         """update_realty_visits_count() increments counter in the Redis DB."""
         realty_id = 5
@@ -292,8 +296,10 @@ class RealtyServicesRealtyTests(TestCase):
         update_realty_visits_count(realty_id)
         self.assertEqual(get_cached_realty_visits_count_by_realty_id(realty_id), 1)
 
-    @mock.patch('realty.services.realty.redis_instance',
-                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch(
+        'realty.services.realty.redis_instance',
+        fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True),
+    )
     def test_update_realty_visits_from_redis(self):
         """update_realty_visits_from_redis() updates `visits_count` field in DB using Redis values."""
         realty = Realty.objects.first()
@@ -406,6 +412,7 @@ class RealtyServicesImagesTests(TestCase):
         )
 
     def test_update_images_order(self):
+        """update_images_order() updates images order correctly."""
         test_realty: Realty = Realty.objects.get(slug='realty-1')
         test_image1: RealtyImage = test_realty.images.all()[0]
         test_image2: RealtyImage = test_realty.images.all()[1]

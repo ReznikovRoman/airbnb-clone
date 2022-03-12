@@ -1,7 +1,8 @@
-from time import sleep
+import datetime
 from unittest import mock
 
 import fakeredis
+from freezegun import freeze_time
 
 from django.contrib.auth.models import Group
 from django.core import mail
@@ -45,10 +46,12 @@ class AccountsServicesTests(TestCase):
         )
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
-    @mock.patch('common.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch(
+        'common.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True),
+    )
     def test_send_verification_link_correct_body(self):
-        """Test that Verification Email's body is correct (subject, content, recipient)."""
+        """Verification email's body is correct (subject, content, recipient)."""
         test_user: CustomUser = CustomUser.objects.first()
         test_domain = 'airbnb'
         test_scheme = 'https'
@@ -75,23 +78,15 @@ class AccountsServicesTests(TestCase):
         self.assertEqual(test_email.to, [test_user.email])
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
-    @mock.patch('common.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch(
+        'common.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True),
+    )
     def test_send_verification_link_sends_email_if_no_cooldown_yet(self):
-        """Test that email is sent if there is no cooldown yet."""
+        """Email is sent if there is no cooldown."""
         test_user: CustomUser = CustomUser.objects.first()
         test_domain = 'airbnb'
         test_scheme = 'https'
-        render_to_string(
-            template_name='accounts/registration/account_activation_email.html',
-            context={
-                'user': test_user,
-                'protocol': test_scheme,
-                'domain': test_domain,
-                'uid': urlsafe_base64_encode(force_bytes(test_user.pk)),
-                'token': account_activation_token.make_token(test_user),
-            },
-        )
 
         redis_instance = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
         redis_instance.flushall()
@@ -101,23 +96,15 @@ class AccountsServicesTests(TestCase):
         self.assertEqual(len(mail.outbox), 1)
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
-    @mock.patch('common.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch(
+        'common.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True),
+    )
     def test_send_verification_link_no_email_if_cooldown(self):
-        """Test that email is not sent if cooldown hasn't ended."""
+        """Email is not sent if cooldown hasn't ended."""
         test_user: CustomUser = CustomUser.objects.first()
         test_domain = 'airbnb'
         test_scheme = 'https'
-        render_to_string(
-            template_name='accounts/registration/account_activation_email.html',
-            context={
-                'user': test_user,
-                'protocol': test_scheme,
-                'domain': test_domain,
-                'uid': urlsafe_base64_encode(force_bytes(test_user.pk)),
-                'token': account_activation_token.make_token(test_user),
-            },
-        )
 
         redis_instance = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
         redis_instance.flushall()
@@ -130,10 +117,12 @@ class AccountsServicesTests(TestCase):
         self.assertEqual(len(mail.outbox), 0)
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
-    @mock.patch('common.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch(
+        'common.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True),
+    )
     def test_send_verification_link_sends_email_after_cooldown(self):
-        """Test that email is sent if cooldown has ended."""
+        """Email is sent if cooldown has ended."""
         test_user: CustomUser = CustomUser.objects.first()
         test_domain = 'airbnb'
         test_scheme = 'https'
@@ -153,12 +142,12 @@ class AccountsServicesTests(TestCase):
         key = f"accounts:user:{test_user.pk}:email.sent"
         timeout = 1
         redis_instance.setex(key, timeout, 1)
+        time_after_timeout = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
 
-        sleep(timeout)
+        with freeze_time(time_after_timeout.isoformat()):
+            send_verification_link(domain=test_domain, scheme=test_scheme, user=test_user)
 
-        send_verification_link(domain=test_domain, scheme=test_scheme, user=test_user)
-
-        self.assertEqual(len(mail.outbox), 1)
+            self.assertEqual(len(mail.outbox), 1)
 
     def test_get_user_by_pk_existing_user(self):
         """get_user_by_pk() returns a CustomUser object if user with the given `pk` exists."""
@@ -209,11 +198,11 @@ class AccountsServicesTests(TestCase):
         self.assertIn('test_group', test_user.groups.values_list('name', flat=True))
 
     def test_has_user_profile_image_valid_image(self):
-        """has_user_profile_image() returns True if CustomUser has a profile image and it is not a default one."""
+        """has_user_profile_image() returns True if CustomUser has a profile image, and it is not a default one."""
         self.assertTrue(has_user_profile_image(user_profile=CustomUser.objects.first().profile))
 
     def test_has_user_profile_image_default_image(self):
-        """has_user_profile_image() returns False if user doesn't have a profile image or it is a default one."""
+        """has_user_profile_image() returns False if user doesn't have a profile image, or it is a default one."""
         self.assertFalse(has_user_profile_image(user_profile=CustomUser.objects.get(email='user2@gmail.com').profile))
 
     def test_update_phone_number_confirmation_status_success(self):
@@ -232,10 +221,12 @@ class AccountsServicesTests(TestCase):
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
     @mock.patch('configs.twilio_conf.twilio_client.messages.create')
-    @mock.patch('common.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch(
+        'common.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True),
+    )
     def test_handle_phone_number_change(self, message_mock):
-        """Test that user's phone number is now unconfirmed, and SMS verification code was sent."""
+        """User's phone number is now unconfirmed, and SMS verification code was sent."""
         test_profile: Profile = CustomUser.objects.first().profile
         test_domain: str = 'airbnb'
         test_phone_number = '+79851686043'
@@ -252,8 +243,10 @@ class AccountsServicesTests(TestCase):
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
     @mock.patch('configs.twilio_conf.twilio_client.messages.create')
-    @mock.patch('common.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch(
+        'common.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True),
+    )
     def test_handle_phone_number_change_send_sms_if_no_cooldown(self, message_mock):
         """handle_phone_number_change() sends SMS if there is no cooldown."""
         test_profile: Profile = CustomUser.objects.first().profile
@@ -271,8 +264,10 @@ class AccountsServicesTests(TestCase):
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
     @mock.patch('configs.twilio_conf.twilio_client.messages.create')
-    @mock.patch('common.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch(
+        'common.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True),
+    )
     def test_handle_phone_number_change_send_sms_if_cooldown_ended(self, message_mock):
         """handle_phone_number_change() sends SMS if cooldown has ended."""
         test_profile: Profile = CustomUser.objects.first().profile
@@ -284,18 +279,21 @@ class AccountsServicesTests(TestCase):
         redis_instance = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
         redis_instance.flushall()
         key = "phone:79851686043:sms.sent"
-        redis_instance.setex(key, 1, 1)
+        timeout = 1
+        redis_instance.setex(key, timeout, 1)
+        time_after_timeout = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
 
-        sleep(1)
+        with freeze_time(time_after_timeout.isoformat()):
+            handle_phone_number_change(test_profile, test_domain, test_phone_number)
 
-        handle_phone_number_change(test_profile, test_domain, test_phone_number)
-
-        self.assertTrue(message_mock.called)
+            self.assertTrue(message_mock.called)
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
     @mock.patch('configs.twilio_conf.twilio_client.messages.create')
-    @mock.patch('common.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch(
+        'common.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True),
+    )
     def test_handle_phone_number_change_no_sms_if_cooldown_did_not_end(self, message_mock):
         """handle_phone_number_change() doesn't send SMS if cooldown hasn't ended."""
         test_profile: Profile = CustomUser.objects.first().profile
@@ -334,8 +332,10 @@ class AccountsServicesTests(TestCase):
 
         self.assertFalse(is_verification_code_for_profile_valid(test_profile, test_sms_code + '1'))
 
-    @mock.patch('accounts.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch(
+        'accounts.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True),
+    )
     def test_set_phone_code_status_by_user_id_new_item(self):
         """set_phone_code_status_by_user_id() creates `phone_code_status` with the given `user_id` and code_status."""
         redis_instance = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
@@ -347,8 +347,10 @@ class AccountsServicesTests(TestCase):
 
         self.assertEqual(redis_instance.get(f"user:{user_id}:phone_code_status"), test_value)
 
-    @mock.patch('accounts.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch(
+        'accounts.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True),
+    )
     def test_set_phone_code_status_by_user_id_overwrite_existing(self):
         """set_phone_code_status_by_user_id() overwrites `phone_code_status` if it already exists."""
         redis_instance = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
@@ -365,8 +367,10 @@ class AccountsServicesTests(TestCase):
 
         self.assertEqual(redis_instance.get(f"user:{user_id}:phone_code_status"), new_value)
 
-    @mock.patch('accounts.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch(
+        'accounts.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True),
+    )
     def test_get_phone_code_status_by_user_id_existing_key(self):
         """get_phone_code_status_by_user_id() returns `phone_code_status` from Redis by the given `user_id`."""
         redis_instance = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)
@@ -379,8 +383,10 @@ class AccountsServicesTests(TestCase):
 
         self.assertEqual(get_phone_code_status_by_user_id(user_id), test_value)
 
-    @mock.patch('accounts.services.redis_instance',
-                fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True))
+    @mock.patch(
+        'accounts.services.redis_instance',
+        fakeredis.FakeStrictRedis(server=redis_server, charset="utf-8", decode_responses=True),
+    )
     def test_get_phone_code_status_by_user_id_no_key(self):
         """get_phone_code_status_by_user_id() returns None if key with the given `user_id` doesn't exist."""
         redis_instance = fakeredis.FakeStrictRedis(server=self.redis_server, charset="utf-8", decode_responses=True)

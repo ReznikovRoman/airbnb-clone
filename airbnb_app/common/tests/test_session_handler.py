@@ -7,7 +7,7 @@ from ..session_handler import SessionHandler
 
 class SessionHandlerTests(SimpleTestCase):
     def test_init_object_success_with_given_prefix(self):
-        """Test that instance's attributes are correct (if `session_prefix` is given)."""
+        """Instance's attributes are correct (if `session_prefix` is given)."""
         session = self.client.session
         keys_collector_name = 'keys_collector'
         prefix = 'prefix'
@@ -23,7 +23,7 @@ class SessionHandlerTests(SimpleTestCase):
         self.assertListEqual(session_handler._keys_collector, [])
 
     def test_init_object_success_without_prefix(self):
-        """Test that instance's attributes are correct (if `session_prefix` is not given)."""
+        """Instance's attributes are correct (if `session_prefix` is not given)."""
         session = self.client.session
         keys_collector_name = 'keys_collector'
         session_handler = SessionHandler(
@@ -37,7 +37,7 @@ class SessionHandlerTests(SimpleTestCase):
         self.assertListEqual(session_handler._keys_collector, [])
 
     def test_init_object_success_with_existing_keys_collector(self):
-        """Test that instance's attributes are correct (if `keys_collector` already exists)."""
+        """Instance's attributes are correct (if `keys_collector` already exists)."""
         session: SessionStore = self.client.session
         keys_collector_name = 'keys_collector'
 

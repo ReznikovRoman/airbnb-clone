@@ -24,7 +24,7 @@ class PopulateRealtyTests(TestCase):
         RealtyHost.objects.create(user=new_user)
 
     def test_command_help_output(self):
-        """Test command help text."""
+        """Command help text is correct."""
         expected_help_text = "Creates `realty_count` realty objects"
         command: Command = load_command_class('realty', 'populaterealty')
 
@@ -46,8 +46,10 @@ class PopulateRealtyTests(TestCase):
 
         output = StringIO()
         color_styles = color_style(force_color=True)
-        expected_output = f'{color_styles.WARNING("Creating new realty host for realty fixtures...")}\n' \
-                          f'{color_styles.SUCCESS("Successfully created 2 realty")}'
+        expected_output = (
+            f'{color_styles.WARNING("Creating new realty host for realty fixtures...")}\n'
+            f'{color_styles.SUCCESS("Successfully created 2 realty")}'
+        )
 
         call_command('populaterealty', 2, stdout=output)
 
