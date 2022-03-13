@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.linter.txt
+          pip install -r ./requirements/requirements.linter.txt
       - name: Check editorconfig settings
         run: ec
       - name: Lint with flake8
@@ -51,7 +51,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.linter.txt
+          pip install -r ./requirements/requirements.linter.txt
       - name: Install Yandex Cloud CLI
         run: |
           curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -a
@@ -107,7 +107,7 @@ jobs:
       - name: Install project dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r ./requirements/requirements.txt
       - name: Apply migrations
         env:
           ENV: ${{ secrets.P_ENV }}

@@ -1,0 +1,17 @@
+-c requirements.txt
+
+pytest==7.1.0
+pytest-asyncio==0.18.2
+pytest-django==4.5.2
+pytest-cov==3.0.0
+pytest-deadfixtures==2.2.1
+pytest-env==0.6.2
+pytest-freezegun==0.4.2
+pytest-mock==3.7.0
+pytest-randomly==3.11.0
+pytest-repeat==0.9.1
+pytest-xdist==2.5.0
+
+freezegun==1.2.0
+mixer==7.2.1
+requests-mock==1.9.3

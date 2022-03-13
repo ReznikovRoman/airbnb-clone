@@ -31,8 +31,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 # Install project dependencies
-COPY ./requirements.txt /app/requirements.txt
-RUN pip install -r requirements.txt
+COPY ./requirements/requirements.txt /app/requirements.txt
+COPY ./requirements/requirements.linter.txt /app/requirements.linter.txt
+COPY ./requirements/requirements.test.txt /app/requirements.test.txt
+RUN pip install --upgrade pip-tools
+RUN pip-sync requirements.txt requirements.*.txt
 
 # Copy entrypoint.sh
 COPY entrypoint.sh .

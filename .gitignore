@@ -12,6 +12,8 @@ local_settings.py
 .idea/
 __pycache__/
 *.pytest_cache
+.coverage
+coverage.xml
 *.sqlite3
 *.log
 

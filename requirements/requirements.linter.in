@@ -1,6 +1,6 @@
 -c requirements.txt
 
-pip-tools==6.4.0
+pip-tools
 
 # Code style
 pre-commit==2.15.0
@@ -14,3 +14,5 @@ flake8-docstrings==1.6.0
 flake8-multiline-containers==0.0.18
 flake8-polyfill==1.0.2
 flake8-quotes==3.3.0
+
+tomli==2.0.1

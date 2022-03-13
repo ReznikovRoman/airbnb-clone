@@ -24,7 +24,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 # Install project dependencies
-COPY ./requirements.txt /app/requirements.txt
+COPY ./requirements/requirements.txt /app/requirements.txt
 RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requirements.txt
 
 
